@@ -3,7 +3,7 @@ import SearchBar from "./SearchBar";
 
 export default function Header() {
   return (
-    <header className="p-4 flex flex-row justify-between">
+    <header className="p-4 flex flex-row justify-between items-center">
       <div className="flex flex-row items-center">
         <Image
           src="/image/logo48.png"
