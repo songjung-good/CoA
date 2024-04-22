@@ -1,8 +1,8 @@
 export default function SearchBar() {
   return (
     <div>
-      <input className="bg-[#F1F7F5]"></input>
-      <button>로그인</button>
+      <input className="bg-appGrey1 h-8 p-4 rounded-2xl"></input>
+      <button>검색</button>
     </div>
   );
 }
