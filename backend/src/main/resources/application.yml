@@ -1,0 +1,23 @@
+spring:
+    application:
+        name: coa
+    datasource:
+        username: ${DB_USERNAME}
+        url: ${DB_URL}
+        password: ${DB_PASSWORD}
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: 'true'
+    data:
+        redis:
+            host: localhost
+            port: 6379
+            password: 'password'
+            database: 0
+server:
+    port: 8080
