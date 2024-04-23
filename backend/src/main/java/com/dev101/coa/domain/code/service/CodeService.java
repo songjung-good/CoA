@@ -1,6 +1,6 @@
 package com.dev101.coa.domain.code.service;
 
-import com.dev101.coa.domain.code.dto.CommonCodeResponse;
+import com.dev101.coa.domain.code.dto.CommonCodeResDto;
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.code.entity.Type;
 import com.dev101.coa.domain.code.repository.CodeRepository;
@@ -24,7 +24,7 @@ public class CodeService {
         this.typeRepository = typeRepository;
     }
 
-    public CommonCodeResponse getAllCommonCodes() {
+    public CommonCodeResDto getAllCommonCodes() {
         List<Code> codes = codeRepository.findAll();
         Map<String, Type> types = typeRepository.findAll().stream()
                 .collect(Collectors.toMap(Type::getTypeId, type -> type));
@@ -38,6 +38,6 @@ public class CodeService {
                         )
                 ));
 
-        return new CommonCodeResponse(groupedCodes, types);
+        return new CommonCodeResDto(groupedCodes, types);
     }
 }

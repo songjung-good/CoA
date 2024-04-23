@@ -1,7 +1,12 @@
 package com.dev101.coa.domain.code.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.Map;
 
+@Getter
+@NoArgsConstructor
 public class TypeCodeDto {
     private String typeId;
     private String typeName;

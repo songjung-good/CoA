@@ -26,7 +26,7 @@ public class BaseResponse<T> {
     public BaseResponse(T result) {
         this.isSuccess = true;
         this.message = "요청에 성공하였습니다.";
-        this.code = 100;
+        this.code = 200;
         this.result = result;
     }
 

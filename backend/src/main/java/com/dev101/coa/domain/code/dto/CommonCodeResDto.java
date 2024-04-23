@@ -1,18 +1,25 @@
 package com.dev101.coa.domain.code.dto;
 
 import com.dev101.coa.domain.code.entity.Type;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
-public class CommonCodeResponse {
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class CommonCodeResDto {
     private List<TypeCodeDto> commonCodeList;
 
-    public CommonCodeResponse(Map<String, Map<Long, String>> groupedCodes, Map<String, Type> types) {
+    public CommonCodeResDto(Map<String, Map<Long, String>> groupedCodes, Map<String, Type> types) {
         this.commonCodeList = groupedCodes.entrySet().stream()
                 .map(entry -> new TypeCodeDto(entry.getKey(), types.get(entry.getKey()).getTypeName(), entry.getValue()))
                 .collect(Collectors.toList());
+        commonCodeList.add(0, new TypeCodeDto());
     }
 
 //    types:
