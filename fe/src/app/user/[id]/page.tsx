@@ -6,9 +6,8 @@ export default function UserPage({
   params: { id: string };
 }) {
   return (
-    <main>
+    <>
       <h1>User Page ID: {params.id}</h1>
-      <UserCard />
-    </main>
+    </>
   );
 }
