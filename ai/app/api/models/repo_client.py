@@ -31,7 +31,7 @@ class RepoClient(metaclass=ABCMeta):
             author_name: 커밋 작성자 이름
 
         Returns:
-
+            커밋 별 변경사항 리스트
         """
         commits = []
         commits_json = await RepoClient.__request_json(self._get_commits_root_url(author_name))
