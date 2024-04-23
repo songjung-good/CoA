@@ -4,6 +4,9 @@ export default function UserPage({
   params: { id: string };
 }) {
   return (
-    <div>User Page ID: {params.id}</div>
+    <>
+      <h1>User Page ID: {params.id}</h1>
+      <h1>개요</h1>
+    </>
   );
 }
