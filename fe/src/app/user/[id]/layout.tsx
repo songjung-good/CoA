@@ -10,9 +10,7 @@ export default function UserPageLayout({
 }>) {
   return (
     <main>
-      <UserCard />
-      <UserPageTabBar />
-      {params.id}
+      <UserCard userId={params.id} />
       {children}
     </main>
   );
