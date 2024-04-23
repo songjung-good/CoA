@@ -18,7 +18,6 @@ export default function Header() {
             alt="logoText"
             width={128}
             height={40}
-            layout="fixed"
           />
         </div>
       </div>
