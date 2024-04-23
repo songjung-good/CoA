@@ -1,4 +1,4 @@
-import SearchIcon from "@/app/_icons/SearchIcon";
+import SearchIcon from "@/icons/SearchIcon";
 
 export default function SearchBar() {
   return (
