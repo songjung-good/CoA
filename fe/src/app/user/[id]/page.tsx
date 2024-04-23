@@ -1,5 +1,3 @@
-import UserCard from "@/components/UserCard/UserCard";
-
 export default function UserPage({
   params,
 }: {
@@ -8,6 +6,7 @@ export default function UserPage({
   return (
     <>
       <h1>User Page ID: {params.id}</h1>
+      <h1>개요</h1>
     </>
   );
 }
