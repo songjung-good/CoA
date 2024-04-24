@@ -1,16 +1,18 @@
 // src/app/main/page.tsx
 import React from 'react';
-import UrlInput from '@/components/Analyzer/UrlInput'; // 상대 경로를 사용하여 불러옵니다.
+// 레포지토리 분석기(URL 입력)
+import UrlInput from '@/components/Analyzer/UrlInput';
+// 개인 레포 불러오기
 import MyRepo from '@/components/RepoCard/MyRepo';
 
 const MainPage = () => {
-    return (
-        <main>
-            <h1>MainPage</h1>
-            <UrlInput />
-            <MyRepo userID='songjung-good' />
-        </main>
-    );
+  return (
+    <main>
+      <h1>MainPage</h1>
+      <UrlInput />
+      <MyRepo userID='songjung-good' />
+    </main>
+  );
 };
 
 export default MainPage;
