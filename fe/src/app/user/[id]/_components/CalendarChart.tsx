@@ -32,10 +32,8 @@ const CalendarChart: React.FC = () => {
       "#30a14e",
       "#216e39",
     ];
-    const numericColorRange: number[] = colorRange.map((color) =>
-      parseInt(color.slice(1), 16),
-    );
-    const color = d3.scaleQuantize().domain([0, 4]).range(colorRange);
+    // const color = d3.scaleQuantize().domain([0, 4]).range(colorRange);
+    const color = d3.scaleQuantize([0, 4], colorRange);
 
     const dateExtent = d3.extent(data, (d) => new Date(d.date));
     const startDate = dateExtent[0] as Date;
