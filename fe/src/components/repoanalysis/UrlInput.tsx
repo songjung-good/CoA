@@ -4,7 +4,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
-// GitHub 정보 추출 함수
+// 받는 파일
+import { UserModal } from './UserModal';
+
+// 입력받은 정보 정리
 const extractUserInfo = (url: string) => {
   const regex = /https:\/\/github\.com\/([^\/]+)\/([^\/]+)/;
   const match = url.match(regex);
@@ -48,7 +51,7 @@ const UrlInput = () => {
   };
 
   return (
-    <Styleddiv>
+    <Container>
       <StyledInput
         type="text"
         placeholder="🔎Repository URL을 입력하세요"
@@ -57,21 +60,23 @@ const UrlInput = () => {
         onKeyDown={handleKeyDown}
       />
       <Styledbutton onClick={fetchGitHubInfo}>분석하기</Styledbutton>
-    </Styleddiv>
+    </Container>
   );
 };
 
 // 
-const Styleddiv = styled.div`
+const Container = styled.div`
+  width: 80%;
   display: flex; 
   alignItems: center;
+  justify-content: space-around;
+  margin: 0 auto;
 `;
 
 // 입력창 css
 const StyledInput = styled.input`
   width: 80%;
   padding: 10px;
-  margin: 0 auto;
   display: block;
   border: 2px solid black;
   border-radius: 25px;
@@ -83,8 +88,10 @@ const StyledInput = styled.input`
 
 // 입력 버튼 css
 const Styledbutton = styled.button`
+  width: 10%;
   border: 2px solid black;
   border-radius: 25px;
+  transition: border-color 0.3s ease;
   &:hover {
     border-color: #cccccc;
   }
