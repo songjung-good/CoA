@@ -1,5 +1,6 @@
 package com.dev101.coa.global.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,16 +12,13 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
     private final JwtTokenProvider tokenProvider;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, JwtTokenProvider tokenProvider) {
-        this.customOAuth2UserService = customOAuth2UserService;
-        this.tokenProvider = tokenProvider;
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,7 +37,10 @@ public class SecurityConfig {
 
                 // OAuth2 로그인 설정
                 .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userinfo -> userinfo
+                        .loginPage("/api/auth/login")
+                        .defaultSuccessUrl("/home")
+                        .failureUrl("/api/auth/login?error")
+                        .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
                 );
