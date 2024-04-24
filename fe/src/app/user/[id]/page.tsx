@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import UserPageTabBar from "./_components/UserPageTabBar";
+import UserAnalysisPage from "./_pages/UserAnalysisPage";
+import UserHistoryPage from "./_pages/UserHistoryPage";
+import UserRepositoryPage from "./_pages/UserRepositoryPage";
+import UserOverviewPage from "./_pages/UserOverviewPage";
 
 export default function UserPage({ params }: { params: { id: string } }) {
   const [tabIndex, setTabIndex] = useState(0);
@@ -9,13 +13,13 @@ export default function UserPage({ params }: { params: { id: string } }) {
   const renderTabContent = () => {
     switch (tabIndex) {
       case 0:
-        return <h1>개요 내용</h1>;
+        return <UserOverviewPage />;
       case 1:
-        return <h1>연혁 내용</h1>;
+        return <UserHistoryPage />;
       case 2:
-        return <h1>레포 내용</h1>;
+        return <UserRepositoryPage />;
       case 3:
-        return <h1>심층분석 내용</h1>;
+        return <UserAnalysisPage />;
       default:
         return null;
     }
