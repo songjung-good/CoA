@@ -19,7 +19,6 @@ public class UserPrincipal implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    // Constructors, getters, and setters
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
