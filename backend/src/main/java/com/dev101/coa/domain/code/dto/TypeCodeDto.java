@@ -13,7 +13,7 @@ import java.util.Map;
 public class TypeCodeDto {
     private String typeId;
     private String typeName;
-    @Schema(description = "codeId : codeName", example = "{'1001':'Google'}, {'1002':'Github'}, ")
+    @Schema(description = "codeId : codeName", example = "{'1001':'Google', '1002':'Github', ...} ")
     private Map<Long, String> codes;
 
 }
