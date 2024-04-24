@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 interface UserModalProps {
@@ -9,16 +9,26 @@ interface UserModalProps {
 }
 
 const UserModal: React.FC<UserModalProps> = ({ userData }) => {
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+
+  const toggleUser = (login: string) => {
+    setSelectedUser(selectedUser === login ? null : login);
+  };
+
   return (
     <ModalOverlay>
       <ModalContent>
         <ModalUserGrid>
-        {userData.map((user, index) => (
-          <ModalUser key={index}>
-            <UserAvatar src={user.avatar_url} alt={user.login} />
-            <UserId>{user.login}</UserId>
-          </ModalUser>
-        ))}
+          {userData.map((user, index) => (
+            <ModalUser key={index} onClick={() => toggleUser(user.login)}>
+              <UserAvatar
+                src={user.avatar_url}
+                alt={user.login}
+                isSelected={selectedUser === user.login}
+              />
+              <UserId>{user.login}</UserId>
+            </ModalUser>
+          ))}
         </ModalUserGrid>
       </ModalContent>
     </ModalOverlay>
@@ -53,13 +63,19 @@ const ModalUser = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
 `;
 
-const UserAvatar = styled.img`
+interface AvatarProps {
+  isSelected: boolean;
+}
+
+const UserAvatar = styled.img<AvatarProps>`
   width: 100%;
   max-width: 100px; /* 최대 너비 조절 */
   height: auto;
   border-radius: 50%;
+  border: ${(props) => (props.isSelected ? '2px solid blue' : '2px solid transparent')};
 `;
 
 const UserId = styled.p`
