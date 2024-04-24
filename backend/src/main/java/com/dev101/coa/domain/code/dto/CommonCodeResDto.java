@@ -39,6 +39,5 @@ public class CommonCodeResDto {
 //            - [TypeCodeDto("1", "platform", {1001: "Google", 1002: "Github"}),
 //               TypeCodeDto("2", "job", {2001: "FE", 2002: "BE"})]
 
-    // Getter and Setter
 }
 
