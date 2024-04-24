@@ -28,6 +28,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:3.2.5'
 
+	// SpringDoc OpenAPI UI
+//	implementation 'org.springdoc:springdoc-openapi-ui:1.8.0' // 얘는 안되던데ㅔ
+// 	implementation 'org.springdoc:springdoc-openapi-webflux-core:1.8.0'
+//	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0' // 얘도
+//	implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.5.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+//	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0' // 추가 했는데 변동 사항 모르겠음
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 //	runtimeOnly 'com.mysql.cj:mysql-connector-java'
