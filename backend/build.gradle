@@ -24,9 +24,17 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:3.2.5'
+
+	// JWT 라이브러리
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+
+	// OAuth2 클라이언트 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.security:spring-security-oauth2-jose'
 
 	// SpringDoc OpenAPI UI
 //	implementation 'org.springdoc:springdoc-openapi-ui:1.8.0' // 얘는 안되던데ㅔ
