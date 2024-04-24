@@ -5,7 +5,15 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 // 받는 파일
-import { UserModal } from './UserModal';
+import UserModal from '@/components/repoanalysis/UserModal';
+
+// 타입 정리
+interface UserModalProps {
+  userData: {
+    login: string;
+    avatar_url: string;
+  }[];
+}
 
 // 입력받은 정보 정리
 const extractUserInfo = (url: string) => {
@@ -21,6 +29,7 @@ const extractUserInfo = (url: string) => {
 
 const UrlInput = () => {
   const [inputValue, setInputValue] = useState('');
+  const [userData, setUserData] = useState<UserModalProps | null>(null);
 
   // 입력 값 변경 시 핸들러
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +50,8 @@ const UrlInput = () => {
     if (githubInfo.username && githubInfo.repositoryName) {
       try {
         const response = await axios.get(`https://api.github.com/repos/${githubInfo.username}/${githubInfo.repositoryName}/contributors`);
-        console.log(response.data); // 응답 데이터를 콘솔에 출력. 실제 애플리케이션에서는 이 데이터를 적절하게 활용합니다.
+        // console.log(response.data);
+        setUserData(response.data);
       } catch (error) {
         console.error("GitHub 정보를 가져오는 데 실패했습니다.", error);
       }
@@ -51,16 +61,21 @@ const UrlInput = () => {
   };
 
   return (
-    <Container>
-      <StyledInput
-        type="text"
-        placeholder="🔎Repository URL을 입력하세요"
-        value={inputValue}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-      />
-      <Styledbutton onClick={fetchGitHubInfo}>분석하기</Styledbutton>
-    </Container>
+    <div>
+      <Container>
+        <StyledInput
+          type="text"
+          placeholder="🔎Repository URL을 입력하세요"
+          value={inputValue}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+        />
+        <Styledbutton onClick={fetchGitHubInfo}>분석하기</Styledbutton>
+      </Container>
+      <div>
+        {userData && <UserModal userData={userData} />}
+      </div>
+    </div>
   );
 };
 
@@ -68,7 +83,6 @@ const UrlInput = () => {
 const Container = styled.div`
   width: 80%;
   display: flex; 
-  alignItems: center;
   justify-content: space-around;
   margin: 0 auto;
 `;
