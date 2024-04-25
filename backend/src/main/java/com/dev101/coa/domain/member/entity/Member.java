@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -40,4 +39,8 @@ public class Member extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "code_id", nullable = false)
     private Code memberPlatformCode;
+
+    public void updateMemberNickname (String memberNickname) {
+        this.memberNickname = memberNickname;
+    }
 }

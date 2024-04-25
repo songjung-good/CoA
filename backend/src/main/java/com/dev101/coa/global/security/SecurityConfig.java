@@ -1,5 +1,6 @@
 package com.dev101.coa.global.security;
 
+import com.dev101.coa.global.security.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,9 +38,9 @@ public class SecurityConfig {
 
                 // OAuth2 로그인 설정
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/api/auth/login")
-                        .defaultSuccessUrl("/home")
-                        .failureUrl("/api/auth/login?error")
+                        .loginPage("/auth/login") // 로그인해야 하는 경우 리디렉션할 로그인 페이지
+                        .defaultSuccessUrl("/home") // 로그인 성공 시 기본적으로 리디렉션할 URL
+                        .failureUrl("/api/auth/login?error") // 로그인 실패 시 리디렉션할 URL
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )

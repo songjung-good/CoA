@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter { // 얘는 접근시 토큰 확인하는 친구?
 
     private final JwtTokenProvider tokenProvider;
 

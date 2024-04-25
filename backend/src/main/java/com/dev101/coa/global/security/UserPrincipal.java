@@ -1,5 +1,6 @@
 package com.dev101.coa.global.security;
 
+import com.dev101.coa.domain.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,11 +15,16 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserPrincipal implements UserDetails {
-    private Long id;
-    private String username;
-    private String password;
+
+    private Member member;
     private Collection<? extends GrantedAuthority> authorities;
 
+    // 비밀번호 관련 메소드 추가
+    @Override
+    public String getPassword() {
+        // 소셜 로그인 사용 시 비밀번호는 사용하지 않거나, 더미 비밀번호를 반환할 수 있습니다.
+        return null; // 또는 암호화된 더미 비밀번호
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -26,13 +32,8 @@ public class UserPrincipal implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
     public String getUsername() {
-        return username;
+        return member.getMemberNickname();
     }
 
 

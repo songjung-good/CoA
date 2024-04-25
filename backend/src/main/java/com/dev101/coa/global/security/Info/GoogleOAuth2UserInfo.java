@@ -1,5 +1,10 @@
 package com.dev101.coa.global.security.Info;
 
+import lombok.RequiredArgsConstructor;
+
+import java.util.Map;
+
+@RequiredArgsConstructor
 public class GoogleOAuth2UserInfo implements OAuth2UserInfo {
     private Map<String, Object> attributes; // OAuth2에서 반환된 속성 맵
 
