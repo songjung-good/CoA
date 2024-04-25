@@ -8,11 +8,16 @@ interface UserModalProps {
   }[];
 }
 
+interface AvatarProps {
+  isSelected?: boolean;
+}
+
 const UserModal: React.FC<UserModalProps> = ({ userData }) => {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
   const toggleUser = (login: string) => {
     setSelectedUser(selectedUser === login ? null : login);
+    console.log(selectedUser)
   };
 
   return (
@@ -30,6 +35,9 @@ const UserModal: React.FC<UserModalProps> = ({ userData }) => {
             </ModalUser>
           ))}
         </ModalUserGrid>
+      <ModalCloseButton onClick={() => setSelectedUser(null)}>
+        X
+      </ModalCloseButton>
       </ModalContent>
     </ModalOverlay>
   );
@@ -45,6 +53,10 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const ModalCloseButton = styled.button`
+  color: black;
 `;
 
 const ModalContent = styled.div`
@@ -65,10 +77,6 @@ const ModalUser = styled.div`
   align-items: center;
   cursor: pointer;
 `;
-
-interface AvatarProps {
-  isSelected: boolean;
-}
 
 const UserAvatar = styled.img<AvatarProps>`
   width: 100%;

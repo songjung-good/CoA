@@ -6,30 +6,35 @@ import axios from 'axios';
 
 // 받는 파일
 import UserModal from '@/components/Analyzer/UserModal';
+import { ExtractUserInfo } from './ExtractUserInfo';
 
 // 타입 정리
-interface UserModalProps {
-  userData: {
-    login: string;
-    avatar_url: string;
-  }[];
+interface User {
+  avatar_url: string;
+  contributions: number;
+  events_url: string;
+  followers_url: string;
+  following_url: string;
+  gists_url: string;
+  gravatar_id: string;
+  html_url: string;
+  id: number;
+  login: string;
+  node_id: string;
+  organizations_url: string;
+  received_events_url: string;
+  repos_url: string;
+  site_admin: boolean;
+  starred_url: string;
+  subscriptions_url: string;
+  type: string;
+  url: string;
 }
-
-// 입력받은 정보 정리
-const extractUserInfo = (url: string) => {
-  const regex = /https:\/\/github\.com\/([^\/]+)\/([^\/]+)/;
-  const match = url.match(regex);
-
-  if (match) {
-    return { username: match[1], repositoryName: match[2] };
-  } else {
-    return { username: null, repositoryName: null };
-  }
-};
 
 const UrlInput = () => {
   const [inputValue, setInputValue] = useState('');
-  const [userData, setUserData] = useState<UserModalProps | null>(null);
+  const [userData, setUserData] = useState<User[] | null>(null);
+  const [repoName, setRepoName] = useState<string | null>(null);
 
   // 입력 값 변경 시 핸들러
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,18 +44,17 @@ const UrlInput = () => {
   // Enter 키 입력 시 실행될 함수
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
-      fetchGitHubInfo(); // Enter 키를 누르면 분석을 시작합니다.
+      fetchGitHubInfo();
     }
   };
 
   // GitHub 정보 요청 함수
   const fetchGitHubInfo = async () => {
-    const githubInfo = extractUserInfo(inputValue);
+    const githubInfo = ExtractUserInfo(inputValue);
 
     if (githubInfo.username && githubInfo.repositoryName) {
       try {
         const response = await axios.get(`https://api.github.com/repos/${githubInfo.username}/${githubInfo.repositoryName}/contributors`);
-        // console.log(response.data);
         setUserData(response.data);
       } catch (error) {
         console.error("GitHub 정보를 가져오는 데 실패했습니다.", error);
@@ -92,11 +96,11 @@ const StyledInput = styled.input`
   width: 80%;
   padding: 10px;
   display: block;
-  border: 2px solid black;
+  border: 2px solid appYellow;
   border-radius: 25px;
   transition: border-color 0.3s ease;
   &:hover {
-    border-color: #cccccc;
+    border-color: appGrey2;
   }
 `;
 
@@ -107,7 +111,7 @@ const Styledbutton = styled.button`
   border-radius: 25px;
   transition: border-color 0.3s ease;
   &:hover {
-    border-color: #cccccc;
+    border-color: appGrey2;
   }
 `;
 
