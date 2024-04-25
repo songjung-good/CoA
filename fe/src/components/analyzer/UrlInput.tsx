@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 // 받는 파일
-import UserModal from '@/components/Analyzer/UserModal';
-import { ExtractUserInfo } from './ExtractUserInfo';
+import UserModal from '@/components/analyzer/UserModal';
+import { ExtractUserInfo } from '@/components/analyzer/ExtractUserInfo';
 
 // 타입 정리
 interface User {

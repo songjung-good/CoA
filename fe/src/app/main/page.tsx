@@ -4,9 +4,9 @@
 import React from 'react';
 import styled from 'styled-components';
 // 레포지토리 분석기(URL 입력)
-import UrlInput from '@/components/Analyzer/UrlInput';
+import UrlInput from '@/components/analyzer/UrlInput';
 // 개인 레포 불러오기
-import MyRepo from '@/components/RepoCard/MyRepo';
+import MyRepo from '@/components/repocard/MyRepo';
 
 const MainPage = () => {
   return (
