@@ -67,18 +67,18 @@ const CalendarChart: React.FC = () => {
     ];
     const color = d3.scaleQuantize([0, 4], colorRange);
     const monthColorRange = [
-      "#97CDF0",
-      "#CC6699",
-      "#99CC66",
-      "#FFCC66",
-      "#66CC99",
-      "#CC6666",
-      "#FA7F80", //7
-      "#FF9966",
-      "#66CCFF",
-      "#FF6666",
-      "#CCCC66",
-      "#9966CC",
+      "#66CCCC", // 1월: 청록색
+      "#CC6699", // 2월: 분홍색
+      "#99CC66", // 3월: 연두색
+      "#FFCC33", // 4월: 황금색
+      "#66CC99", // 5월: 민트색
+      "#FF6666", // 6월: 연분홍색
+      "#6666CC", // 7월: 자주색
+      "#FF9900", // 8월: 주황색
+      "#66CCFF", // 9월: 하늘색
+      "#FF99CC", // 10월: 분홍 자주색
+      "#CCCC33", // 11월: 갈색
+      "#9966FF", // 12월: 보라색
     ];
     const monthColors = d3.scaleQuantize([0, 11], monthColorRange);
 
@@ -120,7 +120,7 @@ const CalendarChart: React.FC = () => {
           {Object.entries(totalContribution).map(([key, value]) => (
             <li
               key={key}
-              className="px-4 py-2 bg-appGrey2 rounded-md"
+              className="px-4 py-2 bg-appGrey2 rounded-md hover:bg-appBlue2"
               onClick={() => handleYear(key)}
             >
               {key}: {value}
