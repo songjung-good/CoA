@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 // 받는 파일
-import UserModal from '@/components/analyzer/UserModal';
+import UserModal from '@/components/Analyzer/UserModal';
 
 // 타입 정리
 interface UserModalProps {
