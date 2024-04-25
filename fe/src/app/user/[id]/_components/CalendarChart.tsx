@@ -17,9 +17,11 @@ const CalendarChart: React.FC = () => {
   );
   const [years, setYears] = useState<string[]>(["2024"]);
   const [data, setData] = useState<Contribution[]>([]);
+  const [isActive, setIsActive] = useState("2024");
+  // github에서 contributions(잔디) 가져오기
   useEffect(() => {
     const fetchData = async () => {
-      const res = await getContributions();
+      const res = await getContributions("Shin-3117");
       setTotalContribution(res.total);
 
       // data를 년도별로 분류
@@ -38,6 +40,7 @@ const CalendarChart: React.FC = () => {
       setYears(Object.keys(dataByYear));
       const firstKey = Object.keys(dataByYear)[0];
       setData(dataByYear[firstKey]);
+      setIsActive(firstKey);
 
       setIsLoading(false);
     };
@@ -46,6 +49,7 @@ const CalendarChart: React.FC = () => {
 
   const handleYear = (year: string) => {
     setData(dataByYear[year]);
+    setIsActive(year);
   };
 
   // Chart svg 만들기
@@ -120,7 +124,7 @@ const CalendarChart: React.FC = () => {
           {Object.entries(totalContribution).map(([key, value]) => (
             <li
               key={key}
-              className="px-4 py-2 bg-appGrey2 rounded-md hover:bg-appBlue2"
+              className={`px-4 py-2 rounded-md hover:bg-appBlue2 ${isActive === key ? "bg-appBlue2" : "bg-appGrey2"}`}
               onClick={() => handleYear(key)}
             >
               {key}: {value}
