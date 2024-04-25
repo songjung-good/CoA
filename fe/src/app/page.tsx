@@ -2,10 +2,10 @@
 
 import tw from "tailwind-styled-components";
 
-import AnalysisButton from "@/components/landing/AnalysisButton";
+import AnalysisButton from "@/components/landing/AnalysisButton.tsx";
 
 import { useState, useEffect } from "react";
-import IntroduceButton from "@/components/landing/IntroduceButton";
+import IntroduceButton from "@/components/landing/IntroduceButton.tsx";
 
 export default function HomePage() {
   const [introMent, setIntroMent] = useState("");
