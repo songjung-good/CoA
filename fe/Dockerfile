@@ -13,8 +13,8 @@ RUN npm i
 # 소스 코드 복사
 COPY . .
 
-#빌드
+# 빌드
 RUN npm run build
 
 # 애플리케이션 시작 명령 설정
-CMD ["npm", "run", "start"]
+CMD ["node", ".next/standalone/server.js"]
