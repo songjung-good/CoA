@@ -31,8 +31,8 @@ export default function UserPage({ params }: { params: { id: string } }) {
   };
   return (
     <>
-      <UserPageTabBar onClickTap={onClickTap} />
-      <h1>User Page ID: {params.id}</h1>
+      <UserPageTabBar onClickTap={onClickTap} tabIndex={tabIndex} />
+      {/* <h1>User Page ID: {params.id}</h1> */}
       {renderTabContent()}
     </>
   );
