@@ -18,13 +18,12 @@ export default function Header() {
             alt="logoText"
             width={128}
             height={40}
+            style={{ width: 128, height: 40 }}
           />
         </div>
       </div>
       <SearchBar />
-      <div>
-        로그인 버튼 / 알림 + 유저 아이콘
-      </div>
+      <div>로그인 버튼 / 알림 + 유저 아이콘</div>
     </header>
   );
 }
