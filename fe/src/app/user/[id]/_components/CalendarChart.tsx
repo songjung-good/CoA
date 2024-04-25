@@ -15,6 +15,7 @@ const CalendarChart: React.FC = () => {
   const [dataByYear, SetDataByYear] = useState<Record<string, Contribution[]>>(
     {},
   );
+  const [years, setYears] = useState<string[]>(["2024"]);
   const [data, setData] = useState<Contribution[]>([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +35,7 @@ const CalendarChart: React.FC = () => {
         {} as Record<string, Contribution[]>,
       );
       SetDataByYear(dataByYear);
+      setYears(Object.keys(dataByYear));
       const firstKey = Object.keys(dataByYear)[0];
       setData(dataByYear[firstKey]);
 
@@ -41,6 +43,10 @@ const CalendarChart: React.FC = () => {
     };
     fetchData();
   }, []);
+
+  const handleYear = (year: string) => {
+    setData(dataByYear[year]);
+  };
 
   // Chart svg 만들기
   const svgRef = useRef<SVGSVGElement>(null);
@@ -50,7 +56,7 @@ const CalendarChart: React.FC = () => {
     const svg = d3.select(svgRef.current);
     const svgWidth = svgRef.current.getBoundingClientRect().width;
     const cellSize = svgWidth / 53;
-    const width = cellSize * 53;
+    const width = svgWidth;
     const height = cellSize * 7;
     const colorRange: string[] = [
       "#ebedf0",
@@ -60,6 +66,21 @@ const CalendarChart: React.FC = () => {
       "#216e39",
     ];
     const color = d3.scaleQuantize([0, 4], colorRange);
+    const monthColorRange = [
+      "#97CDF0",
+      "#CC6699",
+      "#99CC66",
+      "#FFCC66",
+      "#66CC99",
+      "#CC6666",
+      "#FA7F80", //7
+      "#FF9966",
+      "#66CCFF",
+      "#FF6666",
+      "#CCCC66",
+      "#9966CC",
+    ];
+    const monthColors = d3.scaleQuantize([0, 11], monthColorRange);
 
     const dateExtent = d3.extent(data, (d) => new Date(d.date));
     const startDate = dateExtent[0] as Date;
@@ -70,6 +91,8 @@ const CalendarChart: React.FC = () => {
       .domain([startDate, d3.timeDay.offset(endDate, 1)])
       .range([0, width]);
 
+    // 년도 변경시 차트가 변경되게 요소 삭제
+    svg.selectAll("rect").remove();
     svg
       .attr("width", width)
       .attr("height", height)
@@ -82,7 +105,7 @@ const CalendarChart: React.FC = () => {
       .attr("x", (_, i) => Math.floor(i / 7) * cellSize)
       .attr("y", (_, i) => (i % 7) * cellSize)
       .attr("fill", (d) => color(d.level))
-      .attr("stroke", "#fff");
+      .attr("stroke", (d) => monthColors(new Date(d.date).getMonth()));
   }, [data]);
 
   return isLoading ? (
@@ -95,7 +118,11 @@ const CalendarChart: React.FC = () => {
         </p>
         <ul className="flex gap-2">
           {Object.entries(totalContribution).map(([key, value]) => (
-            <li key={key} className="px-4 py-2 bg-appGrey2 rounded-md">
+            <li
+              key={key}
+              className="px-4 py-2 bg-appGrey2 rounded-md"
+              onClick={() => handleYear(key)}
+            >
               {key}: {value}
             </li>
           ))}

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import SearchBar from "./SearchBar";
+import Link from "next/link";
 
 export default function Header() {
   return (
@@ -23,7 +24,7 @@ export default function Header() {
         </div>
       </div>
       <SearchBar />
-      <div>로그인 버튼 / 알림 + 유저 아이콘</div>
+      <Link href="/auth/login">로그인</Link>
     </header>
   );
 }
