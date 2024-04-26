@@ -1,4 +1,4 @@
-import UserCard from "@/components/UserCard/UserCard";
+import UserCard from "@/components/usercard/UserCard";
 
 export default function UserPageLayout({
   children,
