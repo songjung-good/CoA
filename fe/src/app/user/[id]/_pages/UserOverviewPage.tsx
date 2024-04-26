@@ -1,12 +1,9 @@
-import ContributionsComponent from "../_components/Contributions";
-import Chart from "../_components/CalendarChart";
+import CalendarCard from "../_components/CalendarCard";
 
 export default function UserOverviewPage() {
   return (
     <>
-      <h1>잔디, 차트</h1>
-      <Chart />
-      {/* <ContributionsComponent /> */}
+      <CalendarCard />
     </>
   );
 }
