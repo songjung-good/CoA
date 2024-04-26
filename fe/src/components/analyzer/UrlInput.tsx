@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import axios from 'axios';
+import React, { useState } from "react";
+import styled from "styled-components";
+import axios from "axios";
 
 // 받는 파일
-import UserModal from '@/components/analyzer/UserModal';
+import UserModal from "@/components/analyzer/UserModal";
 
 // 타입 정리
 interface UserModalProps {
@@ -28,7 +28,7 @@ const extractUserInfo = (url: string) => {
 };
 
 const UrlInput = () => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [userData, setUserData] = useState<UserModalProps | null>(null);
 
   // 입력 값 변경 시 핸들러
@@ -38,7 +38,7 @@ const UrlInput = () => {
 
   // Enter 키 입력 시 실행될 함수
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       fetchGitHubInfo(); // Enter 키를 누르면 분석을 시작합니다.
     }
   };
@@ -49,7 +49,9 @@ const UrlInput = () => {
 
     if (githubInfo.username && githubInfo.repositoryName) {
       try {
-        const response = await axios.get(`https://api.github.com/repos/${githubInfo.username}/${githubInfo.repositoryName}/contributors`);
+        const response = await axios.get(
+          `https://api.github.com/repos/${githubInfo.username}/${githubInfo.repositoryName}/contributors`,
+        );
         // console.log(response.data);
         setUserData(response.data);
       } catch (error) {
@@ -72,17 +74,15 @@ const UrlInput = () => {
         />
         <Styledbutton onClick={fetchGitHubInfo}>분석하기</Styledbutton>
       </Container>
-      <div>
-        {userData && <UserModal userData={userData} />}
-      </div>
+      <div>{/* {userData && <UserModal userData={userData} />} */}</div>
     </div>
   );
 };
 
-// 
+//
 const Container = styled.div`
   width: 80%;
-  display: flex; 
+  display: flex;
   justify-content: space-around;
   margin: 0 auto;
 `;
