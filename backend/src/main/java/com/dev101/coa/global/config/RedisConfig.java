@@ -24,6 +24,7 @@ public class RedisConfig {
         return new LettuceConnectionFactory(redisProperties.getHost(), redisProperties.getPort());
     }
 
+    // String-String(key-value) 형식으로 저장할 redis 템플릿 설정
     @Bean
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, String> template = new RedisTemplate<>();
@@ -34,6 +35,8 @@ public class RedisConfig {
         return template;
     }
 
+
+    // codeId-AnanlysisDto 형식의 key-value로 redis에 저장하기 위한 템플릿 설정
     @Bean
     public RedisTemplate<Long, AnalysisResultDto> redisTemplateJson(RedisConnectionFactory factory) {
         RedisTemplate<Long, AnalysisResultDto> template = new RedisTemplate<>();

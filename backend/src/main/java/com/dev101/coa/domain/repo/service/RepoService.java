@@ -103,8 +103,8 @@ public class RepoService {
         // TODO:  test) 레디스에 json 저장해보기
         //    commitScoreDto done
         //    analysisResultDto done
-        //    레디스에 json 저장
-        //    저장된 json 조회해보기 (key를 어케 설정하지?)
+        //    레디스에 json 저장 done
+        //    저장된 json 조회해보기 
 
         CommitScoreDto commitScoreDto = CommitScoreDto.builder()
                 .readability(10)
