@@ -3,8 +3,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-
-// 받는 파일
 import UserModal from '@/components/analyzer/UserModal';
 import { ExtractUserInfo } from '@/components/analyzer/ExtractUserInfo';
 
@@ -68,19 +66,16 @@ const UrlInput = () => {
   };
 
   return (
-    <div>
-      <Container>
-        <StyledInput
-          type="text"
-          placeholder="🔎Repository URL을 입력하세요"
-          value={inputValue}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-        />
-        <Styledbutton onClick={fetchGitHubInfo}>분석하기</Styledbutton>
-      </Container>
-      <div>{/* {userData && <UserModal userData={userData} />} */}</div>
-    </div>
+    <Container>
+      <StyledInput
+        type="text"
+        placeholder="🔎Repository URL을 입력하세요"
+        value={inputValue}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+      />
+      <Styledbutton onClick={fetchGitHubInfo}>분석하기</Styledbutton>
+    </Container>
   );
 };
 

@@ -23,10 +23,8 @@ const MainPage = () => {
       <MyRepo userID='songjung-good' />
       <RepoCard />
     </Main>
-  )
-}
-
-export default MainPage;
+  );
+};
 
 const Main = styled.main`
   display: flex;
@@ -64,3 +62,5 @@ const SubTitle = styled.p`
 const Img = styled.img`
   margin-bottom: 1rem;
 `;
+
+export default MainPage;
