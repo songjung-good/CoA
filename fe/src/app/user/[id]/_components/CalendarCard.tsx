@@ -4,9 +4,11 @@ import {
   Contribution,
   getContributions,
 } from "@/api/userPage/apiContributions";
+import userStore from "@/store/user";
 
 const CalendarChart: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const userName = userStore((state) => state.userName);
 
   // github에서 contributions(잔디) 가져오기
   const [totalContribution, setTotalContribution] = useState<
@@ -21,7 +23,7 @@ const CalendarChart: React.FC = () => {
   // github에서 contributions(잔디) 가져오기
   useEffect(() => {
     const fetchData = async () => {
-      const res = await getContributions("Shin-3117");
+      const res = await getContributions(userName);
       setTotalContribution(res.total);
 
       // data를 년도별로 분류
@@ -124,7 +126,7 @@ const CalendarChart: React.FC = () => {
           {Object.entries(totalContribution).map(([key, value]) => (
             <li
               key={key}
-              className={`px-4 py-2 rounded-md hover:bg-appBlue2 ${isActive === key ? "bg-appBlue2" : "bg-appGrey2"}`}
+              className={`px-4 py-2 rounded-md hover:bg-appBlue1 ${isActive === key ? "bg-appBlue2" : "bg-appGrey2"}`}
               onClick={() => handleYear(key)}
             >
               {key}: {value}

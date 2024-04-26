@@ -6,10 +6,10 @@ import UserAnalysisPage from "./_pages/UserAnalysisPage";
 import UserHistoryPage from "./_pages/UserHistoryPage";
 import UserRepositoryPage from "./_pages/UserRepositoryPage";
 import UserOverviewPage from "./_pages/UserOverviewPage";
+import userStore from "@/store/user";
 
 export default function UserPage({ params }: { params: { id: string } }) {
   const [tabIndex, setTabIndex] = useState(0);
-
   //탭에 따른 랜더링될 페이지
   const renderTabContent = () => {
     switch (tabIndex) {
