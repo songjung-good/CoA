@@ -5,6 +5,9 @@ import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,4 +43,27 @@ public class RepoView extends BaseEntity {
 
     @Column(length = 255)
     private String repoViewSubtitle;
+
+
+    // 참조를 쉽게 하기 위해 양방향 매핑을 함
+    @OneToMany(mappedBy = "repoView")
+    List<Comment> commentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "repoView")
+    List<RepoViewSkill> repoViewSkillList = new ArrayList<>();
+
+
+
+    // repoViewReadme update
+    public void updateReadme(String readme){
+        this.repoViewReadme = readme;
+    }
+
+    public void updateCommentList(List<Comment> commentList){
+        this.commentList = commentList;
+    }
+
+    public void updateCodeList(List<RepoViewSkill> repoViewSkillList){
+        this.repoViewSkillList = repoViewSkillList;
+    }
 }

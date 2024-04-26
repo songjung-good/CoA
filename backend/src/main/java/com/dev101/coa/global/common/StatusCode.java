@@ -6,7 +6,11 @@ public enum StatusCode {
     // Success
     SUCCESS(true, 100, "요청에 성공하였습니다."),
 
+    // REPO : 300
+    REPO_VIEW_NOT_FOUND(false, 300, "레포지토리 뷰가 존재하지 않습니다."),
 
+    // COOD : 400
+    CODE_NOT_FOUND(false, 400, "코드를 찾을 수 없습니다.")
 //    // COMMON
 //    FORBIDDEN_REQUEST(false, 202, "접근 권한이 없습니다."),
 //
