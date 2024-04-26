@@ -17,4 +17,4 @@ COPY . .
 RUN npm run build
 
 # 애플리케이션 시작 명령 설정
-CMD ["node", ".next/standalone/server.js"]
+CMD ["npm", "run", "start"]

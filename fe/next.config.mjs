@@ -7,7 +7,6 @@ const nextConfig = {
     config.resolve.extensions.push('.ts', '.tsx');
     return config;
   },
-  output: "standalone",
 };
 
 export default nextConfig;
