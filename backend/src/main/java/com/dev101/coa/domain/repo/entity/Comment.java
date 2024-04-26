@@ -21,10 +21,10 @@ public class Comment extends BaseEntity {
     private RepoView repoView;
 
     @Column(name = "comment_start_index")
-    private Short commentStartIndex;
+    private Integer commentStartIndex;
 
     @Column(name = "comment_end_index")
-    private Short commentEndIndex;
+    private Integer commentEndIndex;
 
     @Column(name = "comment_content", length = 255)
     private String commentContent;
