@@ -16,7 +16,7 @@ const username: string = "Shin-3117";
 const apiUrl: string = `https://api.github.com/users/${username}/repos`;
 
 // 사용자의 저장소 목록을 가져오는 함수
-async function getUserRepos(): Promise<Repository[]> {
+export async function getUserRepos(): Promise<Repository[]> {
   try {
     const response = await axios.get(apiUrl);
     return response.data;
@@ -27,7 +27,7 @@ async function getUserRepos(): Promise<Repository[]> {
 }
 
 // 저장소의 언어별 코드 줄 수를 가져오는 함수
-async function getRepoLanguages(repo: Repository): Promise<LanguageStats> {
+export async function getRepoLanguages(repo: Repository): Promise<LanguageStats> {
   const languagesUrl: string = repo.languages_url;
   try {
     const response = await axios.get(languagesUrl);
@@ -42,7 +42,7 @@ async function getRepoLanguages(repo: Repository): Promise<LanguageStats> {
 }
 
 // 모든 저장소의 언어별 코드 줄 수를 합산하는 함수
-async function getTotalLinesOfCode(): Promise<LanguageStats> {
+export async function getTotalLinesOfCode(): Promise<LanguageStats> {
   const repos: Repository[] = await getUserRepos();
   let totalLinesOfCode: LanguageStats = {};
 
@@ -55,13 +55,3 @@ async function getTotalLinesOfCode(): Promise<LanguageStats> {
 
   return totalLinesOfCode;
 }
-
-// 언어별 코드 줄 수 출력
-getTotalLinesOfCode()
-  .then((linesOfCode) => {
-    console.log("언어별 코드 줄 수:");
-    console.log(linesOfCode);
-  })
-  .catch((error) => {
-    console.error("Error calculating total lines of code:", error);
-  });
