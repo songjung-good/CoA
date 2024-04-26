@@ -8,8 +8,8 @@ class RepoClient(metaclass=ABCMeta):
     레포지토리에서 파일, 커밋 데이터를 가져오기 위한 클라이언트의 기본 클래스입니다.
     """
 
-    @staticmethod
-    async def __request_json(url: str) -> Any:
+    @abstractmethod
+    async def _request_json(self, url: str) -> Any:
         """
         특정 URL로 JSON 파일을 요청합니다.
 
@@ -19,9 +19,7 @@ class RepoClient(metaclass=ABCMeta):
         Returns:
             커밋 목록 JSON 객체
         """
-        response = requests.get(url)
-        response.raise_for_status()  # Raise an exception for 4XX and 5XX status codes
-        return response.json()
+        pass
 
     async def load(self, author_name: str) -> list[dict[Any, Any]]:
         """
@@ -34,17 +32,18 @@ class RepoClient(metaclass=ABCMeta):
             커밋 별 변경사항 리스트
         """
         commits = []
-        commits_json = await RepoClient.__request_json(self._get_commits_root_url(author_name))
+        commits_json = await self._request_json(self._get_commits_root_url(author_name))
         for commit_json in commits_json:
-            commit = {}
-            commit.id = self._get_commit_id_from_commit(commit_json)
-            commit.patches = []
+            commit = {
+                'id': self._get_commit_id_from_commit(commit_json),
+                'patches': []
+            }
 
-            diff_json = await RepoClient.__request_json(self._get_diff_url_from_commit(commit_json))
+            diff_json = await self._request_json(self._get_diff_url_from_commit(commit_json))
             files_json = self._get_files_from_diff(diff_json)
             for file_json in files_json:
                 patch = self._get_patch_from_file(file_json)
-                commit.patches.append(patch)
+                commit['patches'].append(patch)
 
             commits.append(commit)
 
@@ -121,7 +120,7 @@ class GithubClient(RepoClient):
     Github에서 파일, 커밋 데이터를 가져오기 위한 클라이언트입니다.
     """
 
-    def __init__(self, path: str):
+    def __init__(self, path: str, access_token: str | None = None):
         """
         Github 클라이언트를 만듭니다.
 
@@ -129,6 +128,27 @@ class GithubClient(RepoClient):
             path: Github 저장소 경로 (예: DoubleDeltas/MineCollector)
         """
         self.path = path
+        self.access_token = access_token
+
+    async def _request_json(self, url: str) -> Any:
+        """
+        특정 URL로 JSON 파일을 요청합니다.
+
+        Parameters:
+            url: 요청을 보낼 URL
+
+        Returns:
+            커밋 목록 JSON 객체
+        """
+        headers = {
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+        if self.access_token is not None:
+            headers['Authorization'] = f'Bearer {self.access_token}'
+
+        response = requests.get(url=url, headers=headers)
+        response.raise_for_status()  # Raise an exception for 4XX and 5XX status codes
+        return response.json()
 
     def _get_commits_root_url(self, author_name: str) -> str:
         """
@@ -197,7 +217,7 @@ class GitLabClient(RepoClient):
     GitLab에서 파일, 커밋 데이터를 가져오기 위한 클라이언트입니다.
     """
 
-    def __init__(self, base_url: str, project_id: int):
+    def __init__(self, base_url: str, project_id: int, private_token: str | None = None):
         """
         GitLab 클라이언트를 만듭니다.
 
@@ -207,6 +227,25 @@ class GitLabClient(RepoClient):
         """
         self.base_url = base_url
         self.project_id = project_id
+        self.private_token = private_token
+
+    async def _request_json(self, url: str) -> Any:
+        """
+        특정 URL로 JSON 파일을 요청합니다.
+
+        Parameters:
+            url: 요청을 보낼 URL
+
+        Returns:
+            커밋 목록 JSON 객체
+        """
+        headers = {}
+        if self.private_token is not None:
+            headers['PRIVATE-TOKEN'] = self.private_token
+
+        response = requests.get(url=url, headers=headers)
+        response.raise_for_status()  # Raise an exception for 4XX and 5XX status codes
+        return response.json()
 
     def _get_commits_root_url(self, author_name: str) -> str:
         """
