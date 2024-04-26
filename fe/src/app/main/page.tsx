@@ -1,5 +1,6 @@
 'use client'
 
+// src/app/main/page.tsx
 import React from 'react';
 import styled from 'styled-components';
 // 레포지토리 분석기(URL 입력)
