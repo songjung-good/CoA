@@ -33,19 +33,14 @@ public class RepoService {
         // 레포 뷰 존재 유무 확인
         RepoView repoView = repoViewRepository.findByRepoViewId(editReadmeReqDto.getRepoViewId()).orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
 
-        System.out.println("11111111111111111111");
         // commentList db 내의 코멘트 목록을 삭제
         List<Long> commentIdList = repoView.getCommentList().stream()
                 .map(Comment::getCommentId)
                 .collect(Collectors.toList());
 
-        System.out.println("commentIdList = " + commentIdList);
-//        commentRepository.deleteById(commentIdList.get(0));
-        System.out.println("1212121212");
         commentIdList.forEach(commentRepository::deleteById);
 //
 
-        System.out.println("222222222222222");
         // 요청으로 받은 commitcommentList 저장
         List<Comment> commentList = new ArrayList<>();
         editReadmeReqDto.getCommitCommentDtoList().forEach((cd -> {
@@ -59,7 +54,6 @@ public class RepoService {
             commentRepository.save(comment);
         }));
 
-        System.out.println("333333333333333");
         // 요청으로 받은 codeList 삭제 후 저장
         List<RepoViewSkill> repoViewSkillList = new ArrayList<>();
         List<Long> skillIdList = repoView.getRepoViewSkillList().stream()
