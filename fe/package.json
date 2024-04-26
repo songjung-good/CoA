@@ -16,11 +16,8 @@
     "axios": "^1.6.8",
     "d3": "^7.9.0",
     "next": "14.2.2",
-<<<<<<< HEAD
     "next-remove-imports": "^1.0.12",
-=======
     "next-auth": "^5.0.0-beta.16",
->>>>>>> fe-develop
     "react": "^18",
     "react-dom": "^18",
     "styled-components": "^6.1.8",

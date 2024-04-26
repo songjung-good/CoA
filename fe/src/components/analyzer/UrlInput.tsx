@@ -3,14 +3,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-
-// 받는 파일
-<<<<<<< HEAD
 import UserModal from '@/components/analyzer/UserModal';
 import { ExtractUserInfo } from '@/components/analyzer/ExtractUserInfo';
-=======
-import UserModal from "@/components/analyzer/UserModal";
->>>>>>> fe-develop
 
 // 타입 정리
 interface User {
@@ -36,14 +30,9 @@ interface User {
 }
 
 const UrlInput = () => {
-<<<<<<< HEAD
   const [inputValue, setInputValue] = useState('');
   const [userData, setUserData] = useState<User[] | null>(null);
   const [repoName, setRepoName] = useState<string | null>(null);
-=======
-  const [inputValue, setInputValue] = useState("");
-  const [userData, setUserData] = useState<UserModalProps | null>(null);
->>>>>>> fe-develop
 
   // 입력 값 변경 시 핸들러
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,13 +41,8 @@ const UrlInput = () => {
 
   // Enter 키 입력 시 실행될 함수
   const handleKeyDown = (event: React.KeyboardEvent) => {
-<<<<<<< HEAD
     if (event.key === 'Enter') {
       fetchGitHubInfo();
-=======
-    if (event.key === "Enter") {
-      fetchGitHubInfo(); // Enter 키를 누르면 분석을 시작합니다.
->>>>>>> fe-develop
     }
   };
 
@@ -68,14 +52,10 @@ const UrlInput = () => {
 
     if (githubInfo.username && githubInfo.repositoryName) {
       try {
-<<<<<<< HEAD
-        const response = await axios.get(`https://api.github.com/repos/${githubInfo.username}/${githubInfo.repositoryName}/contributors`);
-=======
         const response = await axios.get(
           `https://api.github.com/repos/${githubInfo.username}/${githubInfo.repositoryName}/contributors`,
         );
         // console.log(response.data);
->>>>>>> fe-develop
         setUserData(response.data);
       } catch (error) {
         console.error("GitHub 정보를 가져오는 데 실패했습니다.", error);
@@ -86,19 +66,16 @@ const UrlInput = () => {
   };
 
   return (
-    <div>
-      <Container>
-        <StyledInput
-          type="text"
-          placeholder="🔎Repository URL을 입력하세요"
-          value={inputValue}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-        />
-        <Styledbutton onClick={fetchGitHubInfo}>분석하기</Styledbutton>
-      </Container>
-      <div>{/* {userData && <UserModal userData={userData} />} */}</div>
-    </div>
+    <Container>
+      <StyledInput
+        type="text"
+        placeholder="🔎Repository URL을 입력하세요"
+        value={inputValue}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+      />
+      <Styledbutton onClick={fetchGitHubInfo}>분석하기</Styledbutton>
+    </Container>
   );
 };
 
