@@ -112,6 +112,7 @@ const Styledbutton = styled.button`
   transition: border-color 0.3s ease;
   &:hover {
     border-color: appGrey2;
+    transform: scale(1.05);
   }
 `;
 

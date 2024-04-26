@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import UrlInput from '@/components/analyzer/UrlInput';
 // 개인 레포 불러오기
 import MyRepo from '@/components/repocard/MyRepo';
+// 임시 레포 카드
+import RepoCard from '@/components/repocard/RepoCard';
 
 const MainPage = () => {
   return (
@@ -20,6 +22,7 @@ const MainPage = () => {
         <UrlInput />
       </Header>
       <MyRepo userID='songjung-good' />
+      <RepoCard />
     </Main>
   );
 };
