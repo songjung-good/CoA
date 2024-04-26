@@ -29,9 +29,12 @@ public class RepoService {
     private final RepoViewSkillRepository repoViewSkillRepository;
     private final CodeRepository codeRepository;
 
-    public void editReadme(EditReadmeReqDto editReadmeReqDto) {
+    public void editReadme(Long repoViewId, EditReadmeReqDto editReadmeReqDto) {
         // 레포 뷰 존재 유무 확인
-        RepoView repoView = repoViewRepository.findByRepoViewId(editReadmeReqDto.getRepoViewId()).orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
+        RepoView repoView = repoViewRepository.findByRepoViewId(repoViewId)
+                .orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
+
+        // TODO: 로그인 사용자 예외 처리 (작성자 확인)
 
         // commentList db 내의 코멘트 목록을 삭제
         List<Long> commentIdList = repoView.getCommentList().stream()
@@ -39,7 +42,6 @@ public class RepoService {
                 .collect(Collectors.toList());
 
         commentIdList.forEach(commentRepository::deleteById);
-//
 
         // 요청으로 받은 commitcommentList 저장
         List<Comment> commentList = new ArrayList<>();
@@ -62,7 +64,7 @@ public class RepoService {
 
         skillIdList.forEach(repoViewSkillRepository::deleteById);
 
-        editReadmeReqDto.getCodeList().forEach((codeId)->{
+        editReadmeReqDto.getCodeList().forEach((codeId) -> {
             Code code = codeRepository.findByCodeId(codeId).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
             RepoViewSkill repoviewSkill = RepoViewSkill.builder()
                     .repoView(repoView)
@@ -78,5 +80,17 @@ public class RepoService {
         repoView.updateCommentList(commentList);
         repoView.updateCodeList(repoViewSkillList);
         repoViewRepository.save(repoView);
+    }
+
+    public void saveAnalysis(Long repoViewId, Long analysisId) {
+        // 레포 뷰 존재확인
+        RepoView repoView = repoViewRepository.findByRepoViewId(repoViewId)
+                .orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
+
+        // TODO: 로그인 사용자 예외처리
+
+        // 레디스에 저장된 정보 가져오기
+
+        // mysql 디비에 저장
     }
 }

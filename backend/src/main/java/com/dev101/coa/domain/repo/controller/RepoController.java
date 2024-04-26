@@ -17,10 +17,15 @@ public class RepoController {
     private final RepoService repoService;
 
     @PutMapping("/{repoViewId}")
-    public ResponseEntity<BaseResponse<Object>> editReadme(@PathVariable Long repoViewId, @RequestBody EditReadmeReqDto editReadmeReqDto){
-        // TODO: 1. reposervice login 짜기
-        repoService.editReadme(editReadmeReqDto);
+    public ResponseEntity<BaseResponse<Object>> editReadme(@PathVariable Long repoViewId, @RequestBody EditReadmeReqDto editReadmeReqDto) {
+        repoService.editReadme(repoViewId, editReadmeReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
+    @PostMapping("/{repoViewId}")
+    public ResponseEntity<BaseResponse<Object>> saveAnalysis(@PathVariable Long repoViewId, @RequestBody Long analysisId){
+
+        repoService.saveAnalysis(repoViewId, analysisId);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
+    }
 }
