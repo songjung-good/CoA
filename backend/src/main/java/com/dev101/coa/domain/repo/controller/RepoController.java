@@ -22,10 +22,10 @@ public class RepoController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
-    @PostMapping("/{repoViewId}")
-    public ResponseEntity<BaseResponse<Object>> saveAnalysis(@PathVariable Long repoViewId, @RequestBody Long analysisId){
+    @PostMapping("/{analysisId}")
+    public ResponseEntity<BaseResponse<Object>> saveAnalysis(@PathVariable Long analysisId){
 
-        repoService.saveAnalysis(repoViewId, analysisId);
+        repoService.saveAnalysis(analysisId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 }

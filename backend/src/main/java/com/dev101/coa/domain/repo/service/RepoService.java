@@ -13,11 +13,12 @@ import com.dev101.coa.domain.repo.repository.RepoViewSkillRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +29,9 @@ public class RepoService {
     private final CommentRepository commentRepository;
     private final RepoViewSkillRepository repoViewSkillRepository;
     private final CodeRepository codeRepository;
+
+    private final RedisTemplate<String, String> redisTemplate;
+
 
     public void editReadme(Long repoViewId, EditReadmeReqDto editReadmeReqDto) {
         // 레포 뷰 존재 유무 확인
@@ -82,14 +86,13 @@ public class RepoService {
         repoViewRepository.save(repoView);
     }
 
-    public void saveAnalysis(Long repoViewId, Long analysisId) {
-        // 레포 뷰 존재확인
-        RepoView repoView = repoViewRepository.findByRepoViewId(repoViewId)
-                .orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
-
+    public void saveAnalysis(Long analysisId) {
         // TODO: 로그인 사용자 예외처리
 
         // 레디스에 저장된 정보 가져오기
+        ValueOperations<String, String> valueOps = redisTemplate.opsForValue();
+        String value = valueOps.get("test_key");
+        System.out.println("Value for key '" + "test_key" + "' is: " + value);
 
         // mysql 디비에 저장
     }
