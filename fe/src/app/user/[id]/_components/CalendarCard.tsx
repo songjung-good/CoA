@@ -4,9 +4,12 @@ import {
   Contribution,
   getContributions,
 } from "@/api/userPage/apiContributions";
+import userStore from "@/store/user";
+import ChartCalendar from "./ChartCalendar";
 
-const CalendarChart: React.FC = () => {
+const CalendarCard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const userName = userStore((state) => state.userName);
 
   // github에서 contributions(잔디) 가져오기
   const [totalContribution, setTotalContribution] = useState<
@@ -17,9 +20,11 @@ const CalendarChart: React.FC = () => {
   );
   const [years, setYears] = useState<string[]>(["2024"]);
   const [data, setData] = useState<Contribution[]>([]);
+  const [isActive, setIsActive] = useState("2024");
+  // github에서 contributions(잔디) 가져오기
   useEffect(() => {
     const fetchData = async () => {
-      const res = await getContributions();
+      const res = await getContributions(userName);
       setTotalContribution(res.total);
 
       // data를 년도별로 분류
@@ -38,6 +43,7 @@ const CalendarChart: React.FC = () => {
       setYears(Object.keys(dataByYear));
       const firstKey = Object.keys(dataByYear)[0];
       setData(dataByYear[firstKey]);
+      setIsActive(firstKey);
 
       setIsLoading(false);
     };
@@ -46,67 +52,8 @@ const CalendarChart: React.FC = () => {
 
   const handleYear = (year: string) => {
     setData(dataByYear[year]);
+    setIsActive(year);
   };
-
-  // Chart svg 만들기
-  const svgRef = useRef<SVGSVGElement>(null);
-  useEffect(() => {
-    if (!svgRef.current) return;
-
-    const svg = d3.select(svgRef.current);
-    const svgWidth = svgRef.current.getBoundingClientRect().width;
-    const cellSize = svgWidth / 53;
-    const width = svgWidth;
-    const height = cellSize * 7;
-    const colorRange: string[] = [
-      "#ebedf0",
-      "#9be9a8",
-      "#40c463",
-      "#30a14e",
-      "#216e39",
-    ];
-    const color = d3.scaleQuantize([0, 4], colorRange);
-    const monthColorRange = [
-      "#97CDF0",
-      "#CC6699",
-      "#99CC66",
-      "#FFCC66",
-      "#66CC99",
-      "#CC6666",
-      "#FA7F80", //7
-      "#FF9966",
-      "#66CCFF",
-      "#FF6666",
-      "#CCCC66",
-      "#9966CC",
-    ];
-    const monthColors = d3.scaleQuantize([0, 11], monthColorRange);
-
-    const dateExtent = d3.extent(data, (d) => new Date(d.date));
-    const startDate = dateExtent[0] as Date;
-    const endDate = dateExtent[1] as Date;
-
-    const xScale = d3
-      .scaleTime()
-      .domain([startDate, d3.timeDay.offset(endDate, 1)])
-      .range([0, width]);
-
-    // 년도 변경시 차트가 변경되게 요소 삭제
-    svg.selectAll("rect").remove();
-    svg
-      .attr("width", width)
-      .attr("height", height)
-      .selectAll("rect")
-      .data(data)
-      .enter()
-      .append("rect")
-      .attr("width", cellSize - 1)
-      .attr("height", cellSize - 1)
-      .attr("x", (_, i) => Math.floor(i / 7) * cellSize)
-      .attr("y", (_, i) => (i % 7) * cellSize)
-      .attr("fill", (d) => color(d.level))
-      .attr("stroke", (d) => monthColors(new Date(d.date).getMonth()));
-  }, [data]);
 
   return isLoading ? (
     <p>Loading</p>
@@ -120,7 +67,7 @@ const CalendarChart: React.FC = () => {
           {Object.entries(totalContribution).map(([key, value]) => (
             <li
               key={key}
-              className="px-4 py-2 bg-appGrey2 rounded-md"
+              className={`px-4 py-2 rounded-md hover:bg-appBlue1 ${isActive === key ? "bg-appBlue2" : "bg-appGrey2"}`}
               onClick={() => handleYear(key)}
             >
               {key}: {value}
@@ -128,9 +75,9 @@ const CalendarChart: React.FC = () => {
           ))}
         </ul>
       </div>
-      <svg className="w-full" ref={svgRef}></svg>
+      <ChartCalendar data={data} />
     </section>
   );
 };
 
-export default CalendarChart;
+export default CalendarCard;

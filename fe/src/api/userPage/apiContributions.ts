@@ -13,9 +13,11 @@ export type ApiResponse = {
   contributions: Contribution[];
 };
 
-export const getContributions = async (): Promise<ApiResponse> => {
+export const getContributions = async (
+  userId: string,
+): Promise<ApiResponse> => {
   const response = await axios.get<ApiResponse>(
-    "https://github-contributions-api.jogruber.de/v4/Shin-3117",
+    `https://github-contributions-api.jogruber.de/v4/${userId}`,
   );
   return response.data;
 };

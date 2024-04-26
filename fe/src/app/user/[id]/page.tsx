@@ -6,10 +6,15 @@ import UserAnalysisPage from "./_pages/UserAnalysisPage";
 import UserHistoryPage from "./_pages/UserHistoryPage";
 import UserRepositoryPage from "./_pages/UserRepositoryPage";
 import UserOverviewPage from "./_pages/UserOverviewPage";
+import userStore from "@/store/user";
 
 export default function UserPage({ params }: { params: { id: string } }) {
   const [tabIndex, setTabIndex] = useState(0);
-
+  const [text, setText] = useState("");
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+  };
+  const setUserName = userStore((state) => state.setUserName);
   //탭에 따른 랜더링될 페이지
   const renderTabContent = () => {
     switch (tabIndex) {
@@ -31,8 +36,19 @@ export default function UserPage({ params }: { params: { id: string } }) {
   };
   return (
     <>
-      <UserPageTabBar onClickTap={onClickTap} />
-      <h1>User Page ID: {params.id}</h1>
+      <div className="p-4 bg-appGrey1 flex">
+        <input onChange={onChange} value={text} />
+        <button
+          className="p-2 bg-appGrey2"
+          onClick={() => {
+            setUserName(text);
+          }}
+        >
+          유저 이름 변경
+        </button>
+      </div>
+      <UserPageTabBar onClickTap={onClickTap} tabIndex={tabIndex} />
+      {/* <h1>User Page ID: {params.id}</h1> */}
       {renderTabContent()}
     </>
   );
