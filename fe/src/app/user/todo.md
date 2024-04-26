@@ -5,6 +5,9 @@
 https://lab.ssafy.com/api/v4/users/qsc3117/events
 _/
 
-선택된 TabBar 색 변경되게
+선택된 TabBar 색 변경되게 0
 
-잔디 컴포넌트 선택된 년도 색 변경되게
+잔디 컴포넌트 선택된 년도 색 변경되게 0
+
+- CalendarCard.tsx에 연동된 사이트 표시
+- 연동 페이지 만들기
