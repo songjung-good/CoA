@@ -13,6 +13,7 @@ public class CommitScoreDto {
     private Integer testability;
     private Integer exception;
     private Integer total;
+    private String scoreComment;
 
     // Constructors, getters, setters, and additional methods
 }

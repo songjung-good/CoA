@@ -2,7 +2,9 @@ package com.dev101.coa.domain.repo.service;
 
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.code.repository.CodeRepository;
+import com.dev101.coa.domain.repo.dto.AnalysisResultDto;
 import com.dev101.coa.domain.repo.dto.CommitCommentDto;
+import com.dev101.coa.domain.repo.dto.CommitScoreDto;
 import com.dev101.coa.domain.repo.dto.EditReadmeReqDto;
 import com.dev101.coa.domain.repo.entity.Comment;
 import com.dev101.coa.domain.repo.entity.RepoView;
@@ -18,7 +20,9 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +35,7 @@ public class RepoService {
     private final CodeRepository codeRepository;
 
     private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<Long, AnalysisResultDto> redisTemplateJson;
 
 
     public void editReadme(Long repoViewId, EditReadmeReqDto editReadmeReqDto) {
@@ -89,11 +94,44 @@ public class RepoService {
     public void saveAnalysis(Long analysisId) {
         // TODO: 로그인 사용자 예외처리
 
-        // 레디스에 저장된 정보 가져오기
+        // test) 레디스에 저장된 정보 가져오기
         ValueOperations<String, String> valueOps = redisTemplate.opsForValue();
         String value = valueOps.get("test_key");
         System.out.println("Value for key '" + "test_key" + "' is: " + value);
 
+
+        // TODO:  test) 레디스에 json 저장해보기
+        //    commitScoreDto done
+        //    analysisResultDto done
+        //    레디스에 json 저장
+        //    저장된 json 조회해보기 (key를 어케 설정하지?)
+
+        CommitScoreDto commitScoreDto = CommitScoreDto.builder()
+                .readability(10)
+                .performance(20)
+                .reusability(30)
+                .testability(40)
+                .exception(50)
+                .total(30)
+                .scoreComment("good!")
+                .build();
+
+        Map<Long, Integer> linesOfCode = new HashMap<>();
+        linesOfCode.put(3001L,11);
+        linesOfCode.put(3002L, 22);
+
+        AnalysisResultDto analysisResultDto = AnalysisResultDto.builder()
+                .analysisId(1L)
+                .memberId(1L)
+                .isComplete(true)
+                .readme("readme~ mario!")
+                .commitScore(commitScoreDto)
+                .linesOfCode(linesOfCode)
+                .build();
+
+        redisTemplateJson.opsForValue().set(analysisResultDto.getAnalysisId(), analysisResultDto);
+
+        System.out.println("json 저장 완료");
         // mysql 디비에 저장
     }
 }

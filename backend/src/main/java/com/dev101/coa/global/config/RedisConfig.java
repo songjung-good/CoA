@@ -1,5 +1,7 @@
 package com.dev101.coa.global.config;
 
+import com.dev101.coa.domain.repo.dto.AnalysisResultDto;
+import com.fasterxml.jackson.databind.ser.std.NumberSerializers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
@@ -7,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -26,6 +30,20 @@ public class RedisConfig {
         template.setConnectionFactory(factory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new StringRedisSerializer());
+
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<Long, AnalysisResultDto> redisTemplateJson(RedisConnectionFactory factory) {
+        RedisTemplate<Long, AnalysisResultDto> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+        template.setKeySerializer(new GenericToStringSerializer<>(Long.class));
+        template.setValueSerializer(new StringRedisSerializer());
+
+        // redis에 json 저장을 위한 serializer
+        template.setValueSerializer(new Jackson2JsonRedisSerializer<>(AnalysisResultDto.class));
+
         return template;
     }
 }
