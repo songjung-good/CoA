@@ -32,7 +32,7 @@ public class JwtTokenProvider { // 토큰 만들거나 관리하는 친구
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
-        return Jwts.builder()
+        return Jwts.builder() // TODO 토큰 내부 값 설정
                 .setSubject(Long.toString(userPrincipal.getMember().getMemberId())) // Id를 String으로 Subject에 담는다.
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)

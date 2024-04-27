@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +22,7 @@ public class AuthenticationService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
-    private final CustomOAuth2UserService customOAuth2UserService;
     private final CodeRepository codeRepository;
-    private final ClientRegistrationRepository clientRegistrationRepository;
 
     public String authenticateOAuth2(OAuth2User oauthUser) {
         // 사용자 데이터베이스 업데이트
@@ -42,6 +39,9 @@ public class AuthenticationService {
         String registrationId = oauthUser.getAttribute("sub");
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
+//        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
+        // 어떤 로그인이냐에 따라 다른 로직이되게? 꼭 새로 안만들어도 가능은 할듯
+
         System.out.println("확인 한 번만하고 지우자ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ"+registrationId);
         Member member = memberRepository.findByMemberEmail(email);
         if (member == null) {
@@ -69,6 +69,8 @@ public class AuthenticationService {
         } else {
             throw new BaseException(StatusCode.NOT_FOUND_PLAT);
         }
-        return codeRepository.findById(codeId).orElseThrow(() -> new BaseException(StatusCode.NOT_FOUND_PLAT));
+        Code code = codeRepository.findById(codeId).orElseThrow(() -> new BaseException(StatusCode.NOT_FOUND_PLAT));
+        System.out.println("code = " + code + code.getCodeId());
+        return code;
     }
 }

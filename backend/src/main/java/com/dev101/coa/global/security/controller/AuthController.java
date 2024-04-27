@@ -23,8 +23,16 @@ public class AuthController {
 
     @PostMapping("/oauth")
     public ResponseEntity<?> authenticateUser(@AuthenticationPrincipal OAuth2User principal) {
-        String jwt = authenticationService.authenticateOAuth2(principal);
 
+        String jwt = authenticationService.authenticateOAuth2(principal);
+//        // JWT 토큰을 쿠키에 담음 // , HttpServletResponse response
+//        Cookie authCookie = new Cookie("jwt", jwt);
+//        authCookie.setHttpOnly(true);
+//        authCookie.setSecure(true);
+//        authCookie.setPath("/");
+//        response.addCookie(authCookie);
+
+//        return ResponseEntity.ok().build();
         return ResponseEntity.ok().body(new AuthResponse(jwt));
     }
 
