@@ -21,6 +21,9 @@ const config: Config = {
         appGrey1: "#F1F7F5",
         appGrey2: "#E2E8E6",
       },
+      height: {
+        appVh: "calc(100vh - 80px)",
+      },
     },
   },
   plugins: [],
