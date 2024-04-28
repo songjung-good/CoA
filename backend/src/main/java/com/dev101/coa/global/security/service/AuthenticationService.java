@@ -35,6 +35,7 @@ public class AuthenticationService {
         return jwtTokenProvider.createToken(authentication);
     }
     private Member updateOrCreateMember(OAuth2User oauthUser) { // 여기서 깃허브랑 분기처리 할까?
+        System.out.println("oauthUser = " + oauthUser);
         String provider = "google"; // 이 값은 ClientRegistration에서 가져올 수 있습니다.
         String registrationId = oauthUser.getAttribute("sub");
         String email = oauthUser.getAttribute("email");
@@ -42,7 +43,7 @@ public class AuthenticationService {
 //        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
         // 어떤 로그인이냐에 따라 다른 로직이되게? 꼭 새로 안만들어도 가능은 할듯
 
-        System.out.println("확인 한 번만하고 지우자ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ"+registrationId);
+        System.out.println("확인 한 번만하고 지우자ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ registrationId "+registrationId);
         Member member = memberRepository.findByMemberEmail(email);
         if (member == null) {
             assert registrationId != null;

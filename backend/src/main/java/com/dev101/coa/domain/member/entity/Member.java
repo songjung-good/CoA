@@ -36,7 +36,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_uuid", nullable = false)
     private UUID memberUuid;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "code_id", nullable = false)
     private Code memberPlatformCode;
 
