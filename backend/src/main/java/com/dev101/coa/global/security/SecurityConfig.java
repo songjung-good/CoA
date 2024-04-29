@@ -21,7 +21,6 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
-
     private final JwtTokenProvider jwtTokenProvider;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
@@ -34,6 +33,7 @@ public class SecurityConfig {
                             config.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 허용할 Origin
                             config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // 허용할 HTTP 메소드
                             config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // 허용할 헤더
+//                            config.setAllowedHeaders(List.of("*")); // 허용할 헤더
                             config.setAllowCredentials(true); // 인증 정보 허용 설정
                             config.setMaxAge(3600L); // pre-flight 요청의 캐시 지속 시간
                             return config;
@@ -42,25 +42,27 @@ public class SecurityConfig {
 
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
 //                        new AntPathRequestMatcher("/login/oauth2/code/*")
-                        new AntPathRequestMatcher("/api/auth/*")
+                        new AntPathRequestMatcher("/oauth2/*")
+//                        new AntPathRequestMatcher("/api/auth/*") 이건 일반 로그인 같은게 있을 때 필요한 듯?
                         ).
                         csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 쿠키에 담을 때 JS에서 뜯을 수 있도록 설정하는 것이 False
 
                 // 세션 관리 전략 설정
                 .sessionManagement(session -> session
-//                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //
-                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // TODO 선택적으로 해야하나
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //
+//                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // TODO 선택적으로 해야하나
                 )
 
 
                 // 요청 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                                .anyRequest().permitAll()
-//                        .requestMatchers("/login/oauth2/code/*").permitAll()
-//                        .anyRequest().authenticated()
+//                                .anyRequest().permitAll()
+//                                .requestMatchers("/login/oauth2/code/*").permitAll()
+                                .requestMatchers("/oauth2/authorization/*").permitAll()
+                                .anyRequest().authenticated()
                 )
 
-                // OAuth2 로그인 설정 // oauth2Login 사용자가 로그인 안되어 있으면 일로 보낸다는데?
+                // OAuth2 로그인 설정 // oauth2Login 사용자가 로그인 안되어 있으면 일로 보낸다는데? http://localhost:8080/oauth2/authorization/google
                 //Spring Security는 애플리케이션의 /login/oauth2/code/* 경로를 리다이렉트 URI로 사용하여 OAuth 2.0 프로바이더로부터 인증 코드를 받습니다.
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo

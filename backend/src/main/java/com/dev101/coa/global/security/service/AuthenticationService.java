@@ -28,14 +28,12 @@ public class AuthenticationService {
         // 사용자 데이터베이스 업데이트
         Member member = updateOrCreateMember(oauthUser);
 
-//        UserPrincipal userPrincipal = new UserPrincipal(member, oauthUser.getAuthorities());
-
         // 인증 정보 생성
         Authentication authentication = new UsernamePasswordAuthenticationToken(member.getMemberId(), null, oauthUser.getAuthorities());
-        System.out.println("authentication = " + authentication);
-        System.out.println("여기야여기 authentication = " + authentication.getPrincipal());
+//        System.out.println("authentication = " + authentication);
+//        System.out.println("여기야여기 authentication = " + authentication.getPrincipal());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        System.out.println("여기야여기 authenticationdfgdfgdfg = " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+//        System.out.println("여기야여기 authenticationdfgdfgdfg = " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         return member;
 
     }
@@ -48,7 +46,7 @@ public class AuthenticationService {
 //        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
         // 어떤 로그인이냐에 따라 다른 로직이되게? 꼭 새로 안만들어도 가능은 할듯
 
-        System.out.println("확인 한 번만하고 지우자ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ registrationId "+registrationId);
+//        System.out.println("확인 한 번만하고 지우자ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ registrationId "+registrationId);
         Member member = memberRepository.findByMemberEmail(email);
         if (member == null) {
             assert registrationId != null;

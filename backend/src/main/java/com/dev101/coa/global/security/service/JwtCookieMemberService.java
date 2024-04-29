@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class JwtCookieMember {
+public class JwtCookieMemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationCookieFilter jwtAuthenticationCookieFilter;
 

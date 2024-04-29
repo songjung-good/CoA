@@ -38,7 +38,6 @@ public class JwtTokenProvider { // 토큰 만들거나 관리하는 친구
 
         return Jwts.builder() // TODO 토큰 내부 값 설정
                 .setSubject(Long.toString(member.getMemberId())) // Id를 String으로 Subject에 담는다.
-//                .setSubject(String.valueOf(7)) // Id를 String으로 Subject에 담는다.
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS512)

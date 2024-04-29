@@ -18,7 +18,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        System.out.println("소셜로그인을 하면 바로 여기로 오는건가 ? userRequest = " + userRequest);
+//        System.out.println("소셜로그인을 하면 바로 여기로 오는건가 ? userRequest = " + userRequest);
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Member member = authenticationService.authenticateOAuth2(oAuth2User);
         return new CustomOAuth2User(oAuth2User, member);

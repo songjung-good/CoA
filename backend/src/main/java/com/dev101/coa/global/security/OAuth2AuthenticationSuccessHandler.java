@@ -30,10 +30,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             member = customOAuth2User.getMember();
             // 이제 멤버를 사용하여 추가 작업을 수행할 수 있습니다.
             // 예를 들어, 멤버의 정보를 출력해보겠습니다.
-            System.out.println("사용자의 이름: " + customOAuth2User);
-            System.out.println("사용자의 이름: " + member.getMemberNickname());
-            System.out.println("사용자의 이름: " + member.getMemberId());
-            System.out.println("사용자의 이메일: " + member.getMemberEmail());
+//            System.out.println("사용자의 이름: " + customOAuth2User);
+//            System.out.println("사용자의 이름: " + member.getMemberNickname());
+//            System.out.println("사용자의 이름: " + member.getMemberId());
+//            System.out.println("사용자의 이메일: " + member.getMemberEmail());
         }
 
         String token = jwtTokenProvider.createToken(member);
