@@ -1,8 +1,4 @@
-'use client'
-
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import tw from 'tailwind-styled-components';
 import axios from 'axios';
 
 interface Repo {
@@ -43,75 +39,22 @@ const MyRepo: React.FC<MyRepoProps> = ({ userID }) => {
   }
 
   return (
-    <RepoList>
+    <ul className="flex justify-center flex-wrap list-none p-30">
       {repos.map((repo) => (
-        <RepoItem key={repo.id}>
+        <li key={repo.id} className="border-1 border-appYellow m-1 p-2 relative flex justify-center items-center flex-col transition duration-300 hover:shadow-md" onMouseEnter={() => console.log('Mouse Enter')} onMouseLeave={() => console.log('Mouse Leave')}>
           <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
             {repo.name}
           </a>
-          <ButtonWrapper>
-            <AnalyzeButton>분석하기</AnalyzeButton>
-            {repo.isAnalyzed && <DetailButton>상세보기</DetailButton>} 
-          </ButtonWrapper>
-        </RepoItem>
+          <div className="buttons absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 invisible transition-all duration-300 flex gap-2">
+            <button className="bg-blue-500 text-white font-bold py-1 px-2 text-sm rounded">분석하기</button>
+            {repo.isAnalyzed && (
+              <button className="bg-green-500 text-white font-bold py-1 px-2 text-sm rounded">상세보기</button>
+            )}
+          </div>
+        </li>
       ))}
-    </RepoList>
+    </ul>
   );
 };
-
-const RepoList = styled.ul`
-  justify-content: center;
-  display: flex;
-  flex-wrap: wrap;
-  list-style-type: none;
-  padding: 30px;
-`;
-
-const RepoItem = styled.li`
-  border: 1px solid #ccc;
-  margin-top: 10px;
-  margin-right: 10px;
-  padding: 10px;
-  position: relative;
-
-  &:hover {
-    .buttons {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-`;
-
-const ButtonWrapper = tw.div`
-  buttons
-  absolute
-  top-1/2
-  left-1/2
-  transform -translate-x-1/2 -translate-y-1/2
-  opacity 0
-  visibility hidden
-  transition-all
-  duration-300
-  flex
-  gap-2
-`;
-
-const AnalyzeButton = tw.button`
-  bg-blue-500
-  text-white
-  font-bold
-  py-2
-  px-4
-  rounded
-`;
-
-const DetailButton = tw.button`
-  bg-green-500
-  text-white
-  font-bold
-  py-2
-  px-4
-  rounded
-`;
 
 export default MyRepo;

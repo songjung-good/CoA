@@ -1,36 +1,113 @@
-import React from 'react';
+import React, { useState } from 'react';
 import tw from 'tailwind-styled-components';
-import StarIcon from '@/icons/StarIcon';
+// 임시데이터
+import repocardDTO from '@/components/repocard/repocardDTO';
 
-const RepoCard = () => {
+interface RepoCardProps {
+  data: {
+    memberId: number;
+    memberNickName: string;
+    memberImg: string;
+    repoViewId: number;
+    repoViewTitle: string;
+    repoViewSubTitle: string;
+    skillList: string[];
+    dateRange: { startDate: string; endDate: string };
+    isMine: boolean;
+  };
+}
+
+const RepoCard: React.FC<RepoCardProps> = ({ data }) => {
+  const [hovered, setHovered] = useState(false);
+
+  const {
+    memberNickName,
+    memberImg,
+    repoViewTitle,
+    repoViewSubTitle,
+    skillList,
+    dateRange,
+    isMine,
+  } = data;
+
   return (
-    <Card>
-      <TopSection>
+    <div
+      className="relative" // 상대 위치 설정
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {hovered && 
+      <CardOverlay>
+        <ButtonWrapper>
+          <button className="bg-appGrey1 text-black font-bold py-2 px-4 rounded mr-2">
+            결과분석
+          </button>
+          <button className="bg-appYellow text-white font-bold py-2 px-4 rounded">
+            재분석
+          </button>
+        </ButtonWrapper>
+      </CardOverlay>
+      }
+      <Card>
         <AvatarWrapper>
-          <Avatar />  {/* 사용자 아바타 표시 */}
+          <Avatar src={data.memberImg} alt={memberNickName} />
+          <div>
+            <ContentWrapper>
+              <RepoName>{memberNickName}</RepoName>
+            </ContentWrapper>
+            <Description>{repoViewSubTitle}</Description>
+            <Date>
+              {dateRange.startDate} ~ {dateRange.endDate}
+            </Date>
+          </div>
         </AvatarWrapper>
-        <ContentWrapper>
-          <RepoName>닉네임</RepoName> {/* 닉네임 표시 */}
-          <StarIcon /> {/* 별 아이콘 표시 */}
-        </ContentWrapper>
-      </TopSection>
-      <MiddleSection>
-        <Description>자기소개 글</Description> {/* 자기소개 글 표시 */}
-      </MiddleSection>
-      <BottomSection>
-        <Email>example@example.com</Email> {/* 이메일 표시 */}
-        <SkillWrapper>
-          <SkillLabel>기술 스택: </SkillLabel>
-          <Skill>React</Skill>
-          <Skill>Vue</Skill>
-        </SkillWrapper>
-      </BottomSection>
-    </Card>
+        {/* skill 소제목 */}
+        <div>
+          <SkillLabel>프로젝트 스킬</SkillLabel>
+          <SkillWrapper>
+            {/* skill 데이터 반복 */}
+            {skillList.map((skill, index) => (
+              <Skill key={index}>{skill}</Skill>
+            ))}
+          </SkillWrapper>
+        </div>
+      </Card>
+    </div>
   );
 };
 
+const data = repocardDTO.temporaryData;
+
+const RepoCardList: React.FC = () => {
+  return (
+    <div>
+    <div className='flex flex-wrap justify-start align-center mt-5'>
+      {data.map((item, index) => (
+        <RepoCard key={index} data={item} />
+      ))}
+    </div>
+    </div>
+  );
+};
+
+const CardOverlay = tw.div`
+  absolute
+  w-[25rem] 
+  h-[20rem] 
+  border
+  border-appYellow
+  rounded-lg 
+  bg-white
+  m-2.5 
+  flex
+  items-center
+  justify-center
+  z-10
+  pointer-events-none
+`;
+
 const Card = tw.div`
-  w-[50rem] 
+  w-[25rem] 
   h-[20rem] 
   border
   border-appYellow
@@ -39,23 +116,8 @@ const Card = tw.div`
   flex
   flex-col
   p-4
-  bg-appGrey1
+  bg-appBlue4
   justify-between
-`;
-
-const TopSection = tw.div`
-  flex
-  justify-between
-`;
-
-const MiddleSection = tw.div`
-  flex
-  flex-grow
-`;
-
-const BottomSection = tw.div`
-  flex
-  flex-col
 `;
 
 const AvatarWrapper = tw.div`
@@ -63,11 +125,13 @@ const AvatarWrapper = tw.div`
   items-center
 `;
 
-const Avatar = tw.div`
+const Avatar = tw.img`
   w-16
   h-16
-  bg-teal-500
+  mr-2.5
   rounded-full
+  border
+  border-appRed
 `;
 
 const ContentWrapper = tw.div`
@@ -87,12 +151,13 @@ const Description = tw.p`
   mb-2
 `;
 
-const Email = tw.p`
+const Date = tw.p`
   text-gray-600
 `;
 
 const SkillWrapper = tw.div`
   flex
+  flex-wrap
   items-center
   mt-2
 `;
@@ -103,12 +168,22 @@ const SkillLabel = tw.span`
 `;
 
 const Skill = tw.span`
-  mr-2
-  bg-gray-200
+  m-1
+  bg-white
+  border
+  border-gray-300
   rounded-md
   px-2
   py-1
   text-xs
+  inline-flex
+  items-center 
 `;
 
-export default RepoCard;
+const ButtonWrapper = tw.div`
+  flex
+  align-center
+  justify-center
+`;
+
+export default RepoCardList;
