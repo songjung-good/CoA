@@ -9,6 +9,7 @@ import IntroduceText from "@/components/landing/IntroduceText.tsx";
 import ServiceIntroduceVertical from "@/components/landing/ServiceIntroduceVertical.tsx";
 import ServiceIntroduceLeft from "@/components/landing/ServiceIntroduceLeft.tsx";
 import ServiceIntroduceRight from "@/components/landing/ServiceIntroduceRight.tsx";
+import FloatingButton from "@/components/landing/FloatingButton.tsx";
 
 export default function HomePage() {
   const [windowWidth, setWindowWidth] = useState(0);
@@ -90,27 +91,13 @@ export default function HomePage() {
         <Title>CoA</Title>
         <IntroduceText />
         <AnalysisButton buttonRef={buttonRef} content="분석 하기" url="/main" />
-        {showFloatingButton && (
-          <div>
-            <ToggleButton onClick={toggleButtons}>+</ToggleButton>
-            {isButtonsVisible && (
-              <div className="flex flex-col fixed bottom-20 right-0 font-bold py-2 px-4 rounded z-50">
-                <button
-                  className="bg-appOrange text-white mb-2 px-4 py-2"
-                  onClick={scrollToTitle}
-                >
-                  위로 가기
-                </button>
-                <button className="bg-appOrange text-white mb-2 px-4 py-2">
-                  분석 하기
-                </button>
-                <button className="bg-appOrange text-white px-4 py-2">
-                  로그인
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+        <FloatingButton
+          showFloatingButton={showFloatingButton}
+          isButtonsVisible={isButtonsVisible}
+          toggleButtons={toggleButtons}
+          scrollToTitle={scrollToTitle}
+          // 스크롤 아래로 내렸을때 플로팅 버튼
+        />
         <IntroduceButton content="서비스 알아보기" onClick={scrollToService} />
       </LadingComponent>
       <IntroBar>
@@ -189,16 +176,4 @@ flex items-center justify-center bg-appGrey2 mt-32 mb-10 py-10
 `;
 
 const ServiceComponent = tw.div`
-`;
-
-const ToggleButton = tw.button`
-  fixed bottom-4 right-4 bg-appOrange
-  text-white font-bold py-2 px-4 rounded-full z-50
-  text-2xl flex justify-center items-center h-12 w-12
-  transition-transform duration-300 ease-out
-`;
-
-const FloatingButton = tw.button`
-  fixed right-4 bg-appOrange text-white font-bold py-2 px-4 rounded z-50
-  transition-transform duration-300 ease-out
 `;

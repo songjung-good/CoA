@@ -13,7 +13,7 @@ interface AnalysisButtonProps {
 const AnalysisButton = ({ content, url, buttonRef }: AnalysisButtonProps) => {
   return (
     <StyledLink href={url}>
-      <AnalysisIcon />
+      <AnalysisIcon width={40} height={40} />
       <AnalysisBtn ref={buttonRef}>{content}</AnalysisBtn>
     </StyledLink>
   );
@@ -22,6 +22,7 @@ const AnalysisButton = ({ content, url, buttonRef }: AnalysisButtonProps) => {
 const AnalysisBtn = tw.button`
   text-xl
   font-bold
+  text-white
 `;
 
 const StyledLink = tw(Link)`
