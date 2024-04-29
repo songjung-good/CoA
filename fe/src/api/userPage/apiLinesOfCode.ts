@@ -6,8 +6,9 @@ interface LanguageStats {
 
 export interface Repository {
   name: string;
-  // created_at: string;
-  // pushed_at: string;
+  createdAt: string;
+  pushedAt: string;
+  updatedAt: string;
   languages: LanguageStats;
   totalLinesOfCode: number;
 }
@@ -30,6 +31,9 @@ query {
         repositories(first: 100) {
             nodes {
                 name
+                createdAt
+                pushedAt
+                updatedAt
                 languages(first: 10) {
                     edges {
                         node {
@@ -77,8 +81,9 @@ export async function getTotalLinesOfCode(
 
       repositories.push({
         name: repo.name,
-        // created_at: repo.created_at,
-        // pushed_at: repo.pushed_at,
+        createdAt: repo.createdAt,
+        pushedAt: repo.pushedAt,
+        updatedAt: repo.updatedAt,
         languages: repoLanguages,
         totalLinesOfCode: totalLinesOfCode,
       });
