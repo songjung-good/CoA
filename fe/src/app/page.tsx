@@ -9,69 +9,95 @@ import IntroduceText from "@/components/landing/IntroduceText.tsx";
 import ServiceIntroduceVertical from "@/components/landing/ServiceIntroduceVertical.tsx";
 import ServiceIntroduceLeft from "@/components/landing/ServiceIntroduceLeft.tsx";
 import ServiceIntroduceRight from "@/components/landing/ServiceIntroduceRight.tsx";
+import FloatingButton from "@/components/landing/FloatingButton.tsx";
 
 export default function HomePage() {
-  const [introMent, setIntroMent] = useState("");
   const [windowWidth, setWindowWidth] = useState(0);
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
+  const [toggleButtonText, setToggleButtonText] = useState("+");
+  const [isButtonsVisible, setIsButtonsVisible] = useState(false);
 
-  const serviceRef = useRef<HTMLDivElement>(null);
+  // 위로가기 버튼
+  const titleRef = useRef<HTMLDivElement | null>(null);
+  const scrollToTitle = () => {
+    titleRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // 서비스 알아보기 버튼 (누르면 밑으로 자동 스크롤)
+  const serviceRef = useRef<HTMLDivElement | null>(null);
   const scrollToService = () => {
     serviceRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const introMentSM =
-    "개발자 여러분, GitHub나 GitLab 같은 개발 활동을\n한눈에 볼 수 있는 플랫폼을 찾고 계신가요?\n저희 서비스는 여러분의 커밋과 프로젝트 기여도를\n분석하여 시각적으로 보여드립니다. 여러분의 개발 업적을 멋진 포트폴리오로 만들어보세요. 개발 배지도 획득하면서, 자신만의 프로필을 꾸며보는 재미도 느껴보세요!";
-  const introMentLG = "";
-  const introMentXL = "";
-
+  // 분석하기 플로팅 버튼(해당 버튼 아래로 내려가면 플로팅 버튼 생김)
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      if (window.innerWidth < 1024) {
-        setIntroMent(introMentSM);
-      } else if (window.innerWidth < 1280) {
-        setIntroMent(introMentLG);
-      } else {
-        setIntroMent(introMentXL);
+    const handleButtonVisibility = () => {
+      if (buttonRef.current) {
+        const buttonBottom =
+          buttonRef.current.getBoundingClientRect().bottom + window.scrollY;
+        const currentScrollY = window.scrollY;
+        setShowFloatingButton(currentScrollY >= buttonBottom);
       }
     };
-    // 처음 로딩할 때 실행
-    handleResize();
 
-    // 윈도우 사이즈가 바뀔 때마다 실행
-    window.addEventListener("resize", handleResize);
-
-    // 컴포넌트가 언마운트 될 때 이벤트 리스너 제거
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleButtonVisibility);
+    return () => window.removeEventListener("scroll", handleButtonVisibility);
   }, []);
 
-  // 스크롤에 따른 효과를 위한 상태
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
-      // console.log(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 스크롤 위치에 따라 투명도를 조정
+  useEffect(() => {
+    const updateWindowWidth = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", updateWindowWidth);
+    updateWindowWidth(); // 초기 값 설정
+
+    return () => window.removeEventListener("resize", updateWindowWidth);
+  }, []);
+
   const fadeEffect = (offset: number) => ({
     opacity: Math.min(1, scrollY / offset),
     transform: `translateY(${300 - Math.min(300, (scrollY / offset) * 300)}px)`,
+    transition: "opacity 1s ease-out, transform 0.5s ease-out",
   });
+
+  const toggleButtons = () => {
+    setIsButtonsVisible(!isButtonsVisible);
+
+    if (toggleButtonText === "+") {
+      setToggleButtonText("-");
+    } else {
+      setToggleButtonText("+");
+    }
+  };
 
   return (
     <div>
-      <LadingComponent>
+      <LadingComponent ref={titleRef}>
         <Slogan>코드만 치세요. 분석은 우리가 할께요.</Slogan>
         <Title>CoA</Title>
         <IntroduceText />
-        <AnalysisButton content="분석 하기" url="/main" />
+        <AnalysisButton buttonRef={buttonRef} content="분석 하기" url="/main" />
+        <FloatingButton
+          showFloatingButton={showFloatingButton}
+          isButtonsVisible={isButtonsVisible}
+          toggleButtons={toggleButtons}
+          scrollToTitle={scrollToTitle}
+          // 스크롤 아래로 내렸을때 플로팅 버튼
+        />
         <IntroduceButton content="서비스 알아보기" onClick={scrollToService} />
       </LadingComponent>
       <IntroBar>
@@ -83,22 +109,22 @@ export default function HomePage() {
             <ServiceIntroduceVertical
               content="여기에 내용을 적어주세요"
               image="/image/chun.png"
-              style={fadeEffect(300)}
+              style={fadeEffect(400)}
             />
             <ServiceIntroduceVertical
               content="또 다른 서비스 설명"
               image="/image/chun.png"
-              style={fadeEffect(600)}
+              style={fadeEffect(800)}
             />
             <ServiceIntroduceVertical
               content="세 번째 서비스 내용"
               image="/image/chun.png"
-              style={fadeEffect(900)}
+              style={fadeEffect(1200)}
             />
             <ServiceIntroduceVertical
               content="마지막 서비스 설명"
               image="/image/chun.png"
-              style={fadeEffect(1200)}
+              style={fadeEffect(1600)}
             />
           </>
         ) : (
@@ -149,14 +175,5 @@ const IntroBar = tw.div`
 flex items-center justify-center bg-appGrey2 mt-32 mb-10 py-10
 `;
 
-const Introduce = tw.h3`
-text-center
-text-lg
-w-3/4
-mb-24
-whitespace-pre-wrap
-`;
-
 const ServiceComponent = tw.div`
-
 `;

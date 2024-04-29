@@ -1,12 +1,19 @@
-export default function AnalysisIcon() {
+interface AnalysisIconProps {
+  width: number;
+  height: number;
+}
+
+export default function AnalysisIcon({ width, height }: AnalysisIconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="40"
       fill="none"
+      width={width}
+      height={height}
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
+      color="white"
     >
       <path
         strokeLinecap="round"
