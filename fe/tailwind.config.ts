@@ -24,6 +24,11 @@ const config: Config = {
       height: {
         appVh: "calc(100vh - 80px)",
       },
+      boxShadow: {
+        appShadow:
+          "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;",
+        a3: "rgba(0, 0, 0, 0.35) 0px 5px 15px;",
+      },
     },
   },
   plugins: [],
