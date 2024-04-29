@@ -7,6 +7,7 @@ import UserHistoryPage from "./_pages/UserHistoryPage";
 import UserRepositoryPage from "./_pages/UserRepositoryPage";
 import UserOverviewPage from "./_pages/UserOverviewPage";
 import userStore from "@/store/user";
+import repositoryStore from "./../../../store/repos";
 
 export default function UserPage({ params }: { params: { id: string } }) {
   const [tabIndex, setTabIndex] = useState(0);
@@ -14,7 +15,14 @@ export default function UserPage({ params }: { params: { id: string } }) {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
+  const userName = userStore((state) => state.userName);
   const setUserName = userStore((state) => state.setUserName);
+  const setRepos = repositoryStore((state) => state.setRepos);
+
+  useEffect(() => {
+    setRepos(userName);
+  }, [userName, setRepos]);
+
   //탭에 따른 랜더링될 페이지
   const renderTabContent = () => {
     switch (tabIndex) {
