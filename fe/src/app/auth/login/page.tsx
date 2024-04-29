@@ -12,17 +12,28 @@ function generateState(): string {
 
 export default function LoginPage() {
 
+  // const handleGoogleLogin = () => {
+
+  //   const state = generateState();
+
+  //   const clientId = '765601865422-gfbpej2d4oequfvi35v14j6cba5iafvr.apps.googleusercontent.com';
+  //   const redirectUri = 'http://localhost:8080/login/oauth2/code/google';
+  //   const scope = 'email profile';
+  //   const responseType = 'code';
+  //   const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&state=${state}`;
+  //   // const authUrl = `https://accounts.google.com/o/oauth2/v2/authorization?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&state=${state}`;
+
+  //   window.location.href = authUrl;
+  // };
+
+
   const handleGoogleLogin = () => {
-
-    const state = generateState();
-
-    const clientId = '765601865422-gfbpej2d4oequfvi35v14j6cba5iafvr.apps.googleusercontent.com';
-    const redirectUri = 'http://localhost:8080/login/oauth2/code/google';
-    const scope = 'email profile';
-    const responseType = 'code';
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&state=${state}`;
-
-    window.location.href = authUrl;
+    fetch('http://localhost:8080/api/auth/google/start')
+      .then(response => response.json())
+      .then(data => {
+        window.location.href = data.url;
+      })
+      .catch(error => console.error('Error:', error));
   };
 
   // GitHub 로그인 버튼 클릭 시 이벤트 핸들러
