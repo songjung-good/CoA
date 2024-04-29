@@ -1,4 +1,4 @@
-package com.dev101.coa.api;
+package com.dev101.coa.domain.code.controller;
 
 import com.dev101.coa.domain.code.dto.CommonCodeResDto;
 import com.dev101.coa.domain.code.service.CodeService;
