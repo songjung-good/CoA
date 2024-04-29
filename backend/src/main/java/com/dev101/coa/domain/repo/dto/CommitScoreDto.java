@@ -6,6 +6,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CommitScoreDto {
     private Integer readability;
     private Integer performance;

@@ -8,6 +8,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class AnalysisResultDto {
     private Long analysisId;
     private Long memberId;

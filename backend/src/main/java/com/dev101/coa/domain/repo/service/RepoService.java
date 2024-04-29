@@ -104,7 +104,7 @@ public class RepoService {
         //    commitScoreDto done
         //    analysisResultDto done
         //    레디스에 json 저장 done
-        //    저장된 json 조회해보기 
+        //    저장된 json 조회해보기  done
 
         CommitScoreDto commitScoreDto = CommitScoreDto.builder()
                 .readability(10)
@@ -125,6 +125,7 @@ public class RepoService {
                 .memberId(1L)
                 .isComplete(true)
                 .readme("readme~ mario!")
+                .repoViewResult("this is repoViewResult")
                 .commitScore(commitScoreDto)
                 .linesOfCode(linesOfCode)
                 .build();
@@ -132,6 +133,9 @@ public class RepoService {
         redisTemplateJson.opsForValue().set(analysisResultDto.getAnalysisId(), analysisResultDto);
 
         System.out.println("json 저장 완료");
+
+        System.out.println((AnalysisResultDto)redisTemplateJson.opsForValue().get(1L));
+
         // mysql 디비에 저장
     }
 }
