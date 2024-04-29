@@ -1,4 +1,6 @@
 import { Repository } from "@/api/userPage/apiLinesOfCode";
+import MyPageRepositoryCardChart from "./ChartPie";
+import PieChart from "./PieChart";
 
 export default function MyPageRepositoryCard({ repo }: { repo: Repository }) {
   return (
@@ -21,6 +23,8 @@ export default function MyPageRepositoryCard({ repo }: { repo: Repository }) {
             {language}: {lines}
           </p>
         ))}
+        <MyPageRepositoryCardChart repo={repo.languages} />
+        {/* <PieChart data={repo.languages} /> */}
       </div>
     </div>
   );

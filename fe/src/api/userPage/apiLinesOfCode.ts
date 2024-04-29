@@ -1,6 +1,6 @@
 import axios from "axios";
 
-interface LanguageStats {
+export interface LanguageStats {
   [language: string]: number;
 }
 
