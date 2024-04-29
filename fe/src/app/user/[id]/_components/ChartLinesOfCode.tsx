@@ -18,6 +18,7 @@ const ChartLinesOfCode = () => {
     { letter: "Kotlin", frequency: 20 },
     { letter: "Objective-C", frequency: 4 },
   ];
+
   const totalFrequency = data1.reduce((sum, item) => sum + item.frequency, 0);
   const colorMapping: { [key: string]: string } = {
     JavaScript: "#F7DF1E",
@@ -64,16 +65,14 @@ const ChartLinesOfCode = () => {
       .rangeRound([marginTop, height - marginBottom])
       .padding(0.1);
 
-    // Create a value format.
-    const format = x.tickFormat(20, "%");
-
     // Create the SVG container.
     svg
       .attr("width", width)
       .attr("height", height)
       .attr("viewBox", [0, 0, width, height])
       .attr("style", "max-width: 100%; height: auto;");
-
+    //중복생성방지
+    svg.selectAll("g").remove();
     // Append a rect for each letter.
     svg
       .append("g")
