@@ -24,15 +24,20 @@ public class AuthenticationService {
     private final MemberRepository memberRepository;
     private final CodeRepository codeRepository;
 
-    public String authenticateOAuth2(OAuth2User oauthUser) {
+    public Member authenticateOAuth2(OAuth2User oauthUser) {
         // 사용자 데이터베이스 업데이트
         Member member = updateOrCreateMember(oauthUser);
 
-        // 인증 정보 생성 및 JWT 발급
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member, null, oauthUser.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        UserPrincipal userPrincipal = new UserPrincipal(member, oauthUser.getAuthorities());
 
-        return jwtTokenProvider.createToken(authentication);
+        // 인증 정보 생성
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getMemberId(), null, oauthUser.getAuthorities());
+        System.out.println("authentication = " + authentication);
+        System.out.println("여기야여기 authentication = " + authentication.getPrincipal());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        System.out.println("여기야여기 authenticationdfgdfgdfg = " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        return member;
+
     }
     private Member updateOrCreateMember(OAuth2User oauthUser) { // 여기서 깃허브랑 분기처리 할까?
         System.out.println("oauthUser = " + oauthUser);

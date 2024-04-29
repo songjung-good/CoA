@@ -1,11 +1,14 @@
 package com.dev101.coa.global.security.controller;
 
-import com.dev101.coa.global.security.service.AuthenticationService;
-import com.dev101.coa.global.security.service.CustomOAuth2UserService;
-import lombok.Getter;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 
 @RestController
@@ -13,36 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthenticationService authenticationService;
-    private final CustomOAuth2UserService customOAuth2UserService;
+    @GetMapping("/google/start")
+    public RedirectView startGoogleAuthentication(HttpServletRequest request) {
+        String state = new BigInteger(130, new SecureRandom()).toString(32);
+        String clientId = "765601865422-gfbpej2d4oequfvi35v14j6cba5iafvr.apps.googleusercontent.com";
+        String redirectUri = "http://localhost:8080/login/oauth2/code/google";
+        String scope = "email profile";
 
+        String url = "https://accounts.google.com/o/oauth2/v2/auth?client_id=" + clientId +
+                "&redirect_uri=" + redirectUri +
+                "&scope=" + scope +
+                "&response_type=code" +
+                "&state=" + state;
 
-//    @PostMapping("/oauth")
-//    public ResponseEntity<?> authenticateUser(@AuthenticationPrincipal OAuth2User principal) {
-//
-//        String jwt = authenticationService.authenticateOAuth2(principal);
-////        // JWT 토큰을 쿠키에 담음 // , HttpServletResponse response
-////        Cookie authCookie = new Cookie("jwt", jwt);
-////        authCookie.setHttpOnly(true);
-////        authCookie.setSecure(true);
-////        authCookie.setPath("/");
-////        response.addCookie(authCookie);
-//
-////        return ResponseEntity.ok().build();
-//        return ResponseEntity.ok().body(new AuthResponse(jwt));
-//    }
-
-
-    @Getter
-    public static class AuthResponse {
-        private String authToken;
-
-        public AuthResponse(String authToken) {
-            this.authToken = authToken;
-        }
-
-        public void setAuthToken(String authToken) {
-            this.authToken = authToken;
-        }
+        request.getSession().setAttribute("oauth_state", state); // 프론트에 주는건가?
+        return new RedirectView(url);
     }
+
 }

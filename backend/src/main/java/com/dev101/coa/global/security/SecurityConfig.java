@@ -23,6 +23,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
 
     @Bean
@@ -40,14 +41,15 @@ public class SecurityConfig {
                 // CSRF 설정 변경
 
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
-                        new AntPathRequestMatcher("/login/oauth2/code/*")
+//                        new AntPathRequestMatcher("/login/oauth2/code/*")
+                        new AntPathRequestMatcher("/api/auth/*")
                         ).
-                        csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-                // 쿠키에 담을 때 JS에서 뜯을 수 있도록 설정하는 것이 False
+                        csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 쿠키에 담을 때 JS에서 뜯을 수 있도록 설정하는 것이 False
 
                 // 세션 관리 전략 설정
                 .sessionManagement(session -> session
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 항상 생성
+//                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //
+                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // TODO 선택적으로 해야하나
                 )
 
 
@@ -64,14 +66,15 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
                 );
 
 
 
         // JWT 인증 필터 추가
         // TODO 이게 무슨 의미?
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // 커스텀 필터 추가
+//        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // 커스텀 필터 추가
 //        http.addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass()) // 토큰 예외 핸들링
         return http.build();
     }

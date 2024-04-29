@@ -1,5 +1,7 @@
 package com.dev101.coa.global.security.service;
 
+import com.dev101.coa.domain.member.entity.Member;
+import com.dev101.coa.global.security.CustomOAuth2User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -18,10 +20,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         System.out.println("소셜로그인을 하면 바로 여기로 오는건가 ? userRequest = " + userRequest);
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        authenticationService.authenticateOAuth2(oAuth2User);
-        return oAuth2User;
+        Member member = authenticationService.authenticateOAuth2(oAuth2User);
+        return new CustomOAuth2User(oAuth2User, member);
     }
-
 }
 
 
