@@ -53,4 +53,10 @@ public class RepoController {
         String analysisId = repoService.startAnalysis(memberId, analysisReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<String>(analysisId));
     }
+
+
+    @GetMapping("/analysis/{analysisId}")
+    public ResponseEntity<BaseResponse<Object>> checkAnalysis(@PathVariable String analysisId){
+         return null;
+    }
 }

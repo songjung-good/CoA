@@ -22,6 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -178,6 +179,7 @@ public class RepoService {
         map.put("percentage", "0"); // 초기 비율을 문자열로 저장
 
         redisTemplateRepo.opsForHash().putAll(analysisId, map);
+        redisTemplateRepo.expire(analysisId, 24, TimeUnit.HOURS); // 레디스에 보관하고 있을 시간
 
         // Redis에서 데이터 검색
 //        Map<Object, Object> retrievedData = redisTemplateRepo.opsForHash().entries(analysisId);
