@@ -136,6 +136,11 @@ public class RepoService {
 
         System.out.println((AnalysisResultDto)redisTemplateJson.opsForValue().get(1L));
 
-        // mysql 디비에 저장
+        // mysql 저장
+
+        // repo 저장 - repoPath로 찾은 후, 존재하면 업데이트 존재하지 않으면 생성
+
+        // repoView 저장
+
     }
 }
