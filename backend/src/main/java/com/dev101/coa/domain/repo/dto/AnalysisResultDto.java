@@ -10,7 +10,6 @@ import java.util.Map;
 @AllArgsConstructor
 @ToString
 public class AnalysisResultDto {
-    private Long analysisId;
 
     private String repoPath; // 저장된 레포 정보를 찾기 위함(API 요청에도 사용)
 
@@ -18,7 +17,9 @@ public class AnalysisResultDto {
 
     private Long memberId; // CoA Service memberId
 
-    private Boolean isComplete;
+    private Boolean isOwn;
+
+    private Integer percentage;
 
     private String readme;
 
