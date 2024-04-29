@@ -14,34 +14,36 @@ interface FloatingButtonProps {
   scrollToTitle: () => void;
 }
 
+interface ButtonsContainerProps {
+  show: boolean;
+}
+
 export default function FloatingButton({
   showFloatingButton,
   scrollToTitle,
 }: FloatingButtonProps) {
   return (
     <>
-      {showFloatingButton && (
-        <div>
-          <ButtonsContainer>
-            <button
-              className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full"
-              onClick={scrollToTitle}
-            >
-              <Upicon width={30} height={30} />
+      <div>
+        <ButtonsContainer show={showFloatingButton}>
+          <button
+            className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full"
+            onClick={scrollToTitle}
+          >
+            <Upicon width={30} height={30} />
+          </button>
+          <Link href="/main">
+            <button className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full">
+              <AnalysisIcon width={30} height={30} />
             </button>
-            <Link href="/main">
-              <button className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full">
-                <AnalysisIcon width={30} height={30} />
-              </button>
-            </Link>
-          </ButtonsContainer>
-        </div>
-      )}
+          </Link>
+        </ButtonsContainer>
+      </div>
     </>
   );
 }
 
-const ButtonsContainer = styled.div`
+const ButtonsContainer = styled.div<ButtonsContainerProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,7 +53,6 @@ const ButtonsContainer = styled.div`
   padding: 8px 16px;
   border-radius: 8px;
   z-index: 50;
-  transition:
-    transform 500ms ease-out,
-    bottom 500ms ease-out;
+  transform: ${(props) => (props.show ? "translateY(0)" : "translateY(100%)")};
+  transition: transform 200ms ease-out;
 `;

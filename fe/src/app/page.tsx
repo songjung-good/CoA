@@ -71,7 +71,7 @@ export default function HomePage() {
   const fadeEffect = (offset: number) => ({
     opacity: Math.min(1, scrollY / offset),
     transform: `translateY(${300 - Math.min(300, (scrollY / offset) * 300)}px)`,
-    transition: "opacity 0.5s ease-out, transform 0.5s ease-out",
+    transition: "opacity 1s ease-out, transform 0.5s ease-out",
   });
 
   const toggleButtons = () => {
@@ -109,22 +109,22 @@ export default function HomePage() {
             <ServiceIntroduceVertical
               content="여기에 내용을 적어주세요"
               image="/image/chun.png"
-              style={fadeEffect(300)}
+              style={fadeEffect(400)}
             />
             <ServiceIntroduceVertical
               content="또 다른 서비스 설명"
               image="/image/chun.png"
-              style={fadeEffect(600)}
+              style={fadeEffect(800)}
             />
             <ServiceIntroduceVertical
               content="세 번째 서비스 내용"
               image="/image/chun.png"
-              style={fadeEffect(900)}
+              style={fadeEffect(1200)}
             />
             <ServiceIntroduceVertical
               content="마지막 서비스 설명"
               image="/image/chun.png"
-              style={fadeEffect(1200)}
+              style={fadeEffect(1600)}
             />
           </>
         ) : (
