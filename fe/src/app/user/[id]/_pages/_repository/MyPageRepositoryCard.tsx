@@ -1,6 +1,5 @@
 import { Repository } from "@/api/userPage/apiLinesOfCode";
 import MyPageRepositoryCardChart from "./ChartPie";
-import PieChart from "./PieChart";
 
 export default function MyPageRepositoryCard({ repo }: { repo: Repository }) {
   return (
