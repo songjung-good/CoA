@@ -1,5 +1,5 @@
-import CalendarCard from "../_components/CalendarCard";
-import CodeLinesCard from "../_components/LinesOfCodeCard";
+import CalendarCard from "../../_components/CalendarCard";
+import CodeLinesCard from "./LinesOfCodeCard";
 
 export default function UserOverviewPage() {
   return (

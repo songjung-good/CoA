@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import UserPageTabBar from "./_components/UserPageTabBar";
-import UserAnalysisPage from "./_pages/UserAnalysisPage";
-import UserHistoryPage from "./_pages/UserHistoryPage";
-import UserRepositoryPage from "./_pages/UserRepositoryPage";
-import UserOverviewPage from "./_pages/UserOverviewPage";
+import UserAnalysisPage from "./_pages/_analysis/UserAnalysisPage";
+import UserHistoryPage from "./_pages/_history/UserHistoryPage";
+import UserRepositoryPage from "./_pages/_repository/UserRepositoryPage";
+import UserOverviewPage from "./_pages/_overview/UserOverviewPage";
 import userStore from "@/store/user";
 import repositoryStore from "./../../../store/repos";
 
