@@ -42,7 +42,7 @@ const TypingTextComponent: React.FC<TypingTextProps> = ({
       requestAnimationFrame(animationCallback);
     } else {
       setAnimeFinished();
-      console.log("finish!");
+      // console.log("finish!");
     }
   };
 
