@@ -1,21 +1,23 @@
 import Link from "next/link";
 import tw from "tailwind-styled-components";
+import React, { forwardRef } from "react";
 
 import AnalysisIcon from "@/icons/AnalysisIcon";
 
 interface AnalysisButtonProps {
   content: string;
   url: string;
+  buttonRef: React.RefObject<HTMLButtonElement>;
 }
 
-export default function AnalysisButton({ content, url }: AnalysisButtonProps) {
+const AnalysisButton = ({ content, url, buttonRef }: AnalysisButtonProps) => {
   return (
     <StyledLink href={url}>
       <AnalysisIcon />
-      <AnalysisBtn>{content}</AnalysisBtn>
+      <AnalysisBtn ref={buttonRef}>{content}</AnalysisBtn>
     </StyledLink>
   );
-}
+};
 
 const AnalysisBtn = tw.button`
   text-xl
@@ -29,3 +31,5 @@ const StyledLink = tw(Link)`
   rounded-lg
   mb-24
 `;
+
+export default AnalysisButton;
