@@ -39,19 +39,13 @@ public class RedisConfig {
 
     // hset으로 레포 분석에 필요한 데이터를 저장하기 위한 템플릿
     @Bean
-    public RedisTemplate<String, AnalysisResultDto> redisTemplateRepo(RedisConnectionFactory factory) {
-        RedisTemplate<String, AnalysisResultDto> template = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplateRepo(RedisConnectionFactory factory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
-        template.setKeySerializer(new GenericToStringSerializer<>(Long.class));
-        template.setValueSerializer(new StringRedisSerializer());
 
-        // 키는 문자열 형태로 직렬화
         template.setKeySerializer(new StringRedisSerializer());
-
-        // 값은 다양한 형태를 지원할 수 있도록 JSON 직렬화 사용
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-
-        // 해시 값 직렬화 역시 JSON을 사용
+        template.setHashKeySerializer(new StringRedisSerializer());
         template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 
 

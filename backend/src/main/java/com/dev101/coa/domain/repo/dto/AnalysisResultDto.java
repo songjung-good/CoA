@@ -21,13 +21,11 @@ public class AnalysisResultDto {
 
     private Integer percentage;
 
-    private String readme;
+    private AiResultDto result; // reaeme, commitScore, commitComment, linesOfCode
 
-    private String repoViewResult;
-
-    private CommitScoreDto commitScore;
-
-    private Map<Long, Integer> linesOfCode;
+    public void updateResult(AiResultDto aiResultDto){
+        this.result = aiResultDto;
+    }
 
 
 }

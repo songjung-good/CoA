@@ -36,7 +36,7 @@ public class RepoService {
     private final AccountLinkRepository accountLinkRepository;
 
     private final RedisTemplate<String, String> redisTemplate;
-    private final RedisTemplate<String, AnalysisResultDto> redisTemplateRepo;
+    private final RedisTemplate<String, Object> redisTemplateRepo;
 
     // AI server 통신을 위한 WebClient
     private final WebClient webClient;
@@ -202,10 +202,97 @@ public class RepoService {
                 .bodyToMono(String.class)
                 .block();
 
-        if(response.equals("false")){
+        if (response.equals("false")) {
             throw new BaseException(StatusCode.AI_SERVER_ERROR);
         }
 
         return analysisId;
+    }
+
+    public AnalysisResultDto checkAnalysis(Long memberId, String analysisId) {
+
+        // =========== redis test data
+        CommitScoreDto commitScoreDto = CommitScoreDto.builder()
+                .readability(10)
+                .performance(20)
+                .reusability(30)
+                .testability(40)
+                .exception(50)
+                .total(30)
+                .scoreComment("good!")
+                .build();
+
+        Map<Long, Integer> linesOfCode = new HashMap<>();
+        linesOfCode.put(3001L, 11);
+        linesOfCode.put(3002L, 22);
+
+        AiResultDto resultTest = AiResultDto.builder()
+                .readme("this is readme")
+                .repoViewResult("this is repoViewResult")
+                .commitScore(commitScoreDto)
+                .linesOfCode(linesOfCode)
+                .build();
+
+        AnalysisResultDto analysisResultDtoTest = AnalysisResultDto.builder()
+                .repoPath("http://repopath.com/hellong")
+                .userName("ha09368")
+                .memberId(1L)
+                .isOwn(true)
+                .percentage(100)
+                .result(resultTest)
+                .build();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("repoPath", analysisResultDtoTest.getRepoPath());
+        map.put("userName", analysisResultDtoTest.getUserName());
+        map.put("memberId", analysisResultDtoTest.getMemberId());
+        map.put("isOwn", analysisResultDtoTest.getIsOwn());
+        map.put("percentage", analysisResultDtoTest.getPercentage());
+        map.put("result", analysisResultDtoTest.getResult());  // 'result' is another complex object, serialized as JSON
+
+        System.out.println("map = " + map);
+
+        redisTemplateRepo.opsForHash().putAll(analysisId, map);
+
+        System.out.println("json 저장 완료");
+
+        // =============== testData
+
+        Map<Object, Object> redisData = redisTemplateRepo.opsForHash().entries(analysisId);
+
+        // redis에서 analysisId에 해당하는 요소를 가져온다.
+        String redisRepoPath = (String)redisData.get("repoPath");
+        if (redisRepoPath == null) {
+            throw new BaseException(StatusCode.REPO_VIEW_NOT_FOUND);
+        }
+
+
+        // memberId와 요소의 memberId의 일치여부를 확인한다.
+        Long redisMemberId = ((Integer)redisData.get("memberId")).longValue();
+        if (!Objects.equals(memberId, redisMemberId)) {
+            // 일치하지 않으면 예외 발생
+            throw new BaseException(StatusCode.REPO_REQ_MEMBER_NOT_MATCH);
+        }
+
+        // 일치하면 요소에서 percentage를 가져온다.
+        // percentage가 100이 아니면, AnalysisResultDto 반환한다.
+        AnalysisResultDto analysisResultDto = AnalysisResultDto.builder()
+                .repoPath(redisRepoPath)
+                .userName((String) redisData.get("userName"))
+                .memberId(redisMemberId)
+                .isOwn((Boolean) redisData.get("isOwn"))
+                .percentage((Integer) redisData.get("percentage"))
+                .build();
+
+        if ((Integer) redisData.get("percentage") != 100) {
+            return analysisResultDto;
+        }
+
+        // percentage가 100이면, 저장된 result를 반환 Dto에 담는다.
+        else {
+            AiResultDto result = (AiResultDto) redisData.get("result");
+            analysisResultDto.updateResult(result);
+            return analysisResultDto;
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.dev101.coa.domain.repo.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Builder
 @NoArgsConstructor
