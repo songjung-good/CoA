@@ -9,7 +9,7 @@ export default function LoginPage() {
           <div className="flex flex-col xl:flex-row gap-10 justify-center items-center shadow-a3 bg-white rounded-2xl p-8">
             <div className="flex flex-col justify-center items-center gap-2">
               <Image
-                src="/image/logo144.png"
+                src="/image/logo200.png"
                 alt="logo"
                 width={200}
                 height={200}
