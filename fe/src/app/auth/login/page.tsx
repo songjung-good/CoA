@@ -6,18 +6,18 @@ export default function LoginPage() {
       <div className="relative">
         <div className="absolute w-full h-full top-0 bg-gradient-to-b from-appBlue2 to-appBlue1 -rotate-6 z-0 rounded-2xl"></div>
         <div className="relative z-10">
-          <div className="flex flex-col xl:flex-row gap-10 justify-center items-center shadow-lg bg-white rounded-2xl p-8">
+          <div className="flex flex-col xl:flex-row gap-10 justify-center items-center shadow-md bg-white rounded-2xl p-8">
             <div className="flex flex-col justify-center items-center gap-2">
               <Image
-                src="/image/logo144.png"
+                src="/image/logo200.png"
                 alt="logo"
                 width={200}
                 height={200}
               />
               <h1 className="text-3xl">시작하기</h1>
             </div>
-            <div className="grid gap-2">
-              <button className="flex gap-4 p-4 rounded-xl shadow-lg">
+            <div className="grid gap-4">
+              <button className="flex gap-4 p-4 rounded-xl shadow-md">
                 <Image
                   src="/image/githubSSO.png"
                   alt="githubSSO"
@@ -26,7 +26,7 @@ export default function LoginPage() {
                 />
                 Sign in with Github
               </button>
-              <button className="flex gap-4 p-4 rounded-xl shadow-lg">
+              <button className="flex gap-4 p-4 rounded-xl shadow-md">
                 <Image
                   src="/image/googleSSO.png"
                   alt="googleSSO"

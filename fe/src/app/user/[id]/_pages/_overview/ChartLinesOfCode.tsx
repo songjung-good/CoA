@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { useEffect, useRef } from "react";
+import { colorMapping } from "../../_components/colorMap";
 
 const ChartLinesOfCode = () => {
   const data1 = [
@@ -18,24 +19,9 @@ const ChartLinesOfCode = () => {
     { letter: "Kotlin", frequency: 20 },
     { letter: "Objective-C", frequency: 4 },
   ];
+
   const totalFrequency = data1.reduce((sum, item) => sum + item.frequency, 0);
-  const colorMapping: { [key: string]: string } = {
-    JavaScript: "#F7DF1E",
-    Python: "#3776AB",
-    Java: "#B07219",
-    CSS: "#1572B6",
-    HTML: "#E34C26",
-    TypeScript: "#007ACC",
-    Swift: "#FFAC45",
-    C: "#A8B9CC",
-    "C++": "#00599C",
-    Kotlin: "#F18E33",
-    Dart: "#00B4AB",
-    Shell: "#89E051",
-    Vue: "#42B883",
-    "Objective-C": "#438EFF",
-    // 다른 코드 이름과 색상을 여기에 추가
-  };
+
   // Chart svg 만들기
   const svgRef = useRef<SVGSVGElement>(null);
   useEffect(() => {
@@ -64,16 +50,14 @@ const ChartLinesOfCode = () => {
       .rangeRound([marginTop, height - marginBottom])
       .padding(0.1);
 
-    // Create a value format.
-    const format = x.tickFormat(20, "%");
-
     // Create the SVG container.
     svg
       .attr("width", width)
       .attr("height", height)
       .attr("viewBox", [0, 0, width, height])
       .attr("style", "max-width: 100%; height: auto;");
-
+    //중복생성방지
+    svg.selectAll("g").remove();
     // Append a rect for each letter.
     svg
       .append("g")
