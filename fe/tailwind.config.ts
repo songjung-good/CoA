@@ -18,8 +18,11 @@ const config: Config = {
         appOrange: "#FBA688",
         appGreen: "#DCFB88",
         appPink: "#FB88DD",
-        appGrey1: "#F1F7F5",
+        appGrey1: "#F3F6F8",
         appGrey2: "#E2E8E6",
+      },
+      height: {
+        appVh: "calc(100vh - 80px)",
       },
     },
   },

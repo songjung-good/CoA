@@ -19,5 +19,5 @@ export default function ServiceIntroduceLeft({
 }
 
 const Service = tw.div`
-
+  flex
 `;
