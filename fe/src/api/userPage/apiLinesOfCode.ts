@@ -88,6 +88,23 @@ export async function getTotalLinesOfCode(
         totalLinesOfCode: totalLinesOfCode,
       });
     });
+    //결과값 정렬 생성일자가 최신인거 우선
+    repositories.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+    //언어 내림차순 정렬
+    repositories.forEach((repo) => {
+      const sortedLanguages = Object.entries(repo.languages)
+        .sort((a, b) => b[1] - a[1])
+        .reduce((obj, [key, val]) => {
+          obj[key] = val;
+          return obj;
+        }, {} as LanguageStats);
+
+      repo.languages = sortedLanguages;
+    });
+
     console.log(repositories);
     return repositories;
   } catch (error) {

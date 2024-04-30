@@ -8,11 +8,19 @@ interface DataType {
   lines: number;
 }
 
-const MyPageRepositoryCardChart = ({ repo }: { repo: LanguageStats }) => {
+const MyPageRepositoryCardChart = ({
+  languages,
+  totalLinesOfCode,
+}: {
+  languages: LanguageStats;
+  totalLinesOfCode: number;
+}) => {
   const svgRef = useRef<SVGSVGElement>(null);
-
+  if (Object.keys(languages).length === 0) {
+    return null;
+  }
   useEffect(() => {
-    const data = Object.entries(repo).map(([language, lines]) => ({
+    const data = Object.entries(languages).map(([language, lines]) => ({
       language,
       lines,
     }));
@@ -117,8 +125,19 @@ const MyPageRepositoryCardChart = ({ repo }: { repo: LanguageStats }) => {
   }, []);
 
   return (
-    <div className="p-2">
+    <div className="flex p-4 gap-4">
       <svg ref={svgRef}></svg>
+      <ul>
+        <h3 className="font-semibold">
+          Total Lines of Code: {totalLinesOfCode}
+        </h3>
+        {Object.entries(languages).map(([language, lines], index) => (
+          <li key={index}>
+            {language}: {lines} ({((lines / totalLinesOfCode) * 100).toFixed(2)}
+            %)
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

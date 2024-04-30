@@ -9,7 +9,9 @@ export default function UserRepositoryPage() {
       <ul>
         {repos.map((repo, index) => (
           <li key={index} className="p-4">
-            <MyPageRepositoryCard repo={repo} />
+            <MyPageRepositoryCard
+              repo={repo}
+            />
           </li>
         ))}
       </ul>
