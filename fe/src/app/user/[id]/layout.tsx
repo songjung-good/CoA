@@ -6,7 +6,7 @@ export default function UserPageLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="bg-appGrey1 p-4 flex flex-col gap-4">
+    <main className="bg-appGrey1 flex flex-col py-4 px-[4%] gap-4">
       <UserCard />
       {children}
     </main>

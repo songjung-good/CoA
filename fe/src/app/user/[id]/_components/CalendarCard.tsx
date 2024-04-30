@@ -56,7 +56,10 @@ const CalendarCard: React.FC = () => {
   };
 
   return isLoading ? (
-    <p>Loading</p>
+    <section className="card">
+      <p className="text-lg h-10">Loading...</p>
+      <div className="w-full aspect-[53/7] bg-appGrey1">Loading Chart...</div>
+    </section>
   ) : (
     <section className="card">
       <div className="flex gap-2 items-center">

@@ -5,7 +5,7 @@ export default function UserRepositoryPage() {
   const repos = repositoryStore((state) => state.repos);
   return (
     <>
-      <ul>
+      <ul className="grid gap-3">
         {repos.map((repo, index) => (
           <li key={index}>
             <MyPageRepositoryCard repo={repo} />
