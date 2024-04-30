@@ -108,16 +108,16 @@ const CardOverlay = tw.div`
 
 const Card = tw.div`
   w-[25rem] 
-  h-[20rem] 
+  h-[20rem]
   border
-  border-appYellow
+  border-appGrey2
   rounded-lg 
   m-2.5 
   flex
   flex-col
   p-4
-  bg-appBlue4
   justify-between
+  hover:border-appBlue1
 `;
 
 const AvatarWrapper = tw.div`

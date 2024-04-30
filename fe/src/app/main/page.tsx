@@ -115,6 +115,7 @@ const Div1 = tw.div`
   border
   shadow-lg
   rounded-2xl
+  hover:border-appBlue1
 `;
 
 const Heading = tw.h3`

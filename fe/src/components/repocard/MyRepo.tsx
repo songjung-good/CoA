@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import tw from 'tailwind-styled-components'; // tailwind-styled-components 라이브러리를 import
 
 interface Repo {
   id: number;
@@ -35,26 +36,81 @@ const MyRepo: React.FC<MyRepoProps> = ({ userID }) => {
   }, [userID]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading>Loading...</Loading>; // tw로 수정
   }
 
   return (
-    <ul className="flex justify-center flex-wrap list-none p-30">
+    <RepoList>
       {repos.map((repo) => (
-        <li key={repo.id} className="border-1 border-appYellow m-1 p-2 relative flex justify-center items-center flex-col transition duration-300 hover:shadow-md" onMouseEnter={() => console.log('Mouse Enter')} onMouseLeave={() => console.log('Mouse Leave')}>
+        <RepoItem key={repo.id} onMouseEnter={() => console.log('Mouse Enter')} onMouseLeave={() => console.log('Mouse Leave')}>
           <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
             {repo.name}
           </a>
-          <div className="buttons absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 invisible transition-all duration-300 flex gap-2">
-            <button className="bg-blue-500 text-white font-bold py-1 px-2 text-sm rounded">분석하기</button>
+          <Buttons>
+            <Button>분석하기</Button>
             {repo.isAnalyzed && (
-              <button className="bg-green-500 text-white font-bold py-1 px-2 text-sm rounded">상세보기</button>
+              <Button>상세보기</Button>
             )}
-          </div>
-        </li>
+          </Buttons>
+        </RepoItem>
       ))}
-    </ul>
+    </RepoList>
   );
 };
+
+const Loading = tw.div`
+  text-center
+  mt-4
+`;
+
+const RepoList = tw.ul`
+  flex
+  justify-center
+  flex-wrap
+  list-none
+  p-30
+`;
+
+const RepoItem = tw.li`
+  border
+  border-appGrey2
+  rounded-md
+  m-1
+  p-2
+  relative
+  flex
+  justify-center
+  items-center
+  flex-col
+  transition
+  duration-300
+  hover:shadow-md
+`;
+
+const Buttons = tw.div`
+  buttons
+  absolute
+  top-1/2
+  left-1/2
+  transform
+  -translate-x-1/2
+  -translate-y-1/2
+  opacity-0
+  invisible
+  transition-all
+  duration-300
+  flex
+  gap-2
+`;
+
+const Button = tw.button`
+  bg-blue-500
+  text-white
+  font-bold
+  py-1
+  px-2
+  text-sm
+  rounded
+`;
 
 export default MyRepo;
