@@ -50,6 +50,7 @@ const ModalOverlay = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* 배경색 및 투명도 조절 */
+  z-index: 4;
   display: flex;
   justify-content: center;
   align-items: center;

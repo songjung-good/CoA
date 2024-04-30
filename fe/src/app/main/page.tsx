@@ -5,9 +5,9 @@ import React from 'react';
 // 레포지토리 분석기(URL 입력)
 import UrlInput from '@/components/analyzer/UrlInput';
 // 개인 레포 불러오기
-import MyRepo from '@/components/repocard/MyRepo';
+import MyRepo from '@/components/maincomponents/MyRepo';
 // 임시 레포 카드
-import RepoCard from '@/components/repocard/RepoCard';
+import RepoCard from '@/components/maincomponents/RepoCard';
 import tw from 'tailwind-styled-components';
 
 const MainPage = () => {
@@ -27,7 +27,7 @@ const MainPage = () => {
       </Div1>
       <Div>
         <Heading>여기는 나의 레포</Heading>
-        <MyRepo userID='songjung-good' />
+        {/* <MyRepo userID='songjung-good' /> */}
       </Div>
       <Div>
         <Heading>여기는 자주찾는 레포</Heading>

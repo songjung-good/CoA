@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import tw from 'tailwind-styled-components';
 // 임시데이터
-import repocardDTO from '@/components/repocard/repocardDTO';
+import repocardDTO from '@/components/maincomponents/repocardDTO';
 
 interface RepoCardProps {
   data: {
@@ -102,7 +102,7 @@ const CardOverlay = tw.div`
   flex
   items-center
   justify-center
-  z-10
+  z-2
   pointer-events-none
 `;
 

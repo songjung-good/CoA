@@ -8,6 +8,9 @@ import tw from "tailwind-styled-components";
 import UserModal from '@/components/analyzer/UserModal';
 import { ExtractUserInfo } from '@/components/analyzer/ExtractUserInfo';
 
+// GitHub 개인 액세스 토큰
+const accessToken = process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKENS;
+
 // 타입 정리
 interface User {
   avatar_url: string;
@@ -56,6 +59,11 @@ const UrlInput = () => {
       try {
         const response = await axios.get(
           `https://api.github.com/repos/${githubInfo.username}/${githubInfo.repositoryName}/contributors`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         );
         // console.log(response.data);
         setUserData(response.data);

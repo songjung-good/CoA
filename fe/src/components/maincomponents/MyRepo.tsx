@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import tw from 'tailwind-styled-components'; // tailwind-styled-components 라이브러리를 import
 
+// GitHub 개인 액세스 토큰
+const accessToken = process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKENS;
+
 interface Repo {
   id: number;
   name: string;
@@ -20,7 +23,14 @@ const MyRepo: React.FC<MyRepoProps> = ({ userID }) => {
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const response = await axios.get(`https://api.github.com/users/${userID}/repos`);
+        const response = await axios.get(
+          `https://api.github.com/users/${userID}/repos`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+          );
         setRepos(response.data);
         setLoading(false);
       } catch (error) {
