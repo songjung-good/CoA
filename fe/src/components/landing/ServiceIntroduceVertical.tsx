@@ -1,8 +1,6 @@
-import { StaticImageData } from "next/image";
-import Link from "next/link";
+import { forwardRef } from "react";
 import Image from "next/image";
 import tw from "tailwind-styled-components";
-import { fullscreen } from "@uiw/react-md-editor";
 
 interface ServiceIntroduceVerticalProps {
   content: string;
@@ -10,13 +8,12 @@ interface ServiceIntroduceVerticalProps {
   style: React.CSSProperties;
 }
 
-export default function ServiceIntroduceVertical({
-  content,
-  image,
-  style,
-}: ServiceIntroduceVerticalProps) {
+const ServiceIntroduceVertical = forwardRef<
+  HTMLDivElement,
+  ServiceIntroduceVerticalProps
+>(({ content, image, style }, ref) => {
   return (
-    <Service style={style}>
+    <Service ref={ref} style={style}>
       <div className="flex w-1/2 h-72 relative justify-center items-center">
         <Image src={image} layout="fill" objectFit="cover" alt="analysis" />
       </div>
@@ -25,8 +22,10 @@ export default function ServiceIntroduceVertical({
       </p>
     </Service>
   );
-}
+});
 
 const Service = tw.div`
   flex flex-col items-center w-full relative mb-20
 `;
+
+export default ServiceIntroduceVertical;
