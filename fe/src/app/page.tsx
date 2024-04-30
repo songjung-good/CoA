@@ -11,11 +11,56 @@ import ServiceIntroduceLeft from "@/components/landing/ServiceIntroduceLeft.tsx"
 import ServiceIntroduceRight from "@/components/landing/ServiceIntroduceRight.tsx";
 import FloatingButton from "@/components/landing/FloatingButton.tsx";
 
+// Intersection Observer 커스텀 훅
+import { useObserver } from "@/components/landing/ObserverOption.tsx";
+
 export default function HomePage() {
   const [windowWidth, setWindowWidth] = useState(0);
   const [showFloatingButton, setShowFloatingButton] = useState(false);
-  const [toggleButtonText, setToggleButtonText] = useState("+");
   const [isButtonsVisible, setIsButtonsVisible] = useState(false);
+
+  // fadein 설정 ------------------------------------------------
+  const introRef1 = useRef(null);
+  const introRef2 = useRef(null);
+  const introRef3 = useRef(null);
+  const introRef4 = useRef(null);
+
+  // 가시성 상태 기록을 위한 상태 변수
+  const [active1, setActive1] = useState(false);
+  const [active2, setActive2] = useState(false);
+  const [active3, setActive3] = useState(false);
+  const [active4, setActive4] = useState(false);
+
+  const { isVisible: isVisible1 } = useObserver({
+    target: introRef1,
+    option: { threshold: 0.2 },
+  });
+  const { isVisible: isVisible2 } = useObserver({
+    target: introRef2,
+    option: { threshold: 0.2 },
+  });
+  const { isVisible: isVisible3 } = useObserver({
+    target: introRef3,
+    option: { threshold: 0.2 },
+  });
+  const { isVisible: isVisible4 } = useObserver({
+    target: introRef4,
+    option: { threshold: 0.2 },
+  });
+
+  useEffect(() => {
+    if (isVisible1) setActive1(true);
+    if (isVisible2) setActive2(true);
+    if (isVisible3) setActive3(true);
+    if (isVisible4) setActive4(true);
+  }, [isVisible1, isVisible2, isVisible3, isVisible4]);
+
+  const fadeEffect = (active: boolean) => ({
+    opacity: active ? 1 : 0,
+    transform: `translateY(${active ? 0 : 300}px)`,
+    transition: "opacity 1s ease-out, transform 0.5s ease-out",
+  });
+  // fadein 설정 ------------------------------------
 
   // 위로가기 버튼
   const titleRef = useRef<HTMLDivElement | null>(null);
@@ -68,22 +113,6 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", updateWindowWidth);
   }, []);
 
-  const fadeEffect = (offset: number) => ({
-    opacity: Math.min(1, scrollY / offset),
-    transform: `translateY(${300 - Math.min(300, (scrollY / offset) * 300)}px)`,
-    transition: "opacity 1s ease-out, transform 0.5s ease-out",
-  });
-
-  const toggleButtons = () => {
-    setIsButtonsVisible(!isButtonsVisible);
-
-    if (toggleButtonText === "+") {
-      setToggleButtonText("-");
-    } else {
-      setToggleButtonText("+");
-    }
-  };
-
   return (
     <div>
       <LadingComponent ref={titleRef}>
@@ -94,7 +123,6 @@ export default function HomePage() {
         <FloatingButton
           showFloatingButton={showFloatingButton}
           isButtonsVisible={isButtonsVisible}
-          toggleButtons={toggleButtons}
           scrollToTitle={scrollToTitle}
           // 스크롤 아래로 내렸을때 플로팅 버튼
         />
@@ -107,24 +135,28 @@ export default function HomePage() {
         {windowWidth <= 1280 ? (
           <>
             <ServiceIntroduceVertical
+              ref={introRef1}
               content="여기에 내용을 적어주세요"
               image="/image/chun.png"
-              style={fadeEffect(400)}
+              style={fadeEffect(active1)}
             />
             <ServiceIntroduceVertical
+              ref={introRef2}
               content="또 다른 서비스 설명"
               image="/image/chun.png"
-              style={fadeEffect(800)}
+              style={fadeEffect(active2)}
             />
             <ServiceIntroduceVertical
+              ref={introRef3}
               content="세 번째 서비스 내용"
               image="/image/chun.png"
-              style={fadeEffect(1200)}
+              style={fadeEffect(active3)}
             />
             <ServiceIntroduceVertical
+              ref={introRef4}
               content="마지막 서비스 설명"
               image="/image/chun.png"
-              style={fadeEffect(1600)}
+              style={fadeEffect(active4)}
             />
           </>
         ) : (
