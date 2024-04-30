@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { LanguageStats } from "@/api/userPage/apiLinesOfCode";
+import { colorMapping } from "../../_components/colorMap";
 
 interface DataType {
   language: string;
@@ -63,7 +64,7 @@ const MyPageRepositoryCardChart = ({ repo }: { repo: LanguageStats }) => {
       .selectAll()
       .data(arcs)
       .join("path")
-      .attr("fill", (d) => color(d.data.language))
+      .attr("fill", (d) => colorMapping[d.data.language])
       .attr("d", (d) => {
         const defaultArcObject: d3.DefaultArcObject = {
           innerRadius: 0,
@@ -117,7 +118,6 @@ const MyPageRepositoryCardChart = ({ repo }: { repo: LanguageStats }) => {
 
   return (
     <div className="p-2">
-      Languages:
       <svg ref={svgRef}></svg>
     </div>
   );
