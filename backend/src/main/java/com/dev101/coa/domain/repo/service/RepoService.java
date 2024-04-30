@@ -31,11 +31,9 @@ import java.util.stream.Collectors;
 public class RepoService {
 
 
-    @Value("${ai.server.url}")
+    @Value("${url.ai}")
     private String aiServerUrl;
 
-    @Value("${ai.server.port}")
-    private String aiServerPort;
 
     private final RepoViewRepository repoViewRepository;
     private final CommentRepository commentRepository;
@@ -195,7 +193,7 @@ public class RepoService {
 
         // AI 서버로 요청 보내기 (body: repoUrl, userName, memberId, isOwn)
 
-        String aiUrl = aiServerUrl + ":" + aiServerPort;
+        String aiUrl = aiServerUrl;
         String response = webClient.post()
                 .uri(aiUrl)
                 .contentType(MediaType.APPLICATION_JSON)
