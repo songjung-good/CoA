@@ -10,6 +10,7 @@ import ServiceIntroduceVertical from "@/components/landing/ServiceIntroduceVerti
 import ServiceIntroduceLeft from "@/components/landing/ServiceIntroduceLeft.tsx";
 import ServiceIntroduceRight from "@/components/landing/ServiceIntroduceRight.tsx";
 import FloatingButton from "@/components/landing/FloatingButton.tsx";
+import LandingCarousel from "@/components/landing/LandingCarousel.tsx";
 
 // Intersection Observer 커스텀 훅
 import { useObserver } from "@/components/landing/ObserverOption.tsx";
@@ -115,6 +116,9 @@ export default function HomePage() {
 
   return (
     <div>
+      <div className="relative">
+        <LandingCarousel />
+      </div>
       <LadingComponent ref={titleRef}>
         <Slogan>코드만 치세요. 분석은 우리가 할께요.</Slogan>
         <Title>CoA</Title>
@@ -185,10 +189,7 @@ export default function HomePage() {
 }
 
 const LadingComponent = tw.main`
-flex 
-flex-col 
-justify-center
-items-center
+absolute inset-0 flex flex-col items-center justify-center z- text-white
 `;
 
 const Title = tw.h1`
@@ -204,7 +205,7 @@ text-center
 `;
 
 const IntroBar = tw.div`
-flex items-center justify-center bg-appGrey2 mt-32 mb-10 py-10
+flex items-center justify-center bg-appGrey2 mb-10 py-10 rounded-tl-lg rounded-tr-lg
 `;
 
 const ServiceComponent = tw.div`
