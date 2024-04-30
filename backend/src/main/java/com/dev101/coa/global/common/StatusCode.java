@@ -10,7 +10,7 @@ public enum StatusCode {
     REPO_VIEW_NOT_FOUND(false, 300, "레포지토리 뷰가 존재하지 않습니다."),
 
     // COOD : 400
-    CODE_NOT_FOUND(false, 400, "코드를 찾을 수 없습니다.")
+    CODE_NOT_FOUND(false, 400, "코드를 찾을 수 없습니다."),
 //    // COMMON
 //    FORBIDDEN_REQUEST(false, 202, "접근 권한이 없습니다."),
 //
@@ -20,7 +20,7 @@ public enum StatusCode {
 //
     //회원-태그: 400
 //    USER_TAG_NOT_FOUND(false, 400, "회원에게서 태그를 찾을 수 없습니다."),
-    NOT_FOUND_PLAT(false, 401, "플랫폼을 찾을 수 없습니다.")
+    NOT_FOUND_PLAT(false, 401, "플랫폼을 찾을 수 없습니다."),
 //
 //    //게임 : 500
 //    GAME_NOT_FOUND(false, 500,"게임을 찾을 수 없습니다." ),
