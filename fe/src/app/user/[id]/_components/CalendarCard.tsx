@@ -58,7 +58,7 @@ const CalendarCard: React.FC = () => {
   return isLoading ? (
     <p>Loading</p>
   ) : (
-    <section className="m-4 p-4 bg-appGrey1 rounded-2xl">
+    <section className="card">
       <div className="flex gap-2 items-center">
         <p className="text-lg">
           total: {Object.values(totalContribution).reduce((a, b) => a + b)}

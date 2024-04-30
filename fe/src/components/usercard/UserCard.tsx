@@ -7,7 +7,7 @@ import userStore from "@/store/user";
 export default function UserCard() {
   const userName = userStore((state) => state.userName);
   return (
-    <section className="flex flex-col gap-4 bg-appGrey1 p-4 m-4 rounded-2xl">
+    <section className="card flex flex-col gap-4 ">
       <div className="flex flex-row gap-4">
         <Image src="/image/logo144.png" alt="logo" width={144} height={144} />
         <div className="grow flex flex-col gap-2">
@@ -15,7 +15,7 @@ export default function UserCard() {
             <p>닉네임 / userName: {userName}</p>
             <IsStar isStar={false} />
           </div>
-          <div className="bg-appGrey2 p-4 rounded-2xl grow">
+          <div className="bg-appGrey1 p-4 rounded-2xl grow">
             <p>자기소개 글</p>
           </div>
         </div>
