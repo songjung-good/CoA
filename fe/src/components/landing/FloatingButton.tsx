@@ -10,7 +10,6 @@ import Upicon from "@/icons/Upicon.tsx";
 interface FloatingButtonProps {
   showFloatingButton: boolean;
   isButtonsVisible: boolean;
-  toggleButtons: () => void;
   scrollToTitle: () => void;
 }
 
