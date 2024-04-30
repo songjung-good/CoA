@@ -6,6 +6,9 @@ import com.dev101.coa.domain.member.entity.Member;
 import com.dev101.coa.domain.member.repository.MemberRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
+import com.dev101.coa.global.security.info.GitHubUserInfo;
+import com.dev101.coa.global.security.info.GoogleUserInfo;
+import com.dev101.coa.global.security.info.SocialUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -35,11 +39,13 @@ public class AuthenticationService {
 
     }
     private Member updateOrCreateMember(OAuth2User oauthUser, String registrationId) {
-//        System.out.println("oauthUser = " + oauthUser);// 여기서 깃허브랑 분기처리 할까? 여기서 해야될 듯
 
-        String email = oauthUser.getAttribute("email");
-        String name = oauthUser.getAttribute("name");
-        String img = oauthUser.getAttribute("picture");
+//        System.out.println("oauthUser + registrationId = " + oauthUser + registrationId);
+        SocialUserInfo userInfo = extractUserInfo(registrationId, oauthUser);
+
+        String email = userInfo.getEmail();
+        String userName = userInfo.getUsername();
+        String img = userInfo.getImageUrl();
 //        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
         // 어떤 로그인이냐에 따라 다른 로직이되게? 꼭 새로 안만들어도 가능은 할듯 새로만들면 좋긴한데 ,, 두개니까
         // Info 로 만들어볼까
@@ -49,13 +55,13 @@ public class AuthenticationService {
             assert registrationId != null;
             member = Member.builder()
                     .memberEmail(email)
-                    .memberNickname(name)
+                    .memberNickname(userName)
                     .memberImg(img)
                     .memberUuid(UUID.randomUUID())
                     .memberPlatformCode(resolvePlatformCode(registrationId))
                     .build();
         } else {
-            member.updateMemberNickname(name); // 혹은 다른 업데이트 로직
+            member.updateMemberNickname(userName); // 혹은 다른 업데이트 로직
             member.updateMemberImg(img);
         }
         memberRepository.save(member);
@@ -75,5 +81,16 @@ public class AuthenticationService {
         Code code = codeRepository.findById(codeId).orElseThrow(() -> new BaseException(StatusCode.NOT_FOUND_PLAT));
         System.out.println("code = " + code + code.getCodeId());
         return code;
+    }
+
+    public SocialUserInfo extractUserInfo(String registrationId, OAuth2User oauthUser) {
+        Map<String, Object> attributes = oauthUser.getAttributes();
+        if ("google".equals(registrationId)) {
+            return new GoogleUserInfo(attributes);
+        } else if ("github".equals(registrationId)) {
+            return new GitHubUserInfo(attributes);
+        } else {
+            throw new IllegalArgumentException("Unsupported provider: " + registrationId);
+        }
     }
 }
