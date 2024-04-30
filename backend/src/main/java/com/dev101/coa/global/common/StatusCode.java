@@ -18,29 +18,7 @@ public enum StatusCode {
     AI_SERVER_ERROR(false, 500, "AI 서버로부터 응답을 받지 못했습니다."),
 
     // Member : 600
-    COOKIE_NOT_FOUND(false, 600, "쿠키가 존재하지 않습니다.");
-
-
-//
-//    //게임 : 500
-//    GAME_NOT_FOUND(false, 500,"게임을 찾을 수 없습니다." ),
-//    GAME_SAVE(true, 501, "정상적으로 저장 되었습니다."),
-//    GAME_STATISTICS_NOT_FOUND(false, 502, "통계 데이터가 없습니다."),
-//
-//    //좋아요 : 600
-//    PREFER_CANNOT_SAVE(false,600,"좋아요를 등록할 수 없습니다."),
-//    PREFER_NOT_FOUND(false,601,"등록된 좋아요 정보가 없습니다."),
-//
-//    // 태그 : 700
-//    CODE_NOT_EXIST(false, 700, "해당 코드가 존재하지 않습니다."),
-//    TAG_NOT_EXIST(false, 701, "해당 태그가 존재하지 않습니다."),
-//
-//    // 크롤링: 800
-//    CRAWLING_FAILED(false, 800, "크롤링이 실패하였습니다."),
-//    CRAWLING_NOT_FOUND(false, 801, "검색 결과가 없습니다."),
-//
-//    //로그: 900
-//    JSON_TRANS_FAIL(false, 900, "행동에 대해 JSON 변환에 실패했습니다.")
+    COOKIE_NOT_FOUND(false, 600, "쿠키가 존재하지 않습니다."),
     ;
 //
 // COMMON

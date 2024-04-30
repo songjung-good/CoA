@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URL;
 
 
 @Component
@@ -31,13 +32,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) oAuth2User;
 
         member = customOAuth2User.getMember();
-            // 이제 멤버를 사용하여 추가 작업을 수행할 수 있습니다.
-            // 예를 들어, 멤버의 정보를 출력해보겠습니다.
-//            System.out.println("사용자의 이름: " + customOAuth2User);
-//            System.out.println("사용자의 이름: " + member.getMemberNickname());
-//            System.out.println("사용자의 이름: " + member.getMemberId());
-//            System.out.println("사용자의 이메일: " + member.getMemberEmail());
-
         String token = jwtTokenProvider.createToken(member);
 
         // 쿠키에 토큰 설정
@@ -46,8 +40,39 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         jwtCookie.setSecure(true); // HTTPS에서만 쿠키를 전송
         jwtCookie.setPath("/");
         response.addCookie(jwtCookie);
-        response.sendRedirect("clientUrl");  // 사용자를 홈 페이지로 리다이렉트
+
+        // 요청한 도메인에 따라 다르게 작동하게 하기 위한 설정
+        String refererHeader = request.getHeader("Referer");
+
+        if (refererHeader != null && isAllowedDomain(refererHeader)) {
+            URL refererUrl = new URL(refererHeader);
+            String domain = refererUrl.getHost();
+            int port = refererUrl.getPort();
+
+            // 허용된 도메인이면, 포트와 도메인에 따라 적절히 리디렉션합니다.
+            if (domain.equals("localhost") && port == 3000) {
+                response.sendRedirect("http://localhost:3000");
+            } else if (domain.equals("k10e101.p.ssafy.io")) {
+                response.sendRedirect("https://k10e101.p.ssafy.io");
+            } else {
+                // 허용되지 않은 도메인의 경우 기본 도메인으로 리디렉션합니다.
+                response.sendRedirect("https://k10e101.p.ssafy.io");
+            }
+        } else {
+            // Referer가 없거나 기타 문제가 있는 경우 기본 도메인으로 리디렉션합니다.
+            response.sendRedirect("https://k10e101.p.ssafy.io");
+        }
 
         super.onAuthenticationSuccess(request, response, authentication);
+    }
+
+    private boolean isAllowedDomain(String url) {
+        try {
+            URL parsedUrl = new URL(url);
+            String host = parsedUrl.getHost();
+            return host.equals("localhost") || host.equals("k10e101.p.ssafy.io");
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
