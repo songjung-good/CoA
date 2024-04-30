@@ -38,9 +38,6 @@ public class Repo extends BaseEntity {
     @Column(name = "repo_pr_cnt")
     private Integer repoPrCnt;
 
-    @Column(name = "repo_line_cnt")
-    private Integer repoLineCnt;
-
     @Column(name = "repo_gitlab_project_id")
     private Integer repoGitlabProjectId;
 
