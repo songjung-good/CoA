@@ -7,11 +7,14 @@ import com.dev101.coa.domain.repo.service.RepoService;
 import com.dev101.coa.global.common.BaseResponse;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
+import com.dev101.coa.global.security.CustomOAuth2User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,7 +38,9 @@ public class RepoController {
     }
 
     @PostMapping("/analysis")
-    public ResponseEntity<BaseResponse<String>> startAnalysis(HttpServletRequest request, @RequestBody AnalysisReqDto analysisReqDto) {
+    public ResponseEntity<BaseResponse<String>> startAnalysis(@AuthenticationPrincipal CustomOAuth2User currentUser, HttpServletRequest request, @RequestBody AnalysisReqDto analysisReqDto) {
+        // TODO: Test login member
+        System.out.println("currentUser = " + currentUser.getMember().getMemberId());
         Cookie[] cookies = request.getCookies();
         Cookie cookie = null;
         if (cookies != null) {
