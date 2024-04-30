@@ -1,6 +1,8 @@
-from fastapi import APIRouter
+from dependency_injector.wiring import inject, Provide
+from fastapi import APIRouter, Depends
+from redis import Redis
 
-from app.db.redis_config import redis_client
+from config.containers import Container
 
 router = APIRouter(prefix="")
 
@@ -10,7 +12,10 @@ def get():
     return "Hello, World!"
 
 
-@router.get('/test')
-def get_test():
+@router.get('/redis-test')
+@inject
+def get_test(
+        redis_client: Redis = Depends(lambda: Container.redis_client())
+):
     redis_client.set('python_test', 'test')
     return 'test'
