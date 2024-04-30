@@ -31,9 +31,10 @@ public class RepoController {
     }
 
     @PostMapping("/{analysisId}")
-    public ResponseEntity<BaseResponse<Object>> saveAnalysis(@PathVariable Long analysisId) {
+    public ResponseEntity<BaseResponse<Object>> saveAnalysis(@PathVariable String analysisId) {
 
-        repoService.saveAnalysis(analysisId);
+        Long memberId = 1L;
+        repoService.saveAnalysis(memberId, analysisId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
@@ -56,7 +57,7 @@ public class RepoController {
         // TODO: memberId를 쿠키로부터 가져오기
         Long memberId = 0L;
 
-        String analysisId = repoService.startAnalysis(memberId, analysisReqDto);
+        String analysisId = repoService.startAnalysis(memberId, analysisReqDto.getCodeId(), analysisReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<String>(analysisId));
     }
 

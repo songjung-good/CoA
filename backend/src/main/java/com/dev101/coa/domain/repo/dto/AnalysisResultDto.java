@@ -17,6 +17,8 @@ public class AnalysisResultDto {
 
     private Long memberId; // CoA Service memberId
 
+    private Long codeId;
+
     private Boolean isOwn;
 
     private Integer percentage;
