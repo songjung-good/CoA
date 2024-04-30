@@ -13,14 +13,17 @@ public enum StatusCode {
     // COOD : 400
     CODE_NOT_FOUND(false, 400, "코드를 찾을 수 없습니다."),
     NOT_FOUND_PLAT(false, 401, "플랫폼을 찾을 수 없습니다."),
+    REPO_PLAT_NOT_EXIST(false, 402, "해당하는 저장소 플랫폼이 존재하지 않습니다."),
 
     // AI Server : 500
     AI_SERVER_ERROR(false, 500, "AI 서버로부터 응답을 받지 못했습니다."),
 
     // Member : 600
-    COOKIE_NOT_FOUND(false, 600, "쿠키가 존재하지 않습니다.");
+    COOKIE_NOT_FOUND(false, 600, "쿠키가 존재하지 않습니다."),
 
-
+    // api : 800
+    DATA_NOT_EXIST(false, 800, "api 응답이 존재하지 않습니다."),
+    CANNOT_GET_CONTRIBUTOR(false, 801, "contributor 수를 가져오는데 실패했습니다.");
 //
 //    //게임 : 500
 //    GAME_NOT_FOUND(false, 500,"게임을 찾을 수 없습니다." ),

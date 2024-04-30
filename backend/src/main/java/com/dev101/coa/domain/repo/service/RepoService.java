@@ -6,7 +6,6 @@ import com.dev101.coa.domain.member.AccountLinkRepository;
 import com.dev101.coa.domain.member.entity.Member;
 import com.dev101.coa.domain.repo.dto.*;
 import com.dev101.coa.domain.repo.entity.Comment;
-import com.dev101.coa.domain.repo.entity.Repo;
 import com.dev101.coa.domain.repo.entity.RepoView;
 import com.dev101.coa.domain.repo.entity.RepoViewSkill;
 import com.dev101.coa.domain.repo.repository.CommentRepository;
@@ -14,15 +13,23 @@ import com.dev101.coa.domain.repo.repository.RepoViewRepository;
 import com.dev101.coa.domain.repo.repository.RepoViewSkillRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -34,6 +41,9 @@ public class RepoService {
 
     @Value("${url.ai}")
     private String aiServerUrl;
+
+    @Value("${url.gitHubApi}")
+    private String gitHubApiUrl;
 
 
     private final RepoViewRepository repoViewRepository;
@@ -47,6 +57,10 @@ public class RepoService {
 
     // AI server 통신을 위한 WebClient
     private final WebClient webClient;
+
+    // CodeIdList(github, gitlab)
+    Long[] platforIdList = {1002L, 1003L};
+    Set<Long> platformIdSet = new HashSet<>(Arrays.asList(platforIdList));
 
     public void editReadme(Long repoViewId, EditReadmeReqDto editReadmeReqDto) {
         // 레포 뷰 존재 유무 확인
@@ -104,23 +118,26 @@ public class RepoService {
     public void saveAnalysis(Long memberId, String analysisId) {
         // redis에서 analysisId 로 값 조회시 존재 여부 판단
         Map<Object, Object> redisData = redisTemplateRepo.opsForHash().entries(analysisId);
-        if(redisData.isEmpty()){
+        if (redisData.isEmpty()) {
             throw new BaseException(StatusCode.REPO_VIEW_NOT_FOUND);
         }
         // TODO: 로그인 사용자 예외처리
         // 로그인 사용자와 분석 요구자 일치 여부 확인
-        Long redisMemberId = ((Integer)redisData.get("memberId")).longValue();
-        if(!memberId.equals(redisMemberId)){
+        Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
+        if (!memberId.equals(redisMemberId)) {
             throw new BaseException(StatusCode.REPO_REQ_MEMBER_NOT_MATCH);
         }
         // repo 저장(platformCodeId, repoPath, repoReadmeOrigin, repoCommtCnt,
         // TODO: platformCodeId에 따른 분기처리
+        Long redisCodeId = ((Integer) redisData.get("codeId")).longValue();
+        if (!platformIdSet.contains(redisCodeId)) throw new BaseException(StatusCode.REPO_PLAT_NOT_EXIST);
+        Code code = codeRepository.findByCodeId(redisCodeId).orElseThrow(() -> new BaseException(StatusCode.NOT_FOUND_PLAT));
+
+        RepoInfo repoInfo = getRepoInfo(code.getCodeId(), redisData);
 
 
 
         // repoView 저장
-
-
 
 
         // mysql 저장
@@ -129,6 +146,84 @@ public class RepoService {
 
         // repoView 저장
 
+    }
+
+    private RepoInfo getRepoInfo(Long codeId, Map<Object, Object> redisData) {
+        // gitHub
+        if(codeId == 1002L) { // ex: https://api.github.com/repos/rlagkdud/Spring-Pay-System
+            // repoPath로부터 사용자 이름과 레포이름을 받아오기
+            String repoPath = (String)redisData.get("repoPath");
+            String[] split = repoPath.split("/");
+            String repoName = split[split.length-1];
+            String userName = split[split.length-2];
+
+            // redis에서 repoReadmeOrigin, repoCommitCnt 가져오기
+            String repoReadmeOrigin = ((AiResultDto) redisData.get("result")).getReadme();
+            Long repoCommitCnt = ((AiResultDto) redisData.get("result")).getTotalCommitCnt();
+
+
+            // github api 요청 보내 repoStartDate, repoEndDate, repoMemberCnt 받아오기
+            // TODO:  repoPrCnt api에 없던데 이거 나만 못찾아?
+            String jsonStrResponse = webClient.get()
+                    .uri(gitHubApiUrl+"/repos/"+userName+"/"+repoName)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()  // 응답을 검색
+                    .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
+                    .block();  // Mono를 블로킹하여 실제 값 가져오기
+
+            System.out.println("response Json String = " + jsonStrResponse);
+
+            if(jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
+
+            // 문자열 -> json object
+            JsonObject jsonObject = JsonParser.parseString(jsonStrResponse).getAsJsonObject();
+
+            // 문자열을 LocaDateTime으로 바꾸기 위한 formatter
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+            // repoStartDate
+            String createdAtStr = jsonObject.get("created_at").getAsString();
+            // ISO_LOCAL_DATE_TIME 포맷을 가정하고 파싱
+            LocalDateTime createdAt = LocalDateTime.parse(createdAtStr, formatter);
+
+            // repoEndDate
+            String pushedAtDate = jsonObject.get("pushed_at").getAsString();
+            LocalDateTime pushedAt = LocalDateTime.parse(pushedAtDate, formatter);
+
+            jsonStrResponse = webClient.get()
+                    .uri(gitHubApiUrl+"/repos/"+userName+"/"+repoName+"/"+"contributors")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()  // 응답을 검색
+                    .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
+                    .block();  // Mono를 블로킹하여 실제 값 가져오기
+            System.out.println("response Json String = " + jsonStrResponse);
+
+            if(jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
+
+            // 문자열 -> json object
+            JsonElement jsonElement = JsonParser.parseString(jsonStrResponse);
+
+            // contributor cnt
+            Integer repoContributorCnt = 0;
+            if (jsonElement.isJsonArray()) {
+                JsonArray jsonArray = jsonElement.getAsJsonArray();
+                repoContributorCnt = jsonArray.size();
+            } else {
+                throw new BaseException(StatusCode.CANNOT_GET_CONTRIBUTOR);
+            }
+
+            return RepoInfo.builder()
+                    .repoPath(repoPath)
+                    .repoReadmeOrigin(repoReadmeOrigin)
+                    .repoCommitCnt(repoCommitCnt)
+                    .repoStartDate(createdAt)
+                    .repoEndDate(pushedAt)
+                    .build();
+        }
+
+        // gitLab {
+        else if(codeId == 1003L){ // ex; https://lab.ssafy.com/api/v4/projects/565790
+
+        }
     }
 
 
@@ -148,11 +243,8 @@ public class RepoService {
         Member member = null;
 
         // codeId githb, gitlab 인지 판단하기
-        Set<Long> platformList = new HashSet<>();
-        platformList.add(1002L);
-        platformList.add(1003L);
-        if(!platformList.contains(codeId)){
-            throw new BaseException(StatusCode.NOT_FOUND_PLAT);
+        if (!platformIdSet.contains(codeId)) {
+            throw new BaseException(StatusCode.REPO_PLAT_NOT_EXIST);
         }
 
         // isOwn 값 처리하기
@@ -176,9 +268,11 @@ public class RepoService {
         redisTemplateRepo.expire(analysisId, 24, TimeUnit.HOURS); // 레디스에 보관하고 있을 시간
 
         // AI 서버로 요청 보내기 (body: repoUrl, userName, memberId, isOwn)
+        // platform code에 따라 요청 보낼 url 분기처리
         String aiUrl = "";
-        if(codeId == 1002) aiUrl = aiServerUrl + "/github";
-        else if(codeId == 1003) aiUrl = aiServerUrl + "/gitlab";
+        if (codeId == 1002) aiUrl = aiServerUrl + "/github";
+        else if (codeId == 1003) aiUrl = aiServerUrl + "/gitlab";
+        else throw new BaseException(StatusCode.REPO_PLAT_NOT_EXIST);
 
         String response = webClient.post()
                 .uri(aiUrl)
@@ -187,7 +281,6 @@ public class RepoService {
                         AiAnalysisReqDto.builder()
                                 .repoUrl(analysisReqDto.getRepoUrl())
                                 .userName(analysisReqDto.getUserName())
-                                .memberId(member.getMemberId())
                                 .isOwn(isOwn)
                                 .build()
                 ), AiAnalysisReqDto.class)
@@ -254,14 +347,14 @@ public class RepoService {
         Map<Object, Object> redisData = redisTemplateRepo.opsForHash().entries(analysisId);
 
         // redis에서 analysisId에 해당하는 요소를 가져온다.
-        String redisRepoPath = (String)redisData.get("repoPath");
+        String redisRepoPath = (String) redisData.get("repoPath");
         if (redisRepoPath == null) {
             throw new BaseException(StatusCode.REPO_VIEW_NOT_FOUND);
         }
 
 
         // memberId와 요소의 memberId의 일치여부를 확인한다.
-        Long redisMemberId = ((Integer)redisData.get("memberId")).longValue();
+        Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
         if (!Objects.equals(memberId, redisMemberId)) {
             // 일치하지 않으면 예외 발생
             throw new BaseException(StatusCode.REPO_REQ_MEMBER_NOT_MATCH);

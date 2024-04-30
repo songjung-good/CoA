@@ -11,6 +11,8 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AiResultDto {
+    private Long totalCommitCnt;
+
     private String readme;
 
     private String repoViewResult;
