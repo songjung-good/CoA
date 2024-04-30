@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import styled from "styled-components";
 import axios from "axios";
+import tw from "tailwind-styled-components";
 
 // 받는 파일
 import UserModal from '@/components/analyzer/UserModal';
@@ -68,53 +68,47 @@ const UrlInput = () => {
   };
 
   return (
-    <div>
-      <Container>
-        <StyledInput
-          type="text"
-          placeholder="🔎Repository URL을 입력하세요"
-          value={inputValue}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-        />
-        <Styledbutton onClick={fetchGitHubInfo}>분석하기</Styledbutton>
-      </Container>
+
+    <Container>
+      <StyledInput
+        type="text"
+        placeholder="🔎Repository URL을 입력하세요"
+        value={inputValue}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+      />
+      <StyledButton onClick={fetchGitHubInfo}>분석하기</StyledButton>
       <div>{userData && <UserModal userData={userData} />}</div>
-    </div>
+    </Container>
+
   );
 };
 
-//
-const Container = styled.div`
-  width: 80%;
-  display: flex;
-  justify-content: space-around;
-  margin: 0 auto;
+const Container = tw.div`
+  w-4/5
+  flex
+  justify-around
 `;
 
-// 입력창 css
-const StyledInput = styled.input`
-  width: 80%;
-  padding: 10px;
-  display: block;
-  border: 2px solid appYellow;
-  border-radius: 25px;
-  transition: border-color 0.3s ease;
-  &:hover {
-    border-color: appGrey2;
-  }
+const StyledInput = tw.input`
+  w-4/5
+  px-4
+  py-2
+  border-2
+  border-appGrey2
+  rounded-full
+  transition-colors
+  duration-300
+  hover:border-blue-400
 `;
 
-// 입력 버튼 css
-const Styledbutton = styled.button`
-  width: 10%;
-  border: 2px solid black;
-  border-radius: 25px;
-  transition: border-color 0.3s ease;
-  &:hover {
-    border-color: appGrey2;
-    transform: scale(1.05);
-  }
+const StyledButton = tw.button`
+  border-2
+  border-appGrey2
+  rounded-full
+  transition-colors
+  duration-300
+  hover:border-blue-400
 `;
 
 export default UrlInput;
