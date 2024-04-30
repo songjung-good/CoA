@@ -1,13 +1,16 @@
+'use client'
 import Image from "next/image";
 
 export default function LoginPage() {
+  const serverUrl = process.env.NEXT_PUBLIC_URL_SERVER;
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/google'; // OAuth는 fetch나 axios로 보낼 시 무조건 CORS에 막히는 듯
+    window.location.href = `${serverUrl}/oauth2/authorization/google`; // OAuth는 fetch나 axios로 보낼 시 무조건 CORS에 막히는 듯
   };
 
   // GitHub 로그인 버튼 클릭 시 이벤트 핸들러
   const handleGitHubLogin = () => {
+    window.location.href = `${serverUrl}/oauth2/authorization/github`;
   };
 
 
@@ -27,7 +30,7 @@ export default function LoginPage() {
               <h1 className="text-3xl">시작하기</h1>
             </div>
             <div className="grid gap-4">
-              <button className="flex gap-4 p-4 rounded-xl shadow-md">
+              <button className="flex gap-4 p-4 rounded-xl shadow-md" onClick={handleGitHubLogin}>
                 <Image
                   src="/image/githubSSO.png"
                   alt="githubSSO"
@@ -36,7 +39,7 @@ export default function LoginPage() {
                 />
                 Sign in with Github
               </button>
-              <button className="flex gap-4 p-4 rounded-xl shadow-md">
+              <button className="flex gap-4 p-4 rounded-xl shadow-md" onClick={handleGoogleLogin}>
                 <Image
                   src="/image/googleSSO.png"
                   alt="googleSSO"
