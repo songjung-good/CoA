@@ -1,6 +1,8 @@
 package com.dev101.coa.global.security;
 
 import com.dev101.coa.domain.member.entity.Member;
+import com.dev101.coa.global.common.StatusCode;
+import com.dev101.coa.global.exception.BaseException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -50,7 +52,7 @@ public class JwtTokenProvider { // 토큰 만들거나 관리하는 친구
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authToken);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new RuntimeException("Expired or invalid JWT token");
+            throw new BaseException(StatusCode.NOT_FOUND_PLAT);
         }
     }
 
