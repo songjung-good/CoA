@@ -8,10 +8,19 @@ public enum StatusCode {
 
     // REPO : 300
     REPO_VIEW_NOT_FOUND(false, 300, "레포지토리 뷰가 존재하지 않습니다."),
+    REPO_REQ_MEMBER_NOT_MATCH(false, 301, "레포지토리 분석을 요청한 사용자가 아닙니다."),
 
     // COOD : 400
-    CODE_NOT_FOUND(false, 400, "코드를 찾을 수 없습니다.")
-//    // COMMON
+    CODE_NOT_FOUND(false, 400, "코드를 찾을 수 없습니다."),
+
+    // AI Server : 500
+    AI_SERVER_ERROR(false, 500, "AI 서버로부터 응답을 받지 못했습니다."),
+
+    // Member : 600
+    COOKIE_NOT_FOUND(false, 600, "쿠키가 존재하지 않습니다.");
+
+//
+// COMMON
 //    FORBIDDEN_REQUEST(false, 202, "접근 권한이 없습니다."),
 //
 //    //회원 : 300
