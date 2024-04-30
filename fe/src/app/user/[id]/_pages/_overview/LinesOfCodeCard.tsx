@@ -34,7 +34,7 @@ const LinesOfCodeCard = () => {
 
   // console.log(data1);
   return (
-    <section className="m-4 p-4 bg-appGrey1 rounded-2xl">
+    <section className="card">
       <p>사용 언어 통계</p>
       <ChartLinesOfCode />
       {/* <ul>

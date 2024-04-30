@@ -7,7 +7,7 @@ export default function UserPageTabBar({
 }) {
   // Button Color
   const buttonCSS =
-    "px-6 py-3 rounded-lg bg-appGrey2 hover:bg-appBlue1 whitespace-nowrap";
+    "px-6 py-3 rounded-lg bg-appGrey1 hover:bg-appBlue1 whitespace-nowrap";
   const activeButtonCSS =
     "px-6 py-3 rounded-lg bg-appBlue2 hover:bg-appBlue1 whitespace-nowrap";
   function getButtonColor(key: number) {
@@ -20,7 +20,7 @@ export default function UserPageTabBar({
 
   return (
     <nav
-      className="bg-appBlue4 m-4 p-4 rounded-2xl
+      className=" bg-appBlue4 p-4 rounded-2xl hover:border-appBlue1 border shadow-lg
       flex justify-between overflow-auto"
     >
       <div className="flex gap-4 pr-4">

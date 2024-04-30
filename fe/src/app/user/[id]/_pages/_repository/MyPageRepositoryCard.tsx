@@ -3,7 +3,7 @@ import MyPageRepositoryCardChart from "./ChartPie";
 
 export default function MyPageRepositoryCard({ repo }: { repo: Repository }) {
   return (
-    <div className="bg-appGrey1 rounded-2xl p-4">
+    <div className="card">
       <div className="md:flex justify-between items-end">
         <h2 className="text-2xl">{repo.name}</h2>
         <p>
