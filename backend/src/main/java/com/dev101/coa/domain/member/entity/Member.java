@@ -27,6 +27,9 @@ public class Member extends BaseEntity {
     @Column(name = "member_nickname", nullable = false, length = 16)
     private String memberNickname;
 
+    @Column(name = "member_img", nullable = true, length = 255)
+    private String memberImg;
+
     @Column(name = "member_last_visit_check")
     private LocalDateTime memberLastVisitCheck;
 
@@ -42,5 +45,9 @@ public class Member extends BaseEntity {
 
     public void updateMemberNickname (String memberNickname) {
         this.memberNickname = memberNickname;
+    }
+
+    public void updateMemberImg (String memberImg) {
+        this.memberImg = memberImg;
     }
 }
