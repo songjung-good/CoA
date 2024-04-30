@@ -14,6 +14,7 @@ import com.dev101.coa.domain.repo.repository.RepoViewSkillRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.MediaType;
@@ -28,6 +29,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RepoService {
+
+
+    @Value("${ai.server.url}")
+    private String aiServerUrl;
+
+    @Value("${ai.server.port}")
+    private String aiServerPort;
 
     private final RepoViewRepository repoViewRepository;
     private final CommentRepository commentRepository;
@@ -186,7 +194,8 @@ public class RepoService {
 //        System.out.println("Retrieved Data: " + retrievedData);
 
         // AI 서버로 요청 보내기 (body: repoUrl, userName, memberId, isOwn)
-        String aiUrl = "https://k10e101.p.ssafy.io:7777";
+
+        String aiUrl = aiServerUrl + ":" + aiServerPort;
         String response = webClient.post()
                 .uri(aiUrl)
                 .contentType(MediaType.APPLICATION_JSON)
