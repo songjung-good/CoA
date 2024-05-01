@@ -83,7 +83,7 @@ export default function HomePage() {
         const buttonBottom =
           buttonRef.current.getBoundingClientRect().bottom + window.scrollY;
         const currentScrollY = window.scrollY;
-        setShowFloatingButton(currentScrollY >= buttonBottom);
+        setShowFloatingButton(currentScrollY >= 50);
       }
     };
 
@@ -115,28 +115,29 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div>
+    <div ref={titleRef}>
       <div className="relative">
         <LandingCarousel />
       </div>
-      <LadingComponent ref={titleRef}>
+      <LadingComponent>
         <Slogan>코드만 치세요. 분석은 우리가 할께요.</Slogan>
         <Title>CoA</Title>
         <IntroduceText />
         <AnalysisButton buttonRef={buttonRef} content="분석 하기" url="/main" />
-        <FloatingButton
-          showFloatingButton={showFloatingButton}
-          isButtonsVisible={isButtonsVisible}
-          scrollToTitle={scrollToTitle}
-          // 스크롤 아래로 내렸을때 플로팅 버튼
-        />
         <IntroduceButton content="서비스 알아보기" onClick={scrollToService} />
+        <IntroBar>
+          <h3 className="text-3xl font-bold">CoA = Commit Analyzer</h3>
+        </IntroBar>
       </LadingComponent>
-      <IntroBar>
-        <h1 className="text-3xl font-bold">CoA = Commit Analyzer</h1>
-      </IntroBar>
+      <FloatingButton
+        showFloatingButton={showFloatingButton}
+        isButtonsVisible={isButtonsVisible}
+        scrollToTitle={scrollToTitle}
+        // 스크롤 아래로 내렸을때 플로팅 버튼
+      />
+
       <ServiceComponent ref={serviceRef}>
-        {windowWidth <= 1280 ? (
+        {windowWidth <= 800 ? (
           <>
             <ServiceIntroduceVertical
               ref={introRef1}
@@ -189,14 +190,15 @@ export default function HomePage() {
 }
 
 const LadingComponent = tw.main`
-absolute inset-0 flex flex-col items-center justify-center z- text-white
+absolute inset-y-32 flex flex-col items-center 
+justify-center z-10 h-5/6 w-full
+
 `;
 
 const Title = tw.h1`
 text-7xl 
 font-bold
 text-center
-mt-2
 mb-10
 `;
 
@@ -205,7 +207,7 @@ text-center
 `;
 
 const IntroBar = tw.div`
-flex items-center justify-center bg-appGrey2 mb-10 py-10 rounded-tl-lg rounded-tr-lg
+bg-white py-10 rounded-t-3xl w-full text-center shadow-sm
 `;
 
 const ServiceComponent = tw.div`

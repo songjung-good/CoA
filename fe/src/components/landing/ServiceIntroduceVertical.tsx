@@ -25,7 +25,7 @@ const ServiceIntroduceVertical = forwardRef<
 });
 
 const Service = tw.div`
-  flex flex-col items-center w-full relative mb-20
+  flex flex-col items-center w-full relative mb-20 mt-6
 `;
 
 export default ServiceIntroduceVertical;

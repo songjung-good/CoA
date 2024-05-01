@@ -19,5 +19,5 @@ export default function ServiceIntroduceLeft({
 }
 
 const Service = tw.div`
-  flex
+  flex my-10 justify-between items-center
 `;
