@@ -7,24 +7,29 @@ router = APIRouter(prefix='/analysis')
 
 
 class AnalysisRequest(BaseModel, metaclass=ABCMeta):
-    analysisId: int
+    """분석 요청에 대한 body DTO 추상 클래스"""
+    analysisId: str
     userName: str
 
-    class Github('AnalysisRequest'):
-        repoPath: str
-        accessToken: str
 
-    class GitLab('AnalysisRequest'):
-        baseUrl: str
-        projectId: str
-        privateToken: str
+class GithubAnalysisRequest(AnalysisRequest):
+    """Github 분석 요청에 대한 body DTO"""
+    repoPath: str
+    accessToken: str
+
+
+class GitLabAnalysisRequest(AnalysisRequest):
+    """GitLab 분석 요청에 대한 body DTO"""
+    baseUrl: str
+    projectId: str
+    privateToken: str
 
 
 @router.post('/github')
-def post_github(request: AnalysisRequest.Github):
+def post_github(request: GithubAnalysisRequest):
     return request
 
 
 @router.post('/gitlab')
-def post_gitlab(request: AnalysisRequest.GitLab):
+def post_gitlab(request: GitLabAnalysisRequest):
     return request
