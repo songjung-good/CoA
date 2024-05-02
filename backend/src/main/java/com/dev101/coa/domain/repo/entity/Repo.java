@@ -1,6 +1,7 @@
 package com.dev101.coa.domain.repo.entity;
 
 import com.dev101.coa.domain.code.entity.Code;
+import com.dev101.coa.domain.repo.dto.RepoInfo;
 import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,7 +34,7 @@ public class Repo extends BaseEntity {
     private String repoReadmeOrigin;
 
     @Column(name = "repo_commit_cnt")
-    private Integer repoCommitCnt;
+    private Long repoCommitCnt;
 
     @Column(name = "repo_pr_cnt")
     private Integer repoPrCnt;
@@ -44,4 +45,13 @@ public class Repo extends BaseEntity {
     @Column(name = "repo_member_cnt")
     private Integer repoMemberCnt;
 
+
+    public void updateRepo(RepoInfo repoInfo){
+
+        this.platCode = repoInfo.getRepoCode();
+        this.repoReadmeOrigin = repoInfo.getRepoReadmeOrigin();
+        this.repoCommitCnt = repoInfo.getRepoCommitCnt();
+        this.repoGitlabProjectId = repoInfo.getRepoGitLabProjectId();
+        this.repoMemberCnt = repoInfo.getRepoMemberCnt();
+    }
 }

@@ -1,5 +1,6 @@
 package com.dev101.coa.domain.repo.entity;
 
+import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.member.entity.Member;
 import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -35,7 +36,7 @@ public class RepoView extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String repoViewResult;
 
-    private Integer repoViewCommitCnt;
+    private Long repoViewCommitCnt;
 
     private Integer repoViewPrCnt;
 

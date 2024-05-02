@@ -11,7 +11,9 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AiResultDto {
-    private Long totalCommitCnt;
+    private Long totalCommitCnt; // 전체 커밋 수
+
+    private Long personalCommitCnt; // 개인 커밋 수
 
     private String readme;
 

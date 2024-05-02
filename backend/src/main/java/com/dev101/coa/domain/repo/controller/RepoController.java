@@ -1,8 +1,6 @@
 package com.dev101.coa.domain.repo.controller;
 
-import com.dev101.coa.domain.repo.dto.AnalysisReqDto;
-import com.dev101.coa.domain.repo.dto.AnalysisResultDto;
-import com.dev101.coa.domain.repo.dto.EditReadmeReqDto;
+import com.dev101.coa.domain.repo.dto.*;
 import com.dev101.coa.domain.repo.service.RepoService;
 import com.dev101.coa.global.common.BaseResponse;
 import com.dev101.coa.global.common.StatusCode;
@@ -11,11 +9,16 @@ import com.dev101.coa.global.security.CustomOAuth2User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,10 +34,10 @@ public class RepoController {
     }
 
     @PostMapping("/{analysisId}")
-    public ResponseEntity<BaseResponse<Object>> saveAnalysis(@PathVariable String analysisId) {
+    public ResponseEntity<BaseResponse<Object>> saveAnalysis(@PathVariable String analysisId, @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) {
 
-        Long memberId = 1L;
-        repoService.saveAnalysis(memberId, analysisId);
+        Long memberId = 7L;
+        repoService.saveAnalysis(memberId, analysisId, saveAnalysisReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
@@ -85,5 +88,14 @@ public class RepoController {
         System.out.println("memberId = " + memberId);
         AnalysisResultDto result = repoService.checkAnalysis(memberId, analysisId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
+
+
+    @GetMapping("/test")
+    public ResponseEntity<BaseResponse<String>> test() {
+
+
+        repoService.test();
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 }

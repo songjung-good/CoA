@@ -42,7 +42,7 @@ public class SecurityConfig {
 
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
 //                        new AntPathRequestMatcher("/login/oauth2/code/*")
-                        new AntPathRequestMatcher("/oauth2/*") // 필요한지 모르겠으
+                        new AntPathRequestMatcher("/**") // 필요한지 모르겠으
 //                        new AntPathRequestMatcher("/api/auth/*") 이건 일반 로그인 같은게 있을 때 필요한 듯?
                         ).
                         csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 쿠키에 담을 때 JS에서 뜯을 수 있도록 설정하는 것이 False
@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 //                                .anyRequest().permitAll()
 //                                .requestMatchers("/login/oauth2/code/*").permitAll()
-                                .requestMatchers("/oauth2/authorization/*").permitAll()
+                                .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated()
                 )
 
