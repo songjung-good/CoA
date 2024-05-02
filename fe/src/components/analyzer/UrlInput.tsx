@@ -93,9 +93,10 @@ const UrlInput = () => {
 };
 
 const Container = tw.div`
+  max-w-screen-xl
   w-4/5
   flex
-  justify-around
+  justify-evenly
 `;
 
 const StyledInput = tw.input`

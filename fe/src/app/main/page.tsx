@@ -25,10 +25,16 @@ const MainPage = () => {
       <Div1>
         <UrlInput />
       </Div1>
-      <Div>
-        <Heading>여기는 나의 레포</Heading>
-        {/* <MyRepo userID='songjung-good' /> */}
-      </Div>
+      <RepoDiv>
+        <RepoLeft>
+          <Heading>여기는 github</Heading>
+          <MyRepo userID='songjung-good' />
+        </RepoLeft>
+        <RepoRight>
+          <Heading>여기는 gitlab</Heading>
+          <MyRepo userID='songjung-good' />
+        </RepoRight>
+      </RepoDiv>
       <Div>
         <Heading>여기는 자주찾는 레포</Heading>
         <RepoCard />
@@ -49,10 +55,11 @@ const Main = tw.main`
 `;
 
 const Header = tw.div`
-  w-4/5
+  max-w-screen-xl
+  mx-auto
   bg-white
   mt-10
-  p-4
+  p-20
   border
   shadow-lg
   rounded-2xl
@@ -64,39 +71,67 @@ const Description = tw.div`
   flex-row
   items-center
   justify-between
-  mx-8
+  max-w-screen-xl
 `;
 
 const Title = tw.h1`
   font-bold
-  text-3xl
-  lg:text-5xl
   text-left
   mb-4
+  xl:text-5xl
+  md:text-4xl
+  sm:text-3xl
 `;
 
 const SubTitle = tw.p`
   font-light
   text-lg
   text-left
-  mb-4
 `;
 
 const TextWrapper = tw.div`
-  w-1/2
+  mx-auto
 `;
 
 const Img = tw.img`
-  w-1/2
-  mb-4
-  ml-4
+  mx-auto
+  ml-10
   opacity-60
   rounded-md
   shadow-md
 `;
 
+const RepoDiv = tw.div`
+  flex 
+  justify-around 
+  max-w-screen-xl
+`;
+
+const RepoLeft = tw.div`
+  bg-white
+  mt-10
+  mr-4
+  p-4
+  border
+  shadow-lg
+  rounded-2xl
+  hover:border-appBlue1
+`;
+
+const RepoRight = tw.div`
+  bg-white
+  mt-10
+  ml-4
+  p-4
+  border
+  shadow-lg
+  rounded-2xl
+  hover:border-appBlue1
+`;
+
 const Div = tw.div`
-  w-4/5
+  max-w-screen-xl
+  mx-auto
   bg-white
   mt-10
   p-4
@@ -108,7 +143,10 @@ const Div = tw.div`
   
 
 const Div1 = tw.div`
-  w-4/5
+  max-w-screen-xl
+  flex
+  justify-center
+  w-2/3
   bg-white
   mt-10
   p-4

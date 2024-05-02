@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import tw from 'tailwind-styled-components';
 
 interface SearchProps {
   onSearch: (query: string, type: string) => void;
@@ -22,21 +23,27 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" value={query} onChange={handleQueryChange} placeholder="검색어를 입력하세요" />
+    <Form onSubmit={handleSubmit}>
+      <Input type="text" value={query} onChange={handleQueryChange} placeholder="검색어를 입력하세요" />
       <div>
-        <label>
-          <input type="radio" value="repo" checked={type === 'repo'} onChange={handleTypeChange} />
+        <Label>
+          <Radio type="radio" value="repo" checked={type === 'repo'} onChange={handleTypeChange} />
           레포지토리
-        </label>
-        <label>
-          <input type="radio" value="user" checked={type === 'user'} onChange={handleTypeChange} />
+        </Label>
+        <Label>
+          <Radio type="radio" value="user" checked={type === 'user'} onChange={handleTypeChange} />
           사용자
-        </label>
+        </Label>
       </div>
-      <button type="submit">검색</button>
-    </form>
+      <Button type="submit">검색</Button>
+    </Form>
   );
 };
+
+const Form = tw.form`mt-6`;
+const Input = tw.input`border p-2 rounded`;
+const Label = tw.label`block mt-3`;
+const Radio = tw.input`mr-2`;
+const Button = tw.button`mt-4 bg-blue-500 text-white p-2 rounded`;
 
 export default Search;
