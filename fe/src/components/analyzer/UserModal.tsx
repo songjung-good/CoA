@@ -16,8 +16,8 @@ interface UserModalProps {
       login: string;
       // ...이 부분은 userData의 다른 속성이 있으면 추가하세요.
     }>;
-    projectId: number;
   };
+  projectId: number;
 }
 
 interface AvatarProps {

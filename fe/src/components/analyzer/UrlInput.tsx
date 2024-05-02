@@ -9,7 +9,7 @@ import UserModal from '@/components/analyzer/UserModal';
 import FetchGithubInfo from './FetchGithubInfo';
 
 // 타입 정리
-interface User {
+export interface User {
   avatar_url: string;
   contributions: number;
   events_url: string;
