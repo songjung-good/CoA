@@ -8,7 +8,7 @@ import "swiper/css/scrollbar";
 
 export default function LandingCarousel() {
   const style = {
-    height: "88vh",
+    height: "calc(100vh - 80px)",
     objectFit: "cover" as "cover", // 'cover'를 ObjectFit 타입으로 간주합니다.
     width: "100%",
     opacity: 0.5,
@@ -23,7 +23,7 @@ export default function LandingCarousel() {
           delay: 3000,
           disableOnInteraction: false,
         }}
-        navigation={true}
+        navigation={false}
         modules={[Autoplay, Navigation]}
         className="mySwiper"
       >

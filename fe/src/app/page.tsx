@@ -25,6 +25,11 @@ export default function HomePage() {
   const introRef2 = useRef(null);
   const introRef3 = useRef(null);
   const introRef4 = useRef(null);
+  // ref 1~4 작은화면 (1024px 이하) ref5~8 큰화면(1024px 이상)
+  const introRef5 = useRef(null);
+  const introRef6 = useRef(null);
+  const introRef7 = useRef(null);
+  const introRef8 = useRef(null);
 
   // 가시성 상태 기록을 위한 상태 변수
   const [active1, setActive1] = useState(false);
@@ -34,19 +39,19 @@ export default function HomePage() {
 
   const { isVisible: isVisible1 } = useObserver({
     target: introRef1,
-    option: { threshold: 0.2 },
+    option: { threshold: 0.5 },
   });
   const { isVisible: isVisible2 } = useObserver({
     target: introRef2,
-    option: { threshold: 0.2 },
+    option: { threshold: 0.5 },
   });
   const { isVisible: isVisible3 } = useObserver({
     target: introRef3,
-    option: { threshold: 0.2 },
+    option: { threshold: 0.5 },
   });
   const { isVisible: isVisible4 } = useObserver({
     target: introRef4,
-    option: { threshold: 0.2 },
+    option: { threshold: 0.5 },
   });
 
   useEffect(() => {
@@ -83,7 +88,7 @@ export default function HomePage() {
         const buttonBottom =
           buttonRef.current.getBoundingClientRect().bottom + window.scrollY;
         const currentScrollY = window.scrollY;
-        setShowFloatingButton(currentScrollY >= 50);
+        setShowFloatingButton(currentScrollY >= 80);
       }
     };
 
@@ -115,7 +120,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div ref={titleRef}>
+    <div ref={titleRef} className=" overflow-hidden bg-appGrey1">
       <div className="relative">
         <LandingCarousel />
       </div>
@@ -133,11 +138,9 @@ export default function HomePage() {
         showFloatingButton={showFloatingButton}
         isButtonsVisible={isButtonsVisible}
         scrollToTitle={scrollToTitle}
-        // 스크롤 아래로 내렸을때 플로팅 버튼
       />
-
       <ServiceComponent ref={serviceRef}>
-        {windowWidth <= 800 ? (
+        {windowWidth <= 1024 ? (
           <>
             <ServiceIntroduceVertical
               ref={introRef1}
@@ -167,18 +170,22 @@ export default function HomePage() {
         ) : (
           <>
             <ServiceIntroduceLeft
+              ref={introRef5}
               content="여기에 내용을 적어주세요"
               image="/image/chun.png"
             />
             <ServiceIntroduceRight
+              ref={introRef6}
               content="또 다른 서비스 설명"
               image="/image/chun.png"
             />
             <ServiceIntroduceLeft
+              ref={introRef7}
               content="세 번째 서비스 내용"
               image="/image/chun.png"
             />
             <ServiceIntroduceRight
+              ref={introRef8}
               content="마지막 서비스 설명"
               image="/image/chun.png"
             />
@@ -190,8 +197,8 @@ export default function HomePage() {
 }
 
 const LadingComponent = tw.main`
-absolute inset-y-32 flex flex-col items-center 
-justify-center z-10 h-5/6 w-full
+absolute top-32 flex flex-col items-center 
+z-10 w-full
 
 `;
 
@@ -199,7 +206,7 @@ const Title = tw.h1`
 text-7xl 
 font-bold
 text-center
-mb-10
+my-8
 `;
 
 const Slogan = tw.h2`
@@ -208,6 +215,7 @@ text-center
 
 const IntroBar = tw.div`
 bg-white py-10 rounded-t-3xl w-full text-center shadow-sm
+mt-5
 `;
 
 const ServiceComponent = tw.div`

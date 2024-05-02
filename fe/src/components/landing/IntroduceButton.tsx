@@ -22,6 +22,6 @@ const IntroduceBtn = tw.button`
   py-4
   px-16
   rounded-2xl
-  mb-10
+  mb-32
   shadow-2xl
 `;

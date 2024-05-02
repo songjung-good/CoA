@@ -14,18 +14,20 @@ const ServiceIntroduceVertical = forwardRef<
 >(({ content, image, style }, ref) => {
   return (
     <Service ref={ref} style={style}>
-      <div className="flex w-1/2 h-72 relative justify-center items-center">
-        <Image src={image} layout="fill" objectFit="cover" alt="analysis" />
+      <div className="w-4/5 flex flex-col justify-center items-center rounded-2xl border shadow-lg bg-white hover:border-appBlue1 py-5">
+        <div className="flex w-2/3 max-w-sm h-72 relative justify-center items-center">
+          <Image src={image} layout="fill" objectFit="cover" alt="analysis" />
+        </div>
+        <p className="flex w-1/2 h-60 relative justify-center items-center">
+          {content}
+        </p>
       </div>
-      <p className="flex w-1/2 h-60 relative justify-center items-center">
-        {content}
-      </p>
     </Service>
   );
 });
 
 const Service = tw.div`
-  flex flex-col items-center w-full relative mb-20 mt-6
+  flex flex-col items-center justify-center w-full h-screen relative
 `;
 
 export default ServiceIntroduceVertical;
