@@ -14,6 +14,7 @@ const LinesOfCodeChart = () => {
     language,
     lines,
   }));
+
   const totallines = data1.reduce((sum, item) => sum + item.lines, 0);
 
   // Chart svg 만들기
@@ -86,7 +87,7 @@ const LinesOfCodeChart = () => {
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
       .call(d3.axisLeft(y).tickSizeOuter(0));
-  }, []);
+  }, [data1]);
   return <svg className="w-full" ref={svgRef}></svg>;
 };
 
