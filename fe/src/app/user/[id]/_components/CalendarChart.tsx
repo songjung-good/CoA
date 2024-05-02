@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { Contribution } from "@/api/userPage/apiContributions";
 
-interface ChartCalendarProps {
+interface CalendarChartProps {
   data: Contribution[];
 }
 
-const ChartCalendar: React.FC<ChartCalendarProps> = ({ data }) => {
+const CalendarChart: React.FC<CalendarChartProps> = ({ data }) => {
   // Chart svg 만들기
   const svgRef = useRef<SVGSVGElement>(null);
   useEffect(() => {
@@ -70,4 +70,4 @@ const ChartCalendar: React.FC<ChartCalendarProps> = ({ data }) => {
   return <svg className="w-full" ref={svgRef}></svg>;
 };
 
-export default ChartCalendar;
+export default CalendarChart;

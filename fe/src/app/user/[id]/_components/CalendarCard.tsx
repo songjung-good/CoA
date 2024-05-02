@@ -5,7 +5,7 @@ import {
   getContributions,
 } from "@/api/userPage/apiContributions";
 import userStore from "@/store/user";
-import ChartCalendar from "./ChartCalendar";
+import ChartCalendar from "./CalendarChart";
 
 const CalendarCard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);

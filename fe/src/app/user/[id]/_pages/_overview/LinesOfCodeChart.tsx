@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { colorMapping } from "../../_components/colorMap";
 import repositoryStore from "@/store/repos";
 
-const ChartLinesOfCode = () => {
+const LinesOfCodeChart = () => {
   // data 양식
   // const data1 = [
   //   { language: "JavaScript", lines: 298655 },
@@ -90,4 +90,4 @@ const ChartLinesOfCode = () => {
   return <svg className="w-full" ref={svgRef}></svg>;
 };
 
-export default ChartLinesOfCode;
+export default LinesOfCodeChart;

@@ -1,5 +1,5 @@
 import { getTotalLinesOfCode } from "@/api/userPage/apiCodeLines";
-import ChartLinesOfCode from "./ChartLinesOfCode";
+import ChartLinesOfCode from "./LinesOfCodeChart";
 
 const LinesOfCodeCard = () => {
   // 언어별 코드 줄 수 출력
