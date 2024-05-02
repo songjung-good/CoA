@@ -6,9 +6,11 @@ export default function UserPageLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="bg-appGrey1 p-4 flex flex-col gap-4">
-      <UserCard />
-      {children}
+    <main className="bg-appGrey1 flex flex-col justify-center items-center">
+      <div className="max-w-screen-xl w-full flex flex-col py-4 gap-4">
+        <UserCard />
+        {children}
+      </div>
     </main>
   );
 }

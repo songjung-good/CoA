@@ -4,15 +4,8 @@ import StartIcon from "@/icons/StarIcon";
 import StartIconFilled from "@/icons/StarIconFilled";
 import { useState } from "react";
 
-interface IsStarProps {
-  isStar: boolean;
-}
-
-export default function IsStar({
-  isStar,
-}: IsStarProps) {
-  const [starState, setStartState] =
-    useState(isStar);
+export default function IsStar() {
+  const [starState, setStartState] = useState(false);
 
   const changeStar = () => {
     setStartState(!starState);
@@ -20,12 +13,8 @@ export default function IsStar({
   };
 
   return (
-    <button onClick={changeStar}>
-      {starState ? (
-        <StartIconFilled />
-      ) : (
-        <StartIcon />
-      )}
+    <button onClick={changeStar} className="w-6 h-6">
+      {starState ? <StartIconFilled /> : <StartIcon />}
     </button>
   );
 }

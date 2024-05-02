@@ -13,7 +13,7 @@ export default function UserCard() {
         <div className="grow flex flex-col gap-2">
           <div className="flex justify-between">
             <p>닉네임 / userName: {userName}</p>
-            <IsStar isStar={false} />
+            <IsStar />
           </div>
           <div className="bg-appGrey1 p-4 rounded-2xl grow">
             <p>자기소개 글</p>
