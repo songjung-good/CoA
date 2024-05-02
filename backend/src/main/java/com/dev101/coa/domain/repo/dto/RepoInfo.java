@@ -14,7 +14,6 @@ public class RepoInfo {
     private String repoPath;
     private String repoReadmeOrigin;
     private Long repoCommitCnt;
-    private Long repoPrCnt;
     private Integer repoGitLabProjectId;
     private LocalDate repoStartDate;
     private LocalDate repoEndDate;

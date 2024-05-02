@@ -38,8 +38,6 @@ public class RepoView extends BaseEntity {
 
     private Long repoViewCommitCnt;
 
-    private Integer repoViewPrCnt;
-
     @Column(length = 200)
     private String repoViewTitle;
 

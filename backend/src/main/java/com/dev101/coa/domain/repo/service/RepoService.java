@@ -223,17 +223,15 @@ public class RepoService {
             // 3. repoCommitCnt 가져오기
             Long repoCommitCnt = ((AiResultDto) redisData.get("result")).getTotalCommitCnt();
 
-            // 4. // TODO:  repoPrCnt api에 없던데 이거 나만 못찾아?
-
-            // 5.
+            // 4.
             // github api 요청 보내 repoStartDate, repoEndDate, repoMemberCnt 받아오기
             JsonObject jsonObject = getJsonObject(gitHubApiUrl + "/repos/" + userName + "/" + repoName);
 
-            // 5-1. repoStartDate
-            // 5-2. repoEndDate
+            // 4-1. repoStartDate
+            // 4-2. repoEndDate
             Map<String, LocalDate> projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "pushed_at");
 
-            // 5-3. contributors
+            // 4-3. contributors
             Integer repoMemberCnt = getRepoMemberCnt(gitHubApiUrl + "/repos/" + userName + "/" + repoName + "/" + "contributors");
 
             return RepoInfo.builder()
@@ -264,19 +262,17 @@ public class RepoService {
             // 3. repoCommitCnt
             Long repoCommitCnt = ((AiResultDto) (redisData.get("result"))).getTotalCommitCnt();
 
-            // 4. repoPrCnt;
-
-            // 5.
+            // 4.
             // gitLab api 요청 보내 repoStartDate, repoEndDate, repoMemberCnt 받아오기
             String gitLabApiUrl = "https://" + projectUrl + "/api/v4/projects/" + projectId;
             JsonObject jsonObject = getJsonObject(gitLabApiUrl);
 
-            // 5-1. repoStartDate
-            // 5-2. repoEndDate
+            // 4-1. repoStartDate
+            // 4-2. repoEndDate
             Map<String, LocalDate> projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "updated_at");
 
 
-            // 5-3. repoMemberCnt
+            // 4-3. repoMemberCnt
             Integer repoMemberCnt = getRepoMemberCnt(gitLabApiUrl + "/" + "contributors");
 
             return RepoInfo.builder()
@@ -296,13 +292,13 @@ public class RepoService {
             endDateKey) {
         // 문자열을 LocaDateTime으로 바꾸기 위한 formatter
         DateTimeFormatter formatter = DateTimeFormatter.ISO_INSTANT;
-        // 5-1. repoStartDate
+        // 4-1. repoStartDate
         String repoStartDateStr = jsonObject.get(startDateKey).getAsString();
         Instant startInstant = Instant.parse(repoStartDateStr);
         LocalDate repoStartDate = startInstant.atZone(ZoneId.systemDefault()).toLocalDate();
 
 
-        // 5-2. repoEndDate
+        // 4-2. repoEndDate
         String repoEndDateStr = jsonObject.get(endDateKey).getAsString();
         Instant endInstant = Instant.parse(repoEndDateStr);
         LocalDate repoEndDate = endInstant.atZone(ZoneId.systemDefault()).toLocalDate();
@@ -330,7 +326,7 @@ public class RepoService {
     }
 
     private Integer getRepoMemberCnt(String url) {
-        // 7. contributors
+        // 4-3. contributors
         String jsonStrResponse = webClient.get()
                 .uri(url)
                 .header("Authorization", "Bearer " + githubToken)  // Authorization 헤더 추가
