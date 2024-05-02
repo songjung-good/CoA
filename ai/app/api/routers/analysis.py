@@ -1,7 +1,10 @@
 from abc import ABCMeta
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
+
+from api.models.services import AnalysisService
+from config.containers import Container
 
 router = APIRouter(prefix='/analysis')
 
@@ -26,10 +29,16 @@ class GitLabAnalysisRequest(AnalysisRequest):
 
 
 @router.post('/github')
-def post_github(request: GithubAnalysisRequest):
+def post_github(
+        request: GithubAnalysisRequest,
+        analysis_service: AnalysisService = Depends(lambda: Container.github_analysis_service())
+):
     return request
 
 
 @router.post('/gitlab')
-def post_gitlab(request: GitLabAnalysisRequest):
+def post_gitlab(
+        request: GitLabAnalysisRequest,
+        analysis_service: AnalysisService = Depends(lambda: Container.gitlab_analysis_service())
+):
     return request
