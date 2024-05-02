@@ -58,16 +58,28 @@ export default function HistoryChart() {
       .enter()
       .append("g")
       .attr("class", "rect-text-group")
-      .on("mouseover", function () {
+      .on("mouseover", function (event, d) {
         // 호버 시 테두리 추가
         d3.select(this)
           .select("rect")
           .attr("stroke", "blue")
           .attr("stroke-width", 1);
+
+        // 툴팁 내용 설정
+        const tooltipContent = `<strong>${d.name}</strong><br/>Created: ${d.createdAt.substring(0, 10)}<br/>pushed: ${d.pushedAt.substring(0, 10)}`;
+
+        // tooltip을 보이도록 설정하고 내용을 채움
+        tooltip
+          .style("visibility", "visible")
+          .html(tooltipContent)
+          .style("left", 24 + "px")
+          .style("top", 24 + "px");
       })
       .on("mouseout", function () {
         // 호버 벗어날 때 테두리 제거
         d3.select(this).select("rect").attr("stroke", "none");
+        // tooltip을 숨김
+        tooltip.style("visibility", "hidden");
       })
       .each(function (d: Repository, i) {
         const group = d3.select(this);
@@ -97,7 +109,7 @@ export default function HistoryChart() {
           .text(() => `${d.name}`)
           .attr("text-anchor", () => {
             // 텍스트의 x 좌표가 SVG 요소의 가운데보다 큰지 여부 확인
-            return x(new Date(d.createdAt)) > svgWidth / 2 ? "end" : "start";
+            return x(new Date(d.createdAt)) > svgWidth / 4 ? "end" : "start";
           });
       });
 
@@ -105,9 +117,9 @@ export default function HistoryChart() {
   }, [repos]);
 
   return (
-    <>
+    <div className="relative">
       <svg className="w-full" ref={svgRef} />
       <div ref={tooltipRef}></div>
-    </>
+    </div>
   );
 }
