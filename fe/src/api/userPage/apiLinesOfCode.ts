@@ -34,6 +34,7 @@ query {
                 createdAt
                 pushedAt
                 updatedAt
+                isFork
                 languages(first: 10) {
                     edges {
                         node {
@@ -57,8 +58,17 @@ query {
       },
     },
   );
+  console.log("요청결과");
   console.log(response);
-  return response.data.data.user.repositories.nodes;
+  console.log("forked 제외");
+  console.log(
+    response.data.data.user.repositories.nodes.filter(
+      (repo: any) => !repo.isFork,
+    ),
+  );
+  return response.data.data.user.repositories.nodes.filter(
+    (repo: any) => !repo.isFork,
+  );
 }
 
 // 모든 저장소의 언어별 코드 줄 수를 가져오는 함수
@@ -108,7 +118,7 @@ export async function getTotalLinesOfCode(
     console.log(repositories);
     return repositories;
   } catch (error) {
-    console.error("Error fetching data from GitHub GraphQL API:", error);
+    console.error("getTotalLinesOfCode 에러:", error);
     return [];
   }
 }

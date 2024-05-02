@@ -1,8 +1,4 @@
-"use client";
-
-import tw from "tailwind-styled-components";
 import styled from "styled-components";
-import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import AnalysisIcon from "@/icons/AnalysisIcon.tsx";
 import Upicon from "@/icons/Upicon.tsx";
@@ -10,7 +6,6 @@ import Upicon from "@/icons/Upicon.tsx";
 interface FloatingButtonProps {
   showFloatingButton: boolean;
   isButtonsVisible: boolean;
-  toggleButtons: () => void;
   scrollToTitle: () => void;
 }
 

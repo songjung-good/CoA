@@ -44,7 +44,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
   };
   return (
     <>
-      <div className="p-4 bg-appGrey1 flex">
+      {/* <div className="p-4 bg-appGrey1 flex">
         <input onChange={onChange} value={text} />
         <button
           className="p-2 bg-appGrey2"
@@ -54,7 +54,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
         >
           유저 이름 변경
         </button>
-      </div>
+      </div> */}
       <UserPageTabBar onClickTap={onClickTap} tabIndex={tabIndex} />
       {/* <h1>User Page ID: {params.id}</h1> */}
       {renderTabContent()}

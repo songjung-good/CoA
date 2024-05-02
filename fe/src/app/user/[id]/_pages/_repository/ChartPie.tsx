@@ -17,7 +17,7 @@ const MyPageRepositoryCardChart = ({
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   if (Object.keys(languages).length === 0) {
-    return null;
+    return <h3 className="font-semibold">No Code in this Repository</h3>;
   }
   useEffect(() => {
     const data = Object.entries(languages).map(([language, lines]) => ({
@@ -27,21 +27,10 @@ const MyPageRepositoryCardChart = ({
     if (!svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
-    const svgWidth = svgRef.current.getBoundingClientRect().width;
 
     // Specify the chart’s dimensions.
-    const width = svgWidth;
-    const height = Math.min(width, 500);
-
-    // Create the color scale.
-    const color = d3
-      .scaleOrdinal<string>()
-      .domain(data.map((d) => d.language))
-      .range(
-        d3
-          .quantize((t) => d3.interpolateSpectral(t * 0.8 + 0.1), data.length)
-          .reverse(),
-      );
+    const width = 260;
+    const height = 260;
 
     // Create the pie layout and arc generator.
     const pie = d3

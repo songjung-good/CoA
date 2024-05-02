@@ -5,7 +5,7 @@ import {
   getContributions,
 } from "@/api/userPage/apiContributions";
 import userStore from "@/store/user";
-import ChartCalendar from "./ChartCalendar";
+import ChartCalendar from "./CalendarChart";
 
 const CalendarCard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -56,9 +56,12 @@ const CalendarCard: React.FC = () => {
   };
 
   return isLoading ? (
-    <p>Loading</p>
+    <section className="card">
+      <p className="text-lg h-10">Loading...</p>
+      <div className="w-full aspect-[53/7] bg-appGrey1">Loading Chart...</div>
+    </section>
   ) : (
-    <section className="m-4 p-4 bg-appGrey1 rounded-2xl">
+    <section className="card">
       <div className="flex gap-2 items-center">
         <p className="text-lg">
           total: {Object.values(totalContribution).reduce((a, b) => a + b)}
