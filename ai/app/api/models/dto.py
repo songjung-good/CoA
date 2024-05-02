@@ -1,0 +1,123 @@
+import json
+
+from redis import Redis
+
+
+class CommitScoreDto:
+    def __init__(self, readability: int, performance: int, reusability: int, testability: int, exception: int):
+        self.readability = readability
+        self.performance = performance
+        self.reusability = reusability
+        self.testability = testability
+        self.exception = exception
+
+    @property
+    def total(self):
+        return (self.readability + self.performance + self.reusability + self.testability + self.exception) // 5
+
+    def to_camel_dict(self):
+        return {
+            'readability': self.readability,
+            'performance': self.performance,
+            'reusability': self.reusability,
+            'testability': self.testability,
+            'exception': self.exception,
+            'total': self.total
+        }
+
+
+class AiResultDto:
+    def __init__(
+            self,
+            total_commit_cnt: int,
+            personal_commit_cnt: int,
+            readme: str = '',
+            repo_view_result: str = '',
+            commit_score: CommitScoreDto | None = None,
+            lines_of_code: dict[int, int] | None = None
+    ):
+        self.total_commit_cnt = total_commit_cnt
+        self.personal_commit_cnt = personal_commit_cnt
+        self.readme = readme
+        self.repo_view_result = repo_view_result
+        self.commit_score = commit_score
+        self.lines_of_code = lines_of_code
+
+    @staticmethod
+    def from_dict(dct: dict) -> 'AiResultDto':
+        return AiResultDto(
+            total_commit_cnt=dct['totalCommitCnt'],
+            personal_commit_cnt=dct['personalCommitCnt'],
+            readme=dct['readme'],
+            repo_view_result=dct['repoViewResult'],
+            commit_score=dct['commitScore'],
+            lines_of_code=dct['linesOfCode']
+        )
+
+    def to_camel_dict(self):
+        return {
+            'totalCommitCnt': self.total_commit_cnt,
+            'personalCommitCnt': self.personal_commit_cnt,
+            'readme': self.readme,
+            'repoViewResult': self.repo_view_result,
+            'commitScore': self.commit_score,
+            'linesOfCode': self.lines_of_code
+        }
+
+
+class AnalysisDataDto:
+    def __init__(
+            self,
+            analysis_id: int,
+            user_name: str,
+            member_id: int,
+            result: AiResultDto | None,
+            repo_path: str | None = None,
+            project_id: str | None = None,
+            is_own: bool = False,
+            percentage: int = 0
+    ):
+        self.analysis_id = analysis_id
+        self.repo_path = repo_path
+        self.project_id = project_id
+        self.user_name = user_name
+        self.member_id = member_id
+        self.is_own = is_own
+        self.percentage = percentage
+        self.result = result
+
+    @staticmethod
+    def from_dict(analysis_id: int, dct: dict) -> 'AnalysisDataDto':
+        return AnalysisDataDto(
+            analysis_id=analysis_id,
+            repo_path=dct['repoPath'],
+            project_id=dct['projectId'],
+            user_name=dct['userName'],
+            member_id=dct['memberId'],
+            is_own=dct['isOwn'],
+            percentage=dct['percentage'],
+            result=AiResultDto.from_dict(dct['result']) if dct['result'] else None
+        )
+
+    def to_camel_dict(self) -> dict:
+        return {
+            'repoPath': self.repo_path,
+            'projectId': self.project_id,
+            'userName': self.user_name,
+            'memberId': self.member_id,
+            'isOwn': self.is_own,
+            'percentage': self.percentage,
+            'result': self.result.to_camel_dict() if self.result else None
+        }
+
+    @staticmethod
+    def from_redis(redis_client: Redis, analysis_id: int) -> 'AnalysisDataDto':
+        json_str = redis_client.get(str(analysis_id))
+        return AnalysisDataDto.from_dict(analysis_id, json.loads(json_str))
+
+    def to_redis(self, redis_client: Redis, **redis_set_args) -> None:
+        redis_client.set(
+            name=str(self.analysis_id),
+            value=json.dumps(self, default=lambda obj: obj.to_camel_dict(), separators=(',', ':')),
+            **redis_set_args
+        )
