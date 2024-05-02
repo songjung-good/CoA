@@ -9,8 +9,8 @@ export default function LoginPage() {
   };
 
   // GitHub 로그인 버튼 클릭 시 이벤트 핸들러
-  const handleGitHubLogin = () => {
-    window.location.href = `${serverUrl}/oauth2/authorization/github`;
+  const handleKakaoLogin = () => {
+    window.location.href = `${serverUrl}/oauth2/authorization/kakao`;
   };
 
 
@@ -30,14 +30,14 @@ export default function LoginPage() {
               <h1 className="text-3xl">시작하기</h1>
             </div>
             <div className="grid gap-4">
-              <button className="flex gap-4 p-4 rounded-xl shadow-md" onClick={handleGitHubLogin}>
+              <button className="flex gap-4 p-4 rounded-xl shadow-md" onClick={handleKakaoLogin}>
                 <Image
                   src="/image/githubSSO.png"
                   alt="githubSSO"
                   width={24}
                   height={24}
                 />
-                Sign in with Github
+                Sign in with Kakao
               </button>
               <button className="flex gap-4 p-4 rounded-xl shadow-md" onClick={handleGoogleLogin}>
                 <Image
