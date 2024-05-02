@@ -30,7 +30,9 @@ const StyledLink = tw(Link)`
   bg-appOrange
   p-2
   rounded-lg
-  mb-24
+  mb-20
+  mt-10
+  shadow-2xl
 `;
 
 export default AnalysisButton;

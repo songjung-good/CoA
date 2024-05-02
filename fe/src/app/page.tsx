@@ -10,6 +10,7 @@ import ServiceIntroduceVertical from "@/components/landing/ServiceIntroduceVerti
 import ServiceIntroduceLeft from "@/components/landing/ServiceIntroduceLeft.tsx";
 import ServiceIntroduceRight from "@/components/landing/ServiceIntroduceRight.tsx";
 import FloatingButton from "@/components/landing/FloatingButton.tsx";
+import LandingCarousel from "@/components/landing/LandingCarousel.tsx";
 
 // Intersection Observer 커스텀 훅
 import { useObserver } from "@/components/landing/ObserverOption.tsx";
@@ -24,6 +25,11 @@ export default function HomePage() {
   const introRef2 = useRef(null);
   const introRef3 = useRef(null);
   const introRef4 = useRef(null);
+  // ref 1~4 작은화면 (1024px 이하) ref5~8 큰화면(1024px 이상)
+  const introRef5 = useRef(null);
+  const introRef6 = useRef(null);
+  const introRef7 = useRef(null);
+  const introRef8 = useRef(null);
 
   // 가시성 상태 기록을 위한 상태 변수
   const [active1, setActive1] = useState(false);
@@ -33,19 +39,19 @@ export default function HomePage() {
 
   const { isVisible: isVisible1 } = useObserver({
     target: introRef1,
-    option: { threshold: 0.2 },
+    option: { threshold: 0.5 },
   });
   const { isVisible: isVisible2 } = useObserver({
     target: introRef2,
-    option: { threshold: 0.2 },
+    option: { threshold: 0.5 },
   });
   const { isVisible: isVisible3 } = useObserver({
     target: introRef3,
-    option: { threshold: 0.2 },
+    option: { threshold: 0.5 },
   });
   const { isVisible: isVisible4 } = useObserver({
     target: introRef4,
-    option: { threshold: 0.2 },
+    option: { threshold: 0.5 },
   });
 
   useEffect(() => {
@@ -82,7 +88,7 @@ export default function HomePage() {
         const buttonBottom =
           buttonRef.current.getBoundingClientRect().bottom + window.scrollY;
         const currentScrollY = window.scrollY;
-        setShowFloatingButton(currentScrollY >= buttonBottom);
+        setShowFloatingButton(currentScrollY >= 80);
       }
     };
 
@@ -114,25 +120,27 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div>
-      <LadingComponent ref={titleRef}>
+    <div ref={titleRef} className=" overflow-hidden bg-appGrey1">
+      <div className="relative">
+        <LandingCarousel />
+      </div>
+      <LadingComponent>
         <Slogan>코드만 치세요. 분석은 우리가 할께요.</Slogan>
         <Title>CoA</Title>
         <IntroduceText />
         <AnalysisButton buttonRef={buttonRef} content="분석 하기" url="/main" />
-        <FloatingButton
-          showFloatingButton={showFloatingButton}
-          isButtonsVisible={isButtonsVisible}
-          scrollToTitle={scrollToTitle}
-          // 스크롤 아래로 내렸을때 플로팅 버튼
-        />
         <IntroduceButton content="서비스 알아보기" onClick={scrollToService} />
+        <IntroBar>
+          <h3 className="text-3xl font-bold">CoA = Commit Analyzer</h3>
+        </IntroBar>
       </LadingComponent>
-      <IntroBar>
-        <h1 className="text-3xl font-bold">CoA = Commit Analyzer</h1>
-      </IntroBar>
+      <FloatingButton
+        showFloatingButton={showFloatingButton}
+        isButtonsVisible={isButtonsVisible}
+        scrollToTitle={scrollToTitle}
+      />
       <ServiceComponent ref={serviceRef}>
-        {windowWidth <= 1280 ? (
+        {windowWidth <= 1024 ? (
           <>
             <ServiceIntroduceVertical
               ref={introRef1}
@@ -162,18 +170,22 @@ export default function HomePage() {
         ) : (
           <>
             <ServiceIntroduceLeft
+              ref={introRef5}
               content="여기에 내용을 적어주세요"
               image="/image/chun.png"
             />
             <ServiceIntroduceRight
+              ref={introRef6}
               content="또 다른 서비스 설명"
               image="/image/chun.png"
             />
             <ServiceIntroduceLeft
+              ref={introRef7}
               content="세 번째 서비스 내용"
               image="/image/chun.png"
             />
             <ServiceIntroduceRight
+              ref={introRef8}
               content="마지막 서비스 설명"
               image="/image/chun.png"
             />
@@ -185,18 +197,16 @@ export default function HomePage() {
 }
 
 const LadingComponent = tw.main`
-flex 
-flex-col 
-justify-center
-items-center
+absolute top-32 flex flex-col items-center 
+z-10 w-full
+
 `;
 
 const Title = tw.h1`
 text-7xl 
 font-bold
 text-center
-mt-2
-mb-10
+my-8
 `;
 
 const Slogan = tw.h2`
@@ -204,7 +214,8 @@ text-center
 `;
 
 const IntroBar = tw.div`
-flex items-center justify-center bg-appGrey2 mt-32 mb-10 py-10
+bg-white py-10 rounded-t-3xl w-full text-center shadow-sm
+mt-5
 `;
 
 const ServiceComponent = tw.div`

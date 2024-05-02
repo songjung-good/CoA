@@ -1,23 +1,61 @@
-import Link from "next/link";
+import { forwardRef } from "react";
+import Image from "next/image";
 import tw from "tailwind-styled-components";
+import { useState, useEffect, useRef } from "react";
 
 interface ServiceIntroduceRightProps {
   content: string;
   image: string;
 }
 
-export default function ServiceIntroduceRight({
-  content,
-  image,
-}: ServiceIntroduceRightProps) {
+const ServiceIntroduceRight = forwardRef<
+  HTMLDivElement,
+  ServiceIntroduceRightProps
+>(({ content, image }, ref: any) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.4 },
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [ref]);
   return (
-    <Service>
-      <p>{content}</p>
-      <img src={image} alt="서비스 이미지" />
+    <Service
+      ref={ref}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "translateX(0)" : "translateX(50%)",
+        transition: "opacity 1s ease-out, transform 0.5s ease-in-out",
+        overflow: "hidden",
+      }}
+    >
+      <p className="flex w-1/2 h-60 relative justify-center items-center">
+        {content}
+      </p>
+      <div className="flex w-1/3 h-1/2 relative justify-center items-center">
+        <Image src={image} layout="fill" objectFit="cover" alt="analysis" />
+      </div>
     </Service>
   );
-}
+});
+
+export default ServiceIntroduceRight;
 
 const Service = tw.div`
-  flex
+  flex my-10 justify-between items-center mx-10 h-screen overflow-hidden
 `;
