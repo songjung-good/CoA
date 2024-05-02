@@ -1,15 +1,12 @@
+// Url을 입력받아 GitHub 정보를 가져오는 컴포넌트
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
 import tw from "tailwind-styled-components";
 
-// 받는 파일
+// 컴포넌트 불러오기
 import UserModal from '@/components/analyzer/UserModal';
-import { ExtractUserInfo } from '@/components/analyzer/ExtractUserInfo';
-
-// GitHub 개인 액세스 토큰
-const accessToken = process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKENS;
+import FetchGithubInfo from './FetchGithubInfo';
 
 // 타입 정리
 interface User {
@@ -37,7 +34,6 @@ interface User {
 const UrlInput = () => {
   const [inputValue, setInputValue] = useState('');
   const [userData, setUserData] = useState<User[] | null>(null);
-  const [repoName, setRepoName] = useState<string | null>(null);
 
   // 입력 값 변경 시 핸들러
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,32 +47,11 @@ const UrlInput = () => {
     }
   };
 
-  // GitHub 정보 요청 함수
   const fetchGitHubInfo = async () => {
-    const githubInfo = ExtractUserInfo(inputValue);
-
-    if (githubInfo.username && githubInfo.repositoryName) {
-      try {
-        const response = await axios.get(
-          `https://api.github.com/repos/${githubInfo.username}/${githubInfo.repositoryName}/contributors`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        // console.log(response.data);
-        setUserData(response.data);
-      } catch (error) {
-        console.error("GitHub 정보를 가져오는 데 실패했습니다.", error);
-      }
-    } else {
-      console.log("유효한 GitHub URL을 입력하세요.");
-    }
+    FetchGithubInfo(inputValue, setUserData); // FetchGithubInfo 컴포넌트를 불러와서 사용
   };
 
   return (
-
     <Container>
       <StyledInput
         type="text"
@@ -88,7 +63,6 @@ const UrlInput = () => {
       <StyledButton onClick={fetchGitHubInfo}>분석하기</StyledButton>
       <div>{userData && <UserModal userData={userData} />}</div>
     </Container>
-
   );
 };
 

@@ -1,3 +1,5 @@
+// MyRepo 컴포넌트는 사용자의 GitHub ID를 입력받아 해당 사용자의 Repository 목록을 불러와 보여주는 컴포넌트입니다.
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import tw from 'tailwind-styled-components'; // tailwind-styled-components 라이브러리를 import

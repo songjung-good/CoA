@@ -1,3 +1,5 @@
+// RepoCard 컴포넌트는 프로젝트 카드를 나타내는 컴포넌트입니다.
+
 import React, { useState } from 'react';
 import tw from 'tailwind-styled-components';
 // 임시데이터

@@ -1,11 +1,23 @@
+// UserModal은 레포지토리의 기여자를 모달 형태로 보여주는 컴포넌트
+// UrlInput에서 userData라는 props를 받아와서 사용자의 로그인 아이디와 아바타 이미지를 보여줍니다.
+
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
 interface UserModalProps {
   userData: {
-    login: string;
-    avatar_url: string;
-  }[];
+    data: Array<{
+      id: number;
+      username: string;
+      name: string;
+      state: string;
+      locked: boolean;
+      avatar_url: string;
+      login: string;
+      // ...이 부분은 userData의 다른 속성이 있으면 추가하세요.
+    }>;
+    projectId: number;
+  };
 }
 
 interface AvatarProps {
@@ -14,24 +26,23 @@ interface AvatarProps {
 
 const UserModal: React.FC<UserModalProps> = ({ userData }) => {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
-
   const toggleUser = (login: string) => {
     setSelectedUser(selectedUser === login ? null : login);
-    console.log(selectedUser)
   };
 
   return (
     <ModalOverlay>
       <ModalContent>
         <ModalUserGrid>
-          {userData.map((user, index) => (
-            <ModalUser key={index} onClick={() => toggleUser(user.login)}>
+          {userData.data.map((user, index) => (
+            <ModalUser key={index} onClick={() => toggleUser(user.avatar_url)}>
               <UserAvatar
                 src={user.avatar_url}
                 alt={user.login}
-                isSelected={selectedUser === user.login}
+                isSelected={selectedUser === user.avatar_url}
               />
               <UserId>{user.login}</UserId>
+              <UserId>{user.username}</UserId>
             </ModalUser>
           ))}
         </ModalUserGrid>
@@ -77,6 +88,7 @@ const ModalUser = styled.div`
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  margin: 10px;
 `;
 
 const UserAvatar = styled.img<AvatarProps>`
@@ -89,7 +101,12 @@ const UserAvatar = styled.img<AvatarProps>`
 
 const UserId = styled.p`
   margin-top: 10px;
+  max-width: 100px; /* 최대 너비 조절 */
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
+
 
 export default UserModal;

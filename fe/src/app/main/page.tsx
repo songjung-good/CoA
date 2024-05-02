@@ -28,11 +28,11 @@ const MainPage = () => {
       <RepoDiv>
         <RepoLeft>
           <Heading>여기는 github</Heading>
-          <MyRepo userID='songjung-good' />
+          {/* <MyRepo userID='songjung-good' /> */}
         </RepoLeft>
         <RepoRight>
           <Heading>여기는 gitlab</Heading>
-          <MyRepo userID='songjung-good' />
+          {/* <MyRepo userID='songjung-good' /> */}
         </RepoRight>
       </RepoDiv>
       <Div>
