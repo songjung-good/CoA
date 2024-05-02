@@ -30,7 +30,7 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
-                            config.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 허용할 Origin
+                            config.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 허용할 Origin -> "https://k10e101.p.ssafy.io/" 배포는 오리진이 같아서 괜찮은 듯.
                             config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // 허용할 HTTP 메소드
                             config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // 허용할 헤더
 //                            config.setAllowedHeaders(List.of("*")); // 허용할 헤더
@@ -38,12 +38,9 @@ public class SecurityConfig {
                             config.setMaxAge(3600L); // pre-flight 요청의 캐시 지속 시간
                             return config;
                             }))
-                // CSRF 설정 변경
-
+                // CSRF 설정 변경 +  스프링 시큐리티는 기본적으로 CSRF 보호를 활성화하여 POST, PUT, DELETE 같은 변경을 초래하는 HTTP 메소드에 대해 CSRF 토큰 검증을 요구합니다.
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
-//                        new AntPathRequestMatcher("/login/oauth2/code/*")
-                        new AntPathRequestMatcher("/**") // 필요한지 모르겠으
-//                        new AntPathRequestMatcher("/api/auth/*") 이건 일반 로그인 같은게 있을 때 필요한 듯?
+                        new AntPathRequestMatcher("/oauth2/**") // 필요한지 모르겠으 ("/api/auth/*") 이건 일반 로그인 같은게 있을 때 필요한 듯?
                         ).
                         csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 쿠키에 담을 때 JS에서 뜯을 수 있도록 설정하는 것이 False
 
@@ -57,8 +54,7 @@ public class SecurityConfig {
                 // 요청 권한 설정
                 .authorizeHttpRequests(auth -> auth
 //                                .anyRequest().permitAll()
-//                                .requestMatchers("/login/oauth2/code/*").permitAll()
-                                .requestMatchers("/**").permitAll()
+                                .requestMatchers("/oauth2/**", "/login/**").permitAll()
                                 .anyRequest().authenticated()
                 )
 
@@ -75,7 +71,6 @@ public class SecurityConfig {
 
         // JWT 인증 필터 추가
         // TODO 이게 무슨 의미?
-//        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // 커스텀 필터 추가
 //        http.addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass()) // 토큰 예외 핸들링
         return http.build();

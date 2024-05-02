@@ -55,10 +55,10 @@ public class RepoView extends BaseEntity {
 
     // 참조를 쉽게 하기 위해 양방향 매핑을 함
     @OneToMany(mappedBy = "repoView")
-    List<Comment> commentList = new ArrayList<>();
+    List<Comment> commentList;
 
     @OneToMany(mappedBy = "repoView")
-    List<RepoViewSkill> repoViewSkillList = new ArrayList<>();
+    List<RepoViewSkill> repoViewSkillList;
 
 
 
