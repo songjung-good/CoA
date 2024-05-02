@@ -8,6 +8,7 @@ import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import com.dev101.coa.global.security.info.GitHubUserInfo;
 import com.dev101.coa.global.security.info.GoogleUserInfo;
+import com.dev101.coa.global.security.info.KakaoUserInfo;
 import com.dev101.coa.global.security.info.SocialUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,7 +41,8 @@ public class AuthenticationService {
     }
     private Member updateOrCreateMember(OAuth2User oauthUser, String registrationId) {
 
-//        System.out.println("oauthUser + registrationId = " + oauthUser + registrationId);
+        System.out.println("oauthUser + registrationId = " + oauthUser + registrationId);
+        System.out.println("oauthUser.getAttributes() = " + oauthUser.getAttributes());
         SocialUserInfo userInfo = extractUserInfo(registrationId, oauthUser);
 
         String email = userInfo.getEmail();
@@ -75,6 +77,8 @@ public class AuthenticationService {
             codeId = 1001L;
         } else if (registrationId.equals("github")) {
             codeId = 1002L;
+        } else if (registrationId.equals("kakao")) {
+            codeId = 1006L;
         } else {
             throw new BaseException(StatusCode.NOT_FOUND_PLAT);
         }
@@ -89,7 +93,10 @@ public class AuthenticationService {
             return new GoogleUserInfo(attributes);
         } else if ("github".equals(registrationId)) {
             return new GitHubUserInfo(attributes);
-        } else {
+        } else if ("kakao".equals(registrationId)) {
+            return new KakaoUserInfo(attributes);
+        }
+        else {
             throw new IllegalArgumentException("Unsupported provider: " + registrationId);
         }
     }
