@@ -27,7 +27,9 @@ export async function getUserRepos(): Promise<Repository[]> {
 }
 
 // 저장소의 언어별 코드 줄 수를 가져오는 함수
-export async function getRepoLanguages(repo: Repository): Promise<LanguageStats> {
+export async function getRepoLanguages(
+  repo: Repository,
+): Promise<LanguageStats> {
   const languagesUrl: string = repo.languages_url;
   try {
     const response = await axios.get(languagesUrl);
@@ -42,7 +44,7 @@ export async function getRepoLanguages(repo: Repository): Promise<LanguageStats>
 }
 
 // 모든 저장소의 언어별 코드 줄 수를 합산하는 함수
-export async function getTotalLinesOfCode(): Promise<LanguageStats> {
+export async function getTotalLinesOfCodeErr(): Promise<LanguageStats> {
   const repos: Repository[] = await getUserRepos();
   let totalLinesOfCode: LanguageStats = {};
 
@@ -52,6 +54,7 @@ export async function getTotalLinesOfCode(): Promise<LanguageStats> {
       totalLinesOfCode[language] = (totalLinesOfCode[language] || 0) + lines;
     }
   }
-
+  console.log("API");
+  console.log(totalLinesOfCode);
   return totalLinesOfCode;
 }
