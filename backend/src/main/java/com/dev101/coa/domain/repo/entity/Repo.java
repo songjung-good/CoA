@@ -41,12 +41,6 @@ public class Repo extends BaseEntity {
     @Column(name = "repo_gitlab_project_id")
     private Integer repoGitlabProjectId;
 
-    @Column(name = "repo_start_date")
-    private LocalDate repoStartDate;
-
-    @Column(name = "repo_end_date")
-    private LocalDate repoEndDate;
-
     @Column(name = "repo_member_cnt")
     private Integer repoMemberCnt;
 

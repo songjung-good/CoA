@@ -5,6 +5,7 @@ import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +44,12 @@ public class RepoView extends BaseEntity {
 
     @Column(length = 255)
     private String repoViewSubtitle;
+
+    @Column(name = "repo_start_date")
+    private LocalDate repoStartDate;
+
+    @Column(name = "repo_end_date")
+    private LocalDate repoEndDate;
 
 
     // 참조를 쉽게 하기 위해 양방향 매핑을 함

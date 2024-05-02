@@ -6,5 +6,5 @@ import lombok.Getter;
 public class AnalysisReqDto {
     private String repoUrl;
     private String userName;
-    private Long codeId;
+    private String projectId;
 }

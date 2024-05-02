@@ -45,7 +45,6 @@ public class RepoService {
     @Value("${url.gitHubApi}")
     private String gitHubApiUrl;
 
-
     private final RepoViewRepository repoViewRepository;
     private final CommentRepository commentRepository;
     private final RepoViewSkillRepository repoViewSkillRepository;
@@ -128,102 +127,161 @@ public class RepoService {
             throw new BaseException(StatusCode.REPO_REQ_MEMBER_NOT_MATCH);
         }
         // repo 저장(platformCodeId, repoPath, repoReadmeOrigin, repoCommtCnt,
-        // TODO: platformCodeId에 따른 분기처리
-        Long redisCodeId = ((Integer) redisData.get("codeId")).longValue();
-        if (!platformIdSet.contains(redisCodeId)) throw new BaseException(StatusCode.REPO_PLAT_NOT_EXIST);
-        Code code = codeRepository.findByCodeId(redisCodeId).orElseThrow(() -> new BaseException(StatusCode.NOT_FOUND_PLAT));
-
-        RepoInfo repoInfo = getRepoInfo(code.getCodeId(), redisData);
+        // - repoPath로 찾은 후, 존재하면 업데이트 존재하지 않으면 생성
 
 
+        RepoInfo repoInfo = getRepoInfo(redisData);
 
         // repoView 저장
 
 
         // mysql 저장
 
-        // repo 저장 - repoPath로 찾은 후, 존재하면 업데이트 존재하지 않으면 생성
-
-        // repoView 저장
-
     }
 
-    private RepoInfo getRepoInfo(Long codeId, Map<Object, Object> redisData) {
+    private RepoInfo getRepoInfo(Map<Object, Object> redisData) {
+        String redisProjectId = (String)redisData.get("projectId");
         // gitHub
-        if(codeId == 1002L) { // ex: https://api.github.com/repos/rlagkdud/Spring-Pay-System
-            // repoPath로부터 사용자 이름과 레포이름을 받아오기
+        if(redisProjectId == null) { // ex: https://api.github.com/repos/rlagkdud/Spring-Pay-System
+            // 1. repoPath로부터 사용자 이름과 레포이름을 받아오기
             String repoPath = (String)redisData.get("repoPath");
             String[] split = repoPath.split("/");
             String repoName = split[split.length-1];
             String userName = split[split.length-2];
 
-            // redis에서 repoReadmeOrigin, repoCommitCnt 가져오기
+            // 2. redis에서 repoReadmeOrigin
             String repoReadmeOrigin = ((AiResultDto) redisData.get("result")).getReadme();
+            // 3. repoCommitCnt 가져오기
             Long repoCommitCnt = ((AiResultDto) redisData.get("result")).getTotalCommitCnt();
 
+            // 4. // TODO:  repoPrCnt api에 없던데 이거 나만 못찾아?
 
+            // 5.
             // github api 요청 보내 repoStartDate, repoEndDate, repoMemberCnt 받아오기
-            // TODO:  repoPrCnt api에 없던데 이거 나만 못찾아?
-            String jsonStrResponse = webClient.get()
-                    .uri(gitHubApiUrl+"/repos/"+userName+"/"+repoName)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()  // 응답을 검색
-                    .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
-                    .block();  // Mono를 블로킹하여 실제 값 가져오기
+            JsonObject jsonObject = getJsonObject(gitHubApiUrl+"/repos/"+userName+"/"+repoName);
 
-            System.out.println("response Json String = " + jsonStrResponse);
+            // 5-1. repoStartDate
+            // 5-2. repoEndDate
+            Map<String, LocalDateTime> projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "pushed_at");
 
-            if(jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
-
-            // 문자열 -> json object
-            JsonObject jsonObject = JsonParser.parseString(jsonStrResponse).getAsJsonObject();
-
-            // 문자열을 LocaDateTime으로 바꾸기 위한 formatter
-            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-            // repoStartDate
-            String createdAtStr = jsonObject.get("created_at").getAsString();
-            // ISO_LOCAL_DATE_TIME 포맷을 가정하고 파싱
-            LocalDateTime createdAt = LocalDateTime.parse(createdAtStr, formatter);
-
-            // repoEndDate
-            String pushedAtDate = jsonObject.get("pushed_at").getAsString();
-            LocalDateTime pushedAt = LocalDateTime.parse(pushedAtDate, formatter);
-
-            jsonStrResponse = webClient.get()
-                    .uri(gitHubApiUrl+"/repos/"+userName+"/"+repoName+"/"+"contributors")
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()  // 응답을 검색
-                    .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
-                    .block();  // Mono를 블로킹하여 실제 값 가져오기
-            System.out.println("response Json String = " + jsonStrResponse);
-
-            if(jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
-
-            // 문자열 -> json object
-            JsonElement jsonElement = JsonParser.parseString(jsonStrResponse);
-
-            // contributor cnt
-            Integer repoContributorCnt = 0;
-            if (jsonElement.isJsonArray()) {
-                JsonArray jsonArray = jsonElement.getAsJsonArray();
-                repoContributorCnt = jsonArray.size();
-            } else {
-                throw new BaseException(StatusCode.CANNOT_GET_CONTRIBUTOR);
-            }
+            // 5-3. contributors
+            Integer repoMemberCnt = getRepoMemberCnt(gitHubApiUrl+"/repos/"+userName+"/"+repoName+"/"+"contributors");
 
             return RepoInfo.builder()
                     .repoPath(repoPath)
                     .repoReadmeOrigin(repoReadmeOrigin)
                     .repoCommitCnt(repoCommitCnt)
-                    .repoStartDate(createdAt)
-                    .repoEndDate(pushedAt)
+                    .repoStartDate(projectPeriod.get("repoStartDate"))
+                    .repoEndDate(projectPeriod.get("repoEndDate"))
+                    .repoMemberCnt(repoMemberCnt)
                     .build();
         }
 
         // gitLab {
-        else if(codeId == 1003L){ // ex; https://lab.ssafy.com/api/v4/projects/565790
+        else { // ex; https://lab.ssafy.com/api/v4/projects/565790
+        // TODO: 여기부터!!!!!
+            // 1. repoPath
+            String repoPath = (String) redisData.get("repoPath"); //https://lab.ssafy.com/s10-final/S10P31E101
+            String[] split = repoPath.split("/");
+            String projectId = split[split.length-1];
+            String projectUrl = split[split.length-5];
+
+            // 2 repoReadmeOrigin
+            String repoReadmeOrigin = ((AiResultDto)(redisData.get("result"))).getReadme();
+
+            // 3. repoCommitCnt
+            Long repoCommitCnt = ((AiResultDto)(redisData.get("result"))).getTotalCommitCnt();
+
+            // 4. repoPrCnt;
+
+            // 5.
+            // gitLab api 요청 보내 repoStartDate, repoEndDate, repoMemberCnt 받아오기
+            String gitLabApiUrl = "https://"+projectUrl+"/api/v4/projects/"+projectId;
+            JsonObject jsonObject = getJsonObject(gitLabApiUrl);
+
+            // 5-1. repoStartDate
+            // 5-2. repoEndDate
+            Map<String, LocalDateTime> projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "updated_at");
+
+
+            // 5-3. repoMemberCnt
+            Integer repoMemberCnt = getRepoMemberCnt(gitLabApiUrl +"/"+"contributors");
+
+            return RepoInfo.builder()
+                    .repoPath(repoPath)
+                    .repoReadmeOrigin(repoReadmeOrigin)
+                    .repoCommitCnt(repoCommitCnt)
+                    .repoStartDate(projectPeriod.get("repoStartDate"))
+                    .repoEndDate(projectPeriod.get("repoEndDate"))
+                    .repoMemberCnt(repoMemberCnt)
+                    .build();
+
 
         }
+    }
+
+    private Map<String, LocalDateTime> getGetProjectPeriod(JsonObject jsonObject, String startDateKey, String endDateKey) {
+        // 문자열을 LocaDateTime으로 바꾸기 위한 formatter
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        // 5-1. repoStartDate
+        String repoStartDateStr = jsonObject.get(startDateKey).getAsString();
+        // ISO_LOCAL_DATE_TIME 포맷을 가정하고 파싱
+        LocalDateTime repoStartDate = LocalDateTime.parse(repoStartDateStr, formatter);
+
+        // 5-2. repoEndDate
+        String repoEndDateStr = jsonObject.get(endDateKey).getAsString();
+        LocalDateTime repoEndDate = LocalDateTime.parse(repoEndDateStr, formatter);
+
+        Map<String, LocalDateTime> map = new HashMap<>();
+        map.put("repoStartDate", repoStartDate);
+        map.put("repoEndDate", repoEndDate);
+
+        return map;
+    }
+
+    private record getProjectPeriod(LocalDateTime createdAt, LocalDateTime pushedAt) {
+    }
+
+    private JsonObject getJsonObject(String url) {
+        String jsonStrResponse = webClient.get()
+                .uri(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()  // 응답을 검색
+                .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
+                .block();  // Mono를 블로킹하여 실제 값 가져오기
+
+        System.out.println("repo info jsonStrResponse"+jsonStrResponse);
+
+        if (jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
+
+        // 문자열 -> json object
+        return JsonParser.parseString(jsonStrResponse).getAsJsonObject();
+    }
+
+    private Integer getRepoMemberCnt(String url) {
+        // 7. contributors
+        String jsonStrResponse = webClient.get()
+                .uri(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()  // 응답을 검색
+                .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
+                .block();  // Mono를 블로킹하여 실제 값 가져오기
+        System.out.println("response Json String = " + jsonStrResponse);
+
+        if(jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
+
+        // 문자열 -> json object
+        JsonElement jsonElement = JsonParser.parseString(jsonStrResponse);
+
+        // contributor cnt
+        Integer repoMemberCnt = 0;
+        if (jsonElement.isJsonArray()) {
+            JsonArray jsonArray = jsonElement.getAsJsonArray();
+            repoMemberCnt = jsonArray.size();
+        } else {
+            throw new BaseException(StatusCode.CANNOT_GET_CONTRIBUTOR);
+        }
+        return repoMemberCnt;
     }
 
 
@@ -234,18 +292,23 @@ public class RepoService {
      * @param analysisReqDto
      * @return
      */
-    public String startAnalysis(Long memberId, Long codeId, AnalysisReqDto analysisReqDto) {
+    public String startAnalysis(Long memberId, AnalysisReqDto analysisReqDto) {
 
 
         // TODO: 로그인한 member 받아오기
-        // TODO: codeId(github/gitlab) 받아오기 - 아마 dto도 바꿔야 할거야.
+        // TODO: projectId(github/gitlab) (있으면 gitLab, 없으면 gitHub)받아오기 - 아마 dto도 바꿔야 할거야.
 
         Member member = null;
 
-        // codeId githb, gitlab 인지 판단하기
-        if (!platformIdSet.contains(codeId)) {
-            throw new BaseException(StatusCode.REPO_PLAT_NOT_EXIST);
-        }
+//        // projectId githb, gitlab 인지 판단하기
+//        if(analysisReqDto.getProjectId() == null) codeId = 1002L;
+//        else codeId = 1003L;
+
+//        if (!platformIdSet.contains(codeId)) {
+//            throw new BaseException(StatusCode.REPO_PLAT_NOT_EXIST);
+//        }
+
+        String projectId = analysisReqDto.getProjectId();
 
         // isOwn 값 처리하기
         Boolean isOwn = accountLinkRepository.existsAccountLinkByMemberAndAccountLinkAccountId(member, analysisReqDto.getUserName());
@@ -260,7 +323,8 @@ public class RepoService {
         map.put("repoPath", analysisReqDto.getRepoUrl());
         map.put("userName", analysisReqDto.getUserName());
         map.put("memberId", member.getMemberId());
-        map.put("codeId", codeId);
+//        map.put("codeId", codeId);
+        map.put("projectId", projectId);
         map.put("isOwn", isOwn.toString()); // Boolean 값을 문자열로 저장
         map.put("percentage", "0"); // 초기 비율을 문자열로 저장
 
@@ -270,9 +334,8 @@ public class RepoService {
         // AI 서버로 요청 보내기 (body: repoUrl, userName, memberId, isOwn)
         // platform code에 따라 요청 보낼 url 분기처리
         String aiUrl = "";
-        if (codeId == 1002) aiUrl = aiServerUrl + "/github";
-        else if (codeId == 1003) aiUrl = aiServerUrl + "/gitlab";
-        else throw new BaseException(StatusCode.REPO_PLAT_NOT_EXIST);
+        if (projectId == null) aiUrl = aiServerUrl + "/github";
+        else aiUrl = aiServerUrl + "/gitlab";
 
         String response = webClient.post()
                 .uri(aiUrl)
@@ -280,6 +343,7 @@ public class RepoService {
                 .body(Mono.just(
                         AiAnalysisReqDto.builder()
                                 .repoUrl(analysisReqDto.getRepoUrl())
+                                .projectId(projectId)
                                 .userName(analysisReqDto.getUserName())
                                 .isOwn(isOwn)
                                 .build()
@@ -320,7 +384,8 @@ public class RepoService {
                 .build();
 
         AnalysisResultDto analysisResultDtoTest = AnalysisResultDto.builder()
-                .repoPath("http://repopath.com/hellong")
+                .repoPath("http://repopath.com/hellong/hhhhhhh")
+                .projectId(null)
                 .userName("ha09368")
                 .memberId(1L)
                 .isOwn(true)
@@ -330,6 +395,7 @@ public class RepoService {
 
         Map<String, Object> map = new HashMap<>();
         map.put("repoPath", analysisResultDtoTest.getRepoPath());
+        map.put("projectId", analysisResultDtoTest.getProjectId());
         map.put("userName", analysisResultDtoTest.getUserName());
         map.put("memberId", analysisResultDtoTest.getMemberId());
         map.put("isOwn", analysisResultDtoTest.getIsOwn());
@@ -364,6 +430,7 @@ public class RepoService {
         // percentage가 100이 아니면, AnalysisResultDto 반환한다.
         AnalysisResultDto analysisResultDto = AnalysisResultDto.builder()
                 .repoPath(redisRepoPath)
+                .projectId((String)redisData.get("projectId"))
                 .userName((String) redisData.get("userName"))
                 .memberId(redisMemberId)
                 .isOwn((Boolean) redisData.get("isOwn"))

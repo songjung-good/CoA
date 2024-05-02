@@ -57,7 +57,7 @@ public class RepoController {
         // TODO: memberId를 쿠키로부터 가져오기
         Long memberId = 0L;
 
-        String analysisId = repoService.startAnalysis(memberId, analysisReqDto.getCodeId(), analysisReqDto);
+        String analysisId = repoService.startAnalysis(memberId, analysisReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<String>(analysisId));
     }
 
