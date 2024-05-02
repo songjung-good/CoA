@@ -1,5 +1,6 @@
 import Image from "next/image";
 import SearchBar from "./SearchBar";
+import LoadingAnalyzing from "./LoadingAnalyzing";
 import Link from "next/link";
 
 export default function Header() {
@@ -26,6 +27,7 @@ export default function Header() {
         </div>
       </Link>
       <SearchBar />
+      <LoadingAnalyzing />
       <Link href="/auth/login">로그인</Link>
     </header>
   );
