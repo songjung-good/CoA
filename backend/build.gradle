@@ -62,6 +62,9 @@ dependencies {
 	// webflux - AI 서버로 요청을 보내기 위함
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+	// gson
+	implementation 'com.google.code.gson:gson:2.10.1'
+
 }
 
 tasks.named('test') {
