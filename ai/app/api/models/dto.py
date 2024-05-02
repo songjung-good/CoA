@@ -68,9 +68,8 @@ class AiResultDto:
 class AnalysisDataDto:
     def __init__(
             self,
-            analysis_id: int,
+            analysis_id: str,
             user_name: str,
-            member_id: int,
             result: AiResultDto | None,
             repo_path: str | None = None,
             project_id: str | None = None,
@@ -81,19 +80,17 @@ class AnalysisDataDto:
         self.repo_path = repo_path
         self.project_id = project_id
         self.user_name = user_name
-        self.member_id = member_id
         self.is_own = is_own
         self.percentage = percentage
         self.result = result
 
     @staticmethod
-    def from_dict(analysis_id: int, dct: dict) -> 'AnalysisDataDto':
+    def from_dict(analysis_id: str, dct: dict) -> 'AnalysisDataDto':
         return AnalysisDataDto(
             analysis_id=analysis_id,
             repo_path=dct['repoPath'],
             project_id=dct['projectId'],
             user_name=dct['userName'],
-            member_id=dct['memberId'],
             is_own=dct['isOwn'],
             percentage=dct['percentage'],
             result=AiResultDto.from_dict(dct['result']) if dct['result'] else None
@@ -104,15 +101,14 @@ class AnalysisDataDto:
             'repoPath': self.repo_path,
             'projectId': self.project_id,
             'userName': self.user_name,
-            'memberId': self.member_id,
             'isOwn': self.is_own,
             'percentage': self.percentage,
             'result': self.result.to_camel_dict() if self.result else None
         }
 
     @staticmethod
-    def from_redis(redis_client: Redis, analysis_id: int) -> 'AnalysisDataDto':
-        json_str = redis_client.get(str(analysis_id))
+    def from_redis(redis_client: Redis, analysis_id: str) -> 'AnalysisDataDto':
+        json_str = redis_client.get(analysis_id)
         return AnalysisDataDto.from_dict(analysis_id, json.loads(json_str))
 
     def to_redis(self, redis_client: Redis, **redis_set_args) -> None:
