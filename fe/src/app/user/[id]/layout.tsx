@@ -7,7 +7,7 @@ export default function UserPageLayout({
 }>) {
   return (
     <main className="bg-appGrey1 flex flex-col justify-center items-center">
-      <div className="max-w-screen-xl flex flex-col py-4 gap-4">
+      <div className="max-w-screen-xl w-full flex flex-col py-4 gap-4">
         <UserCard />
         {children}
       </div>
