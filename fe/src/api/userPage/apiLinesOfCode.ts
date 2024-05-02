@@ -57,7 +57,8 @@ query {
       },
     },
   );
-  console.log(response);
+  // console.log("요청결과");
+  // console.log(response);
   return response.data.data.user.repositories.nodes;
 }
 
@@ -105,10 +106,10 @@ export async function getTotalLinesOfCode(
       repo.languages = sortedLanguages;
     });
 
-    console.log(repositories);
+    // console.log(repositories);
     return repositories;
   } catch (error) {
-    console.error("Error fetching data from GitHub GraphQL API:", error);
+    console.error("getTotalLinesOfCode 에러:", error);
     return [];
   }
 }

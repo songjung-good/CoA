@@ -1,26 +1,20 @@
 import * as d3 from "d3";
 import { useEffect, useRef } from "react";
 import { colorMapping } from "../../_components/colorMap";
+import repositoryStore from "@/store/repos";
 
 const ChartLinesOfCode = () => {
-  const data1 = [
-    { letter: "JavaScript", frequency: 298655 },
-    { letter: "Vue", frequency: 32934 },
-    { letter: "Java", frequency: 30654 },
-    { letter: "Python", frequency: 15358 },
-    { letter: "CSS", frequency: 12650 },
-    { letter: "TypeScript", frequency: 10722 },
-    { letter: "HTML", frequency: 6596 },
-    { letter: "Shell", frequency: 3984 },
-    { letter: "C++", frequency: 3098 },
-    { letter: "Dart", frequency: 2485 },
-    { letter: "Swift", frequency: 288 },
-    { letter: "C", frequency: 256 },
-    { letter: "Kotlin", frequency: 20 },
-    { letter: "Objective-C", frequency: 4 },
-  ];
-
-  const totalFrequency = data1.reduce((sum, item) => sum + item.frequency, 0);
+  // data 양식
+  // const data1 = [
+  //   { language: "JavaScript", lines: 298655 },
+  //   { language: "Vue", lines: 32934 },
+  // ];
+  const obj = repositoryStore((state) => state.languageTotals);
+  const data1 = Object.entries(obj).map(([language, lines]) => ({
+    language,
+    lines,
+  }));
+  const totallines = data1.reduce((sum, item) => sum + item.lines, 0);
 
   // Chart svg 만들기
   const svgRef = useRef<SVGSVGElement>(null);
@@ -41,12 +35,12 @@ const ChartLinesOfCode = () => {
     // Create the scales.
     const x = d3
       .scaleLinear()
-      .domain([0, d3.max(data1, (d) => d.frequency) as number])
+      .domain([0, d3.max(data1, (d) => d.lines) as number])
       .range([marginLeft, width - marginRight]);
 
     const y = d3
       .scaleBand()
-      .domain(d3.sort(data1, (d) => -d.frequency).map((d) => d.letter))
+      .domain(d3.sort(data1, (d) => -d.lines).map((d) => d.language))
       .rangeRound([marginTop, height - marginBottom])
       .padding(0.1);
 
@@ -58,7 +52,7 @@ const ChartLinesOfCode = () => {
       .attr("style", "max-width: 100%; height: auto;");
     //중복생성방지
     svg.selectAll("g").remove();
-    // Append a rect for each letter.
+    // Append a rect for each language.
     svg
       .append("g")
       .attr("fill", "steelblue")
@@ -66,12 +60,12 @@ const ChartLinesOfCode = () => {
       .data(data1)
       .join("rect")
       .attr("x", x(0))
-      .attr("y", (d) => y(d.letter)!)
-      .attr("width", (d) => (d.frequency / totalFrequency) * width)
+      .attr("y", (d) => y(d.language)!)
+      .attr("width", (d) => (d.lines / totallines) * width)
       .attr("height", y.bandwidth())
-      .attr("fill", (d) => colorMapping[d.letter]); // 색상 지정
+      .attr("fill", (d) => colorMapping[d.language]); // 색상 지정
 
-    // Append a label for each letter.
+    // Append a label for each language.
     svg
       .append("g")
       .attr("fill", "white")
@@ -79,11 +73,11 @@ const ChartLinesOfCode = () => {
       .selectAll()
       .data(data1)
       .join("text")
-      .attr("x", (d) => (d.frequency / totalFrequency) * width)
-      .attr("y", (d) => y(d.letter)! + y.bandwidth() / 2)
+      .attr("x", (d) => (d.lines / totallines) * width)
+      .attr("y", (d) => y(d.language)! + y.bandwidth() / 2)
       .attr("dy", "0.35em")
-      .attr("dx", (d) => d.frequency.toString().length * 10 + marginLeft)
-      .text((d) => d.frequency)
+      .attr("dx", (d) => d.lines.toString().length * 10 + marginLeft)
+      .text((d) => d.lines)
       .attr("fill", "black");
     // .attr("text-anchor", "start");
     // Create the axes
