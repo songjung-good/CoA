@@ -11,6 +11,7 @@ interface AnalyzingState {
   analyzeId: number; // -1 : 분석 X, 0 ~ : 분석Id
   startAnalysis: () => void;  // 분석 시작
   completeAnalysis: () => void; // 분석 완료
+  updatePercent: (percent: number) => void;
   resetAnalysis: () => void;  // 분석 결과 확인
 }
 
