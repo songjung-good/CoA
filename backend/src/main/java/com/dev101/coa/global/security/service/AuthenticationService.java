@@ -2,6 +2,8 @@ package com.dev101.coa.global.security.service;
 
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.code.repository.CodeRepository;
+import com.dev101.coa.domain.member.repository.AccountLinkRepository;
+import com.dev101.coa.domain.member.entity.AccountLink;
 import com.dev101.coa.domain.member.entity.Member;
 import com.dev101.coa.domain.member.repository.MemberRepository;
 import com.dev101.coa.global.common.StatusCode;
@@ -18,6 +20,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,6 +29,7 @@ public class AuthenticationService {
 
     private final MemberRepository memberRepository;
     private final CodeRepository codeRepository;
+    private final AccountLinkRepository accountLinkRepository;
 
     public Member authenticateOAuth2(OAuth2User oauthUser, String registrationId) {
         // 사용자 데이터베이스 업데이트
@@ -99,5 +103,36 @@ public class AuthenticationService {
         else {
             throw new IllegalArgumentException("Unsupported provider: " + registrationId);
         }
+    }
+
+
+    // 기존 회원에게 새 소셜 계정 연동
+    public Member linkSocialAccount(Member existingMember, OAuth2User oAuth2User, String registrationId) {
+        // OAuth2User에서 제공하는 소셜 미디어 고유 ID 추출
+        Code platCode = codeRepository.findByCodeName(registrationId).orElseThrow(() -> new BaseException(StatusCode.NOT_FOUND_PLAT));
+
+
+        // 기존에 연동된 계정인지 조회
+        AccountLink accountLink = accountLinkRepository.findByMemberAndCode(existingMember, platCode);
+
+        if (accountLink == null) {
+            // 연동된 정보가 없으면 새로 빌드하여 저장 TODO 정보 넣어주기
+            accountLink = AccountLink.builder()
+                    .member(existingMember)
+                    .code(platCode)
+                    .accountLinkAccountId()
+                    .accountLinkNickname()
+                    .account_link_token()
+                    .account_link_refresh_token()
+                    .build();
+            accountLinkRepository.save(accountLink);
+        } else {
+            // 이미 연동된 정보가 있다면, 닉네임 / 토큰 / 리프레시 토큰 갱신
+            accountLink.
+            socialAccountRepository.save(accountLink);
+        }
+
+        // 사용자 정보 반환
+        return existingMember;
     }
 }
