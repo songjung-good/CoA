@@ -13,6 +13,6 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):   # class AnalysisService<
         background_tasks.add_task(self.analyze, request)
         return True
 
-    @abstractmethod
     async def analyze(self, request: R) -> None:
-        pass
+        # TODO: 각 단계를 나누어 추상 메소드를 호출하고 처리 상태 변경
+        return
