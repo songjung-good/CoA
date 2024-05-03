@@ -1,6 +1,7 @@
-from api.models.services import AnalysisService
 from api.models.dto import GitLabAnalysisRequest
+from api.models.services import AnalysisService
 
 
 class GitLabAnalysisService(AnalysisService[GitLabAnalysisRequest]):
-    pass
+    async def analyze(self, request: GitLabAnalysisRequest) -> None:
+        pass    # todo

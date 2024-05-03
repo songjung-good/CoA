@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, BackgroundTasks
 
 from api.models.dto import GithubAnalysisRequest, GitLabAnalysisRequest
 from api.models.services import AnalysisService
@@ -10,14 +10,16 @@ router = APIRouter(prefix='/analysis')
 @router.post('/github')
 def post_github(
         request: GithubAnalysisRequest,
+        background_tasks: BackgroundTasks,
         analysis_service: AnalysisService[GithubAnalysisRequest] = Depends(lambda: Container.github_analysis_service())
-):
-    return request
+) -> bool:
+    return analysis_service.start_analysis(background_tasks, request)
 
 
 @router.post('/gitlab')
 def post_gitlab(
         request: GitLabAnalysisRequest,
+        background_tasks: BackgroundTasks,
         analysis_service: AnalysisService[GitLabAnalysisRequest] = Depends(lambda: Container.gitlab_analysis_service())
-):
-    return request
+) -> bool:
+    return analysis_service.start_analysis(background_tasks, request)
