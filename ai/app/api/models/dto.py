@@ -4,6 +4,8 @@ from abc import ABCMeta
 from pydantic import BaseModel
 from redis import Redis
 
+from api.models.code import AnalysisStatus
+
 
 class CommitScoreDto:
     def __init__(self, readability: int, performance: int, reusability: int, testability: int, exception: int):
@@ -76,7 +78,8 @@ class AnalysisDataDto:
             repo_path: str | None = None,
             project_id: str | None = None,
             is_own: bool = False,
-            percentage: int = 0
+            percentage: int = 0,
+            status: AnalysisStatus = AnalysisStatus.BEFORE_RECEIVING
     ):
         self.analysis_id = analysis_id
         self.repo_path = repo_path
@@ -85,6 +88,7 @@ class AnalysisDataDto:
         self.is_own = is_own
         self.percentage = percentage
         self.result = result
+        self.status = status
 
     @staticmethod
     def from_dict(analysis_id: str, dct: dict) -> 'AnalysisDataDto':
@@ -95,7 +99,8 @@ class AnalysisDataDto:
             user_name=dct['userName'],
             is_own=dct['isOwn'],
             percentage=dct['percentage'],
-            result=AiResultDto.from_dict(dct['result']) if dct['result'] else None
+            result=AiResultDto.from_dict(dct['result']) if dct['result'] else None,
+            status=AnalysisStatus(int(dct['status']))
         )
 
     def to_camel_dict(self) -> dict:
@@ -105,7 +110,8 @@ class AnalysisDataDto:
             'userName': self.user_name,
             'isOwn': self.is_own,
             'percentage': self.percentage,
-            'result': self.result.to_camel_dict() if self.result else None
+            'result': self.result.to_camel_dict() if self.result else None,
+            'status': int(self.status)
         }
 
     @staticmethod

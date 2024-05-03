@@ -20,8 +20,19 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):
     async def analyze(self, request: R) -> None:
         # TODO: 각 단계를 나누어 추상 메소드를 호출하고 처리 상태 변경
         try:
+            # 레포 API 호출 횟수 확인하기
+
+            # 레포에서 데이터 가져오기
             commits = await self.load_commits(request)
-            print(commits)
+
+            # AI에 학습 시키기
+
+            # 대화해서 학습 결과 긁어오기
+
+            # 학습 취소시키기
+
+            # 완료 처리
+
         except AnalysisException:
             # TODO: redis에 percentage 0으로 만들고 statusCode 바꾸기
             pass
