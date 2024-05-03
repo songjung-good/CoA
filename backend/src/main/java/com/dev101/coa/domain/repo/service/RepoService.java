@@ -466,6 +466,10 @@ public class RepoService {
         }
     }
 
+    public RepoDetailResDto readRepoView(Long memberId, String repoViewId) {
+
+    }
+
     public void test() {
         CommitScoreDto commitScoreDto = CommitScoreDto.builder()
                 .readability(10)

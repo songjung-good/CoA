@@ -45,17 +45,6 @@ public class RepoController {
     public ResponseEntity<BaseResponse<String>> startAnalysis(@AuthenticationPrincipal CustomOAuth2User currentUser, HttpServletRequest request, @RequestBody AnalysisReqDto analysisReqDto) {
         // TODO: Test login member
         System.out.println("currentUser = " + currentUser.getMember().getMemberId());
-        Cookie[] cookies = request.getCookies();
-        Cookie cookie = null;
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                if ("JWT".equals(c.getName())) {
-                    cookie = c;
-                    break;
-                }
-            }
-        }
-        if (cookie == null) throw new BaseException(StatusCode.COOKIE_NOT_FOUND);
 
         // TODO: memberId를 쿠키로부터 가져오기
         Long memberId = 0L;
@@ -69,32 +58,25 @@ public class RepoController {
     public ResponseEntity<BaseResponse<Object>> checkAnalysis(HttpServletRequest request, @PathVariable String analysisId) {
         String memberUUID = null;
 
-//        Cookie[] cookies = request.getCookies();
-//        Cookie cookie = null;
-//        if (cookies != null) {
-//            for (Cookie c : cookies) {
-//                if ("JWT".equals(c.getName())) {
-//                    cookie = c;
-//                    break;
-//                }
-//            }
-//        }
-//        if (cookie == null) throw new BaseException(StatusCode.COOKIE_NOT_FOUND);
-
         // TODO: memberId를 쿠키로부터 가져오기
         Long memberId = 1L;
 
-        System.out.println("analysisId = " + analysisId);
-        System.out.println("memberId = " + memberId);
         AnalysisResultDto result = repoService.checkAnalysis(memberId, analysisId);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
+
+    @GetMapping("/{repoViewId}")
+    public ResponseEntity<BaseResponse<Object>> readRepoView(@PathVariable String repoViewId){
+        // TODO: 로그인 유저 아이디 가져오기
+        Long memberId = 0L;
+        RepoDetailResDto result = repoService.readRepoView(memberId, repoViewId);
+
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
 
     @GetMapping("/test")
     public ResponseEntity<BaseResponse<String>> test() {
-
-
         repoService.test();
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
