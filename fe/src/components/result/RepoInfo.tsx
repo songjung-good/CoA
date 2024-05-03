@@ -10,5 +10,5 @@ export default function RepoInfo() {
 }
 
 const RepoInfoDiv = tw.div`
-w-2/3 min-h-60 flex justify-center shadow-lg bg-white rounded-2xl
+w-3/4 min-h-60 h-1/4 flex justify-center shadow-lg bg-white rounded-2xl
 `;

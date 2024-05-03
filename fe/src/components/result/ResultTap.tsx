@@ -20,50 +20,62 @@ export default function ResultTab() {
     setTabIndex(index);
   };
 
+  const tabComponents = [
+    <ResultReadme />,
+    <ResultContribution />,
+    <ResultCommit />,
+    <ResultScore />,
+  ];
+
   return (
-    <div>
-      <div className="mt-10 flex">
-        <TapButtonLeft
-          onClick={() => handleTab(0)}
-          className={tabIndex === 0 ? "border-appBlue1 text-appBlue1" : ""}
-        >
-          README
-        </TapButtonLeft>
-        <TapButton
-          onClick={() => handleTab(1)}
-          className={tabIndex === 1 ? "border-appBlue1 text-appBlue1" : ""}
-        >
-          기여도
-        </TapButton>
-        <TapButton
-          onClick={() => handleTab(2)}
-          className={tabIndex === 2 ? "border-appBlue1 text-appBlue1" : ""}
-        >
-          커밋분석
-        </TapButton>
-        <TapButtonRight
-          onClick={() => handleTab(3)}
-          className={tabIndex === 3 ? "border-appBlue1 text-appBlue1" : ""}
-        >
-          레포점수
-        </TapButtonRight>
+    <div className="w-full h-full">
+      <div className="h-fit flex">
+        <div className="my-10 justify-center items-center mx-auto">
+          <TabButtonLeft
+            onClick={() => handleTab(0)}
+            className={`${tabIndex === 0 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+          >
+            README
+          </TabButtonLeft>
+          <TabButton
+            onClick={() => handleTab(1)}
+            className={`${tabIndex === 1 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+          >
+            기여도
+          </TabButton>
+          <TabButton
+            onClick={() => handleTab(2)}
+            className={`${tabIndex === 2 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+          >
+            커밋분석
+          </TabButton>
+          <TabButtonRight
+            onClick={() => handleTab(3)}
+            className={`${tabIndex === 3 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+          >
+            레포점수
+          </TabButtonRight>
+        </div>
       </div>
-      <div>{tabIndex === 0 && <ResultReadme />}</div>
-      <div>{tabIndex === 1 && <ResultContribution />}</div>
-      <div>{tabIndex === 2 && <ResultCommit />}</div>
-      <div>{tabIndex === 3 && <ResultScore />}</div>
+      <div className="flex justify-center w-full min-h-96">
+        {tabComponents[tabIndex]}
+      </div>
+      <div className="flex justify-center mt-10">
+        <button>저장 후 수정</button>
+        <button>홈으로</button>
+      </div>
     </div>
   );
 }
 
-const TapButton = tw.button`
+const TabButton = tw.button`
 border-2 border-black px-5 py-2
 `;
 
-const TapButtonLeft = tw(TapButton)`
+const TabButtonLeft = tw(TabButton)`
 rounded-tl-xl rounded-bl-xl
 `;
 
-const TapButtonRight = tw(TapButton)`
+const TabButtonRight = tw(TabButton)`
 rounded-tr-xl rounded-br-xl
 `;

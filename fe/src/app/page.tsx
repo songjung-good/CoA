@@ -198,7 +198,7 @@ export default function HomePage() {
 
 const LadingComponent = tw.main`
 absolute top-32 flex flex-col items-center 
-z-10 w-full
+z-10 w-full 
 
 `;
 
