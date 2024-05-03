@@ -1,5 +1,5 @@
 from api.models.services import AnalysisService
-from api.routers.analysis import GitLabAnalysisRequest
+from api.models.dto import GitLabAnalysisRequest
 
 
 class GitLabAnalysisService(AnalysisService[GitLabAnalysisRequest]):

@@ -1,9 +1,9 @@
-from typing import Generic, TypeVar, TypeAlias, NewType
+from typing import TypeVar, Generic
 
-from api.routers.analysis import AnalysisRequest
+from api.models.dto import AnalysisRequest
 
-R: TypeAlias = NewType('R', AnalysisRequest)
+R = TypeVar('R', bound=AnalysisRequest, covariant=True)
 
 
-class AnalysisService(Generic[R]):
+class AnalysisService(Generic[R]):   # Java: `class AnalysisService<R extends AnalysisRequest> { ... }`
     pass

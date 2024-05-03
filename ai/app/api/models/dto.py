@@ -1,5 +1,7 @@
 import json
+from abc import ABCMeta
 
+from pydantic import BaseModel
 from redis import Redis
 
 
@@ -117,3 +119,22 @@ class AnalysisDataDto:
             value=json.dumps(self, default=lambda obj: obj.to_camel_dict(), separators=(',', ':')),
             **redis_set_args
         )
+
+
+class AnalysisRequest(BaseModel, metaclass=ABCMeta):
+    """분석 요청에 대한 body DTO 추상 클래스"""
+    analysisId: str
+    userName: str
+
+
+class GithubAnalysisRequest(AnalysisRequest):
+    """Github 분석 요청에 대한 body DTO"""
+    repoPath: str
+    accessToken: str
+
+
+class GitLabAnalysisRequest(AnalysisRequest):
+    """GitLab 분석 요청에 대한 body DTO"""
+    baseUrl: str
+    projectId: str
+    privateToken: str
