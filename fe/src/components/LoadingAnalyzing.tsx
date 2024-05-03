@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import useAnalyzingStore from "@/store/analyze";
 
 export default function LoadingAnalyzing() {
@@ -14,14 +15,20 @@ export default function LoadingAnalyzing() {
   return (
     <div>
       {/* 테스트 버튼(상태 변경용) */}
-      {/* <button onClick={startAnalysis}>분석 시작</button>
+      <button onClick={startAnalysis}>분석 시작</button>
       <button onClick={completeAnalysis}>분석 종료</button>
-      <button onClick={resetAnalysis}>초기화</button> */}
+      <button onClick={resetAnalysis}>초기화</button>
       {/* 테스트 버튼(상태 변경용) */}
       {isAnalyzing && (
-        <div>
+        <div className="flex justify-center items-center">
           {isCompleted ? (
-            <p>완료</p>
+            <div>
+              <Link href="result/1">
+                <button className="p-1 bg-appPink text-white rounded-lg">
+                  분석 결과 확인
+                </button>
+              </Link>
+            </div>
           ) : (
             <span className="flex justify-center items-center">
               <img
