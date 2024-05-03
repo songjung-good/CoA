@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import tw from 'tailwind-styled-components';
 
+// 컴포넌트 import
+import SearchResult from './SearchResult';
+
+// type 지정
 interface SearchProps {
   onSearch: (query: string, type: string) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ onSearch }) => {
+const SearchInput: React.FC<SearchProps> = ({ onSearch }) => {
   const [query, setQuery] = useState('');
   const [type, setType] = useState('repo'); // 기본값: 레포지토리 검색
 
@@ -40,10 +44,35 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
   );
 };
 
-const Form = tw.form`mt-6`;
-const Input = tw.input`border p-2 rounded`;
-const Label = tw.label`block mt-3`;
-const Radio = tw.input`mr-2`;
-const Button = tw.button`mt-4 bg-blue-500 text-white p-2 rounded`;
+const Form = tw.form`
+  mt-6
+  flex
+  flex-row
+  max-width-screen-xl
+  justify-around
+  `;
 
-export default Search;
+const Input = tw.input`
+  border
+  p-2
+  rounded
+  `;
+
+const Label = tw.label`
+  block 
+  mt-3
+  `;
+
+const Radio = tw.input`
+  mr-2
+  `;
+
+const Button = tw.button`
+  mt-4 
+  bg-blue-500 
+  text-white 
+  p-2 
+  rounded
+  `;
+
+export default SearchInput;

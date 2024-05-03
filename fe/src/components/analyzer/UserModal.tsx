@@ -4,20 +4,22 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
+// 타입 정리
 interface UserModalProps {
   userData: {
-    data: Array<{
-      id: number;
-      username: string;
-      name: string;
-      state: string;
-      locked: boolean;
-      avatar_url: string;
-      login: string;
-      // ...이 부분은 userData의 다른 속성이 있으면 추가하세요.
-    }>;
+    data: User[];
   };
+}
+
+interface User {
+  avatar_url: string;
+  id: number;
+  login: string;
+  username?: string;
+  type: string;
+  url: string;
   projectId: number;
+  repositoryName: string;
 }
 
 interface AvatarProps {
@@ -107,6 +109,5 @@ const UserId = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-
 
 export default UserModal;

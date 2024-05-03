@@ -9,31 +9,38 @@ import UserModal from '@/components/analyzer/UserModal';
 import FetchGithubInfo from './FetchGithubInfo';
 
 // 타입 정리
-export interface User {
+interface UserData {
+  userData: {
+    data: User[];
+  };
+}
+
+interface User {
   avatar_url: string;
-  contributions: number;
-  events_url: string;
-  followers_url: string;
-  following_url: string;
-  gists_url: string;
-  gravatar_id: string;
-  html_url: string;
   id: number;
   login: string;
-  node_id: string;
-  organizations_url: string;
-  received_events_url: string;
-  repos_url: string;
-  site_admin: boolean;
-  starred_url: string;
-  subscriptions_url: string;
+  username?: string;
   type: string;
   url: string;
+  projectId: number;
+  repositoryName: string;
 }
+
+interface GitHubResponse {
+  data: UserData[];
+  repositoryName: string;
+}
+
+interface GitLabResponse {
+  data: UserData[];
+  projectId: number;
+}
+
+type ApiResponse = GitHubResponse | GitLabResponse;
 
 const UrlInput = () => {
   const [inputValue, setInputValue] = useState('');
-  const [userData, setUserData] = useState<User[] | null>(null);
+  const [userData, setUserData] = useState<ApiResponse | null>(null);
 
   // 입력 값 변경 시 핸들러
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +54,9 @@ const UrlInput = () => {
     }
   };
 
+   // FetchGithubInfo 컴포넌트를 불러와서 사용
   const fetchGitHubInfo = async () => {
-    FetchGithubInfo(inputValue, setUserData); // FetchGithubInfo 컴포넌트를 불러와서 사용
+    FetchGithubInfo(inputValue, setUserData);
   };
 
   return (

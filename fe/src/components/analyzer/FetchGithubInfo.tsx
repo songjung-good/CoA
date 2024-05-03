@@ -1,3 +1,4 @@
+// GitHub 또는 GitLab API를 사용하여 사용자 정보를 가져오는 함수
 import axios from 'axios';
 import { ExtractUserInfo } from './ExtractUserInfo';
 
@@ -13,18 +14,6 @@ interface Contributor {
   avatar_url: string;
 }
 
-interface Project {
-  id: number;
-  description: string;
-  name: string;
-  path: string;
-  path_with_namespace: string;
-  last_activity_at: string;
-  _links: {
-    members: string;
-  };
-}
-
 const FetchGithubInfo = async (inputValue: string, setUserData: Function) => {
   const githubInfo = ExtractUserInfo(inputValue);
   if (githubInfo.platform === '1') {
@@ -36,6 +25,7 @@ const FetchGithubInfo = async (inputValue: string, setUserData: Function) => {
   }
 };
 
+// fetchGitHubData 함수는 GitHub API를 사용하여 사용자 정보를 가져오는 함수
 const fetchGitHubData = async (githubInfo: any, setUserData: Function, accessTokenHub: any) => {
   try {
     const response = await axios.get(
@@ -46,7 +36,6 @@ const fetchGitHubData = async (githubInfo: any, setUserData: Function, accessTok
         },
       }
     );
-    // GitHub repositoryName을 포함하여 데이터 설정
     setUserData({
       data: response.data,
       repositoryName: githubInfo.repositoryName
@@ -56,19 +45,21 @@ const fetchGitHubData = async (githubInfo: any, setUserData: Function, accessTok
   }
 };
 
+// fetchGitLabData 함수는 GitLab API를 사용하여 사용자 정보를 가져오는 함수
 const fetchGitLabData = async (githubInfo: any, setUserData: Function, accessTokenLab: any) => {
   try {
     const members = await fetchProjectMembers(githubInfo.repositoryName, accessTokenLab);
     // GitLab projectId를 반환 값에 포함
     setUserData({
       data: members,
-      projectId: members.length > 0 ? members[0].id : null // 예시: 첫 번째 멤버의 ID를 projectId로 사용
+      projectId: members.length > 0 ? members[0].id : null
     });
   } catch (error) {
     console.error("GitLab 정보를 가져오는 데 실패했습니다.", error);
   }
 };
 
+// fetchProjectMembers 함수는 GitLab API를 사용하여 프로젝트 멤버 정보를 가져오는 함수
 const fetchProjectMembers = async (projectName: string, accessToken: string): Promise<Contributor[]> => {
   try {
     // GitLab API를 사용하여 사용자가 기여한 프로젝트 정보를 가져오는 요청
@@ -81,7 +72,7 @@ const fetchProjectMembers = async (projectName: string, accessToken: string): Pr
       }
     );
 
-    // 받아온 프로젝트 정보를 반복하여 프로젝트 이름이 일치하는 ID를 찾아냅니다.
+    // 받아온 프로젝트 정보를 반복하여 프로젝트 이름이 일치하는 ID 탐색
     let projectId = '';
     projectsResponse.data.forEach((project: any) => {
       if (project.name === projectName) {

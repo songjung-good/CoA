@@ -1,62 +1,66 @@
-// src/pages/SearchPage.jsx
 'use client'
 
 import React, { useState } from 'react';
-import Search from '@/components/searchcomponents/Search';
-import RepoCard from '@/components/searchcomponents/RepoCard';
+import SearchInput from '@/components/searchcomponents/SearchInput';
+import SearchResult from '@/components/searchcomponents/SearchResult'; 
 
-// 임시 데이터
-const RepoCardDTO = [
-  {
-    "memberId": 1,
-    "memberNickName": "songjung-good",
-    "memberImg": "https://example.com/image.jpg",
-    "repoViewId": 1,
-    "repoViewTitle": "My First Repository",
-    "repoViewSubTitle": "This is a subtitle",
-    "skillList": ["JavaScript", "React"],
-    "dateRange": {
-      "startDate": "2022-01-01",
-      "endDate": "2022-12-31"
-    },
-    "isMine": true
-  },
-  {
-    "memberId": 2,
-    "memberNickName": "another-user",
-    "memberImg": "https://example.com/image2.jpg",
-    "repoViewId": 2,
-    "repoViewTitle": "Another Repository",
-    "repoViewSubTitle": "Another subtitle",
-    "skillList": ["Python", "Django"],
-    "dateRange": {
-      "startDate": "2022-01-01",
-      "endDate": "2022-12-31"
-    },
-    "isMine": false
+// 임시 데이터 import 및 type 지정
+import RepoCardDTO from '@/components/searchcomponents/RepoCardDTO';
+import MembercardDTO from '@/components/searchcomponents/MemberInfo';
+
+// 타입 정의
+interface RepoDataType {
+  [url: string]: {
+    memberId: number;
+    memberNickName: string;
+    memberImg: string;
+    repoViewId: number;
+    repoViewTitle: string;
+    repoViewSubTitle: string;
+    skillList: string[];
+    dateRange: { startDate: string; endDate: string };
+    isMine: boolean;
   }
-];
+}
+
+interface MemberDataType {
+  memberId: number;
+  memberNickName: string;
+  memberImg: string;
+  memberIntro: string;
+  skillList: string[];
+}
 
 const SearchPage = () => {
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<RepoDataType[string][] | MemberDataType[]>([]); 
+  const [searchType, setSearchType] = useState<'repo' | 'user'>('repo');
 
-  // URL을 통한 검색 로직 구현
-  const handleSearch = (query: string, type: string) => {
-    // URL search logic - URL 입력이 'Repo' 타입일 때만 처리
+  // 검색 처리 함수
+  const handleSearch = (query: string, type: 'repo' | 'user') => {
+    setSearchType(type); 
+
     if (type === 'repo') {
-      // 단순 예시: 실제 구현에서는 URL을 바탕으로 적절한 검색 로직 필요
-      setResults(RepoCardDTO.filter(repo => repo.repoViewTitle.toLowerCase().includes(query.toLowerCase())));
+      // URL 키값으로 레포지토리 데이터 검색
+      const foundData = RepoCardDTO[query]; 
+      setResults(foundData ? [foundData] : []); 
+    } else {
+      // 사용자 이름으로 사용자 데이터 검색 
+      const foundUsers = MembercardDTO.filter(user => 
+        user.memberNickName.toLowerCase().includes(query.toLowerCase())
+      );
+      setResults(foundUsers);
     }
-    // 사용자 검색 로직 or 다른 로직은 이곳에 구현
   };
 
   return (
     <div>
-      <Search onSearch={handleSearch} />
+      <SearchInput onSearch={handleSearch} />
       <div>
-        {results.map((result) => (
-          <RepoCard key={result.repoViewId} type="repo" data={result} />
-        ))}
+        {results.length > 0 && (
+          <SearchResult results={results} type={searchType} /> 
+        )}
+        {/* 검색 결과가 없을 경우 메시지 표시 */}
+        {results.length === 0 && <p>검색 결과가 없습니다.</p>}
       </div>
     </div>
   );

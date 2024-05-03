@@ -1,31 +1,40 @@
 import React from 'react';
 
-interface CardProps {
-  type: 'repo' | 'user';
-  data: any; // 데이터 형식에 따라 수정 필요
+interface RepoCardProps {
+  data: {
+    memberId: number;
+    memberNickName: string;
+    memberImg: string;
+    repoViewId: number;
+    repoViewTitle: string;
+    repoViewSubTitle: string;
+    skillList: string[];
+    dateRange: { startDate: string; endDate: string };
+    isMine: boolean;
+  };
 }
 
-const RepoCard: React.FC<CardProps> = ({ type, data }) => {
-  // type에 따라 다른 내용을 표시
-  if (type === 'repo') {
-    return (
-      <div>
-        <h3>{data.name}</h3> 
-        <p>{data.description}</p> 
-        {/* ... 레포지토리 관련 정보 ... */}
-      </div>
-    );
-  } else if (type === 'user') {
-    return (
-      <div>
-        <img src={data.avatar_url} alt={data.login} /> 
-        <h3>{data.login}</h3> 
-        {/* ... 사용자 관련 정보 ... */}
-      </div>
-    );
-  }
+const RepoCard: React.FC<RepoCardProps> = ({ data }) => {
+  const { memberNickName, memberImg, repoViewTitle, repoViewSubTitle, skillList } = data;
 
-  return null; 
+  return (
+    <div className="card">
+      <div className="avatar-container">
+        <img src={memberImg} alt={memberNickName} className="avatar" /> 
+        <div className="info">
+          <p className="name">{memberNickName}</p>
+          <p className="title">{repoViewTitle}</p>
+          <p className="subtitle">{repoViewSubTitle}</p>
+        </div>
+      </div>
+      <div className="skills-container">
+        <p className="skills-label">기술 스택:</p>
+        {skillList.map((skill) => (
+          <span key={skill} className="skill">{skill}</span>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default RepoCard;

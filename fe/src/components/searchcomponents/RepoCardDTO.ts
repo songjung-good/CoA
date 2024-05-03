@@ -1,6 +1,5 @@
-const RepoCardDTO =
-[
-  {
+const RepoCardDTO = {
+  "https://github.com/songjung-good/gollajyu": {
     "memberId": 1,
     "memberNickName": "songjung-good",
     "memberImg": "https://example.com/image.jpg",
@@ -14,7 +13,7 @@ const RepoCardDTO =
     },
     "isMine": true
   },
-  {
+  "https://lab.ssafy.com/s10-final/S10P31E101": {
     "memberId": 2,
     "memberNickName": "another-user",
     "memberImg": "https://example.com/image2.jpg",
@@ -28,6 +27,6 @@ const RepoCardDTO =
     },
     "isMine": false
   }
-]
+};
 
 export default RepoCardDTO;
