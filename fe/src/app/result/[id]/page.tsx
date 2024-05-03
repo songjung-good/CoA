@@ -5,7 +5,7 @@ import ResultTap from "@/components/result/ResultTap.tsx";
 import useResultStore from "@/store/result";
 
 export default function ResultPage({ params }: { params: { id: string } }) {
-  const { isOwn } = useResultStore((state) => state);   // 이후 유저닉네임으로 변경
+  const { isOwn } = useResultStore((state) => state); // 이후 유저닉네임으로 변경
   return (
     <div className="flex flex-col items-center bg-appGrey1 pt-5 p-10 w-full h-full">
       <p className="mb-5 text-2xl font-bold">

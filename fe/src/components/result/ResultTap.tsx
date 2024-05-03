@@ -48,18 +48,29 @@ export default function ResultTab() {
           >
             기여도
           </TabButton>
-          <TabButton
-            onClick={() => handleTab(2)}
-            className={`${tabIndex === 2 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
-          >
-            커밋분석
-          </TabButton>
-          <TabButtonRight
-            onClick={() => handleTab(3)}
-            className={`${tabIndex === 3 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
-          >
-            레포점수
-          </TabButtonRight>
+          {isOwn ? (
+            <TabButton
+              onClick={() => handleTab(2)}
+              className={`${tabIndex === 2 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+            >
+              커밋분석
+            </TabButton>
+          ) : (
+            <TabButtonRight
+              onClick={() => handleTab(2)}
+              className={`${tabIndex === 2 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+            >
+              커밋분석
+            </TabButtonRight>
+          )}
+          {isOwn ? (
+            <TabButtonRight
+              onClick={() => handleTab(3)}
+              className={`${tabIndex === 3 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+            >
+              레포점수
+            </TabButtonRight>
+          ) : null}
         </div>
       </div>
       <div className="flex justify-center w-full min-h-96">
