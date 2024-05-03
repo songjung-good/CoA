@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import tw from "tailwind-styled-components";
+
+// store
+import useResultStore from "@/store/result";
 
 // 컴포넌트 import
 import ResultCommit from "@/app/result/[id]/_components/ResultCommit.tsx";
@@ -11,6 +15,7 @@ import ResultScore from "@/app/result/[id]/_components/ResultScore.tsx";
 
 export default function ResultTab() {
   const [tabIndex, setTabIndex] = useState(0);
+  const { isOwn } = useResultStore((state) => state);
 
   useEffect(() => {
     console.log(`현재 선택된 탭: ${tabIndex}`);
@@ -60,9 +65,11 @@ export default function ResultTab() {
       <div className="flex justify-center w-full min-h-96">
         {tabComponents[tabIndex]}
       </div>
-      <div className="flex justify-center mt-10">
-        <button>저장 후 수정</button>
-        <button>홈으로</button>
+      <div className="flex justify-evenly mt-10">
+        {isOwn && <button>저장 후 수정</button>}
+        <Link href="/main">
+          <button>홈으로</button>
+        </Link>
       </div>
     </div>
   );
