@@ -1,10 +1,13 @@
 'use client'
 
 import React, { useState } from 'react';
+import tw from 'tailwind-styled-components';
+
+// 컴포넌트 import
 import SearchInput from '@/components/searchcomponents/SearchInput';
 import SearchResult from '@/components/searchcomponents/SearchResult'; 
 
-// 임시 데이터 import 및 type 지정
+// 임시 데이터 import
 import RepoCardDTO from '@/components/searchcomponents/RepoCardDTO';
 import MembercardDTO from '@/components/searchcomponents/MemberInfo';
 
@@ -52,17 +55,31 @@ const SearchPage = () => {
   };
 
   return (
-    <div>
+    <Main>
       <SearchInput onSearch={handleSearch} />
-      <div>
+      <ResultComponent>
         {results.length > 0 && (
           <SearchResult results={results} type={searchType} /> 
         )}
         {/* 검색 결과가 없을 경우 메시지 표시 */}
         {results.length === 0 && <p>검색 결과가 없습니다.</p>}
-      </div>
-    </div>
+      </ResultComponent>
+    </Main>
   );
 };
+
+const Main = tw.div`
+  max-w-screen-xl
+  mx-auto
+`;
+
+const ResultComponent = tw.div`
+  mt-8
+  grid
+  gap-8
+  grid-cols-1
+  justify-center
+  items-start
+`;
 
 export default SearchPage;

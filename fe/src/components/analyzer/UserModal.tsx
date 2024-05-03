@@ -35,6 +35,7 @@ const UserModal: React.FC<UserModalProps> = ({ userData }) => {
   return (
     <ModalOverlay>
       <ModalContent>
+      {userData.data && (
         <ModalUserGrid>
           {userData.data.map((user, index) => (
             <ModalUser key={index} onClick={() => toggleUser(user.avatar_url)}>
@@ -48,6 +49,8 @@ const UserModal: React.FC<UserModalProps> = ({ userData }) => {
             </ModalUser>
           ))}
         </ModalUserGrid>
+      )}
+      {!userData.data && <p>사용자 데이터를 가져올 수 없습니다.</p>}
       <ModalCloseButton onClick={() => setSelectedUser(null)}>
         X
       </ModalCloseButton>
