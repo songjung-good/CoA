@@ -18,6 +18,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -43,6 +44,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final AccountLinkRepository accountLinkRepository;
     private final CodeRepository codeRepository;
 
+    @Value("${app.jwt.expiration-ms}")
+    private int jwtExpirationInMs;
     @Override // 요청 온것 , 보낼 반환 , 인증 과정에서 반환한 객체
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
 
@@ -74,6 +77,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             jwtCookie.setHttpOnly(true);
             jwtCookie.setSecure(true); // HTTPS에서만 쿠키를 전송
             jwtCookie.setPath("/");
+            jwtCookie.setMaxAge(jwtExpirationInMs);
             response.addCookie(jwtCookie);
             try {
                 String requestDomain = determineRedirectUrl(request);

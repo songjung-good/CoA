@@ -33,4 +33,7 @@ public class AccountLink extends BaseEntity {
 
     @Column
     private String accountLinkRefreshToken;
+
+    @Column
+    private String accountLinkReceiveToken;
 }
