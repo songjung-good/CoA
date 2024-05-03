@@ -20,22 +20,18 @@ const SearchInput: React.FC<SearchProps> = ({ onSearch }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSearch(query, type);
+    onSearch(query, type as 'repo' | 'user');
   };
 
   return (
     <Form onSubmit={handleSubmit}>
       <Input type="text" value={query} onChange={handleQueryChange} placeholder="검색어를 입력하세요" />
-      <div>
-        <Label>
-          <Radio type="radio" value="repo" checked={type === 'repo'} onChange={handleTypeChange} />
-          레포지토리
-        </Label>
-        <Label>
-          <Radio type="radio" value="user" checked={type === 'user'} onChange={handleTypeChange} />
-          사용자
-        </Label>
-      </div>
+      <Label>
+        <Radio type="radio" value="repo" checked={type === 'repo'} onChange={handleTypeChange} />
+        레포지토리
+        <Radio type="radio" value="user" checked={type === 'user'} onChange={handleTypeChange} />
+        사용자
+      </Label>
       <Button type="submit">검색</Button>
     </Form>
   );
@@ -45,31 +41,43 @@ const Form = tw.form`
   mt-6
   flex
   flex-row
+  justify-center
+  items-center
   max-width-screen-xl
   justify-around
   `;
 
 const Input = tw.input`
   border
-  p-2
-  rounded
+  h-3/4
+  w-3/4
+  p-3
+  text-xl
+  font-bold
+  rounded-xl
   `;
 
 const Label = tw.label`
   block 
-  mt-3
+  my-3
+  mx-2
+  text-xl
+  font-medium
   `;
 
 const Radio = tw.input`
-  mr-2
+  mx-4
   `;
 
 const Button = tw.button`
-  mt-4 
-  bg-blue-500 
-  text-white 
-  p-2 
-  rounded
+  bg-appBlue1
+  text-white
+  px-3
+  py-1
+  mx-2
+  text-xl
+  font-medium
+  rounded-full
   `;
 
 export default SearchInput;

@@ -1,6 +1,4 @@
 // UserModal은 레포지토리의 기여자를 모달 형태로 보여주는 컴포넌트
-// UrlInput에서 userData라는 props를 받아와서 사용자의 로그인 아이디와 아바타 이미지를 보여줍니다.
-
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
@@ -8,6 +6,7 @@ import styled from 'styled-components';
 interface UserModalProps {
   userData: {
     data: User[];
+    repositoryName: string;
   };
 }
 
@@ -27,6 +26,7 @@ interface AvatarProps {
 }
 
 const UserModal: React.FC<UserModalProps> = ({ userData }) => {
+  console.log(userData);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const toggleUser = (login: string) => {
     setSelectedUser(selectedUser === login ? null : login);

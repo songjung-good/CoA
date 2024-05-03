@@ -10,16 +10,9 @@ import FetchGithubInfo from './FetchGithubInfo';
 
 // 타입 정리
 interface UserData {
-  userData: {
-    data: User[];
-  };
-}
-
-interface User {
   avatar_url: string;
   id: number;
   login: string;
-  username?: string;
   type: string;
   url: string;
   projectId: number;
@@ -45,6 +38,7 @@ const UrlInput = () => {
   // 입력 값 변경 시 핸들러
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
+    console.log('handleChange', inputValue);
   };
 
   // Enter 키 입력 시 실행될 함수
@@ -54,8 +48,9 @@ const UrlInput = () => {
     }
   };
 
-   // FetchGithubInfo 컴포넌트를 불러와서 사용
+  // FetchGithubInfo 컴포넌트를 불러와서 사용
   const fetchGitHubInfo = async () => {
+    console.log('fetchGitHubInfo', inputValue);
     FetchGithubInfo(inputValue, setUserData);
   };
 
@@ -69,7 +64,10 @@ const UrlInput = () => {
         onKeyDown={handleKeyDown}
       />
       <StyledButton onClick={fetchGitHubInfo}>분석하기</StyledButton>
-      <div>{userData && <UserModal userData={userData} />}</div>
+      {userData && 
+      (userData as GitHubResponse).repositoryName &&  // GitHubResponse 타입인지 확인
+      <UserModal userData={userData as GitHubResponse} /> // GitHubResponse 타입으로 변환
+    } 
     </Container>
   );
 };
