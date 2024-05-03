@@ -1,8 +1,10 @@
-from dependency_injector.containers import DeclarativeContainer
 from dependency_injector import providers
-
+from dependency_injector.containers import DeclarativeContainer
 from dotenv import load_dotenv
 from redis import Redis
+
+from api.models.services.github import GithubAnalysisService
+from api.models.services.gitlab import GitLabAnalysisService
 
 
 class Container(DeclarativeContainer):
@@ -17,4 +19,7 @@ class Container(DeclarativeContainer):
         host=config.redis.host,
         port=config.redis.port
     )
+
+    github_analysis_service = providers.Singleton(GithubAnalysisService, redis_client)
+    gitlab_analysis_service = providers.Singleton(GitLabAnalysisService, redis_client)
 
