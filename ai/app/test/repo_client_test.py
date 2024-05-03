@@ -11,7 +11,8 @@ async def test_github():
     )
 
     result = await client.load("DoubleDeltas")
-    print('github complete:', len(result))
+    print('github complete:')
+    print(result)
 
 
 async def test_gitlab():
@@ -27,4 +28,3 @@ async def test_gitlab():
 if __name__ == '__main__':
     load_dotenv()
     asyncio.run(test_github())
-    asyncio.run(test_gitlab())
