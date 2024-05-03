@@ -3,14 +3,14 @@ import Image from "next/image";
 
 export default function LoginPage() {
   const serverUrl = process.env.NEXT_PUBLIC_URL_SERVER;
-
-  const handleGoogleLogin = () => {
-    window.location.href = `${serverUrl}/oauth2/authorization/google`; // OAuth는 fetch나 axios로 보낼 시 무조건 CORS에 막히는 듯
-  };
-
+  
   // GitHub 로그인 버튼 클릭 시 이벤트 핸들러
   const handleKakaoLogin = () => {
     window.location.href = `${serverUrl}/oauth2/authorization/kakao`;
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${serverUrl}/oauth2/authorization/google`; // OAuth는 fetch나 axios로 보낼 시 무조건 CORS에 막히는 듯
   };
 
 
