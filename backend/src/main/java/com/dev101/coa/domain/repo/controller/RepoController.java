@@ -5,20 +5,14 @@ import com.dev101.coa.domain.repo.service.RepoService;
 import com.dev101.coa.global.common.BaseResponse;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
-import com.dev101.coa.global.security.CustomOAuth2User;
+import com.dev101.coa.global.security.oauth2user.CustomOAuth2User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor

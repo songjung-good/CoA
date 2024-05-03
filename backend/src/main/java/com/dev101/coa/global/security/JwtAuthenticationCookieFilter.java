@@ -21,7 +21,6 @@ import java.util.Collections;
 public class JwtAuthenticationCookieFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;  // 직접 구현 필요
 
-
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {

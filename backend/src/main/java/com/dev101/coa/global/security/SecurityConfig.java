@@ -57,6 +57,7 @@ public class SecurityConfig {
                                 .requestMatchers("/oauth2/**", "/login/**").permitAll()
                                 .anyRequest().authenticated()
                 )
+                .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
 
                 // OAuth2 로그인 설정 // oauth2Login 사용자가 로그인 안되어 있으면 일로 보낸다는데? http://localhost:8080/oauth2/authorization/google
                 //Spring Security는 애플리케이션의 /login/oauth2/code/* 경로를 리다이렉트 URI로 사용하여 OAuth 2.0 프로바이더로부터 인증 코드를 받습니다.
@@ -67,12 +68,6 @@ public class SecurityConfig {
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                 );
 
-
-
-        // JWT 인증 필터 추가
-        // TODO 이게 무슨 의미?
-        http.addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // 커스텀 필터 추가
-//        http.addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass()) // 토큰 예외 핸들링
         return http.build();
     }
 }

@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -27,8 +26,14 @@ public class AccountLink extends BaseEntity {
     private Code code;
 
     @Column(nullable = false, length = 64)
-    private String accountLinkAccountId;
-
-    @Column(length = 64)
     private String accountLinkNickname;
+
+    @Column
+    private String accountLinkToken;
+
+    @Column
+    private String accountLinkRefreshToken;
+
+    @Column
+    private String accountLinkReceiveToken;
 }
