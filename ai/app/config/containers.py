@@ -3,6 +3,7 @@ from dependency_injector.containers import DeclarativeContainer
 from dotenv import load_dotenv
 from redis import Redis
 
+from api.models.services import MockAnalysisService
 from api.models.services.github import GithubAnalysisService
 from api.models.services.gitlab import GitLabAnalysisService
 
@@ -20,6 +21,6 @@ class Container(DeclarativeContainer):
         port=config.redis.port
     )
 
-    github_analysis_service = providers.Singleton(GithubAnalysisService, redis_client)
-    gitlab_analysis_service = providers.Singleton(GitLabAnalysisService, redis_client)
+    github_analysis_service = providers.Singleton(MockAnalysisService)  # Mock
+    gitlab_analysis_service = providers.Singleton(MockAnalysisService)  # Mock
 
