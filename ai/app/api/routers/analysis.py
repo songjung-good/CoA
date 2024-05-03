@@ -13,7 +13,8 @@ def post_github(
         background_tasks: BackgroundTasks,
         analysis_service: AnalysisService[GithubAnalysisRequest] = Depends(lambda: Container.github_analysis_service())
 ) -> bool:
-    return analysis_service.start_analysis(background_tasks, request)
+    background_tasks.add_task(analysis_service.analyze, request)
+    return True
 
 
 @router.post('/gitlab')
@@ -22,4 +23,5 @@ def post_gitlab(
         background_tasks: BackgroundTasks,
         analysis_service: AnalysisService[GitLabAnalysisRequest] = Depends(lambda: Container.gitlab_analysis_service())
 ) -> bool:
-    return analysis_service.start_analysis(background_tasks, request)
+    background_tasks.add_task(analysis_service.analyze, request)
+    return True
