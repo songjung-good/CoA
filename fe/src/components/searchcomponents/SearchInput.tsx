@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import tw from 'tailwind-styled-components';
 
-// 컴포넌트 import
-import SearchResult from './SearchResult';
-
 // type 지정
 interface SearchProps {
-  onSearch: (query: string, type: string) => void;
+  onSearch: (query: string, type: 'repo' | 'user') => void;
 }
 
 const SearchInput: React.FC<SearchProps> = ({ onSearch }) => {

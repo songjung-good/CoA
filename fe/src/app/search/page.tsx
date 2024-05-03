@@ -10,18 +10,17 @@ import MembercardDTO from '@/components/searchcomponents/MemberInfo';
 
 // 타입 정의
 interface RepoDataType {
-  [url: string]: {
-    memberId: number;
-    memberNickName: string;
-    memberImg: string;
-    repoViewId: number;
-    repoViewTitle: string;
-    repoViewSubTitle: string;
-    skillList: string[];
-    dateRange: { startDate: string; endDate: string };
-    isMine: boolean;
-  }
-}
+  url: string;
+  memberId: number;
+  memberNickName: string;
+  memberImg: string;
+  repoViewId: number;
+  repoViewTitle: string;
+  repoViewSubTitle: string;
+  skillList: string[];
+  dateRange: { startDate: string; endDate: string };
+  isMine: boolean;
+};
 
 interface MemberDataType {
   memberId: number;
@@ -32,17 +31,17 @@ interface MemberDataType {
 }
 
 const SearchPage = () => {
-  const [results, setResults] = useState<RepoDataType[string][] | MemberDataType[]>([]); 
+  const [results, setResults] = useState<RepoDataType[] | MemberDataType[]>([]); 
   const [searchType, setSearchType] = useState<'repo' | 'user'>('repo');
 
   // 검색 처리 함수
   const handleSearch = (query: string, type: 'repo' | 'user') => {
     setSearchType(type); 
-
+  
     if (type === 'repo') {
-      // URL 키값으로 레포지토리 데이터 검색
-      const foundData = RepoCardDTO[query]; 
-      setResults(foundData ? [foundData] : []); 
+      // URL로 레포지토리 데이터 검색
+      const foundData = RepoCardDTO.filter(repo => repo.url === query);
+      setResults(foundData); 
     } else {
       // 사용자 이름으로 사용자 데이터 검색 
       const foundUsers = MembercardDTO.filter(user => 
