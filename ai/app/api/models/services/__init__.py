@@ -5,6 +5,7 @@ from typing import TypeVar, Generic, Any
 from redis import Redis
 
 from api.models.dto import AnalysisRequest, GithubAnalysisRequest, GitLabAnalysisRequest
+from exception import AnalysisException
 
 R = TypeVar('R', bound=AnalysisRequest, covariant=True)
 
@@ -18,8 +19,12 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):
 
     async def analyze(self, request: R) -> None:
         # TODO: 각 단계를 나누어 추상 메소드를 호출하고 처리 상태 변경
-        commits = await self.load_commits(request)
-        return
+        try:
+            commits = await self.load_commits(request)
+            print(commits)
+        except AnalysisException:
+            # TODO: redis에 percentage 0으로 만들고 statusCode 바꾸기
+            pass
 
     @abstractmethod
     async def load_commits(self, request: R) -> list[dict[Any, Any]]:
@@ -35,7 +40,12 @@ class MockAnalysisService(Generic[R], AnalysisService[R]):
         await asyncio.sleep(5)
         return [
             {
-
+                'id': '5c47a3c8c3892f5277680a3f0cb934a9843ab1a3',
+                'patches': ['@@ -0,0 +1 @@\n+Hello, ssafy!']
+            },
+            {
+                'id': '71541e9e6d7850a27476063d10313f5f6d1d9baf',
+                'patches': ['@@ -0,0 +1,2 @@\n+# CoATest\n+test repo']
             }
         ]
 

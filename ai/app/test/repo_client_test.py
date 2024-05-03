@@ -6,7 +6,7 @@ import os
 
 async def test_github():
     client = GithubClient(
-        path="DoubleDeltas/MineCollector",
+        path="DoubleDeltas/CoATest",
         access_token=os.getenv('GITHUB_ACCESS_TOKEN')
     )
 
