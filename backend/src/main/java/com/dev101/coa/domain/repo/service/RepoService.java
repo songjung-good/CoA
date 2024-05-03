@@ -378,7 +378,7 @@ public class RepoService {
         String projectId = analysisReqDto.getProjectId();
 
         // isOwn 값 처리하기
-        Boolean isOwn = accountLinkRepository.existsAccountLinkByMemberAndAccountLinkAccountId(member, analysisReqDto.getUserName());
+        Boolean isOwn = accountLinkRepository.existsAccountLinkByMemberAndAccountLinkNickname(member, analysisReqDto.getUserName());
 
         // analysisId 만들기
         String analysisId = UUID.randomUUID().toString();

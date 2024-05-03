@@ -25,15 +25,12 @@ public class AccountLink extends BaseEntity {
     @JoinColumn(name = "code_id", nullable = false)
     private Code code;
 
-    @Column(length = 64)
-    private String accountLinkAccountId;
-
     @Column(nullable = false, length = 64)
     private String accountLinkNickname;
 
     @Column
-    private String account_link_token;
+    private String accountLinkToken;
 
     @Column
-    private String account_link_refresh_token;
+    private String accountLinkRefreshToken;
 }
