@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import tw from "tailwind-styled-components";
-
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 // store
 import useResultStore from "@/store/result";
+
+import "@/app/result/[id]/_components/result.css";
 
 // 컴포넌트 import
 import ResultCommit from "@/app/result/[id]/_components/ResultCommit.tsx";
@@ -15,6 +17,7 @@ import ResultScore from "@/app/result/[id]/_components/ResultScore.tsx";
 
 export default function ResultTab() {
   const [tabIndex, setTabIndex] = useState(0);
+  const [lastIndex, setLastIndex] = useState(0);
   const { isOwn } = useResultStore((state) => state);
 
   useEffect(() => {
@@ -23,7 +26,10 @@ export default function ResultTab() {
 
   const handleTab = (index: number) => {
     setTabIndex(index);
+    setLastIndex(tabIndex);
   };
+
+  const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";
 
   const tabComponents = [
     <ResultReadme />,
@@ -73,9 +79,13 @@ export default function ResultTab() {
           ) : null}
         </div>
       </div>
-      <div className="flex justify-center w-full min-h-96">
-        {tabComponents[tabIndex]}
-      </div>
+      <TransitionGroup component={null}>
+        <CSSTransition key={tabIndex} timeout={500} classNames={slideDirection}>
+          <div className="flex justify-center w-full min-h-96">
+            {tabComponents[tabIndex]}
+          </div>
+        </CSSTransition>
+      </TransitionGroup>
       <div className="flex justify-evenly mt-10">
         {isOwn && <button>저장 후 수정</button>}
         <Link href="/main">

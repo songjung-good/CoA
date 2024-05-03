@@ -4,6 +4,8 @@ import RepoInfo from "@/components/result/RepoInfo.tsx";
 import ResultTap from "@/components/result/ResultTap.tsx";
 import useResultStore from "@/store/result";
 
+import "./_components/result.css";
+
 export default function ResultPage({ params }: { params: { id: string } }) {
   const { isOwn } = useResultStore((state) => state); // 이후 유저닉네임으로 변경
   return (
