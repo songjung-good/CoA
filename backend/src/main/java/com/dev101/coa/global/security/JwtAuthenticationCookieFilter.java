@@ -32,10 +32,10 @@ public class JwtAuthenticationCookieFilter extends OncePerRequestFilter {
             Long memberId = jwtTokenProvider.getMemberIdFromJWT(jwt);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    memberId, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                    memberId, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))); // 임의의 권한
 
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // 사용자의 ip나 세션 정보를 저장
+            SecurityContextHolder.getContext().setAuthentication(authentication); // 여기에 저장된 상태로 아래 filterChain을 통해 대상 서블릿이나 컨트롤러에 감.
         }
         filterChain.doFilter(request, response);
     }
