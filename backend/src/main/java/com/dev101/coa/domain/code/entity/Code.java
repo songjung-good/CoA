@@ -1,5 +1,7 @@
 package com.dev101.coa.domain.code.entity;
 
+import com.dev101.coa.domain.code.dto.CodeCntDto;
+import com.dev101.coa.domain.code.dto.CodeDto;
 import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,6 +24,13 @@ public class Code extends BaseEntity {
     @Column(name = "code_name", length = 20, nullable = false)
     private String codeName;
 
+    public CodeDto convertToDto(){
+        return CodeDto.builder()
+                .codeId(this.codeId)
+                .codeName(this.codeName)
+                .build();
+    }
+
     // equals 메서드 오버라이드
     @Override
     public boolean equals(Object o) {
@@ -35,4 +44,5 @@ public class Code extends BaseEntity {
     @Override
     public int hashCode() {
         return 31 * (codeId != null ? codeId.hashCode() : 0);
-    }}
+    }
+}

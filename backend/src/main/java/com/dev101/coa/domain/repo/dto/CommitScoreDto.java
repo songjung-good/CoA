@@ -1,5 +1,6 @@
 package com.dev101.coa.domain.repo.dto;
 
+import com.dev101.coa.domain.repo.entity.CommitScore;
 import lombok.*;
 
 import java.io.Serializable;
@@ -10,13 +11,12 @@ import java.io.Serializable;
 @AllArgsConstructor
 @ToString
 public class CommitScoreDto {
-    private Integer readability;
-    private Integer performance;
-    private Integer reusability;
-    private Integer testability;
-    private Integer exception;
-    private Integer total;
+    private Short readability;
+    private Short performance;
+    private Short reusability;
+    private Short testability;
+    private Short exception;
+    private Short total;
     private String scoreComment;
 
-    // Constructors, getters, setters, and additional methods
 }

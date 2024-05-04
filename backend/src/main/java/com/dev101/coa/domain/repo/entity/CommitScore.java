@@ -1,5 +1,6 @@
 package com.dev101.coa.domain.repo.entity;
 
+import com.dev101.coa.domain.repo.dto.CommitScoreDto;
 import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,6 +16,9 @@ import java.util.Objects;
 public class CommitScore extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long commitScoreId;
+
     @OneToOne
     @JoinColumn(name = "repo_view_id", nullable = false)
     private RepoView repoView;
@@ -46,6 +50,18 @@ public class CommitScore extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(repoView);
+    }
+
+    public CommitScoreDto converToDto(){
+        return CommitScoreDto.builder()
+                .readability(this.scoreReadability)
+                .performance(this.scorePerformance)
+                .reusability(this.scoreReusability)
+                .testability(this.scoreTestability)
+                .exception(this.scoreException)
+                .total(this.scoreTotal)
+                .scoreComment(this.scoreComment)
+                .build();
     }
 
 }

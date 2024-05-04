@@ -1,5 +1,7 @@
 package com.dev101.coa.domain.repo.service;
 
+import com.dev101.coa.domain.code.dto.CodeCntDto;
+import com.dev101.coa.domain.code.dto.CodeDto;
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.code.repository.CodeRepository;
 import com.dev101.coa.domain.member.repository.AccountLinkRepository;
@@ -54,6 +56,7 @@ public class RepoService {
     private final AccountLinkRepository accountLinkRepository;
     private final MemberRepository memberRepository;
     private final LineOfCodeRepository lineOfCodeRepository;
+    private final CommitScoreRepository commitScoreRepository;
 
     private final RedisTemplate<String, Object> redisTemplateRepo;
 
@@ -198,6 +201,19 @@ public class RepoService {
                     .build();
             lineOfCodeRepository.save(lineOfCode);
         }
+
+        // commitScore 저장
+        CommitScoreDto commitScoreDto = ((AiResultDto) redisData.get("result")).getCommitScore();
+        commitScoreRepository.save(CommitScore.builder()
+                        .repoView(repoView)
+                        .scoreReadability(commitScoreDto.getReadability())
+                        .scorePerformance(commitScoreDto.getPerformance())
+                        .scoreReusability(commitScoreDto.getReusability())
+                        .scoreTestability(commitScoreDto.getTestability())
+                        .scoreException(commitScoreDto.getException())
+                        .scoreTotal(commitScoreDto.getTotal())
+                        .scoreComment(commitScoreDto.getScoreComment())
+                .build());
 
     }
 
@@ -462,14 +478,68 @@ public class RepoService {
         }
     }
 
+    public RepoDetailResDto readRepoView(Long memberId, Long repoViewId) {
+        // 레포 뷰 존재 여부 확인
+        RepoView repoView = repoViewRepository.findById(repoViewId).orElseThrow(()->new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
+
+        // 레포 카드
+        List<RepoViewSkill> repoViewSkillList = repoViewSkillRepository.findAllByRepoView(repoView);
+        List<CodeDto> skillList = new ArrayList<>();
+        for(RepoViewSkill repoViewSkill : repoViewSkillList){
+            skillList.add(repoViewSkill.getSkillCode().convertToDto());
+        }
+
+        RepoCardDto repoCardDto = RepoCardDto.createRepoCardDto(repoView, memberId);
+        repoCardDto.updateSkillList(skillList);
+
+        // 베이직 디테일
+        // - commentList
+        List<Comment> commentList = commentRepository.findAllByRepoView(repoView);
+        List<CommitCommentDto> commentDtoList = new ArrayList<>();
+        for(Comment comment : commentList){
+            commentDtoList.add(comment.convertToDto());
+        }
+        // - repoViewTotalCommitCnt
+        // - repoLineCntList
+        List<LineOfCode> lineOfCodeList = lineOfCodeRepository.findAllByRepoView(repoView);
+        List<CodeCntDto> lineCntList = new ArrayList<>();
+        for(LineOfCode loc : lineOfCodeList){
+            CodeCntDto codeCntDto = CodeCntDto.builder()
+                    .codeName(loc.getSkillCode().getCodeName())
+                    .lineCnt(loc.getLineCount())
+                    .build();
+            lineCntList.add(codeCntDto);
+        }
+
+        BasicDetailDto basicDetailDto = BasicDetailDto.builder()
+                .repoReadme(repoView.getRepoViewReadme())
+                .repoViewResult(repoView.getRepoViewResult())
+                .commentList(commentDtoList)
+                .repoViewTotalCommitCnt(repoView.getRepo().getRepoCommitCnt())
+                .repoViewCommitCnt(repoView.getRepoViewCommitCnt())
+                .repoViewMemberCnt(repoView.getRepo().getRepoMemberCnt())
+                .repoLineCntList(lineCntList)
+                .build();
+
+        // 커밋 스코어 디티오
+        CommitScore commitScore = commitScoreRepository.findByRepoView(repoView)
+                .orElseThrow(()->new BaseException(StatusCode.REPO_COMMIT_SCORE_NOT_EXIST));
+
+        return RepoDetailResDto.builder()
+                .repoCardDto(repoCardDto)
+                .basicDetailDto(basicDetailDto)
+                .commitScoreDto(commitScore.converToDto())
+                .build();
+    }
+
     public void test() {
         CommitScoreDto commitScoreDto = CommitScoreDto.builder()
-                .readability(10)
-                .performance(20)
-                .reusability(30)
-                .testability(40)
-                .exception(50)
-                .total(30)
+                .readability((short) 10)
+                .performance((short) 20)
+                .reusability((short) 30)
+                .testability((short) 40)
+                .exception((short) 50)
+                .total((short) 30)
                 .scoreComment("good!")
                 .build();
 
