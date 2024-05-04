@@ -1,7 +1,13 @@
 package com.dev101.coa.domain.repo.dto;
 
-import java.time.LocalDate;
+import lombok.Builder;
+import lombok.Getter;
 
+import java.time.LocalDate;
+import java.util.List;
+
+@Builder
+@Getter
 public class RepoCardDto {
     private Long memberId;
 
@@ -15,7 +21,7 @@ public class RepoCardDto {
 
     private String repoViewSubtitle;
 
-    private String[] skillList;
+    private List<String> skillList;
 
     private LocalDate repoStartDate;
 

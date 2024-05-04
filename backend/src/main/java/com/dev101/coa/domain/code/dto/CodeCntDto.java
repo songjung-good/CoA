@@ -7,5 +7,5 @@ import lombok.Getter;
 @Builder
 public class CodeCntDto {
     private String codeName;
-    private Long lineCnt;
+    private Integer lineCnt;
 }

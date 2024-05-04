@@ -59,14 +59,14 @@ public class RepoController {
         String memberUUID = null;
 
         // TODO: memberId를 쿠키로부터 가져오기
-        Long memberId = 1L;
+        Long memberId = 7L;
 
         AnalysisResultDto result = repoService.checkAnalysis(memberId, analysisId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
     @GetMapping("/{repoViewId}")
-    public ResponseEntity<BaseResponse<Object>> readRepoView(@PathVariable String repoViewId){
+    public ResponseEntity<BaseResponse<Object>> readRepoView(@PathVariable Long repoViewId){
         // TODO: 로그인 유저 아이디 가져오기
         Long memberId = 0L;
         RepoDetailResDto result = repoService.readRepoView(memberId, repoViewId);

@@ -40,7 +40,7 @@ public class SecurityConfig {
                             }))
                 // CSRF 설정 변경 +  스프링 시큐리티는 기본적으로 CSRF 보호를 활성화하여 POST, PUT, DELETE 같은 변경을 초래하는 HTTP 메소드에 대해 CSRF 토큰 검증을 요구합니다.
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
-                        new AntPathRequestMatcher("/oauth2/**") // 필요한지 모르겠으 ("/api/auth/*") 이건 일반 로그인 같은게 있을 때 필요한 듯?
+                        new AntPathRequestMatcher("/**") // 필요한지 모르겠으 ("/api/auth/*") 이건 일반 로그인 같은게 있을 때 필요한 듯?
                         ).
                         csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 쿠키에 담을 때 JS에서 뜯을 수 있도록 설정하는 것이 False
 
@@ -54,7 +54,7 @@ public class SecurityConfig {
                 // 요청 권한 설정
                 .authorizeHttpRequests(auth -> auth
 //                                .anyRequest().permitAll()
-                                .requestMatchers("/oauth2/**", "/login/**").permitAll()
+                                .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated()
                 )
 

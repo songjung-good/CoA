@@ -12,8 +12,9 @@ import java.util.Map;
 public class BasicDetailDto {
     private String repoReadme;
     private String repoViewResult;
-    private List<CommitCommentDto> CommentList;
+    private List<CommitCommentDto> commentList;
     private Long repoViewTotalCommitCnt;
     private Long repoViewCommitCnt;
+    private Integer repoViewMemberCnt;
     private Map<String, CodeCntDto> repoLineCntMap;
 }
