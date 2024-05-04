@@ -1,6 +1,7 @@
 package com.dev101.coa.domain.repo.service;
 
 import com.dev101.coa.domain.code.dto.CodeCntDto;
+import com.dev101.coa.domain.code.dto.CodeDto;
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.code.repository.CodeRepository;
 import com.dev101.coa.domain.member.AccountLinkRepository;
@@ -485,30 +486,15 @@ public class RepoService {
         // 레포 뷰 존재 여부 확인
         RepoView repoView = repoViewRepository.findById(repoViewId).orElseThrow(()->new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
 
-
-        // 현재 로그인한 memberId와 레포 뷰의 주인 매치 여부 확인
-        Boolean isMine = false;
-        if(memberId == repoView.getMember().getMemberId()) isMine = true;
-
         // 레포 카드
         List<RepoViewSkill> repoViewSkillList = repoViewSkillRepository.findAllByRepoView(repoView);
-        List<String> skillNameList = new ArrayList<>();
+        List<CodeDto> skillList = new ArrayList<>();
         for(RepoViewSkill repoViewSkill : repoViewSkillList){
-            skillNameList.add(repoViewSkill.getSkillCode().getCodeName());
+            skillList.add(repoViewSkill.getSkillCode().convertToDto());
         }
 
-        RepoCardDto repoCardDto = RepoCardDto.builder()
-                .memberId(repoView.getMember().getMemberId())
-                .memberNickname(repoView.getMember().getMemberNickname())
-                .memberImg(repoView.getMember().getMemberImg())
-                .repoViewId(repoViewId)
-                .repoViewTitle(repoView.getRepoViewTitle())
-                .repoViewSubtitle(repoView.getRepoViewSubtitle())
-                .skillList(skillNameList)
-                .repoStartDate(repoView.getRepoStartDate())
-                .repoEndDate(repoView.getRepoEndDate())
-                .isMine(isMine)
-                .build();
+        RepoCardDto repoCardDto = RepoCardDto.createRepoCardDto(repoView, memberId);
+        repoCardDto.updateSkillList(skillList);
 
         // 베이직 디테일
         // - commentList
@@ -518,16 +504,15 @@ public class RepoService {
             commentDtoList.add(comment.convertToDto());
         }
         // - repoViewTotalCommitCnt
-        // - repoLineCntMap
+        // - repoLineCntList
         List<LineOfCode> lineOfCodeList = lineOfCodeRepository.findAllByRepoView(repoView);
-        Map<String, CodeCntDto> lineCntMap = new HashMap<>();
+        List<CodeCntDto> lineCntList = new ArrayList<>();
         for(LineOfCode loc : lineOfCodeList){
-            String codeName = loc.getSkillCode().getCodeName();
             CodeCntDto codeCntDto = CodeCntDto.builder()
-                    .codeName(codeName)
+                    .codeName(loc.getSkillCode().getCodeName())
                     .lineCnt(loc.getLineCount())
                     .build();
-            lineCntMap.put(codeName, codeCntDto);
+            lineCntList.add(codeCntDto);
         }
 
         BasicDetailDto basicDetailDto = BasicDetailDto.builder()
@@ -537,7 +522,7 @@ public class RepoService {
                 .repoViewTotalCommitCnt(repoView.getRepo().getRepoCommitCnt())
                 .repoViewCommitCnt(repoView.getRepoViewCommitCnt())
                 .repoViewMemberCnt(repoView.getRepo().getRepoMemberCnt())
-                .repoLineCntMap(lineCntMap)
+                .repoLineCntList(lineCntList)
                 .build();
 
         // 커밋 스코어 디티오

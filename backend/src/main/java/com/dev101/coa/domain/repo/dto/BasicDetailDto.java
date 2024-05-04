@@ -16,5 +16,5 @@ public class BasicDetailDto {
     private Long repoViewTotalCommitCnt;
     private Long repoViewCommitCnt;
     private Integer repoViewMemberCnt;
-    private Map<String, CodeCntDto> repoLineCntMap;
+    private List<CodeCntDto> repoLineCntList;
 }
