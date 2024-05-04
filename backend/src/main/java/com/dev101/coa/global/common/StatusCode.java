@@ -9,6 +9,7 @@ public enum StatusCode {
     // REPO : 300
     REPO_VIEW_NOT_FOUND(false, 300, "레포지토리 뷰가 존재하지 않습니다."),
     REPO_REQ_MEMBER_NOT_MATCH(false, 301, "레포지토리 분석을 요청한 사용자가 아닙니다."),
+    REPO_COMMIT_SCORE_NOT_EXIST(false, 302, "해당 레포지토리의 커밋 점수가 존재하지 않습니다."),
 
     // CODE : 400
     CODE_NOT_FOUND(false, 400, "코드를 찾을 수 없습니다."),
@@ -29,6 +30,7 @@ public enum StatusCode {
     // api : 800
     DATA_NOT_EXIST(false, 800, "api 응답이 존재하지 않습니다."),
     CANNOT_GET_CONTRIBUTOR(false, 801, "contributor 수를 가져오는데 실패했습니다.");
+
 
 
 //    //게임 : 500

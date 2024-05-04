@@ -1,5 +1,6 @@
 package com.dev101.coa.domain.repo.entity;
 
+import com.dev101.coa.domain.repo.dto.CommitCommentDto;
 import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,4 +29,12 @@ public class Comment extends BaseEntity {
 
     @Column(name = "comment_content", length = 255)
     private String commentContent;
+
+    public CommitCommentDto convertToDto(){
+        return CommitCommentDto.builder()
+                .commentStartIndex(this.commentStartIndex)
+                .commentEndIndex(this.commentEndIndex)
+                .commentContent(this.commentContent)
+                .build();
+    }
 }

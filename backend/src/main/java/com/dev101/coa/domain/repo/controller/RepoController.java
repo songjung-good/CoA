@@ -6,6 +6,8 @@ import com.dev101.coa.global.common.BaseResponse;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import com.dev101.coa.global.security.oauth2user.CustomOAuth2User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Repo Controller", description = "Repo와 관련된 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/repos")
@@ -21,12 +24,14 @@ public class RepoController {
 
     private final RepoService repoService;
 
+    @Operation(description = "리드미 수정")
     @PutMapping("/{repoViewId}")
     public ResponseEntity<BaseResponse<Object>> editReadme(@PathVariable Long repoViewId, @RequestBody EditReadmeReqDto editReadmeReqDto) {
         repoService.editReadme(repoViewId, editReadmeReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
+    @Operation(description = "분석 결과 저장")
     @PostMapping("/{analysisId}")
     public ResponseEntity<BaseResponse<Object>> saveAnalysis(@PathVariable String analysisId, @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) {
 
@@ -35,21 +40,11 @@ public class RepoController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
+    @Operation(description = "분석 요청")
     @PostMapping("/analysis")
     public ResponseEntity<BaseResponse<String>> startAnalysis(@AuthenticationPrincipal CustomOAuth2User currentUser, HttpServletRequest request, @RequestBody AnalysisReqDto analysisReqDto) {
         // TODO: Test login member
         System.out.println("currentUser = " + currentUser.getMember().getMemberId());
-        Cookie[] cookies = request.getCookies();
-        Cookie cookie = null;
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                if ("JWT".equals(c.getName())) {
-                    cookie = c;
-                    break;
-                }
-            }
-        }
-        if (cookie == null) throw new BaseException(StatusCode.COOKIE_NOT_FOUND);
 
         // TODO: memberId를 쿠키로부터 가져오기
         Long memberId = 0L;
@@ -59,36 +54,32 @@ public class RepoController {
     }
 
 
+    @Operation(description = "분석 진척도 체크")
     @GetMapping("/analysis/{analysisId}")
-    public ResponseEntity<BaseResponse<Object>> checkAnalysis(HttpServletRequest request, @PathVariable String analysisId) {
+    public ResponseEntity<BaseResponse<AnalysisResultDto>> checkAnalysis(HttpServletRequest request, @PathVariable String analysisId) {
         String memberUUID = null;
 
-//        Cookie[] cookies = request.getCookies();
-//        Cookie cookie = null;
-//        if (cookies != null) {
-//            for (Cookie c : cookies) {
-//                if ("JWT".equals(c.getName())) {
-//                    cookie = c;
-//                    break;
-//                }
-//            }
-//        }
-//        if (cookie == null) throw new BaseException(StatusCode.COOKIE_NOT_FOUND);
-
         // TODO: memberId를 쿠키로부터 가져오기
-        Long memberId = 1L;
+        Long memberId = 7L;
 
-        System.out.println("analysisId = " + analysisId);
-        System.out.println("memberId = " + memberId);
         AnalysisResultDto result = repoService.checkAnalysis(memberId, analysisId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
+    @Operation(description = "특정 레포 뷰 조회")
+    @GetMapping("/{repoViewId}")
+    public ResponseEntity<BaseResponse<RepoDetailResDto>> readRepoView(@PathVariable Long repoViewId){
+        // TODO: 로그인 유저 아이디 가져오기
+        Long memberId = 0L;
+        RepoDetailResDto result = repoService.readRepoView(memberId, repoViewId);
 
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
+
+
+    @Operation(description = "더미데이터 주입을 위한 컨트롤러! 무시해도 됩니다!")
     @GetMapping("/test")
-    public ResponseEntity<BaseResponse<String>> test() {
-
-
+    public ResponseEntity<BaseResponse<Object>> test() {
         repoService.test();
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
