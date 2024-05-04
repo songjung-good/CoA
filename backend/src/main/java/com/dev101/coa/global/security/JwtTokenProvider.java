@@ -40,6 +40,9 @@ public class JwtTokenProvider { // 토큰 만들거나 관리하는 친구
 
         return Jwts.builder() // TODO 토큰 내부 값 설정
                 .setSubject(Long.toString(member.getMemberId())) // Id를 String으로 Subject에 담는다.
+//                .claim("roles", member.getAuthorities().stream()
+//                        .map(GrantedAuthority::getAuthority)
+//                        .collect(Collectors.toList())) // 사용자 권한 정보 추가하는 방법 - 필터에서 꺼내서 설정가능
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -66,13 +69,13 @@ public class JwtTokenProvider { // 토큰 만들거나 관리하는 친구
         return Long.parseLong(claims.getSubject()); // Subject에 담았던 String id를 꺼내서 반환.
     }
     public UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody(); // getMemberIdFromJWT랑 같은 작업이네
         String username = claims.getSubject();
-        var authorities = ((List<String>) claims.get("auth")).stream()
+        var authorities = ((List<String>) claims.get("roles")).stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
         User principal = new User(username, "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        return new UsernamePasswordAuthenticationToken(principal, token, authorities); // 컨트롤러에서 사용할 정보들로 authentication 만들기
     }
 }

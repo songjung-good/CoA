@@ -42,7 +42,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
                         new AntPathRequestMatcher("/oauth2/**") // 필요한지 모르겠으 ("/api/auth/*") 이건 일반 로그인 같은게 있을 때 필요한 듯?
                         ).
-                        csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 쿠키에 담을 때 JS에서 뜯을 수 있도록 설정하는 것이 False
+                        csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                // false로 설정함으로써 JavaScript를 통해서도 쿠키에 접근할 수 있게 합니다.
+                // TODO CSRF 토큰을 읽어서 요청의 헤더에 포함시킬 필요가 있을 때 사용합니다.
+
+                // 요청 권한 설정 TODO 서버의(JWT) 인증 부분
+                .authorizeHttpRequests(auth -> auth
+//                                .anyRequest().permitAll()
+                                .requestMatchers("/oauth2/**", "/login/**").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
 
                 // 세션 관리 전략 설정
                 .sessionManagement(session -> session
@@ -51,13 +61,6 @@ public class SecurityConfig {
                 )
 
 
-                // 요청 권한 설정
-                .authorizeHttpRequests(auth -> auth
-//                                .anyRequest().permitAll()
-                                .requestMatchers("/oauth2/**", "/login/**").permitAll()
-                                .anyRequest().authenticated()
-                )
-                .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
 
                 // OAuth2 로그인 설정 // oauth2Login 사용자가 로그인 안되어 있으면 일로 보낸다는데? http://localhost:8080/oauth2/authorization/google
                 //Spring Security는 애플리케이션의 /login/oauth2/code/* 경로를 리다이렉트 URI로 사용하여 OAuth 2.0 프로바이더로부터 인증 코드를 받습니다.
