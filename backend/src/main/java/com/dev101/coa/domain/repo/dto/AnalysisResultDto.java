@@ -1,5 +1,7 @@
 package com.dev101.coa.domain.repo.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jdk.jfr.Description;
 import lombok.*;
 
 import java.util.Map;
@@ -8,7 +10,6 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class AnalysisResultDto {
 
     private String repoPath; // 저장된 레포 정보를 찾기 위함(API 요청에도 사용)
@@ -25,7 +26,8 @@ public class AnalysisResultDto {
 
     private Integer percentage;
 
-    private AiResultDto result; // reaeme, commitScore, commitComment, linesOfCode
+    @Schema(description="전체 커밋 수, 개인 커밋 수, 리드미, 레포 분석 결과, 커밋 점수, 언어 별 코드 줄 수")
+    private AiResultDto result; // readme, commitScore, commitComment, linesOfCode
 
     public void updateResult(AiResultDto aiResultDto){
         this.result = aiResultDto;

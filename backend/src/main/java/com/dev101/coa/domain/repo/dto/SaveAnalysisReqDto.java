@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@ToString
 public class SaveAnalysisReqDto {
     private String repoViewTitle;
     private String repoViewSubtitle;
