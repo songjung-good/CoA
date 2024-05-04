@@ -30,4 +30,19 @@ public class Code extends BaseEntity {
                 .codeName(this.codeName)
                 .build();
     }
+
+    // equals 메서드 오버라이드
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Code code = (Code) o;
+        return codeId != null && codeId.equals(code.codeId);
+    }
+
+    // hashCode 메서드 오버라이드
+    @Override
+    public int hashCode() {
+        return 31 * (codeId != null ? codeId.hashCode() : 0);
+    }
 }

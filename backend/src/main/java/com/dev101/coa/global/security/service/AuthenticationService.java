@@ -3,6 +3,7 @@ package com.dev101.coa.global.security.service;
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.code.repository.CodeRepository;
 import com.dev101.coa.domain.member.entity.Member;
+import com.dev101.coa.domain.member.repository.AccountLinkRepository;
 import com.dev101.coa.domain.member.repository.MemberRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
@@ -26,6 +27,7 @@ public class AuthenticationService {
 
     private final MemberRepository memberRepository;
     private final CodeRepository codeRepository;
+    private final AccountLinkRepository accountLinkRepository;
 
     public Member authenticateOAuth2(OAuth2User oauthUser, String registrationId) {
         // 사용자 데이터베이스 업데이트
@@ -33,25 +35,20 @@ public class AuthenticationService {
 
         // 인증 정보 생성
         Authentication authentication = new UsernamePasswordAuthenticationToken(member.getMemberId(), null, oauthUser.getAuthorities());
-//        System.out.println("여기야여기 authentication = " + authentication.getPrincipal());
-//        System.out.println("여기야여기 authenticationdfgdfgdfg = " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return member;
 
     }
     private Member updateOrCreateMember(OAuth2User oauthUser, String registrationId) {
 
-        System.out.println("oauthUser + registrationId = " + oauthUser + registrationId);
-        System.out.println("oauthUser.getAttributes() = " + oauthUser.getAttributes());
+//        System.out.println("oauthUser + registrationId = " + oauthUser + registrationId);
+//        System.out.println("oauthUser.getAttributes() = " + oauthUser.getAttributes());
         SocialUserInfo userInfo = extractUserInfo(registrationId, oauthUser);
 
         String email = userInfo.getEmail();
         String userName = userInfo.getUsername();
         String img = userInfo.getImageUrl();
-//        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
-        // 어떤 로그인이냐에 따라 다른 로직이되게? 꼭 새로 안만들어도 가능은 할듯 새로만들면 좋긴한데 ,, 두개니까
-        // Info 로 만들어볼까
-//        System.out.println("확인 한 번만하고 지우자ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ registrationId "+registrationId);
+
         Member member = memberRepository.findByMemberEmail(email);
         if (member == null) {
             assert registrationId != null;
@@ -72,19 +69,14 @@ public class AuthenticationService {
 
 
     private Code resolvePlatformCode(String registrationId) {
-        long codeId;
-        if (registrationId.equals("google")) {
-            codeId = 1001L;
-        } else if (registrationId.equals("github")) {
-            codeId = 1002L;
-        } else if (registrationId.equals("kakao")) {
-            codeId = 1006L;
-        } else {
-            throw new BaseException(StatusCode.NOT_FOUND_PLAT);
-        }
-        Code code = codeRepository.findById(codeId).orElseThrow(() -> new BaseException(StatusCode.NOT_FOUND_PLAT));
-        System.out.println("code = " + code + code.getCodeId());
-        return code;
+        long codeId = switch (registrationId) {
+            case "google" -> 1001L;
+            case "github" -> 1002L;
+            case "gitlab" -> 1003L;
+            case "kakao" -> 1006L;
+            default -> throw new BaseException(StatusCode.NOT_FOUND_PLAT);
+        };
+        return codeRepository.findById(codeId).orElseThrow(() -> new BaseException(StatusCode.NOT_FOUND_PLAT));
     }
 
     public SocialUserInfo extractUserInfo(String registrationId, OAuth2User oauthUser) {
@@ -100,4 +92,5 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Unsupported provider: " + registrationId);
         }
     }
+
 }

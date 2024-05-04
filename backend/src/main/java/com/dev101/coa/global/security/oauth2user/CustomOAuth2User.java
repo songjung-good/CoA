@@ -1,4 +1,4 @@
-package com.dev101.coa.global.security;
+package com.dev101.coa.global.security.oauth2user;
 
 import com.dev101.coa.domain.member.entity.Member;
 import lombok.Getter;
