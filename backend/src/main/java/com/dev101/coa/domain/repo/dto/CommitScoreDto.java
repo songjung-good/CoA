@@ -9,7 +9,6 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class CommitScoreDto {
     private Short readability;
     private Short performance;
