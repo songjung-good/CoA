@@ -54,15 +54,28 @@ public class RepoController {
     }
 
 
+//    @Operation(description = "분석 진척도 체크")
+//    @GetMapping("/analysis/{analysisId}")
+//    public ResponseEntity<BaseResponse<AnalysisResultDto>> checkAnalysis(HttpServletRequest request, @PathVariable String analysisId) {
+//        String memberUUID = null;
+//
+//        // TODO: memberId를 쿠키로부터 가져오기
+//        Long memberId = 7L;
+//
+//        AnalysisResultDto result = repoService.checkAnalysis(memberId, analysisId);
+//        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+//    }
+
+
     @Operation(description = "분석 진척도 체크")
     @GetMapping("/analysis/{analysisId}")
-    public ResponseEntity<BaseResponse<AnalysisResultDto>> checkAnalysis(HttpServletRequest request, @PathVariable String analysisId) {
+    public ResponseEntity<BaseResponse<AnalysisCheckResDto>> checkAnalysis(HttpServletRequest request, @PathVariable String analysisId) {
         String memberUUID = null;
 
         // TODO: memberId를 쿠키로부터 가져오기
         Long memberId = 7L;
 
-        AnalysisResultDto result = repoService.checkAnalysis(memberId, analysisId);
+        AnalysisCheckResDto result = repoService.checkAnalysis(memberId, analysisId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 

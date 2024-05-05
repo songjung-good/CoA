@@ -438,10 +438,52 @@ public class RepoService {
         return analysisId;
     }
 
-    public AnalysisResultDto checkAnalysis(Long memberId, String analysisId) {
-        Map<Object, Object> redisData = redisTemplateRepo.opsForHash().entries(analysisId);
+//    public AnalysisResultDto checkAnalysis(Long memberId, String analysisId) {
+//        Map<Object, Object> redisData = redisTemplateRepo.opsForHash().entries(analysisId);
+//
+//        // redis에서 analysisId에 해당하는 요소를 가져온다.
+//        String redisRepoPath = (String) redisData.get("repoPath");
+//        if (redisRepoPath == null) {
+//            throw new BaseException(StatusCode.REPO_VIEW_NOT_FOUND);
+//        }
+//
+//
+//        // memberId와 요소의 memberId의 일치여부를 확인한다.
+//        Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
+//        if (!Objects.equals(memberId, redisMemberId)) {
+//            // 일치하지 않으면 예외 발생
+//            throw new BaseException(StatusCode.REPO_REQ_MEMBER_NOT_MATCH);
+//        }
+//
+//        // 일치하면 요소에서 percentage를 가져온다.
+//        // percentage가 100이 아니면, AnalysisResultDto 반환한다.
+//        AnalysisResultDto analysisResultDto = AnalysisResultDto.builder()
+//                .repoPath(redisRepoPath)
+//                .projectId((String) redisData.get("projectId"))
+//                .userName((String) redisData.get("userName"))
+//                .memberId(redisMemberId)
+//                .isOwn((Boolean) redisData.get("isOwn"))
+//                .percentage((Integer) redisData.get("percentage"))
+//                .build();
+//
+//        if ((Integer) redisData.get("percentage") != 100) {
+//            return analysisResultDto;
+//        }
+//
+//        // percentage가 100이면, 저장된 result를 반환 Dto에 담는다.
+//        else {
+//            AiResultDto result = (AiResultDto) redisData.get("result");
+//            analysisResultDto.updateResult(result);
+//            return analysisResultDto;
+//        }
+//    }
+//
+
+
+    public AnalysisCheckResDto checkAnalysis(Long memberId, String analysisId) {
 
         // redis에서 analysisId에 해당하는 요소를 가져온다.
+        Map<Object, Object> redisData = redisTemplateRepo.opsForHash().entries(analysisId);
         String redisRepoPath = (String) redisData.get("repoPath");
         if (redisRepoPath == null) {
             throw new BaseException(StatusCode.REPO_VIEW_NOT_FOUND);
@@ -456,27 +498,15 @@ public class RepoService {
         }
 
         // 일치하면 요소에서 percentage를 가져온다.
-        // percentage가 100이 아니면, AnalysisResultDto 반환한다.
-        AnalysisResultDto analysisResultDto = AnalysisResultDto.builder()
-                .repoPath(redisRepoPath)
-                .projectId((String) redisData.get("projectId"))
-                .userName((String) redisData.get("userName"))
-                .memberId(redisMemberId)
-                .isOwn((Boolean) redisData.get("isOwn"))
+        return AnalysisCheckResDto.builder()
+                .analysisId(analysisId)
                 .percentage((Integer) redisData.get("percentage"))
                 .build();
-
-        if ((Integer) redisData.get("percentage") != 100) {
-            return analysisResultDto;
-        }
-
-        // percentage가 100이면, 저장된 result를 반환 Dto에 담는다.
-        else {
-            AiResultDto result = (AiResultDto) redisData.get("result");
-            analysisResultDto.updateResult(result);
-            return analysisResultDto;
-        }
     }
+
+
+
+
 
     public RepoDetailResDto readRepoView(Long memberId, Long repoViewId) {
         // 레포 뷰 존재 여부 확인
