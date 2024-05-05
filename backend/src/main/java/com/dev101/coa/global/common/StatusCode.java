@@ -29,7 +29,10 @@ public enum StatusCode {
 
     // api : 800
     DATA_NOT_EXIST(false, 800, "api 응답이 존재하지 않습니다."),
-    CANNOT_GET_CONTRIBUTOR(false, 801, "contributor 수를 가져오는데 실패했습니다.");
+    CANNOT_GET_CONTRIBUTOR(false, 801, "contributor 수를 가져오는데 실패했습니다."),
+
+    // search : 900
+    KEYWORD_EMPTY(false, 900, "검색 키워드가 빈 문자열 입니다.")
 
 
 
