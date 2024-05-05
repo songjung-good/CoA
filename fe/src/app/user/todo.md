@@ -16,3 +16,44 @@ _/
 레포지토리에 내가 한 것만 나오게 0502 forked 제거로 완료
 
 - 레포 연혁 차트 클릭시 해당 레포지토리 정보 띄우기 (레포 페이지 완성후 추가 예정)
+
+런차트 구현 중 얕은 복사 문제 해결
+
+```ts
+// 얕은 복사로 원본 값에 영향을 미침
+const newData = [...prevData, ...data[index].languages];
+
+const currentData = newData.reduce((acc: LanguageData[], cur) => {
+  const existingLanguage = acc.find(
+    (item: LanguageData) => item.language === cur.language,
+  );
+
+  if (existingLanguage) {
+    existingLanguage.value += cur.value;
+  } else {
+    acc.push(cur);
+  }
+
+  return acc;
+}, []);
+setPrevData(currentData);
+```
+
+```ts
+const newData = [...prevData, ...data[index].languages];
+
+const currentData = newData.reduce((acc: LanguageData[], cur) => {
+  const existingLanguage = acc.find(
+    (item: LanguageData) => item.language === cur.language,
+  );
+
+  if (existingLanguage) {
+    existingLanguage.value += cur.value;
+  } else {
+    acc.push({ ...cur });
+  }
+
+  return acc;
+}, []);
+setPrevData(JSON.parse(JSON.stringify(currentData)));
+```

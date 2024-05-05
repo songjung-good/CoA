@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import repositoryStore from "@/store/repos";
+import { mergeLanguageData } from "./mergeLOC";
+import { colorMapping } from "../../../_components/colorMap";
 
 type LanguageData = {
   language: string;
@@ -12,100 +14,60 @@ type TransformedData = {
   languages: LanguageData[];
 };
 
-function toYearMonthString(date: Date) {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더합니다.
-  return `${year}-${month.toString().padStart(2, "0")}`; // 월이 한 자리 수인 경우 앞에 0을 추가합니다.
-}
-
 const RunBarChart: React.FC = () => {
   const { repos } = repositoryStore((state) => state);
   //차트
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [data, setData] = useState<TransformedData[]>([]);
+  const [prevData, setPrevData] = useState<LanguageData[]>([]);
   // 데이터 변환
   let transformedData: TransformedData[] = [];
   useEffect(() => {
     transformedData = [];
-    // 프로젝트 데이터를 순회하면서 각 프로젝트의 createdAt와 pushedAt 사이의 날짜 범위를 계산하고 집계
     repos.forEach((repo) => {
-      // createdAt와 pushedAt을 Date 객체로 변환
+      // createdAt와 pushedAt을 월별 차이 구하기
       const createdAt = new Date(repo.createdAt);
       const pushedAt = new Date(repo.pushedAt);
-
-      // 월별로 사용된 언어와 라인 수를 집계
-      const startMonth = new Date(
-        createdAt.getFullYear(),
-        createdAt.getMonth(),
-        1,
-      );
-      const endMonth = new Date(
-        pushedAt.getFullYear(),
-        pushedAt.getMonth() + 1,
-        0,
-      );
-      const startYear = startMonth.getFullYear();
-      const endYear = endMonth.getFullYear();
-
-      const startMonthIndex = startMonth.getMonth();
-      const endMonthIndex = endMonth.getMonth();
-
-      const monthDiff = Math.max(
-        (endYear - startYear) * 12 + (endMonthIndex - startMonthIndex),
-        1,
-      ); // 0으로 나누지 않도록 1로 설정
-
-      // 프로젝트의 사용된 언어와 라인 수를 순회하면서 변환된 데이터에 추가
-      for (
-        let date = startMonth;
-        date <= endMonth;
-        date.setMonth(date.getMonth() + 1)
-      ) {
-        // const dateString = date.
-        const dateString = toYearMonthString(date);
-        const languageEntries = Object.entries(repo.languages).map(
-          ([language, value]) => ({
-            language,
-            value: Math.floor(value / monthDiff),
-          }),
-        );
-        // 월별 data 통합
-        const existingDataIndex = transformedData.findIndex(
-          (data) => data.date === dateString,
-        );
-        if (existingDataIndex !== -1) {
-          languageEntries.forEach(({ language, value }) => {
-            const existingLanguageIndex = transformedData[
-              existingDataIndex
-            ].languages.findIndex((langData) => langData.language === language);
-            //언어가 있으면 더 하기 없으면 언어 obj 생성
-            if (existingLanguageIndex !== -1) {
-              transformedData[existingDataIndex].languages[
-                existingLanguageIndex
-              ].value += value;
-            } else {
-              transformedData[existingDataIndex].languages.push({
-                language,
-                value,
-              });
-            }
+      const startMonth = [createdAt.getFullYear(), createdAt.getMonth() + 1];
+      const endMonth = [pushedAt.getFullYear(), pushedAt.getMonth() + 1];
+      const monthDiff =
+        (endMonth[0] - startMonth[0]) * 12 + (endMonth[1] - startMonth[1]);
+      if (monthDiff === 0) {
+        const languages = [];
+        for (const [key, value] of Object.entries(repo.languages)) {
+          languages.push({
+            language: key,
+            value: value,
           });
-        } else {
+        }
+        transformedData.push({
+          date: `${startMonth[0]}-${startMonth[1]}`,
+          languages: languages,
+        });
+      } else {
+        // 프로젝트 기간(월) 만큼 value 나눠서 넣기
+        for (let i = 0; i < monthDiff; i++) {
+          const languages = [];
+          for (const [key, value] of Object.entries(repo.languages)) {
+            languages.push({
+              language: key,
+              value: Math.floor(value / monthDiff),
+            });
+          }
           transformedData.push({
-            date: dateString,
-            languages: languageEntries,
+            date: `${startMonth[0]}-${startMonth[1]}`,
+            languages: languages,
           });
         }
       }
     });
 
-    transformedData.sort((a, b) => a.date.localeCompare(b.date));
-    // 이전 월, 현재 월의 합치기
-
-    console.log("transformedData");
-    console.log(transformedData);
-    setData(transformedData);
+    //월 단위로 데이터 합치기
+    const mergeData = mergeLanguageData(transformedData);
+    console.log("mergeData");
+    console.log(mergeData);
+    setData(mergeData);
   }, [repos]);
 
   useEffect(() => {
@@ -123,7 +85,23 @@ const RunBarChart: React.FC = () => {
     const width = svgWidth - margin.left - margin.right;
 
     const updateChart = (index: number) => {
-      const currentData = data[index].languages;
+      const newData = [...prevData, ...data[index].languages];
+      // 데이터를 크기순으로 정렬
+      const sortedData = newData.sort((a, b) => b.value - a.value);
+      const currentData = sortedData.reduce((acc: LanguageData[], cur) => {
+        const existingLanguage = acc.find(
+          (item: LanguageData) => item.language === cur.language,
+        );
+
+        if (existingLanguage) {
+          existingLanguage.value += cur.value;
+        } else {
+          acc.push({ ...cur });
+        }
+
+        return acc;
+      }, []);
+      setPrevData(JSON.parse(JSON.stringify(currentData)));
 
       const x = d3
         .scaleLinear()
@@ -158,12 +136,17 @@ const RunBarChart: React.FC = () => {
       const bars = svg
         .selectAll(".bar")
         .data(currentData, (d: any) => d.language);
-
+      bars
+        .exit()
+        .transition()
+        .duration(duration)
+        .attr("width", margin.left)
+        .remove();
       bars
         .enter()
         .append("rect")
         .attr("class", "bar")
-        .attr("fill", "steelblue")
+        .attr("fill", (d) => colorMapping[d.language] || "steelblue")
         .attr("x", margin.left)
         .attr("y", (d) => y(d.language)! + margin.top)
         .attr("width", 0)
@@ -178,13 +161,6 @@ const RunBarChart: React.FC = () => {
         .attr("y", (d) => y(d.language)! + margin.top)
         .attr("width", (d) => x(d.value))
         .attr("height", y.bandwidth());
-
-      bars
-        .exit()
-        .transition()
-        .duration(duration)
-        .attr("width", margin.left)
-        .remove();
     };
 
     updateChart(currentIndex);

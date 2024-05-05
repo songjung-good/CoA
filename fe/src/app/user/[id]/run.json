@@ -1,136 +1,14 @@
 [
   {
-    "date": "2023-03",
+    "date": "2023-10",
     "languages": [
       {
         "language": "JavaScript",
-        "value": 33941
-      },
-      {
-        "language": "SCSS",
-        "value": 16001
+        "value": 9671
       },
       {
         "language": "HTML",
-        "value": 369
-      }
-    ]
-  },
-  {
-    "date": "2023-04",
-    "languages": [
-      {
-        "language": "JavaScript",
-        "value": 33941
-      },
-      {
-        "language": "SCSS",
-        "value": 16001
-      },
-      {
-        "language": "HTML",
-        "value": 369
-      }
-    ]
-  },
-  {
-    "date": "2023-05",
-    "languages": [
-      {
-        "language": "JavaScript",
-        "value": 33941
-      },
-      {
-        "language": "SCSS",
-        "value": 16001
-      },
-      {
-        "language": "HTML",
-        "value": 369
-      }
-    ]
-  },
-  {
-    "date": "2023-06",
-    "languages": [
-      {
-        "language": "JavaScript",
-        "value": 33941
-      },
-      {
-        "language": "SCSS",
-        "value": 16001
-      },
-      {
-        "language": "HTML",
-        "value": 369
-      }
-    ]
-  },
-  {
-    "date": "2023-07",
-    "languages": [
-      {
-        "language": "JavaScript",
-        "value": 33941
-      },
-      {
-        "language": "SCSS",
-        "value": 16001
-      },
-      {
-        "language": "HTML",
-        "value": 369
-      }
-    ]
-  },
-  {
-    "date": "2023-08",
-    "languages": [
-      {
-        "language": "JavaScript",
-        "value": 37619
-      },
-      {
-        "language": "SCSS",
-        "value": 17773
-      },
-      {
-        "language": "Python",
-        "value": 26861
-      },
-      {
-        "language": "HTML",
-        "value": 2552
-      }
-    ]
-  },
-  {
-    "date": "2023-09",
-    "languages": [
-      {
-        "language": "JavaScript",
-        "value": 12963
-      },
-      {
-        "language": "CSS",
-        "value": 672
-      },
-      {
-        "language": "HTML",
-        "value": 7142
-      },
-      {
-        "language": "TypeScript",
-        "value": 3257
-      },
-      {
-        "language": "SCSS",
-        "value": 1772
-      },
-      {
-        "language": "Python",
-        "value": 26187
+        "value": 1937
       }
     ]
   },
@@ -139,27 +17,53 @@
     "languages": [
       {
         "language": "Python",
-        "value": 64073
-      },
+        "value": 3368
+      }
+    ]
+  },
+  {
+    "date": "2023-10",
+    "languages": [
       {
-        "language": "TypeScript",
-        "value": 15060
-      },
-      {
-        "language": "SCSS",
-        "value": 3548
+        "language": "Python",
+        "value": 21735
       },
       {
         "language": "HTML",
-        "value": 15723
+        "value": 4928
+      }
+    ]
+  },
+  {
+    "date": "2023-10",
+    "languages": []
+  },
+  {
+    "date": "2023-11",
+    "languages": [
+      {
+        "language": "Vue",
+        "value": 131464
+      },
+      {
+        "language": "Python",
+        "value": 77535
+      },
+      {
+        "language": "TypeScript",
+        "value": 19582
       },
       {
         "language": "JavaScript",
-        "value": 40855
+        "value": 395
+      },
+      {
+        "language": "HTML",
+        "value": 340
       },
       {
         "language": "CSS",
-        "value": 1824
+        "value": 58
       }
     ]
   },
@@ -167,78 +71,79 @@
     "date": "2023-11",
     "languages": [
       {
+        "language": "JavaScript",
+        "value": 13990
+      },
+      {
         "language": "Vue",
-        "value": 150180
-      },
-      {
-        "language": "Python",
-        "value": 132174
-      },
-      {
-        "language": "TypeScript",
-        "value": 35871
-      },
-      {
-        "language": "JavaScript",
-        "value": 42637
-      },
-      {
-        "language": "HTML",
-        "value": 52123
+        "value": 7276
       },
       {
         "language": "CSS",
-        "value": 8497
+        "value": 4464
       },
       {
-        "language": "SCSS",
-        "value": 3548
+        "language": "HTML",
+        "value": 2362
+      },
+      {
+        "language": "TypeScript",
+        "value": 1700
       }
     ]
   },
   {
-    "date": "2023-12",
+    "date": "2023-11",
     "languages": [
       {
-        "language": "TypeScript",
-        "value": 2134
-      },
-      {
-        "language": "SCSS",
-        "value": 760
-      },
-      {
         "language": "HTML",
-        "value": 2718
-      },
-      {
-        "language": "CSS",
-        "value": 567
-      },
-      {
-        "language": "JavaScript",
-        "value": 1318
+        "value": 45418
       },
       {
         "language": "Python",
-        "value": 25267
+        "value": 15669
+      },
+      {
+        "language": "Vue",
+        "value": 11440
+      },
+      {
+        "language": "JavaScript",
+        "value": 5606
+      },
+      {
+        "language": "TypeScript",
+        "value": 2786
+      },
+      {
+        "language": "CSS",
+        "value": 2544
       }
     ]
   },
   {
-    "date": "2024-01",
+    "date": "2023-8",
+    "languages": [
+      {
+        "language": "Python",
+        "value": 674
+      }
+    ]
+  },
+  {
+    "date": "2024-1",
     "languages": [
       {
         "language": "JavaScript",
-        "value": 92596
+        "value": 62857
       },
       {
         "language": "CSS",
-        "value": 42854
+        "value": 41819
       },
       {
         "language": "HTML",
-        "value": 8006
+        "value": 3567
       },
       {
         "language": "Dockerfile",
@@ -247,6 +152,32 @@
       {
         "language": "Shell",
         "value": 373
+      }
+    ]
+  },
+  {
+    "date": "2024-1",
+    "languages": [
+      {
+        "language": "JavaScript",
+        "value": 22458
+      },
+      {
+        "language": "HTML",
+        "value": 1721
+      },
+      {
+        "language": "CSS",
+        "value": 468
+      }
+    ]
+  },
+  {
+    "date": "2024-1",
+    "languages": [
+      {
+        "language": "JavaScript",
+        "value": 5963
       },
       {
         "language": "Pug",
@@ -254,81 +185,16 @@
       },
       {
         "language": "Python",
-        "value": 25277
-      },
-      {
-        "language": "TypeScript",
-        "value": 2134
-      },
-      {
-        "language": "SCSS",
-        "value": 760
+        "value": 10
       }
     ]
   },
   {
-    "date": "2024-02",
-    "languages": [
-      {
-        "language": "C++",
-        "value": 95179
-      },
-      {
-        "language": "CMake",
-        "value": 77693
-      },
-      {
-        "language": "Dart",
-        "value": 46344
-      },
-      {
-        "language": "HTML",
-        "value": 25391
-      },
-      {
-        "language": "Swift",
-        "value": 7033
-      },
-      {
-        "language": "C",
-        "value": 5700
-      },
-      {
-        "language": "Kotlin",
-        "value": 486
-      },
-      {
-        "language": "Objective-C",
-        "value": 152
-      },
-      {
-        "language": "TypeScript",
-        "value": 34212
-      },
-      {
-        "language": "CSS",
-        "value": 987
-      },
-      {
-        "language": "JavaScript",
-        "value": 1493
-      },
-      {
-        "language": "SCSS",
-        "value": 760
-      },
-      {
-        "language": "Python",
-        "value": 25267
-      }
-    ]
-  },
-  {
-    "date": "2024-03",
+    "date": "2024-3",
     "languages": [
       {
         "language": "JavaScript",
-        "value": 296834
+        "value": 296088
       },
       {
         "language": "Java",
@@ -336,60 +202,32 @@
       },
       {
         "language": "CSS",
-        "value": 4288
+        "value": 3580
       },
       {
         "language": "HTML",
-        "value": 26984
+        "value": 1697
       },
       {
         "language": "Python",
-        "value": 26958
+        "value": 1691
       },
       {
         "language": "Dockerfile",
         "value": 917
-      },
-      {
-        "language": "C++",
-        "value": 95179
-      },
-      {
-        "language": "CMake",
-        "value": 77693
-      },
-      {
-        "language": "Dart",
-        "value": 46344
-      },
-      {
-        "language": "Swift",
-        "value": 7033
-      },
-      {
-        "language": "C",
-        "value": 5700
-      },
-      {
-        "language": "Kotlin",
-        "value": 486
-      },
-      {
-        "language": "Objective-C",
-        "value": 152
-      },
-      {
-        "language": "TypeScript",
-        "value": 34212
-      },
-      {
-        "language": "SCSS",
-        "value": 760
       }
     ]
   },
   {
-    "date": "2024-04",
+    "date": "2024-4",
+    "languages": []
+  },
+  {
+    "date": "2024-4",
+    "languages": []
+  },
+  {
+    "date": "2024-4",
     "languages": [
       {
         "language": "JavaScript",
@@ -397,87 +235,12 @@
       },
       {
         "language": "TypeScript",
-        "value": 4435
+        "value": 2301
       },
       {
         "language": "CSS",
-        "value": 347
-      },
-      {
-        "language": "SCSS",
-        "value": 760
-      },
-      {
-        "language": "HTML",
-        "value": 431
+        "value": 59
       }
     ]
   }
 ]
-
-
-{
-  "date": "2024-04",
-  "languages": [
-    {
-      "language": "JavaScript",
-      "value": 305791
-    },
-    {
-      "language": "Java",
-      "value": 95285
-    },
-    {
-      "language": "CSS",
-      "value": 4635
-    },
-    {
-      "language": "HTML",
-      "value": 27415
-    },
-    {
-      "language": "Python",
-      "value": 26958
-    },
-    {
-      "language": "Dockerfile",
-      "value": 917
-    },
-    {
-      "language": "C++",
-      "value": 95179
-    },
-    {
-      "language": "CMake",
-      "value": 77693
-    },
-    {
-      "language": "Dart",
-      "value": 46344
-    },
-    {
-      "language": "Swift",
-      "value": 7033
-    },
-    {
-      "language": "C",
-      "value": 5700
-    },
-    {
-      "language": "Kotlin",
-      "value": 486
-    },
-    {
-      "language": "Objective-C",
-      "value": 152
-    },
-    {
-      "language": "TypeScript",
-      "value": 38647
-    },
-    {
-      "language": "SCSS",
-      "value": 1520
-    }
-  ]
-}
