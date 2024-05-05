@@ -8,9 +8,6 @@ import com.dev101.coa.global.exception.BaseException;
 import com.dev101.coa.global.security.oauth2user.CustomOAuth2User;
 import com.dev101.coa.global.security.oauth2user.platOAuth2User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -40,8 +37,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 Optional<Code> code = codeRepository.findByCodeName(registrationId);
                 Code platcode = code.orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
 
-                Authentication authentication = new UsernamePasswordAuthenticationToken(oAuth2User, null, null);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+//                Authentication authentication = new UsernamePasswordAuthenticationToken(oAuth2User, null, null);
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 return new platOAuth2User(oAuth2User, platcode); // 플랫폼코드 값을 담아줌
             }

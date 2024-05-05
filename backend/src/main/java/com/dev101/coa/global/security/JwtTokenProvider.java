@@ -36,7 +36,7 @@ public class JwtTokenProvider { // 토큰 만들거나 관리하는 친구
 
     public String createToken(Member member) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs * 1000L); // ms라서 시간 맞춰주기
 
         return Jwts.builder() // TODO 토큰 내부 값 설정
                 .setSubject(Long.toString(member.getMemberId())) // Id를 String으로 Subject에 담는다.
@@ -55,6 +55,7 @@ public class JwtTokenProvider { // 토큰 만들거나 관리하는 친구
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authToken);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
+            System.out.println("e = " + e);
             throw new BaseException(StatusCode.JWT_KEY_ERROR);
         }
     }
