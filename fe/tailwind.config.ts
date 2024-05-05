@@ -22,7 +22,7 @@ const config: Config = {
         appGrey2: "#E2E8E6",
       },
       height: {
-        appVh: "calc(100vh - 80px)",
+        appVh: "calc(100vh - 96px)",
       },
     },
   },
