@@ -19,6 +19,8 @@ public class RepoCardDto {
 
     private Long repoViewId;
 
+    private String repoViewPath;
+
     private String repoViewTitle;
 
     private String repoViewSubtitle;
@@ -41,6 +43,7 @@ public class RepoCardDto {
                 .memberNickname(repoView.getMember().getMemberNickname())
                 .memberImg(repoView.getMember().getMemberImg())
                 .repoViewId(repoView.getRepoViewId())
+                .repoViewPath(repoView.getRepo().getRepoPath())
                 .repoViewTitle(repoView.getRepoViewTitle())
                 .repoViewSubtitle(repoView.getRepoViewSubtitle())
                 .repoStartDate(repoView.getRepoStartDate())
