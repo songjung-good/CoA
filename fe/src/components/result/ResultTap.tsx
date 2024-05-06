@@ -97,7 +97,10 @@ export default function ResultTab() {
 }
 
 const TabButton = tw.button`
-border-2 border-black px-5 py-2
+  border-2 border-black px-3 py-2 text-sm
+  sm:px-4 sm:text-sm
+  md:px-4 md:text-base
+  lg:px-4 lg:text-lg
 `;
 
 const TabButtonLeft = tw(TabButton)`
