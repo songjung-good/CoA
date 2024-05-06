@@ -3,7 +3,7 @@ export default function ResultContribution() {
     <div className="flex flex-col justify-around items-center w-full">
       <div>기여도 그래프</div>
       <div className="w-full h-1/2">
-        <p className="text-xl">
+        <p className="text-base sm:text-xl lg:text-2xl">
           <span className=" text-appBlue1">{"{프로젝트명}"}</span>
           에서
           <span className=" text-appBlue1">{"{유저명}"}</span>
