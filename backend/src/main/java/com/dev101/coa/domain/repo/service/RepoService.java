@@ -63,12 +63,15 @@ public class RepoService {
     // AI server 통신을 위한 WebClient
     private final WebClient webClient;
 
-    public void editReadme(Long repoViewId, EditReadmeReqDto editReadmeReqDto) {
+    public void editReadme(Long memberId, Long repoViewId, EditReadmeReqDto editReadmeReqDto) {
         // 레포 뷰 존재 유무 확인
         RepoView repoView = repoViewRepository.findByRepoViewId(repoViewId)
                 .orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
 
-        // TODO: 로그인 사용자 예외 처리 (작성자 확인)
+        // 로그인 사용자 예외 처리 (작성자 확인)
+        if(memberId != repoView.getMember().getMemberId()){
+            throw new BaseException(StatusCode.MEMBER_NOT_OWN_REPO);
+        }
 
         // commentList db 내의 코멘트 목록을 삭제
         List<Long> commentIdList = repoView.getCommentList().stream()
@@ -123,7 +126,6 @@ public class RepoService {
         if (redisData.isEmpty()) {
             throw new BaseException(StatusCode.REPO_VIEW_NOT_FOUND);
         }
-        // TODO: 로그인 사용자 예외처리
         // 로그인 사용자와 분석 요구자 일치 여부 확인
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
         Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
@@ -158,6 +160,9 @@ public class RepoService {
 
 
         // repoView 저장
+        // 분석 요구자와 레포의 주인이 일치하는 경우(redisData.get("isOwn") == true)만 저장
+        if(redisData.get("isOwn").equals("false")) return;
+
         List<Long> skillCodeIdList = saveAnalysisReqDto.getRepoViewSkillList();
         List<Code> skillCodeList = new ArrayList<>();
         for (Long id : skillCodeIdList) {
@@ -374,22 +379,12 @@ public class RepoService {
     public String startAnalysis(Long memberId, AnalysisReqDto analysisReqDto) {
 
 
-        // TODO: 로그인한 member 받아오기
-        // TODO: projectId(github/gitlab) (있으면 gitLab, 없으면 gitHub)받아오기 - 아마 dto도 바꿔야 할거야.
-
+        // 로그인한 member 받아오기
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));
-
-//        // projectId githb, gitlab 인지 판단하기
-//        if(analysisReqDto.getProjectId() == null) codeId = 1002L;
-//        else codeId = 1003L;
-
-//        if (!platformIdSet.contains(codeId)) {
-//            throw new BaseException(StatusCode.REPO_PLAT_NOT_EXIST);
-//        }
 
         String projectId = analysisReqDto.getProjectId();
 
-        // isOwn 값 처리하기
+        // isOwn 값 처리하기 : 로그인한 사용자의 본인 레포를 분석하는지 여부
         Boolean isOwn = accountLinkRepository.existsAccountLinkByMemberAndAccountLinkNickname(member, analysisReqDto.getUserName());
 
         // analysisId 만들기
@@ -424,7 +419,7 @@ public class RepoService {
         map.put("repoPath", analysisReqDto.getRepoUrl());
         map.put("projectId", projectId);
         map.put("userName", analysisReqDto.getUserName());
-        map.put("memberId", member.getMemberId());
+        map.put("memberId", member.getMemberId()); // 분석요청자 (로그인한 유저)
 //        map.put("codeId", codeId);
         map.put("isOwn", isOwn.toString()); // Boolean 값을 문자열로 저장
         map.put("percentage", 0); // 초기 비율을 문자열로 저장
@@ -457,7 +452,7 @@ public class RepoService {
                 .block();
 
         // TODO: 지워라
-        response = "true";
+//        response = "true";
 
         if (response.equals("false")) {
             throw new BaseException(StatusCode.AI_SERVER_ERROR);
@@ -465,47 +460,6 @@ public class RepoService {
 
         return analysisId;
     }
-
-//    public AnalysisResultDto checkAnalysis(Long memberId, String analysisId) {
-//        Map<Object, Object> redisData = redisTemplateRepo.opsForHash().entries(analysisId);
-//
-//        // redis에서 analysisId에 해당하는 요소를 가져온다.
-//        String redisRepoPath = (String) redisData.get("repoPath");
-//        if (redisRepoPath == null) {
-//            throw new BaseException(StatusCode.REPO_VIEW_NOT_FOUND);
-//        }
-//
-//
-//        // memberId와 요소의 memberId의 일치여부를 확인한다.
-//        Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
-//        if (!Objects.equals(memberId, redisMemberId)) {
-//            // 일치하지 않으면 예외 발생
-//            throw new BaseException(StatusCode.REPO_REQ_MEMBER_NOT_MATCH);
-//        }
-//
-//        // 일치하면 요소에서 percentage를 가져온다.
-//        // percentage가 100이 아니면, AnalysisResultDto 반환한다.
-//        AnalysisResultDto analysisResultDto = AnalysisResultDto.builder()
-//                .repoPath(redisRepoPath)
-//                .projectId((String) redisData.get("projectId"))
-//                .userName((String) redisData.get("userName"))
-//                .memberId(redisMemberId)
-//                .isOwn((Boolean) redisData.get("isOwn"))
-//                .percentage((Integer) redisData.get("percentage"))
-//                .build();
-//
-//        if ((Integer) redisData.get("percentage") != 100) {
-//            return analysisResultDto;
-//        }
-//
-//        // percentage가 100이면, 저장된 result를 반환 Dto에 담는다.
-//        else {
-//            AiResultDto result = (AiResultDto) redisData.get("result");
-//            analysisResultDto.updateResult(result);
-//            return analysisResultDto;
-//        }
-//    }
-//
 
     public RepoDetailResDto getDoneAnalysis(Long memberId, String analysisId) {
 
@@ -521,18 +475,18 @@ public class RepoService {
         String title = split[split.length - 1];
 
 
-        // memberId와 요소의 memberId의 일치여부를 확인한다.
+        // memberId와 요청한 memberId의 일치여부를 확인한다.(로그인한 유저와 분석 요청자 일치 여부 확인)
         Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
         if (!Objects.equals(memberId, redisMemberId)) {
             // 일치하지 않으면 예외 발생
             throw new BaseException(StatusCode.REPO_REQ_MEMBER_NOT_MATCH);
         }
 
-        // 일치하면 완성된 분석 결과를 반환한다.
+        // 일치하면 완성된 분석 결과를 반환한다. (로그인한 멤버가 분석 요청 멤버임이 확인 됨)
         // isMine이 true이면, 커밋스코어까지 반환하고, 아니면 커밋스코은 반환하지 않는다.
 
-        // isMine:  레디스에 저장된 memberId와 현제 로그인한 유저의 memberId의 일치 여부
-        Boolean isMine = memberId == redisData.get("memberId");
+        // isMine: 분석 요청자가 자신의 레포를 분석하는지 여부
+        Boolean isMine = redisData.get("isOwn") == "true";
 
         // RepoCardDto(repoPath, repoTitle,repoStartDate, repoEndDate, isMine)
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -582,7 +536,7 @@ public class RepoService {
         }
 
 
-        // memberId와 요소의 memberId의 일치여부를 확인한다.
+        // memberId와 요소의 memberId의 일치여부를 확인한다.(로그인한 유저와 분석요청 유저의 일치 여부)
         Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
         if (!Objects.equals(memberId, redisMemberId)) {
             // 일치하지 않으면 예외 발생
@@ -640,10 +594,19 @@ public class RepoService {
                 .repoLineCntList(lineCntList)
                 .build();
 
+        //  로그인한 유저 != 레포 주인 (commit score만 뺴고)
+        if(!Objects.equals(memberId, repoView.getMember().getMemberId())){
+            return RepoDetailResDto.builder()
+                    .repoCardDto(repoCardDto)
+                    .basicDetailDto(basicDetailDto)
+                    .build();
+        }
+
         // 커밋 스코어 디티오
         CommitScore commitScore = commitScoreRepository.findByRepoView(repoView)
                 .orElseThrow(() -> new BaseException(StatusCode.REPO_COMMIT_SCORE_NOT_EXIST));
 
+        //  로그인한 유저 == 레포 주인 (3가지 전부)
         return RepoDetailResDto.builder()
                 .repoCardDto(repoCardDto)
                 .basicDetailDto(basicDetailDto)
