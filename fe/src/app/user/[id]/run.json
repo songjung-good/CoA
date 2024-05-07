@@ -1,0 +1,246 @@
+[
+  {
+    "date": "2023-10",
+    "languages": [
+      {
+        "language": "JavaScript",
+        "value": 9671
+      },
+      {
+        "language": "HTML",
+        "value": 1937
+      }
+    ]
+  },
+  {
+    "date": "2023-10",
+    "languages": [
+      {
+        "language": "Python",
+        "value": 3368
+      }
+    ]
+  },
+  {
+    "date": "2023-10",
+    "languages": [
+      {
+        "language": "Python",
+        "value": 21735
+      },
+      {
+        "language": "HTML",
+        "value": 4928
+      }
+    ]
+  },
+  {
+    "date": "2023-10",
+    "languages": []
+  },
+  {
+    "date": "2023-11",
+    "languages": [
+      {
+        "language": "Vue",
+        "value": 131464
+      },
+      {
+        "language": "Python",
+        "value": 77535
+      },
+      {
+        "language": "TypeScript",
+        "value": 19582
+      },
+      {
+        "language": "JavaScript",
+        "value": 395
+      },
+      {
+        "language": "HTML",
+        "value": 340
+      },
+      {
+        "language": "CSS",
+        "value": 58
+      }
+    ]
+  },
+  {
+    "date": "2023-11",
+    "languages": [
+      {
+        "language": "JavaScript",
+        "value": 13990
+      },
+      {
+        "language": "Vue",
+        "value": 7276
+      },
+      {
+        "language": "CSS",
+        "value": 4464
+      },
+      {
+        "language": "HTML",
+        "value": 2362
+      },
+      {
+        "language": "TypeScript",
+        "value": 1700
+      }
+    ]
+  },
+  {
+    "date": "2023-11",
+    "languages": [
+      {
+        "language": "HTML",
+        "value": 45418
+      },
+      {
+        "language": "Python",
+        "value": 15669
+      },
+      {
+        "language": "Vue",
+        "value": 11440
+      },
+      {
+        "language": "JavaScript",
+        "value": 5606
+      },
+      {
+        "language": "TypeScript",
+        "value": 2786
+      },
+      {
+        "language": "CSS",
+        "value": 2544
+      }
+    ]
+  },
+  {
+    "date": "2023-8",
+    "languages": [
+      {
+        "language": "Python",
+        "value": 674
+      }
+    ]
+  },
+  {
+    "date": "2024-1",
+    "languages": [
+      {
+        "language": "JavaScript",
+        "value": 62857
+      },
+      {
+        "language": "CSS",
+        "value": 41819
+      },
+      {
+        "language": "HTML",
+        "value": 3567
+      },
+      {
+        "language": "Dockerfile",
+        "value": 539
+      },
+      {
+        "language": "Shell",
+        "value": 373
+      }
+    ]
+  },
+  {
+    "date": "2024-1",
+    "languages": [
+      {
+        "language": "JavaScript",
+        "value": 22458
+      },
+      {
+        "language": "HTML",
+        "value": 1721
+      },
+      {
+        "language": "CSS",
+        "value": 468
+      }
+    ]
+  },
+  {
+    "date": "2024-1",
+    "languages": [
+      {
+        "language": "JavaScript",
+        "value": 5963
+      },
+      {
+        "language": "Pug",
+        "value": 959
+      },
+      {
+        "language": "Python",
+        "value": 10
+      }
+    ]
+  },
+  {
+    "date": "2024-3",
+    "languages": [
+      {
+        "language": "JavaScript",
+        "value": 296088
+      },
+      {
+        "language": "Java",
+        "value": 95285
+      },
+      {
+        "language": "CSS",
+        "value": 3580
+      },
+      {
+        "language": "HTML",
+        "value": 1697
+      },
+      {
+        "language": "Python",
+        "value": 1691
+      },
+      {
+        "language": "Dockerfile",
+        "value": 917
+      }
+    ]
+  },
+  {
+    "date": "2024-4",
+    "languages": []
+  },
+  {
+    "date": "2024-4",
+    "languages": []
+  },
+  {
+    "date": "2024-4",
+    "languages": [
+      {
+        "language": "JavaScript",
+        "value": 8957
+      },
+      {
+        "language": "TypeScript",
+        "value": 2301
+      },
+      {
+        "language": "CSS",
+        "value": 59
+      }
+    ]
+  }
+]

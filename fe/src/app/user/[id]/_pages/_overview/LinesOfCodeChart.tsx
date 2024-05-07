@@ -15,7 +15,7 @@ const LinesOfCodeChart = () => {
     lines,
   }));
 
-  const totallines = data1.reduce((sum, item) => sum + item.lines, 0);
+  const totalLines = data1.reduce((sum, item) => sum + item.lines, 0);
 
   // Chart svg 만들기
   const svgRef = useRef<SVGSVGElement>(null);
@@ -62,7 +62,7 @@ const LinesOfCodeChart = () => {
       .join("rect")
       .attr("x", x(0))
       .attr("y", (d) => y(d.language)!)
-      .attr("width", (d) => (d.lines / totallines) * width)
+      .attr("width", (d) => (d.lines / totalLines) * width)
       .attr("height", y.bandwidth())
       .attr("fill", (d) => colorMapping[d.language]); // 색상 지정
 
@@ -74,7 +74,7 @@ const LinesOfCodeChart = () => {
       .selectAll()
       .data(data1)
       .join("text")
-      .attr("x", (d) => (d.lines / totallines) * width)
+      .attr("x", (d) => (d.lines / totalLines) * width)
       .attr("y", (d) => y(d.language)! + y.bandwidth() / 2)
       .attr("dy", "0.35em")
       .attr("dx", (d) => d.lines.toString().length * 10 + marginLeft)
