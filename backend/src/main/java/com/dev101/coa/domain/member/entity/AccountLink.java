@@ -24,7 +24,7 @@ public class AccountLink extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "code_id", nullable = false)
     private Code code;
 
@@ -48,5 +48,9 @@ public class AccountLink extends BaseEntity {
     }
     public void updateReceiveToken(String receiveToken) {
         this.accountLinkReceiveToken = receiveToken;
+    }
+
+    public void updateNickName(String nickName) {
+        this.accountLinkNickname = nickName;
     }
 }
