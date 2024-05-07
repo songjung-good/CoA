@@ -79,7 +79,7 @@ const RunBarChart: React.FC = () => {
     const margin = {
       top: 20,
       bottom: 20,
-      left: 80,
+      left: 100,
       right: 28,
     };
     const svgHeight = 400;

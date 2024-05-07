@@ -144,4 +144,6 @@ export const colorMapping: { [key: string]: string } = {
   CMake: "#064F8C",
   Pug: "#A86454",
   Dockerfile: "#2496ED",
+  "Jupyter Notebook": "#F37726",
+  EJS: "#90A93A",
 };

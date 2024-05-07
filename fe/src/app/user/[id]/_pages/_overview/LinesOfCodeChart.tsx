@@ -27,7 +27,7 @@ const LinesOfCodeChart = () => {
     const marginTop = 30;
     const marginRight = 0;
     const marginBottom = 10;
-    const marginLeft = 64;
+    const marginLeft = 100;
     const svgWidth = svgRef.current.getBoundingClientRect().width;
     const width = svgWidth;
     const height =
