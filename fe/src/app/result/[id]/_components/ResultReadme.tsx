@@ -43,7 +43,8 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 });
 const ResultReadme: NextPage = () => {
   const [md, setMd] = useState<string | undefined>(testMd);
-  const { isOwn, setIsOther, setIsOwn } = useResultStore((state) => state);
+  const { setIsOther, setIsMine } = useResultStore((state) => state);
+  const isMine = useResultStore((state) => state.result.repoCardDto.isMine);
   const [editorHeight, setEditorHeight] = useState(calculateHeight(md || "")); // 초기 높이 계산
 
   useEffect(() => {
@@ -63,7 +64,7 @@ const ResultReadme: NextPage = () => {
       />
 
       <div className=" ">
-        <button onClick={setIsOwn}>본인</button>
+        <button onClick={setIsMine}>본인</button>
         <button onClick={setIsOther}>타인</button>
       </div>
     </div>

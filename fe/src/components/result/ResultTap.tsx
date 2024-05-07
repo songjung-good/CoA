@@ -11,14 +11,14 @@ import "@/app/result/[id]/_components/result.css";
 
 // 컴포넌트 import
 import ResultCommit from "@/app/result/[id]/_components/ResultCommit.tsx";
-import ResultContribution from "@/app/result/[id]/_components/ResultContribution.tsx";
+// import ResultContribution from "@/app/result/[id]/_components/ResultContribution.tsx"; 폐기했습니다
 import ResultReadme from "@/app/result/[id]/_components/ResultReadme.tsx";
 import ResultScore from "@/app/result/[id]/_components/ResultScore.tsx";
 
 export default function ResultTab() {
   const [tabIndex, setTabIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(0);
-  const { isOwn } = useResultStore((state) => state);
+  const isMine = useResultStore((state) => state.result.repoCardDto.isMine);
 
   useEffect(() => {
     console.log(`현재 선택된 탭: ${tabIndex}`);
@@ -31,12 +31,7 @@ export default function ResultTab() {
 
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";
 
-  const tabComponents = [
-    <ResultReadme />,
-    <ResultContribution />,
-    <ResultCommit />,
-    <ResultScore />,
-  ];
+  const tabComponents = [<ResultReadme />, <ResultCommit />, <ResultScore />];
 
   return (
     <div className="w-full h-full">
@@ -48,31 +43,25 @@ export default function ResultTab() {
           >
             README
           </TabButtonLeft>
-          <TabButton
-            onClick={() => handleTab(1)}
-            className={`${tabIndex === 1 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
-          >
-            기여도
-          </TabButton>
-          {isOwn ? (
+          {isMine ? (
             <TabButton
-              onClick={() => handleTab(2)}
-              className={`${tabIndex === 2 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+              onClick={() => handleTab(1)}
+              className={`${tabIndex === 1 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
             >
               커밋분석
             </TabButton>
           ) : (
             <TabButtonRight
-              onClick={() => handleTab(2)}
-              className={`${tabIndex === 2 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+              onClick={() => handleTab(1)}
+              className={`${tabIndex === 1 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
             >
               커밋분석
             </TabButtonRight>
           )}
-          {isOwn ? (
+          {isMine ? (
             <TabButtonRight
-              onClick={() => handleTab(3)}
-              className={`${tabIndex === 3 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+              onClick={() => handleTab(2)}
+              className={`${tabIndex === 2 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
             >
               레포점수
             </TabButtonRight>
@@ -87,7 +76,7 @@ export default function ResultTab() {
         </CSSTransition>
       </TransitionGroup>
       <div className="flex justify-evenly mt-10">
-        {isOwn && <button>저장 후 수정</button>}
+        {isMine && <button>저장 후 수정</button>}
         <Link href="/main">
           <button>홈으로</button>
         </Link>
