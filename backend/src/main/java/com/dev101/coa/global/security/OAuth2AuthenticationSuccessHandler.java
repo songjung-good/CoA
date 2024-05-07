@@ -128,7 +128,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     try {
                         return jwtTokenProvider.getMemberIdFromJWT(jwt);
                     } catch (Exception e) {
-                        System.out.println("e = " + e);
                         System.out.println("Invalid JWT or Member not found");
                     }
                 }

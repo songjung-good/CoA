@@ -55,7 +55,6 @@ public class JwtTokenProvider { // 토큰 만들거나 관리하는 친구
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authToken);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            System.out.println("e = " + e);
             throw new BaseException(StatusCode.JWT_KEY_ERROR);
         }
     }
