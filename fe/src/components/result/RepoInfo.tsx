@@ -14,8 +14,16 @@ export default function RepoInfo() {
     repoInfo.repoStartDate,
     repoInfo.repoEndDate,
   );
+  console.log();
   return (
     <RepoInfoDiv>
+      {repoInfo.isMine && (
+        <div className="absolute bottom-0 right-0 z-10 p-4">
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            편집하기
+          </button>
+        </div>
+      )}
       <div className="flex flex-col items-start">
         <div className="flex items-center mb-5">
           {repoInfo.repoViewPath.includes("github") ? (
@@ -32,7 +40,7 @@ export default function RepoInfo() {
             {repoInfo.repoViewPath}
           </Link>
         </div>
-        <p className="text-2xl font-semibold lg:text-4xl mb-5">
+        <p className="text-2xl font-semibold lg:text-3xl mb-5">
           {repoInfo.repoViewTitle}
         </p>
         <p className="text-xl font-bold lg:text-2xl mb-2">
@@ -53,7 +61,7 @@ export default function RepoInfo() {
 }
 
 const RepoInfoDiv = tw.div`
-  w-full min-h-20 h-1/4 flex flex-col lg:flex-row flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2 overflow-hidden
+  relative w-full min-h-20 h-1/4 flex flex-col lg:flex-row flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2 overflow-hidden
   overflow-x-auto
   `;
 
