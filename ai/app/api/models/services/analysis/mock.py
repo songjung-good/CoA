@@ -23,7 +23,7 @@ class MockAnalysisService(Generic[R], AnalysisService[R]):
         """
 
         # DTO 가져오기
-        dto: AnalysisDataDto = await AnalysisDataDto.from_redis(self.redis_client, request.analysisId)
+        dto: AnalysisDataDto = AnalysisDataDto.from_redis(self.redis_client, request.analysisId)
         if dto is None:
             raise AnalysisException(AnalysisStatus.NO_REDIS_OBJECT)
 
