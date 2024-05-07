@@ -11,7 +11,7 @@ from config.containers import Container
 
 app = FastAPI()
 
-load_dotenv()
+load_dotenv(os.getenv('ENV_FILE_PATH'))
 
 app.include_router(index.router)
 app.include_router(analysis.router)
