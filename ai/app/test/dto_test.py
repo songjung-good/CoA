@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     print(redis_client.get('0'))
 
-    dto2 = AnalysisDataDto.from_redis(redis_client, '0')
-    print('TEST:', dto2.to_camel_dict())
-    print(type(dto2))
+    # dto2 = AnalysisDataDto.from_redis(redis_client, '0')
+    # print('TEST:', dto2.to_camel_dict())
+    # print(type(dto2))
 

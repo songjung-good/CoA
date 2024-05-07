@@ -25,7 +25,7 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):
         # TODO: 각 단계를 나누어 추상 메소드를 호출하고 처리 상태 변경
 
         # DTO 가져오기
-        dto: AnalysisDataDto = AnalysisDataDto.from_redis(self.redis_client, request.analysisId)
+        dto: AnalysisDataDto = await AnalysisDataDto.from_redis(self.redis_client, request.analysisId)
         if dto is None:
             raise AnalysisException(AnalysisStatus.NO_REDIS_OBJECT)
 
