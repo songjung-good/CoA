@@ -1,15 +1,15 @@
-from enum import IntEnum
+from enum import IntEnum, unique
 
 
+@unique
 class AnalysisStatus(IntEnum):
     BEFORE_RECEIVING = 000
 
     PROCESSING = 100
     REQUESTING_TO_REPO = 110
-    REQUESTING_TO_GITHUB = 111
-    REQUESTING_TO_GITLAB = 112
-    LEARNING = 120
-    LEARNING_DATA = 121
+    INITIALIZING_AI = 120
+    WAITING_AI = 121
+    LEARNING_DATA = 122
     GENERATING_ANSWER = 130
     GENERATING_README = 131
     JUDGING_COMMITS = 132
@@ -27,3 +27,15 @@ class AnalysisStatus(IntEnum):
     INSUFFICIENT_GITHUB_REQUEST = 321
     INSUFFICIENT_GITLAB_REQUEST = 322
     REPO_REQUEST_TIMEOUT = 323
+
+    PERCENTAGES: dict['AnalysisStatus', int] = {
+        BEFORE_RECEIVING: 0,
+        REQUESTING_TO_REPO: 10,
+        WAITING_AI: 25,
+        LEARNING_DATA: 30,
+        GENERATING_README: 50,
+        JUDGING_COMMITS: 60,
+        SCORING_COMMITS: 80,
+        RESETTING_LEARNED_DATA: 90,
+        DONE: 100
+    }
