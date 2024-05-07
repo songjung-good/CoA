@@ -12,6 +12,7 @@ interface AnalyzingState {
   showNotification: boolean;  // 알림 표시 상태
   startAnalysis: () => void;  // 분석 시작
   completeAnalysis: () => void; // 분석 완료
+  setAnalyzeId: (id: number) => void; // 분석ID 저장
   updatePercent: (percent: number) => void;
   resetAnalysis: () => void;  // 분석 결과 확인
   toggleNotification: (visible: boolean) => void;
@@ -38,6 +39,7 @@ const useAnalyzingStore = create<AnalyzingState, []>(
         set({ isAnalyzing: true, isCompleted: true });
         set({ showNotification: true });  // 분석 완료 시 알림 표시
       }, // 분석 완료
+      setAnalyzeId: (id: number) => set({analyzeId: id}),
       updatePercent: (percent: number) => set({ analyzingPercent: percent }), // 진행도 갱신
       resetAnalysis: () => set({ isAnalyzing: false, isCompleted: false, analyzingPercent: 0, analyzeId: -1 }), // 분석상태 초기화
       toggleNotification: (visible: boolean) => set({ showNotification: visible }),
