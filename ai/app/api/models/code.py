@@ -35,7 +35,7 @@ class AnalysisStatus(IntEnum):
     REPO_REQUEST_TIMEOUT = 333
 
 
-AnalysisPercentages: dict[AnalysisStatus, int] = {
+status_to_percentages: dict[AnalysisStatus, int] = {
     AnalysisStatus.BEFORE_RECEIVING: 0,
     AnalysisStatus.CHECKING_FOR_REQUESTING: 5,
     AnalysisStatus.REQUESTING_CONTENT: 10,
