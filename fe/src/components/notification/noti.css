@@ -27,7 +27,9 @@
 .notification {
   position: fixed;
   top: 10vh;
-  left: 73%;
+  left: 70%;
+  width: 200px;
+  text-align: center;
   transform: translateX(-50%);
   z-index: 1000;
   font-weight: bold;

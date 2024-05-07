@@ -1,17 +1,38 @@
 "use client";
 
-import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import useAnalyzingStore from "@/store/analyze";
+import useResultStore from "@/store/result";
+
+// 임시데이터
+import dummy from "@/app/result/[id]/_data/Result_DTO.json";
 
 export default function LoadingAnalyzing() {
+  const router = useRouter();
   const {
     isAnalyzing,
     isCompleted,
     analyzingPercent,
+    analyzeId,
     startAnalysis,
     completeAnalysis,
     resetAnalysis,
   } = useAnalyzingStore((state) => state);
+
+  const handleCompletedButton = async () => {
+    // axios 분석 결과 받아오기
+    // result store에 저장
+    // 페이지 이동
+    // 임시
+    await useResultStore.getState().updateResultState(dummy);
+    // await console.log(useResultStore.getState().result);
+    if (router) {
+      await router.push(`/result/${analyzeId}`);
+    }
+    // 임시
+    // console.log(dummy);
+  };
+
   return (
     <div>
       {/* 테스트 버튼(상태 변경용) */}
@@ -23,11 +44,12 @@ export default function LoadingAnalyzing() {
         <div className="flex justify-center items-center">
           {isCompleted ? (
             <div>
-              <Link href="result/1">
-                <button className="p-1 bg-appPink text-white rounded-lg">
-                  분석 결과 확인
-                </button>
-              </Link>
+              <button
+                className="p-1 bg-appPink text-white rounded-lg"
+                onClick={handleCompletedButton}
+              >
+                분석 결과 확인
+              </button>
             </div>
           ) : (
             <span className="flex justify-center items-center">

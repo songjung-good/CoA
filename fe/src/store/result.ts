@@ -6,8 +6,9 @@ interface ResultState {
   message: string;
   code: number;
   result: Result;
-  setIsMine: () => void;  // Define the method for setting isMine to true
-  setIsOther: () => void; // Define the method for setting isMine to false
+  setIsMine: () => void;
+  setIsOther: () => void;
+  updateResultState: (newState: Partial<ResultState>) => void; // 전체 상태를 업데이트하는 함수
 }
 
 interface Result {
@@ -24,6 +25,7 @@ interface RepoCardDto {
   repoViewPath: string;
   repoViewTitle: string;
   repoViewSubtitle: string;
+  repoMemberCnt: number;
   skillList: Skill[];
   repoStartDate: string;
   repoEndDate: string;
@@ -75,40 +77,31 @@ const useResultStore = create<ResultState>(
   (persist as resultPersist)(
     (set) => ({
       isSuccess: true,
-      message: "string",
+      message: "Initial message",
       code: 0,
       result: {
         repoCardDto: {
           memberId: 0,
-          memberNickname: "string",
-          memberImg: "string",
+          memberNickname: "Initial name",
+          memberImg: "Initial image URL",
           repoViewId: 0,
-          repoViewPath: "string",
-          repoViewTitle: "string",
-          repoViewSubtitle: "string",
-          skillList: [{
-            codeId: 0,
-            codeName: "string"
-          }],
+          repoViewPath: "Initial path",
+          repoViewTitle: "Initial title",
+          repoViewSubtitle: "Initial subtitle",
+          repoMemberCnt: 0,
+          skillList: [],
           repoStartDate: "2024-05-07",
           repoEndDate: "2024-05-07",
           isMine: true
         },
         basicDetailDto: {
-          repoReadme: "string",
-          repoViewResult: "string",
-          commentList: [{
-            commentStartIndex: 0,
-            commentEndIndex: 0,
-            commentContent: "string"
-          }],
+          repoReadme: "Initial README",
+          repoViewResult: "Initial result",
+          commentList: [],
           repoViewTotalCommitCnt: 0,
           repoViewCommitCnt: 0,
           repoViewMemberCnt: 0,
-          repoLineCntList: [{
-            codeName: "string",
-            lineCnt: 0
-          }]
+          repoLineCntList: []
         },
         commitScoreDto: {
           readability: 0,
@@ -117,11 +110,12 @@ const useResultStore = create<ResultState>(
           testability: 0,
           exception: 0,
           total: 0,
-          scoreComment: "string"
+          scoreComment: "Initial comment"
         }
       },
       setIsMine: () => set(state => ({ ...state, result: { ...state.result, repoCardDto: { ...state.result.repoCardDto, isMine: true } } })),
-      setIsOther: () => set(state => ({ ...state, result: { ...state.result, repoCardDto: { ...state.result.repoCardDto, isMine: false } } }))
+      setIsOther: () => set(state => ({ ...state, result: { ...state.result, repoCardDto: { ...state.result.repoCardDto, isMine: false } } })),
+      updateResultState: (newState: Partial<ResultState>) => set(newState)  // 전체 상태를 업데이트
     }),
     {
       name: 'result-store',

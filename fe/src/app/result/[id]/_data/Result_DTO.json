@@ -8,9 +8,10 @@
         "memberNickname": "Developer Nick",
         "memberImg": "https://example.com/images/member12345.jpg",
         "repoViewId": 67890,
-        "repoViewPath": "/path/to/repo",
+        "repoViewPath": "https://github.com/123123/123123123",
         "repoViewTitle": "Example Project",
         "repoViewSubtitle": "A demonstration of API usage",
+        "repoMemberCnt": 6,
         "skillList": [
           {
             "codeId": 101,
