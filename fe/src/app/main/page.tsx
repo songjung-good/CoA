@@ -1,16 +1,29 @@
 'use client'
 
-// src/app/main/page.tsx
+// 라이브러리
 import React from 'react';
-// 레포지토리 분석기(URL 입력)
+import tw from 'tailwind-styled-components';
+import { useStore } from 'zustand';
+import { Link } from 'react-router-dom';
+
+// 컴포넌트
+// URL 입력(레포지토리 분석을 위한)
 import UrlInput from '@/components/analyzer/UrlInput';
 // 개인 레포 불러오기
-import MyRepo from '@/components/maincomponents/MyRepo';
-// 임시 레포 카드
+import GitlabRepo from '@/components/maincomponents/GitlabRepo';
+import GithubRepo from '@/components/maincomponents/GithubRepo';
+// 레포 카드(수정 필요)
 import RepoCard from '@/components/maincomponents/RepoCard';
-import tw from 'tailwind-styled-components';
 
-const MainPage = () => {
+// 전역변수
+// 유저정보
+import userStore from '@/store/user';
+
+
+const MainPage: React.FC = () => {
+  const github = useStore(userStore).userName;
+  const gitlab = useStore(userStore).gitlabName;
+
   return (
     <Main>
       <Header>
@@ -28,11 +41,11 @@ const MainPage = () => {
       <RepoDiv>
         <RepoLeft>
           <Heading>여기는 github</Heading>
-          {/* <MyRepo userID='songjung-good' /> */}
+          <GithubRepo userID={github} />
         </RepoLeft>
         <RepoRight>
           <Heading>여기는 gitlab</Heading>
-          {/* <MyRepo userID='songjung-good' /> */}
+          <GitlabRepo userID={gitlab} />
         </RepoRight>
       </RepoDiv>
       <Div>
