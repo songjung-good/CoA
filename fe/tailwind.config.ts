@@ -24,6 +24,9 @@ const config: Config = {
       height: {
         appVh: "calc(100vh - 96px)",
       },
+      minWidth: {
+        "760px": "760px",
+      }
     },
   },
   plugins: [],
