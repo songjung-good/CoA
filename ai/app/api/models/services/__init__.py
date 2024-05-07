@@ -1,10 +1,11 @@
 import asyncio
 from abc import ABCMeta, abstractmethod
-from typing import TypeVar, Generic, Any
+from typing import TypeVar, Generic, Any, Callable, Awaitable
 
 from redis import Redis
 
-from api.models.dto import AnalysisRequest, GithubAnalysisRequest, GitLabAnalysisRequest
+from api.models.code import AnalysisStatus
+from api.models.dto import AnalysisRequest, AnalysisDataDto
 from exception import AnalysisException
 
 R = TypeVar('R', bound=AnalysisRequest, covariant=True)
@@ -19,8 +20,15 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):
 
     async def analyze(self, request: R) -> None:
         # TODO: 각 단계를 나누어 추상 메소드를 호출하고 처리 상태 변경
+
+        # DTO 가져오기
+
+
         try:
+            
             # 레포 요청 가능 여부 확인하기
+            await self.__do_and_update(self.assert_commits_loadable, [])
+            await self.__do_and_update(self.assert_commits_loadable, [])
 
             # 레포에서 내용 가져오기
 
@@ -39,12 +47,27 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):
             # TODO: redis에 percentage 0으로 만들고 statusCode 바꾸기
             pass
 
+    async def __do_and_update(
+            self,
+            coroutine: Callable[..., Awaitable[Any]],
+            params: list[Any],
+            dto: AnalysisDataDto,
+            next_status: AnalysisStatus
+    ) -> Any:
+        """
+        비동기 함수를 실행하고, 실행 성공 시 Redis에 분석 상태를 업데이트합니다.
+        """
+        result: Any = await coroutine(*params)
+        dto.status = next_status
+        dto.to_redis(redis_client=self.redis_client)
+        return result
+
     @abstractmethod
-    async def is_content_loadable(self) -> bool:
+    async def assert_content_loadable(self) -> None:
         pass
 
     @abstractmethod
-    async def is_commits_loadable(self) -> bool:
+    async def assert_commits_loadable(self) -> bool:
         pass
 
     @abstractmethod
@@ -57,11 +80,11 @@ class MockAnalysisService(Generic[R], AnalysisService[R]):
     데이터 요청(5초) - 학습(5초) - 답변 생성(10초)의 딜레이로 고정된 데이터를 보내줍니다.
     """
 
-    async def is_content_loadable(self) -> bool:
-        return True
+    async def assert_content_loadable(self) -> None:
+        pass
 
-    async def is_commits_loadable(self) -> bool:
-        return True
+    async def assert_commits_loadable(self) -> bool:
+        pass
 
     async def load_commits(self, request: R) -> list[dict[Any, Any]]:
         await asyncio.sleep(5)

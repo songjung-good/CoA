@@ -126,7 +126,6 @@ class AnalysisDataDto:
             **redis_set_args
         )
 
-
 class AnalysisRequest(BaseModel, metaclass=ABCMeta):
     """분석 요청에 대한 body DTO 추상 클래스"""
     analysisId: str

@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from redis import Redis
 
+from api.models.code import AnalysisStatus
 from api.models.dto import AnalysisDataDto, AiResultDto, CommitScoreDto
 
 
