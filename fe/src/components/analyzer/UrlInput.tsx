@@ -77,8 +77,8 @@ const UrlInput = () => {
       <StyledButton onClick={fetchGitInfo}>분석하기</StyledButton>
       {isModalOpen && userData && 
         ('projectId' in userData ? 
-          <UserModal userData={userData as GitHubResponse} onClose={closeModal} /> :
-          <UserModal userData={userData as GitLabResponse} onClose={closeModal} />
+          <UserModal userData={userData as GitHubResponse} onClose={closeModal} url={inputValue}/> :
+          <UserModal userData={userData as GitLabResponse} onClose={closeModal} url={inputValue}/>
         )
       } 
     </Container>

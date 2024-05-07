@@ -68,10 +68,10 @@ const Main = tw.main`
 
 const Header = tw.div`
   max-w-screen-xl
+  w-full
   mx-auto
   bg-white
   mt-10
-  p-20
   border
   shadow-lg
   rounded-2xl
@@ -86,31 +86,49 @@ const Description = tw.div`
   max-w-screen-xl
 `;
 
+const TextWrapper = tw.div`
+  mx-auto
+  p-[2rem]
+`;
+
 const Title = tw.h1`
   font-bold
   text-left
   mb-4
-  xl:text-5xl
-  md:text-4xl
-  sm:text-3xl
+  lg:text-5xl
+  md:text-3xl
+  sm:text-xl
 `;
 
 const SubTitle = tw.p`
   font-light
-  text-lg
   text-left
-`;
-
-const TextWrapper = tw.div`
-  mx-auto
+  lg:text-lg
+  md:text-sm
+  sm:text-xs
 `;
 
 const Img = tw.img`
-  mx-auto
   ml-10
+  w-auto
   opacity-60
-  rounded-md
+  blur-l-xl
+  rounded-r-2xl
   shadow-md
+`;
+
+const Div1 = tw.div`
+  max-w-screen-xl
+  flex
+  justify-center
+  w-full
+  bg-white
+  mt-10
+  p-4
+  border
+  shadow-lg
+  rounded-2xl
+  hover:border-appBlue1
 `;
 
 const RepoDiv = tw.div`
@@ -152,24 +170,10 @@ const Div = tw.div`
   rounded-2xl
   hover:border-appBlue1
 `;
-  
-
-const Div1 = tw.div`
-  max-w-screen-xl
-  flex
-  justify-center
-  w-2/3
-  bg-white
-  mt-10
-  p-4
-  border
-  shadow-lg
-  rounded-2xl
-  hover:border-appBlue1
-`;
 
 const Heading = tw.h3`
-  text
+  font-bold
+  text-xl
 `;
 
 export default MainPage;
