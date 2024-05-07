@@ -8,7 +8,7 @@ interface UserStore {
 }
 
 const userStore = create<UserStore>((set) => ({
-  userName: "Shin-3117",
+  userName: "songjung-good",
   setUserName: (input: string) => set({ userName: input }),
   gitlabName: "jed595",
   setgitlabName: (input: string) => set({ gitlabName: input }),

@@ -1,12 +1,17 @@
 // Url을 입력받아 GitHub 정보를 가져오는 컴포넌트
 "use client";
 
+// 라이브러리
 import React, { useState } from "react";
 import tw from "tailwind-styled-components";
+import { useStore } from 'zustand';
 
 // 컴포넌트 불러오기
 import UserModal from '@/components/analyzer/UserModal';
-import FetchGithubInfo from './FetchGithubInfo';
+import FetchGitInfo from '@/components/analyzer/FetchGitInfo';
+
+// 전역변수
+import userStore from '@/store/user';
 
 // 타입 정리
 interface UserData {
@@ -21,7 +26,6 @@ interface UserData {
 
 interface GitHubResponse {
   data: UserData[];
-  repositoryName: string;
 }
 
 interface GitLabResponse {
@@ -34,24 +38,31 @@ type ApiResponse = GitHubResponse | GitLabResponse;
 const UrlInput = () => {
   const [inputValue, setInputValue] = useState('');
   const [userData, setUserData] = useState<ApiResponse | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const GithubUser = useStore(userStore).userName;
+  const GitlabUser = useStore(userStore).gitlabName;
 
   // 입력 값 변경 시 핸들러
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
-    console.log('handleChange', inputValue);
   };
 
   // Enter 키 입력 시 실행될 함수
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
-      fetchGitHubInfo();
+      fetchGitInfo();
     }
   };
 
   // FetchGithubInfo 컴포넌트를 불러와서 사용
-  const fetchGitHubInfo = async () => {
-    console.log('fetchGitHubInfo', inputValue);
-    FetchGithubInfo(inputValue, setUserData);
+  const fetchGitInfo = async () => {
+    FetchGitInfo(inputValue, setUserData, GithubUser, GitlabUser);
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기 함수
+  const closeModal = () => {
+    setIsModalOpen(false); // 모달 상태를 false로 설정
   };
 
   return (
@@ -63,11 +74,13 @@ const UrlInput = () => {
         onChange={handleChange}
         onKeyDown={handleKeyDown}
       />
-      <StyledButton onClick={fetchGitHubInfo}>분석하기</StyledButton>
-      {userData && 
-      (userData as GitHubResponse).repositoryName &&  // GitHubResponse 타입인지 확인
-      <UserModal userData={userData as GitHubResponse} /> // GitHubResponse 타입으로 변환
-    } 
+      <StyledButton onClick={fetchGitInfo}>분석하기</StyledButton>
+      {isModalOpen && userData && 
+        ('projectId' in userData ? 
+          <UserModal userData={userData as GitHubResponse} onClose={closeModal} /> :
+          <UserModal userData={userData as GitLabResponse} onClose={closeModal} />
+        )
+      } 
     </Container>
   );
 };

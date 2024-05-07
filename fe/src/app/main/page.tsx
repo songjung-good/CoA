@@ -1,10 +1,11 @@
+// mainpage > UrlInput > FetchGithubInfo(ExtractUserInfo) > UserModal
+
 'use client'
 
 // 라이브러리
 import React from 'react';
 import tw from 'tailwind-styled-components';
 import { useStore } from 'zustand';
-import { Link } from 'react-router-dom';
 
 // 컴포넌트
 // URL 입력(레포지토리 분석을 위한)
@@ -16,9 +17,7 @@ import GithubRepo from '@/components/maincomponents/GithubRepo';
 import RepoCard from '@/components/maincomponents/RepoCard';
 
 // 전역변수
-// 유저정보
 import userStore from '@/store/user';
-
 
 const MainPage: React.FC = () => {
   const github = useStore(userStore).userName;
