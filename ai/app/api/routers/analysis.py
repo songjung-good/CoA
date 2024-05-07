@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, BackgroundTasks
 
 from api.models.dto import GithubAnalysisRequest, GitLabAnalysisRequest
-from api.models.services import AnalysisService
+from api.models.services.analysis import AnalysisService
 from config.containers import Container
 
 router = APIRouter(prefix='/analysis')

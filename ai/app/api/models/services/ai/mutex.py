@@ -1,0 +1,2 @@
+class AiMutex:
+    pass
