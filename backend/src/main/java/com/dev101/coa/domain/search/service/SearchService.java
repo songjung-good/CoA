@@ -1,6 +1,7 @@
 package com.dev101.coa.domain.search.service;
 
 import com.dev101.coa.domain.code.dto.CodeDto;
+import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.member.dto.MemberCardDto;
 import com.dev101.coa.domain.member.entity.AccountLink;
 import com.dev101.coa.domain.member.entity.Member;
@@ -92,23 +93,14 @@ public class SearchService {
         // 중복 제거 - CoA 서비스 닉네임 일치도 우선, 연동계정 닉네임 일치도 후순위
         List<Member> mergedMemberList = memberList.stream().distinct().toList();
 
-        // memberCardDto 만들기
+        // memberCardDto List 만들기
         List<MemberCardDto> memberCardDtoList = new ArrayList<>();
-        for(Member member : mergedMemberList){
+        for (Member member : mergedMemberList) {
             // skillList
             List<MemberSkill> memberSkillList = memberSkillRepository.findByMember(member);
-            List<String> skillList = new ArrayList<>();
-            for(MemberSkill memberSkill : memberSkillList){
-                skillList.add(memberSkill.getSkillCode().getCodeName());
-            }
 
-            memberCardDtoList.add(MemberCardDto.builder()
-                            .memberId(member.getMemberId())
-                            .memberNickName(member.getMemberNickname())
-                            .memberImg(member.getMemberImg())
-                            .memberIntro(member.getMemberIntro())
-                            .skillList(skillList)
-                    .build());
+            MemberCardDto memberCardDto = MemberCardDto.createDto(member, memberSkillList);
+            memberCardDtoList.add(memberCardDto);
         }
 
         return memberCardDtoList;
