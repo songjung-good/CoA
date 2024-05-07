@@ -59,7 +59,7 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):
             # ai_service.learn(ai_context)
 
             # 대화해서 학습 결과 긁어오기
-            self.__update_status(dto, AnalysisStatus.JUDGING_COMMITS)
+            self.__update_status(dto, AnalysisStatus.GENERATING_README)
             # TODO ...
             # dto.result.readme = await ai_service.generate_readme()
 
@@ -111,7 +111,7 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    async def load_content(self, request: R) -> list[dict[Any, Any]]:
+    async def load_content(self, request: R) -> dict[Any, Any]:
         """
         레포에서 레포 내용을 가져옵니다.
         """
