@@ -1,5 +1,6 @@
 import json
 from abc import ABCMeta
+from typing import Union
 
 from pydantic import BaseModel
 from redis import Redis
@@ -115,7 +116,7 @@ class AnalysisDataDto:
         }
 
     @staticmethod
-    def from_redis(redis_client: Redis, analysis_id: str) -> 'AnalysisDataDto':
+    def from_redis(redis_client: Redis, analysis_id: str) -> Union['AnalysisDataDto', None]:
         json_str = redis_client.get(analysis_id)
         return AnalysisDataDto.from_dict(analysis_id, json.loads(json_str))
 

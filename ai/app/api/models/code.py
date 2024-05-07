@@ -34,16 +34,17 @@ class AnalysisStatus(IntEnum):
     INSUFFICIENT_GITLAB_REQUEST = 332
     REPO_REQUEST_TIMEOUT = 333
 
-    PERCENTAGES: dict['AnalysisStatus', int] = {
-        BEFORE_RECEIVING: 0,
-        CHECKING_FOR_REQUESTING: 5,
-        REQUESTING_CONTENT: 10,
-        REQUESTING_COMMITS: 20,
-        WAITING_AI: 25,
-        LEARNING_DATA: 30,
-        GENERATING_README: 50,
-        JUDGING_COMMITS: 60,
-        SCORING_COMMITS: 80,
-        RESETTING_LEARNED_DATA: 90,
-        DONE: 100
-    }
+
+AnalysisPercentages: dict[AnalysisStatus, int] = {
+    AnalysisStatus.BEFORE_RECEIVING: 0,
+    AnalysisStatus.CHECKING_FOR_REQUESTING: 5,
+    AnalysisStatus.REQUESTING_CONTENT: 10,
+    AnalysisStatus.REQUESTING_COMMITS: 20,
+    AnalysisStatus.WAITING_AI: 25,
+    AnalysisStatus.LEARNING_DATA: 30,
+    AnalysisStatus.GENERATING_README: 50,
+    AnalysisStatus.JUDGING_COMMITS: 60,
+    AnalysisStatus.SCORING_COMMITS: 80,
+    AnalysisStatus.RESETTING_LEARNED_DATA: 90,
+    AnalysisStatus.DONE: 100
+}
