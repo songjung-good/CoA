@@ -26,80 +26,48 @@ public class RepoController {
 
     @Operation(description = "리드미 수정")
     @PutMapping("/{repoViewId}")
-    public ResponseEntity<BaseResponse<Object>> editReadme(@PathVariable Long repoViewId, @RequestBody EditReadmeReqDto editReadmeReqDto) {
-        repoService.editReadme(repoViewId, editReadmeReqDto);
+    public ResponseEntity<BaseResponse<Object>> editReadme(@AuthenticationPrincipal Long currentMemberId, @PathVariable Long repoViewId, @RequestBody EditReadmeReqDto editReadmeReqDto) {
+        repoService.editReadme(currentMemberId, repoViewId, editReadmeReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
     @Operation(description = "분석 결과 저장")
     @PostMapping("/{analysisId}")
-    public ResponseEntity<BaseResponse<Object>> saveAnalysis(@PathVariable String analysisId, @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) {
+    public ResponseEntity<BaseResponse<Object>> saveAnalysis(@AuthenticationPrincipal Long currentMemberId, @PathVariable String analysisId, @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) {
 
-        Long memberId = 7L;
-        repoService.saveAnalysis(memberId, analysisId, saveAnalysisReqDto);
+        repoService.saveAnalysis(currentMemberId, analysisId, saveAnalysisReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
     @Operation(description = "분석 요청")
     @PostMapping("/analysis")
-//    public ResponseEntity<BaseResponse<String>> startAnalysis(@AuthenticationPrincipal CustomOAuth2User currentUser, HttpServletRequest request, @RequestBody AnalysisReqDto analysisReqDto) {
-    public ResponseEntity<BaseResponse<String>> startAnalysis(HttpServletRequest request, @RequestBody AnalysisReqDto analysisReqDto) {
-        // TODO: Test login member
-//        System.out.println("currentUser = " + currentUser.getMember().getMemberId());
+    public ResponseEntity<BaseResponse<String>> startAnalysis(@AuthenticationPrincipal Long currentMemberId, HttpServletRequest request, @RequestBody AnalysisReqDto analysisReqDto) {
 
-        // TODO: memberId를 쿠키로부터 가져오기
-        Long memberId = 7L;
-
-        String analysisId = repoService.startAnalysis(memberId, analysisReqDto);
+        String analysisId = repoService.startAnalysis(currentMemberId, analysisReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<String>(analysisId));
     }
 
-
-//    @Operation(description = "분석 진척도 체크")
-//    @GetMapping("/analysis/{analysisId}")
-//    public ResponseEntity<BaseResponse<AnalysisResultDto>> checkAnalysis(HttpServletRequest request, @PathVariable String analysisId) {
-//        String memberUUID = null;
-//
-//        // TODO: memberId를 쿠키로부터 가져오기
-//        Long memberId = 7L;
-//
-//        AnalysisResultDto result = repoService.checkAnalysis(memberId, analysisId);
-//        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
-//    }
-
-
-
     @Operation(description = "분석 진척도 체크")
     @GetMapping("/analysis/{analysisId}")
-    public ResponseEntity<BaseResponse<AnalysisCheckResDto>> checkAnalysis(HttpServletRequest request, @PathVariable String analysisId) {
-        String memberUUID = null;
+    public ResponseEntity<BaseResponse<AnalysisCheckResDto>> checkAnalysis(@AuthenticationPrincipal Long currentMemberId, HttpServletRequest request, @PathVariable String analysisId) {
 
-        // TODO: memberId를 쿠키로부터 가져오기
-        Long memberId = 7L;
-
-        AnalysisCheckResDto result = repoService.checkAnalysis(memberId, analysisId);
+        AnalysisCheckResDto result = repoService.checkAnalysis(currentMemberId, analysisId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
 
     @Operation(description = "완료된 분석 결과 가져오기")
     @GetMapping("/analysis/done/{analysisId}")
-    public ResponseEntity<BaseResponse<RepoDetailResDto>> getDoneAnalysis(HttpServletRequest request, @PathVariable String analysisId) {
-        String memberUUID = null;
+    public ResponseEntity<BaseResponse<RepoDetailResDto>> getDoneAnalysis(@AuthenticationPrincipal Long currentMemberId, HttpServletRequest request, @PathVariable String analysisId) {
 
-        // TODO: memberId를 쿠키로부터 가져오기
-        Long memberId = 7L;
-
-        RepoDetailResDto result = repoService.getDoneAnalysis(memberId, analysisId);
+        RepoDetailResDto result = repoService.getDoneAnalysis(currentMemberId, analysisId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
     @Operation(description = "특정 레포 뷰 조회")
     @GetMapping("/{repoViewId}")
-    public ResponseEntity<BaseResponse<RepoDetailResDto>> readRepoView(@PathVariable Long repoViewId){
-        // TODO: 로그인 유저 아이디 가져오기
-        Long memberId = 0L;
-        RepoDetailResDto result = repoService.readRepoView(memberId, repoViewId);
+    public ResponseEntity<BaseResponse<RepoDetailResDto>> readRepoView(@AuthenticationPrincipal Long currentMemberId, @PathVariable Long repoViewId){
+        RepoDetailResDto result = repoService.readRepoView(currentMemberId, repoViewId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
