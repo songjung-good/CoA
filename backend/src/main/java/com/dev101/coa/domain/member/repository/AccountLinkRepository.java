@@ -26,4 +26,6 @@ public interface AccountLinkRepository extends JpaRepository<AccountLink, Long> 
     @Transactional
     @Query("UPDATE AccountLink al SET al.accountLinkNickname = :nickName, al.accountLinkToken = :token, al.accountLinkRefreshToken = :refreshToken WHERE al.accountLinkId = :id")
     void updateAccountLinkFields(Long id, String nickName, String token, String refreshToken);
+
+    List<AccountLink> findAllByMember(Member member);
 }

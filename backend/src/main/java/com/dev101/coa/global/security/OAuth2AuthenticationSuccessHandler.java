@@ -174,23 +174,25 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String userName = userInfo != null ? userInfo.getUsername() : null;
 
         // 기존에 연동된 계정인지 조회
-        AccountLink accountLink = accountLinkRepository.findByMemberAndCode(existingMember, platCode).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
-
-        if (accountLink == null) {
-            // 연동된 정보가 없으면 새로 빌드하여 저장 TODO 정보 넣어주기
-            accountLink = AccountLink.builder()
-                    .member(existingMember)
-                    .code(platCode)
-                    .accountLinkNickname(userName)
-                    .accountLinkToken(encryptedAccessToken)
-                    .accountLinkRefreshToken(encryptedRefreshToken)
-                    .build();
-            accountLinkRepository.save(accountLink);
-        } else {
-            // 이미 연동된 정보가 있다면, 닉네임 / 토큰 / 리프레시 토큰 갱신
-            accountLink.updateAccountLinkFields(accountLink.getAccountLinkId() ,userName ,encryptedAccessToken ,encryptedRefreshToken);
-            accountLinkRepository.save(accountLink);
-        }
+        Optional<AccountLink> optionalAccountLink = accountLinkRepository.findByMemberAndCode(existingMember, platCode);
+        optionalAccountLink.ifPresentOrElse(
+                accountLink -> {
+                    // 이미 연동된 정보가 있다면, 닉네임 / 토큰 / 리프레시 토큰 갱신
+                    accountLink.updateAccountLinkFields(accountLink.getAccountLinkId() ,userName ,encryptedAccessToken ,encryptedRefreshToken);
+                    accountLinkRepository.save(accountLink);                },
+                () -> {
+                    // 연동된 정보가 없으면 새로 빌드하여 저장 TODO 정보 넣어주기
+                    new AccountLink();
+                    AccountLink newAccountLink = AccountLink.builder()
+                            .member(existingMember)
+                            .code(platCode)
+                            .accountLinkNickname(userName)
+                            .accountLinkToken(encryptedAccessToken)
+                            .accountLinkRefreshToken(encryptedRefreshToken)
+                            .build();
+                    accountLinkRepository.save(newAccountLink);
+                }
+        );
     }
 
 }
