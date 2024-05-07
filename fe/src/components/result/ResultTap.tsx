@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter, useParams } from "next/navigation";
 import tw from "tailwind-styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 // store
@@ -27,6 +28,16 @@ export default function ResultTab() {
   const handleTab = (index: number) => {
     setTabIndex(index);
     setLastIndex(tabIndex);
+  };
+
+  const router = useRouter();
+  const params = useParams();
+
+  const handleEditButton = () => {
+    const { id } = params;
+
+    router.push(`/result/${id}/edit`);
+    console.log(useResultStore.getState().result.repoCardDto.memberNickname);
   };
 
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";
@@ -76,7 +87,7 @@ export default function ResultTab() {
         </CSSTransition>
       </TransitionGroup>
       <div className="flex justify-evenly mt-10">
-        {isMine && <button>저장 후 수정</button>}
+        {isMine && <button onClick={handleEditButton}>저장 후 수정</button>}
         <Link href="/main">
           <button>홈으로</button>
         </Link>

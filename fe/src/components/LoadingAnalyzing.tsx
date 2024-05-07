@@ -25,6 +25,7 @@ export default function LoadingAnalyzing() {
     // 페이지 이동
     // 임시
     await useResultStore.getState().updateResultState(dummy);
+    await useAnalyzingStore.getState().setAnalyzeId(1);
     // await console.log(useResultStore.getState().result);
     if (router) {
       await router.push(`/result/${analyzeId}`);

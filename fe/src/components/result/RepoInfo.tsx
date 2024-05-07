@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import tw from "tailwind-styled-components";
@@ -51,7 +53,7 @@ export default function RepoInfo() {
 }
 
 const RepoInfoDiv = tw.div`
-  w-full min-h-20 h-1/4 flex flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2 overflow-hidden
+  w-full min-h-20 h-1/4 flex flex-col lg:flex-row flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2 overflow-hidden
   overflow-x-auto
   `;
 
