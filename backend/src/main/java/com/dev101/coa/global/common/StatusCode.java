@@ -18,7 +18,7 @@ public enum StatusCode {
 
     // AI Server : 500,
     AI_SERVER_ERROR(false, 500, "AI 서버로부터 응답을 받지 못했습니다."),
-
+    ANALYSIS_RESULT_NOT_EXIST(false, 501, "분석 결과과 존재하지 않습니다."),
     // Member : 600
     COOKIE_NOT_FOUND(false, 600, "쿠키가 존재하지 않습니다."),
     MEMBER_NOT_EXIST(false, 601, "사용자가 존재하지 않습니다."),

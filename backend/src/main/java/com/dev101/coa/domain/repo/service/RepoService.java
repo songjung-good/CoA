@@ -4,9 +4,11 @@ import com.dev101.coa.domain.code.dto.CodeCntDto;
 import com.dev101.coa.domain.code.dto.CodeDto;
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.code.repository.CodeRepository;
-import com.dev101.coa.domain.member.repository.AccountLinkRepository;
 import com.dev101.coa.domain.member.entity.Member;
+import com.dev101.coa.domain.member.repository.AccountLinkRepository;
 import com.dev101.coa.domain.member.repository.MemberRepository;
+import com.dev101.coa.domain.redis.RedisRepoRepository;
+import com.dev101.coa.domain.redis.RedisResult;
 import com.dev101.coa.domain.repo.dto.*;
 import com.dev101.coa.domain.repo.entity.*;
 import com.dev101.coa.domain.repo.repository.*;
@@ -18,7 +20,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,7 +30,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,7 +58,7 @@ public class RepoService {
     private final LineOfCodeRepository lineOfCodeRepository;
     private final CommitScoreRepository commitScoreRepository;
 
-    private final RedisTemplate<String, Object> redisTemplateRepo;
+    private final RedisRepoRepository redisRepoRepository;
 
     // AI server 통신을 위한 WebClient
     private final WebClient webClient;
@@ -69,7 +69,7 @@ public class RepoService {
                 .orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
 
         // 로그인 사용자 예외 처리 (작성자 확인)
-        if(memberId != repoView.getMember().getMemberId()){
+        if (memberId != repoView.getMember().getMemberId()) {
             throw new BaseException(StatusCode.MEMBER_NOT_OWN_REPO);
         }
 
@@ -122,13 +122,12 @@ public class RepoService {
     public void saveAnalysis(Long memberId, String analysisId, SaveAnalysisReqDto saveAnalysisReqDto) {
 
         // redis에서 analysisId 로 값 조회시 존재 여부 판단
-        Map<Object, Object> redisData = redisTemplateRepo.opsForHash().entries(analysisId);
-        if (redisData.isEmpty()) {
-            throw new BaseException(StatusCode.REPO_VIEW_NOT_FOUND);
-        }
+        RedisResult redisData = redisRepoRepository.findById(analysisId).orElseThrow(() -> new BaseException(StatusCode.ANALYSIS_RESULT_NOT_EXIST));
+
         // 로그인 사용자와 분석 요구자 일치 여부 확인
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
-        Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
+        Long redisMemberId = redisData.getMemberId();
+//        Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
         if (!memberId.equals(redisMemberId)) {
             throw new BaseException(StatusCode.REPO_REQ_MEMBER_NOT_MATCH);
         }
@@ -138,7 +137,7 @@ public class RepoService {
         RepoInfo repoInfo = getRepoInfo(redisData);
 
         Repo repo = null;
-        Optional<Repo> optionalRepo = repoRepository.findByRepoPath((String) redisData.get("repoPath"));
+        Optional<Repo> optionalRepo = repoRepository.findByRepoPath(redisData.getRepoPath());
 
         if (optionalRepo.isPresent()) {
             // update repo
@@ -153,15 +152,16 @@ public class RepoService {
                     .repoReadmeOrigin(repoInfo.getRepoReadmeOrigin())
                     .repoCommitCnt(repoInfo.getRepoCommitCnt())
                     .repoGitlabProjectId(repoInfo.getRepoGitLabProjectId())
-                    .repoMemberCnt((Integer) redisData.get("repoMemberCnt"))
+                    .repoMemberCnt(redisData.getRepoMemberCnt())
                     .build();
+
             repoRepository.save(repo);
         }
 
 
         // repoView 저장
         // 분석 요구자와 레포의 주인이 일치하는 경우(redisData.get("isOwn") == true)만 저장
-        if(redisData.get("isOwn").equals("false")) return;
+        if(!redisData.getIsOwn()) return;
 
         List<Long> skillCodeIdList = saveAnalysisReqDto.getRepoViewSkillList();
         List<Code> skillCodeList = new ArrayList<>();
@@ -169,7 +169,7 @@ public class RepoService {
             Code code = codeRepository.findByCodeId(id).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
             skillCodeList.add(code);
         }
-        AiResultDto aiResult = (AiResultDto) redisData.get("result");
+        AiResultDto aiResult = redisData.getResult();
         RepoView repoView = RepoView.builder()
                 .repo(repo)
                 .member(member)
@@ -208,7 +208,7 @@ public class RepoService {
         }
 
         // commitScore 저장
-        CommitScoreDto commitScoreDto = ((AiResultDto) redisData.get("result")).getCommitScore();
+        CommitScoreDto commitScoreDto = redisData.getResult().getCommitScore();
         commitScoreRepository.save(CommitScore.builder()
                 .repoView(repoView)
                 .scoreReadability(commitScoreDto.getReadability())
@@ -222,44 +222,30 @@ public class RepoService {
 
     }
 
-    private RepoInfo getRepoInfo(Map<Object, Object> redisData) {
-        String redisProjectId = (String) redisData.get("projectId");
+    private RepoInfo getRepoInfo(RedisResult redisData) {
+        String redisProjectId = redisData.getProjectId();
+
         // gitHub
         if (redisProjectId == null) { // ex: https://api.github.com/repos/rlagkdud/Spring-Pay-System
             // 0. repoCodeId
             Code repoCode = codeRepository.findByCodeId(1002L).orElseThrow(() -> new BaseException(StatusCode.NOT_FOUND_PLAT));
 
             // 1. repoPath로부터 사용자 이름과 레포이름을 받아오기
-            String repoPath = (String) redisData.get("repoPath");
-//            String[] split = repoPath.split("/");
-//            String repoName = split[split.length - 1];
-//            String userName = split[split.length - 2];
+            String repoPath = redisData.getRepoPath();
 
             // 2. redis에서 repoReadmeOrigin
-            String repoReadmeOrigin = ((AiResultDto) redisData.get("result")).getReadme();
+            String repoReadmeOrigin = redisData.getResult().getReadme();
             // 3. repoCommitCnt 가져오기
-            Long repoCommitCnt = ((AiResultDto) redisData.get("result")).getTotalCommitCnt();
-
-            // 4.
-            // github api 요청 보내 repoStartDate, repoEndDate, repoMemberCnt 받아오기
-//            JsonObject jsonObject = getJsonObject(gitHubApiUrl + "/repos/" + userName + "/" + repoName);
-
-//            // 4-1. repoStartDate
-//            // 4-2. repoEndDate
-//            Map<String, LocalDate> projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "pushed_at");
-
-            // 4-3. contributors
-//            Integer repoMemberCnt = getRepoMemberCnt(gitHubApiUrl + "/repos/" + userName + "/" + repoName + "/" + "contributors");
+            Long repoCommitCnt = redisData.getResult().getTotalCommitCnt();
 
             return RepoInfo.builder()
                     .repoCode(repoCode) //
                     .repoPath(repoPath)
                     .repoReadmeOrigin(repoReadmeOrigin)
                     .repoCommitCnt(repoCommitCnt)
-//                    .repoStartDate(projectPeriod.get("repoStartDate"))
-//                    .repoEndDate(projectPeriod.get("repoEndDate"))
-                    .repoMemberCnt((Integer) redisData.get("repoMemberCnt"))
+                    .repoMemberCnt(redisData.getRepoMemberCnt())
                     .build();
+
         }
 
         // gitLab {
@@ -268,38 +254,23 @@ public class RepoService {
             Code repoCode = codeRepository.findByCodeId(1003L).orElseThrow(() -> new BaseException(StatusCode.NOT_FOUND_PLAT));
 
             // 1. repoPath
-            String repoPath = (String) redisData.get("repoPath"); //https://lab.ssafy.com/s10-final/S10P31E101
-//            String[] split = repoPath.split("/");
-//            String projectId = split[split.length - 1];
-//            String projectUrl = split[split.length - 5];
+            String repoPath = redisData.getRepoPath(); //https://lab.ssafy.com/s10-final/S10P31E101
 
             // 2 repoReadmeOrigin
-            String repoReadmeOrigin = ((AiResultDto) (redisData.get("result"))).getReadme();
+            String repoReadmeOrigin = redisData.getResult().getReadme();
 
             // 3. repoCommitCnt
-            Long repoCommitCnt = ((AiResultDto) (redisData.get("result"))).getTotalCommitCnt();
+            Long repoCommitCnt = redisData.getResult().getTotalCommitCnt();
 
             // 4.
             // gitLab api 요청 보내 repoStartDate, repoEndDate, repoMemberCnt 받아오기
-//            String gitLabApiUrl = "https://" + projectUrl + "/api/v4/projects/" + projectId;
-//            JsonObject jsonObject = getJsonObject(gitLabApiUrl);
-
-            // 4-1. repoStartDate
-            // 4-2. repoEndDate
-//            Map<String, LocalDate> projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "updated_at");
-
-
-            // 4-3. repoMemberCnt
-//            Integer repoMemberCnt = getRepoMemberCnt(gitLabApiUrl + "/" + "contributors");
 
             return RepoInfo.builder()
                     .repoCode(repoCode)
                     .repoPath(repoPath)
                     .repoReadmeOrigin(repoReadmeOrigin)
                     .repoCommitCnt(repoCommitCnt)
-//                    .repoStartDate(projectPeriod.get("repoStartDate"))
-//                    .repoEndDate(projectPeriod.get("repoEndDate"))
-                    .repoMemberCnt((Integer) redisData.get("repoMemberCnt"))
+                    .repoMemberCnt(redisData.getRepoMemberCnt())
                     .build();
 
         }
@@ -380,7 +351,7 @@ public class RepoService {
 
 
         // 로그인한 member 받아오기
-        Member member = memberRepository.findByMemberId(memberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
         String projectId = analysisReqDto.getProjectId();
 
@@ -415,20 +386,19 @@ public class RepoService {
 
 
         // Redis에 저장하기 전에 객체의 모든 데이터를 JSON 형식으로 저장하도록 설정
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("repoPath", analysisReqDto.getRepoUrl());
-        map.put("projectId", projectId);
-        map.put("userName", analysisReqDto.getUserName());
-        map.put("memberId", member.getMemberId()); // 분석요청자 (로그인한 유저)
-//        map.put("codeId", codeId);
-        map.put("isOwn", isOwn.toString()); // Boolean 값을 문자열로 저장
-        map.put("percentage", 0); // 초기 비율을 문자열로 저장
-        map.put("repoStartDate", projectPeriod.get("repoStartDate").toString());
-        map.put("repoEndDate", projectPeriod.get("repoEndDate").toString()  );
-        map.put("repoMemberCnt", repoMemberCnt);
-
-        redisTemplateRepo.opsForHash().putAll(analysisId, map);
-        redisTemplateRepo.expire(analysisId, 24, TimeUnit.HOURS); // 레디스에 보관하고 있을 시간
+        redisRepoRepository.save(RedisResult.builder()
+                .analysisId(analysisId)
+                .repoPath(analysisReqDto.getRepoUrl())
+                .projectId(projectId)
+                .userName(analysisReqDto.getUserName())
+                .memberId(member.getMemberId()) // 분석 요청자
+                .isOwn(isOwn)
+                .percentage(0)
+                .repoStartDate(projectPeriod.get("repoStartDate"))
+                .repoEndDate(projectPeriod.get("repoEndDate"))
+                .repoMemberCnt(repoMemberCnt)
+                .expireSec(86400L)
+                .build());
 
         // AI 서버로 요청 보내기 (body: repoUrl, userName, memberId, isOwn)
         // platform code에 따라 요청 보낼 url 분기처리
@@ -451,8 +421,7 @@ public class RepoService {
                 .bodyToMono(String.class)
                 .block();
 
-        // TODO: 지워라
-//        response = "true";
+
 
         if (response.equals("false")) {
             throw new BaseException(StatusCode.AI_SERVER_ERROR);
@@ -464,11 +433,9 @@ public class RepoService {
     public RepoDetailResDto getDoneAnalysis(Long memberId, String analysisId) {
 
         // redis에서 analysisId에 해당하는 요소를 가져온다.
-        Map<Object, Object> redisData = redisTemplateRepo.opsForHash().entries(analysisId);
-        String redisRepoPath = (String) redisData.get("repoPath");
-        if (redisRepoPath == null) {
-            throw new BaseException(StatusCode.REPO_VIEW_NOT_FOUND);
-        }
+        RedisResult redisData = redisRepoRepository.findById(analysisId).orElseThrow(() -> new BaseException(StatusCode.ANALYSIS_RESULT_NOT_EXIST));
+        String redisRepoPath = redisData.getRepoPath();
+
 
         // 분석 결과 title에 쓰일 레포 이름을 가져온다.
         String[] split = redisRepoPath.split("/");
@@ -476,7 +443,7 @@ public class RepoService {
 
 
         // memberId와 요청한 memberId의 일치여부를 확인한다.(로그인한 유저와 분석 요청자 일치 여부 확인)
-        Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
+        Long redisMemberId = redisData.getMemberId();
         if (!Objects.equals(memberId, redisMemberId)) {
             // 일치하지 않으면 예외 발생
             throw new BaseException(StatusCode.REPO_REQ_MEMBER_NOT_MATCH);
@@ -486,27 +453,26 @@ public class RepoService {
         // isMine이 true이면, 커밋스코어까지 반환하고, 아니면 커밋스코은 반환하지 않는다.
 
         // isMine: 분석 요청자가 자신의 레포를 분석하는지 여부
-        Boolean isMine = redisData.get("isOwn") == "true";
+        Boolean isMine = redisData.getIsOwn();
 
         // RepoCardDto(repoPath, repoTitle,repoStartDate, repoEndDate, isMine)
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         RepoCardDto repoCardDto = RepoCardDto.builder()
                 .repoViewPath(redisRepoPath)
                 .repoViewTitle(title)
-                .repoMemberCnt((Integer) redisData.get("repoMemberCnt"))
-                .repoStartDate(LocalDate.parse(redisData.get("repoStartDate").toString()))
-                .repoEndDate(LocalDate.parse(redisData.get("repoEndDate").toString()))
+                .repoMemberCnt(redisData.getRepoMemberCnt())
+                .repoStartDate(redisData.getRepoStartDate())
+                .repoEndDate(redisData.getRepoEndDate())
                 .isMine(isMine)
                 .build();
 
         // BasicDetailDto
-        AiResultDto aiResult = (AiResultDto) redisData.get("result");
+        AiResultDto aiResult = redisData.getResult();
         BasicDetailDto basicDetailDto = BasicDetailDto.builder()
                 .repoReadme(aiResult.getReadme())
                 .repoViewResult(aiResult.getRepoViewResult())
                 .repoViewTotalCommitCnt(aiResult.getTotalCommitCnt())
                 .repoViewCommitCnt(aiResult.getPersonalCommitCnt())
-                .repoViewMemberCnt((Integer) redisData.get("repoMemberCnt"))
+                .repoViewMemberCnt(redisData.getRepoMemberCnt())
                 .build();
 
         if (!isMine) {
@@ -529,15 +495,12 @@ public class RepoService {
     public AnalysisCheckResDto checkAnalysis(Long memberId, String analysisId) {
 
         // redis에서 analysisId에 해당하는 요소를 가져온다.
-        Map<Object, Object> redisData = redisTemplateRepo.opsForHash().entries(analysisId);
-        String redisRepoPath = (String) redisData.get("repoPath");
-        if (redisRepoPath == null) {
-            throw new BaseException(StatusCode.REPO_VIEW_NOT_FOUND);
-        }
+        RedisResult redisData = redisRepoRepository.findById(analysisId).orElseThrow(() -> new BaseException(StatusCode.ANALYSIS_RESULT_NOT_EXIST));
+        String redisRepoPath = redisData.getRepoPath();
 
 
         // memberId와 요소의 memberId의 일치여부를 확인한다.(로그인한 유저와 분석요청 유저의 일치 여부)
-        Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
+        Long redisMemberId = redisData.getMemberId();
         if (!Objects.equals(memberId, redisMemberId)) {
             // 일치하지 않으면 예외 발생
             throw new BaseException(StatusCode.REPO_REQ_MEMBER_NOT_MATCH);
@@ -546,7 +509,7 @@ public class RepoService {
         // 일치하면 요소에서 percentage를 가져온다.
         return AnalysisCheckResDto.builder()
                 .analysisId(analysisId)
-                .percentage((Integer) redisData.get("percentage"))
+                .percentage(redisData.getPercentage())
                 .build();
     }
 
@@ -595,7 +558,7 @@ public class RepoService {
                 .build();
 
         //  로그인한 유저 != 레포 주인 (commit score만 뺴고)
-        if(!Objects.equals(memberId, repoView.getMember().getMemberId())){
+        if (!Objects.equals(memberId, repoView.getMember().getMemberId())) {
             return RepoDetailResDto.builder()
                     .repoCardDto(repoCardDto)
                     .basicDetailDto(basicDetailDto)
@@ -636,30 +599,20 @@ public class RepoService {
                 .linesOfCode(linesOfCode)
                 .build();
 
-        AnalysisResultDto analysisResultDtoTest = AnalysisResultDto.builder()
+        RedisResult redisResult = RedisResult.builder()
                 .repoPath("https://github.com/rlagkdud/Spring-Pay-System")
                 .projectId(null)
                 .userName("rlagkdud")
                 .memberId(7L)
                 .isOwn(true)
                 .percentage(100)
+                .repoStartDate(LocalDate.now())
+                .repoEndDate(LocalDate.now())
                 .result(resultTest)
+                .repoMemberCnt(6)
                 .build();
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("repoPath", analysisResultDtoTest.getRepoPath());
-        map.put("projectId", analysisResultDtoTest.getProjectId());
-        map.put("userName", analysisResultDtoTest.getUserName());
-        map.put("memberId", analysisResultDtoTest.getMemberId());
-        map.put("isOwn", analysisResultDtoTest.getIsOwn());
-        map.put("percentage", analysisResultDtoTest.getPercentage());
-        map.put("result", analysisResultDtoTest.getResult());  // 'result' is another complex object, serialized as JSON
-        map.put("repoStartDate", "2024-05-01");
-        map.put("repoEndDate", "2024-05-05");
-        map.put("repoMemberCnt", 6);
-
-        String analysisId = UUID.randomUUID().toString();
-        redisTemplateRepo.opsForHash().putAll(analysisId, map);
+        redisRepoRepository.save(redisResult);
 
         System.out.println("json 저장 완료");
         // =============== testData

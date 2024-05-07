@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -50,5 +51,6 @@ public class Repo extends BaseEntity {
         this.repoCommitCnt = repoInfo.getRepoCommitCnt();
         this.repoGitlabProjectId = repoInfo.getRepoGitLabProjectId();
         this.repoMemberCnt = repoInfo.getRepoMemberCnt();
+        this.setUpdatedAt(LocalDateTime.now());
     }
 }
