@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,4 +25,6 @@ public interface AccountLinkRepository extends JpaRepository<AccountLink, Long> 
     @Transactional
     @Query("UPDATE AccountLink al SET al.accountLinkNickname = :nickName, al.accountLinkToken = :token, al.accountLinkRefreshToken = :refreshToken WHERE al.accountLinkId = :id")
     void updateAccountLinkFields(Long id, String nickName, String token, String refreshToken);
+
+    List<AccountLink> findAllByMember(Member member);
 }

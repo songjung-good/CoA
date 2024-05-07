@@ -2,6 +2,7 @@ package com.dev101.coa.domain.member.controller;
 
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.code.repository.CodeRepository;
+import com.dev101.coa.domain.member.dto.AccountLinkInfoDto;
 import com.dev101.coa.domain.member.dto.NickNameDto;
 import com.dev101.coa.domain.member.entity.AccountLink;
 import com.dev101.coa.domain.member.entity.Member;
@@ -20,7 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/accountLink")
@@ -34,9 +37,23 @@ public class AccountLinkController {
     private final AccountLinkRepository accountLinkRepository;
     private final EncryptionUtils encryptionUtils;
 
+    @Operation(description = "연결 페이지 정보")
+    @GetMapping("")
+    public ResponseEntity<BaseResponse<AccountLinkInfoDto>> getAccountLinkInfo(@AuthenticationPrincipal Long memberId) {
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        List<AccountLink> accountLinks = accountLinkRepository.findAllByMember(member);
+
+        AccountLinkInfoDto dto = accountLinks.stream()
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(),
+                        this::aggregateLinksIntoDto));
+
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(dto));
+    }
+
     @Operation(description = "멤버 SolvedAc 닉네임 저장")
     @PostMapping("/solvedac")
-    public ResponseEntity<BaseResponse<Object>> saveNickNameSolved(@AuthenticationPrincipal Long memberId, @RequestBody NickNameDto nickNameDto) {
+    public ResponseEntity<BaseResponse<String>> saveNickNameSolved(@AuthenticationPrincipal Long memberId, @RequestBody NickNameDto nickNameDto) {
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
         Code code = codeRepository.findByCodeId(1004L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
         String nickName = nickNameDto.getNickName();
@@ -48,7 +65,7 @@ public class AccountLinkController {
 
     @Operation(description = "멤버 Codeforces 닉네임 저장")
     @PostMapping("/codeforces")
-    public ResponseEntity<BaseResponse<Object>> saveNickNameCodeforces(@AuthenticationPrincipal Long memberId, @RequestBody NickNameDto nickNameDto) {
+    public ResponseEntity<BaseResponse<String>> saveNickNameCodeforces(@AuthenticationPrincipal Long memberId, @RequestBody NickNameDto nickNameDto) {
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
         Code code = codeRepository.findByCodeId(1005L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
         String nickName = nickNameDto.getNickName();
@@ -122,4 +139,28 @@ public class AccountLinkController {
         accountLink.updateReceiveToken(encryptedToken);
         accountLinkRepository.save(accountLink);
     }
+
+    private AccountLinkInfoDto aggregateLinksIntoDto(List<AccountLink> links) {
+        AccountLinkInfoDto.AccountLinkInfoDtoBuilder dtoBuilder = AccountLinkInfoDto.builder();
+        for (AccountLink link : links) {
+            switch (link.getCode().getCodeName()) {
+                case "Github":
+                    dtoBuilder.githubNickName(link.getAccountLinkNickname())
+                            .isGithubToken(link.getAccountLinkReceiveToken() != null);
+                    break;
+                case "GitLab":
+                    dtoBuilder.gitlabNickName(link.getAccountLinkNickname())
+                            .isGitlabToken(link.getAccountLinkReceiveToken() != null);
+                    break;
+                case "solvedac":
+                    dtoBuilder.solvedacNickName(link.getAccountLinkNickname());
+                    break;
+                case "Codeforces":
+                    dtoBuilder.codeforcesNickName(link.getAccountLinkNickname());
+                    break;
+            }
+        }
+        return dtoBuilder.build();
+    }
+
 }
