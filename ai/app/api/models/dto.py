@@ -116,8 +116,10 @@ class AnalysisDataDto:
         }
 
     @staticmethod
-    def from_redis(redis_client: Redis, analysis_id: str) -> Union['AnalysisDataDto', None]:
-        json_str = redis_client.get(analysis_id)
+    async def from_redis(redis_client: Redis, analysis_id: str) -> Union['AnalysisDataDto', None]:
+        json_str = await redis_client.get(analysis_id)
+        if json_str is None:
+            return None
         return AnalysisDataDto.from_dict(analysis_id, json.loads(json_str))
 
     def to_redis(self, redis_client: Redis, **redis_set_args) -> None:
@@ -126,6 +128,7 @@ class AnalysisDataDto:
             value=json.dumps(self, default=lambda obj: obj.to_camel_dict(), separators=(',', ':')),
             **redis_set_args
         )
+
 
 class AnalysisRequest(BaseModel, metaclass=ABCMeta):
     """분석 요청에 대한 body DTO 추상 클래스"""
