@@ -75,7 +75,7 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):
             self.__update_status(dto, AnalysisStatus.RESETTING_LEARNED_DATA)
             # TODO ...
             # ai_service.reset_learning()
-            # ai_mutex.retrieve(ai_service)
+            # ai_mutex.unlock()
 
             # 완료 처리
             self.__update_status(dto, AnalysisStatus.DONE)
