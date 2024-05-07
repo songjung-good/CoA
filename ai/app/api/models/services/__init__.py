@@ -27,8 +27,8 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):
         try:
             
             # 레포 요청 가능 여부 확인하기
-            await self.__do_and_update(self.assert_commits_loadable, [])
-            await self.__do_and_update(self.assert_commits_loadable, [])
+            await self.assert_content_loadable()
+            await self.assert_commits_loadable()
 
             # 레포에서 내용 가져오기
 

@@ -7,6 +7,9 @@ class AnalysisStatus(IntEnum):
 
     PROCESSING = 100
     REQUESTING_TO_REPO = 110
+    CHECKING_FOR_REQUESTING = 111
+    REQUESTING_CONTENT = 112
+    REQUESTING_COMMITS = 113
     INITIALIZING_AI = 120
     WAITING_AI = 121
     LEARNING_DATA = 122
@@ -33,7 +36,9 @@ class AnalysisStatus(IntEnum):
 
     PERCENTAGES: dict['AnalysisStatus', int] = {
         BEFORE_RECEIVING: 0,
-        REQUESTING_TO_REPO: 10,
+        CHECKING_FOR_REQUESTING: 5,
+        REQUESTING_CONTENT: 10,
+        REQUESTING_COMMITS: 20,
         WAITING_AI: 25,
         LEARNING_DATA: 30,
         GENERATING_README: 50,
