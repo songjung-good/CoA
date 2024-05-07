@@ -28,7 +28,7 @@ const RepoCard: React.FC<RepoCardProps> = ({ data }) => {
         </div>
       </div>
       <div className="skills-container">
-        <p className="skills-label">기술 스택:</p>
+        <p className="skills-label">기술   스택:</p>
         {skillList.map((skill) => (
           <span key={skill} className="skill">{skill}</span>
         ))}
