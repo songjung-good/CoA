@@ -2,25 +2,16 @@ import Image from "next/image";
 import SearchBar from "./SearchBar";
 import LoadingAnalyzing from "./LoadingAnalyzing";
 import Link from "next/link";
-function getCookie(name: string) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== "") {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      // 이 쿠키의 이름이 요청한 이름과 일치하는지 확인
-      if (cookie.startsWith(name + "=")) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
+import AuthButton from "./AuthButton";
+import { cookies } from "next/headers";
 export default function Header() {
+  const cookieStore = cookies();
+  // cookie 존재 여부를 boolean으로 return
+  const hasJWT = cookieStore.has("JWT");
+
   return (
     <header className="p-4 flex flex-row justify-between items-center">
-      <Link href="/">
+      <Link href="/main">
         <div className="flex flex-row items-center">
           <Image
             src="/image/logo48.png"
@@ -42,8 +33,7 @@ export default function Header() {
       </Link>
       <SearchBar />
       <LoadingAnalyzing />
-
-      <Link href="/auth/login">로그인</Link>
+      <AuthButton hasJWT={hasJWT} />
     </header>
   );
 }
