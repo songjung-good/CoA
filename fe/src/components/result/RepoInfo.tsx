@@ -3,6 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import tw from "tailwind-styled-components";
+import { useState, useEffect } from "react";
+
+import EditIcon from "@/icons/EditIcon";
 
 import useResultStore from "@/store/result";
 
@@ -10,18 +13,36 @@ export default function RepoInfo() {
   // 통신 결과로 setRepoInfo를 업데이트
   const repoInfo = useResultStore((state) => state.result.repoCardDto);
 
+  const [isEditHover, setIsEditHover] = useState(false);
+
+  // 프로젝트 일수 계산
   const projectDays = calculateDaysBetweenDates(
     repoInfo.repoStartDate,
     repoInfo.repoEndDate,
   );
-  console.log();
+
   return (
     <RepoInfoDiv>
       {repoInfo.isMine && (
-        <div className="absolute bottom-0 right-0 z-10 p-4">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            편집하기
-          </button>
+        <div className="absolute -bottom-8 -right-8 z-10 p-4">
+          <div className="relative">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 rounded-full"
+              onMouseEnter={() => {
+                setIsEditHover(true);
+              }}
+              onMouseLeave={() => {
+                setIsEditHover(false);
+              }}
+            >
+              <EditIcon width={20} height={20} />
+            </button>
+            {isEditHover && (
+              <div className="absolute -right-5 flex whitespace-nowrap p-2 mt-2 bg-white shadow-lg rounded-lg z-20 text-center">
+                수정하기
+              </div>
+            )}
+          </div>
         </div>
       )}
       <div className="flex flex-col items-start">
@@ -36,14 +57,17 @@ export default function RepoInfo() {
           ) : (
             <Image src="" alt="gitlab logo" width={30} height={30}></Image>
           )}
-          <Link href={`${repoInfo.repoViewPath}`} className="ml-2 font-bold">
+          <Link
+            href={`${repoInfo.repoViewPath}`}
+            className="ml-2 font-bold truncate"
+          >
             {repoInfo.repoViewPath}
           </Link>
         </div>
-        <p className="text-2xl font-semibold lg:text-3xl mb-5">
+        <p className="text-2xl font-semibold lg:text-3xl mb-5 truncate">
           {repoInfo.repoViewTitle}
         </p>
-        <p className="text-xl font-bold lg:text-2xl mb-2">
+        <p className="text-xl font-bold lg:text-2xl mb-2 truncate">
           {repoInfo.repoViewSubtitle}
         </p>
       </div>
@@ -61,8 +85,7 @@ export default function RepoInfo() {
 }
 
 const RepoInfoDiv = tw.div`
-  relative w-full min-h-20 h-1/4 flex flex-col lg:flex-row flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2 overflow-hidden
-  overflow-x-auto
+  relative w-full min-h-20 flex flex-col lg:flex-row flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2
   `;
 
 function calculateDaysBetweenDates(startDate: string, endDate: string) {

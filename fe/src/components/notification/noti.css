@@ -26,7 +26,7 @@
 
 .notification {
   position: fixed;
-  top: 10vh;
+  top: 12vh;
   left: 70%;
   width: 200px;
   text-align: center;
@@ -38,13 +38,13 @@
   padding: 10px 20px;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  opacity: 1;
+  opacity: 0.6;
 }
 
 .notification::after {
   content: "";
   position: absolute;
-  top: -20px; /* 삼각형을 상자 위로 이동 */
+  top: -15px; /* 삼각형을 상자 위로 이동 */
   right: 20%;
   transform: translateX(-50%);
   width: 0;
