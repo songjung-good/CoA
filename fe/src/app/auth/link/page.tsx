@@ -9,6 +9,9 @@ export default function LinkPage() {
   const serverUrl = process.env.NEXT_PUBLIC_URL_SERVER;
   const [githubToken, setGithubToken] = useState('');
   const [gitlabToken, setGitlabToken] = useState('');
+  const [solvedacNickName, setSolvedacNickName] = useState('');
+  const [codeforcesNickName, setCodeforcesNickName] = useState('');
+
   const axiosInstance = UseAxios();
 
   const handleGithubLogin = () => {
@@ -30,14 +33,6 @@ export default function LinkPage() {
         }
       });
       console.log('GitHub Token 저장 응답:', response.data);
-      // 응답에서 'Access-Token' 헤더를 꺼내기
-      const accessToken = response.headers['access-token']; // 헤더 이름은 소문자로 반환될 수 있습니다.
-      if (accessToken) {
-        // 로컬 스토리지에 토큰 저장
-        sessionStorage.setItem('githubAccessToken', accessToken);
-      } else {
-        console.log('github access 토큰 반환 에러');
-      }
     } catch (error) {
       console.error('GitHub Token 저장 중 오류가 발생했습니다:', error);  
     }
@@ -52,19 +47,32 @@ export default function LinkPage() {
         }
       });
       console.log('GitLab Token 저장 응답:', response.data);
-      // 응답에서 'Access-Token' 헤더를 꺼내기
-      const accessToken = response.headers['access-token']; // 헤더 이름은 소문자로 반환될 수 있습니다.
-      if (accessToken) {
-        // 로컬 스토리지에 토큰 저장
-        sessionStorage.setItem('gitlabAccessToken', accessToken);
-      } else {
-        console.log('gitlab access 토큰 반환 에러');
-      }
         } catch (error) {
       console.error('Gitlab Token 저장 중 오류가 발생했습니다:', error);  
     }
   };
 
+  // 토큰을 사용하여 GitHub API에 요청을 보내는 함수
+  const saveNickNameSolvedac = async () => {
+    try {
+      const response = await axiosInstance.post('/api/accountLink/solvedac', {
+        nickName : solvedacNickName
+      },
+      );
+    } catch (error) {
+      console.error('saveNickNameSolvedac 저장 중 오류가 발생했습니다:', error);  
+    }
+  };
+  const saveNickNameCodeforces = async () => {
+    try {
+      const response = await axiosInstance.post('/api/accountLink/codeforces', {
+        nickName : codeforcesNickName
+      },
+      );
+    } catch (error) {
+      console.error('saveNickNameCodeforces 저장 중 오류가 발생했습니다:', error);  
+    }
+  };
   return (
     <main>
       <h1>LinkPage</h1>
@@ -83,6 +91,7 @@ export default function LinkPage() {
           </div>
         </div>
       </div>
+
       <div>
         <div>GitLab</div>
         <div>
@@ -96,6 +105,25 @@ export default function LinkPage() {
             <button onClick={saveAccessTokenGitLab}>load token</button>
           </div>
         </div>
+      </div>
+
+      <div>
+        <div>solvedAC</div>
+        <input
+          type="text"
+          value={solvedacNickName}
+          onChange={e => setSolvedacNickName(e.target.value)}
+        />
+        <button onClick={saveNickNameSolvedac}>닉네임 연동하기</button>
+      </div>
+      <div>
+        <div>Codeforces</div>
+        <input
+          type="text"
+          value={codeforcesNickName}
+          onChange={e => setCodeforcesNickName(e.target.value)}
+        />
+        <button onClick={saveNickNameCodeforces}>닉네임 연동하기</button>
       </div>
     </main>
   );
