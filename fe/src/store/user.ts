@@ -1,13 +1,13 @@
 import { create } from "zustand";
 
 interface UserStore {
-  userName: string;
-  setUserName: (input: string) => void;
+  githubUserName: string;
+  setGithubUserName: (input: string) => void;
 }
 
 const userStore = create<UserStore>((set) => ({
-  userName: "Shin-3117",
-  setUserName: (input: string) => set({ userName: input }),
+  githubUserName: "Shin-3117",
+  setGithubUserName: (input: string) => set({ githubUserName: input }),
 }));
 
 export default userStore;
