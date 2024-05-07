@@ -82,8 +82,10 @@ const RunBarChart: React.FC = () => {
       left: 80,
       right: 28,
     };
+    const svgHeight = 400;
     const width = svgWidth - margin.left - margin.right;
-
+    const height = svgHeight - margin.top - margin.bottom;
+    svg.attr("height", svgHeight);
     const updateChart = (index: number) => {
       const newData = [...prevData, ...data[index].languages];
       // 데이터를 크기순으로 정렬
@@ -114,7 +116,7 @@ const RunBarChart: React.FC = () => {
       const y = d3
         .scaleBand()
         .domain(currentData.map((d) => d.language))
-        .range([0, 200])
+        .range([0, height])
         .padding(0.1);
 
       const yAxis = d3.axisLeft(y);
@@ -176,7 +178,7 @@ const RunBarChart: React.FC = () => {
   }, [data, currentIndex]);
 
   return (
-    <svg className="w-full h-[800px]" ref={svgRef}>
+    <svg className="w-full" ref={svgRef}>
       <g className="x-axis" />
       <g className="y-axis" />
     </svg>

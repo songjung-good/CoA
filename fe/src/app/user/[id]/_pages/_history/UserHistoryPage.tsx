@@ -1,11 +1,11 @@
 import HistoryCard from "../../_components/HistoryCard";
-import RunBarChart from "./_runbarchart/RunBarChart";
+import RunBarCard from "./_runbarchart/RunBarCard";
 
 export default function UserHistoryPage() {
   return (
     <>
       <HistoryCard />
-      <RunBarChart />
+      <RunBarCard />
     </>
   );
 }
