@@ -13,6 +13,7 @@ import com.dev101.coa.global.security.service.EncryptionUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,15 +39,9 @@ public class MemberController {
     public ResponseEntity<BaseResponse<Object>> saveAccessTokenGithub(@AuthenticationPrincipal Long memberId, @RequestHeader("Access-Token") String receiveToken) {
         try {
             Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
-            Code platCode = codeRepository.findByCodeId(1002L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+            HttpHeaders headers = getHttpHeaders(1002L, receiveToken, member);
 
-            // 멤버, 코드로 AccountLink 찾기
-            AccountLink accountLink = accountLinkRepository.findByMemberAndCode(member, platCode).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
-
-            // 외부 토큰 암호화
-            saveAccountLink(receiveToken, accountLink);
-
-            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
+            return ResponseEntity.status(HttpStatus.OK).headers(headers).body(new BaseResponse<>(StatusCode.SUCCESS));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse<>(StatusCode.ACCOUNT_LINK_FAIL));
@@ -59,18 +54,24 @@ public class MemberController {
         try {
 
             Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
-            Code platCode = codeRepository.findByCodeId(1003L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+            HttpHeaders headers = getHttpHeaders(1003L, receiveToken, member);
 
-            // 멤버, 코드로 AccountLink 찾기
-            AccountLink accountLink = accountLinkRepository.findByMemberAndCode(member, platCode).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
-
-            saveAccountLink(receiveToken, accountLink);
-
-            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
+            return ResponseEntity.status(HttpStatus.OK).headers(headers).body(new BaseResponse<>(StatusCode.SUCCESS));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse<>(StatusCode.ACCOUNT_LINK_FAIL));
         }
+    }
+
+    private HttpHeaders getHttpHeaders(long codeId, String receiveToken, Member member) throws Exception {
+        Code platCode = codeRepository.findByCodeId(codeId).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Token", receiveToken);
+        // 멤버, 코드로 AccountLink 찾기
+        AccountLink accountLink = accountLinkRepository.findByMemberAndCode(member, platCode).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+
+        saveAccountLink(receiveToken, accountLink);
+        return headers;
     }
 
     private void saveAccountLink(String receiveToken, AccountLink accountLink) throws Exception {

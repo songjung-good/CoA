@@ -6,11 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
@@ -39,12 +38,13 @@ public class SecurityConfig {
                             return config;
                             }))
                 // CSRF 설정 변경 +  스프링 시큐리티는 기본적으로 CSRF 보호를 활성화하여 POST, PUT, DELETE 같은 변경을 초래하는 HTTP 메소드에 대해 CSRF 토큰 검증을 요구합니다.
-                .csrf(csrf -> csrf.ignoringRequestMatchers(
-                        new AntPathRequestMatcher("/**") // 필요한지 모르겠으 ("/api/auth/*") 이건 일반 로그인 같은게 있을 때 필요한 듯?
-                        ).
-                        csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+//                .csrf(csrf -> csrf.ignoringRequestMatchers(
+//                        new AntPathRequestMatcher("/**") //
+//                        ).
+//                        csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 // false로 설정함으로써 JavaScript를 통해서도 쿠키에 접근할 수 있게 합니다.
                 // TODO CSRF 토큰을 읽어서 요청의 헤더에 포함시킬 필요가 있을 때 사용합니다.
+                .csrf(AbstractHttpConfigurer::disable)
 
                 // 요청 권한 설정 TODO 서버의(JWT) 인증 부분
                 .authorizeHttpRequests(auth -> auth
