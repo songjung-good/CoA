@@ -1,17 +1,43 @@
 package com.dev101.coa.domain.member.dto;
 
+import com.dev101.coa.domain.code.dto.CodeDto;
+import com.dev101.coa.domain.code.entity.Code;
+import com.dev101.coa.domain.member.entity.Member;
+import com.dev101.coa.domain.member.entity.MemberSkill;
+import com.dev101.coa.domain.member.repository.MemberSkillRepository;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class MemberCardDto {
     private Long memberId;
     private String memberNickName;
     private String memberImg;
     private String memberIntro;
-    private String[] skillList;
+    private List<CodeDto> skillList;
 
-    // Constructors, getters, setters, and additional methods
+    public static MemberCardDto createDto(Member member, List<MemberSkill> memberSkillList){
+        List<CodeDto> skillList = new ArrayList<>();
+        for (MemberSkill memberSkill : memberSkillList) {
+            Code code = memberSkill.getSkillCode();
+            skillList.add(CodeDto.builder()
+                    .codeId(code.getCodeId())
+                    .codeName(code.getCodeName())
+                    .build());
+        }
+
+        return MemberCardDto.builder()
+                .memberId(member.getMemberId())
+                .memberNickName(member.getMemberNickname())
+                .memberImg(member.getMemberImg())
+                .memberIntro(member.getMemberIntro())
+                .skillList(skillList)
+                .build();
+
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,6 +20,7 @@ public interface AccountLinkRepository extends JpaRepository<AccountLink, Long> 
 
     Optional<AccountLink> findByMemberAndCode(Member member, Code code);
 
+    List<AccountLink> findByAccountLinkNicknameContaining(String keyword);
 
     @Modifying
     @Transactional
