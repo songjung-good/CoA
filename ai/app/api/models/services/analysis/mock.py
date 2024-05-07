@@ -40,11 +40,8 @@ class MockAnalysisService(Generic[R], AnalysisService[R]):
         ]
 
         for step in steps:
-            if step.name == request.userName:   # for test
-                raise AnalysisException(step)
             await asyncio.sleep(3)
-            print(step.name)
-            self._update_status(dto, step)
+            self.__update_status(dto, step)
 
         new_dto = AnalysisDataDto(
             analysis_id=dto.analysis_id,
