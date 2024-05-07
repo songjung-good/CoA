@@ -539,6 +539,7 @@ public class RepoService {
         RepoCardDto repoCardDto = RepoCardDto.builder()
                 .repoViewPath(redisRepoPath)
                 .repoViewTitle(title)
+                .repoMemberCnt((Integer) redisData.get("repoMemberCnt"))
                 .repoStartDate(LocalDate.parse(redisData.get("repoStartDate").toString()))
                 .repoEndDate(LocalDate.parse(redisData.get("repoEndDate").toString()))
                 .isMine(isMine)
