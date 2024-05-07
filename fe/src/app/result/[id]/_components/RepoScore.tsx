@@ -59,7 +59,7 @@ export default function RepoScore() {
         pointLabels: {
           font: {
             size: 14, // Increase label font size
-            weight: "bold", // Make label font bold
+            weight: "bold" as const, // Make label font bold
           },
           color: "#000", // Optional: change the color of the labels
         },
@@ -68,6 +68,14 @@ export default function RepoScore() {
     plugins: {
       legend: {
         position: "top" as const,
+        labels: {
+          boxWidth: 0,
+          font: {
+            size: 16,
+            weight: "bold" as const,
+          },
+          color: "#fe764a",
+        },
       },
     },
     elements: {
