@@ -2,6 +2,8 @@ package com.dev101.coa.domain.member.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -11,7 +13,7 @@ public class MemberCardDto {
     private String memberNickName;
     private String memberImg;
     private String memberIntro;
-    private String[] skillList;
+    private List<String> skillList;
 
     // Constructors, getters, setters, and additional methods
 }

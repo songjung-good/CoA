@@ -1,5 +1,6 @@
 package com.dev101.coa.domain.search.controller;
 
+import com.dev101.coa.domain.member.dto.MemberCardDto;
 import com.dev101.coa.domain.repo.dto.RepoCardDto;
 import com.dev101.coa.domain.search.service.SearchService;
 import com.dev101.coa.global.common.BaseResponse;
@@ -23,6 +24,13 @@ public class SearchController {
     @GetMapping("/repos")
     public ResponseEntity<BaseResponse<List<RepoCardDto>>> searchRepoView(@RequestParam String keyword){
         List<RepoCardDto> result = searchService.searchRepoView(keyword);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
+
+    @GetMapping("/members")
+    public ResponseEntity<BaseResponse<List<MemberCardDto>>> searchMember(@RequestParam String keyword){
+        List<MemberCardDto> result = searchService.searchMember(keyword);
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
