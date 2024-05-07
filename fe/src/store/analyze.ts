@@ -9,10 +9,12 @@ interface AnalyzingState {
   isCompleted: boolean;  // 둘다 true 일때 분석 결과 확인 버튼 보여주기 false라면 분석 진행도 보여주기
   analyzingPercent: number; // 0 ~ 100
   analyzeId: number; // -1 : 분석 X, 0 ~ : 분석Id
+  showNotification: boolean;  // 알림 표시 상태
   startAnalysis: () => void;  // 분석 시작
   completeAnalysis: () => void; // 분석 완료
   updatePercent: (percent: number) => void;
   resetAnalysis: () => void;  // 분석 결과 확인
+  toggleNotification: (visible: boolean) => void;
 }
 
 // Next + Zustand + TypeScript + Persist 사용시 타입 에러 발생
@@ -29,11 +31,16 @@ const useAnalyzingStore = create<AnalyzingState, []>(
       isCompleted: false,
       analyzingPercent: 0,
       analyzeId: -1,
+      showNotification: false,  // 초기 알림 상태는 숨김
 
       startAnalysis: () => set({ isAnalyzing: true, isCompleted: false }), // 분석 시작
-      completeAnalysis: () => set({ isAnalyzing: true, isCompleted: true }), // 분석 완료
+      completeAnalysis: () => {
+        set({ isAnalyzing: true, isCompleted: true });
+        set({ showNotification: true });  // 분석 완료 시 알림 표시
+      }, // 분석 완료
       updatePercent: (percent: number) => set({ analyzingPercent: percent }), // 진행도 갱신
       resetAnalysis: () => set({ isAnalyzing: false, isCompleted: false, analyzingPercent: 0, analyzeId: -1 }), // 분석상태 초기화
+      toggleNotification: (visible: boolean) => set({ showNotification: visible }),
     }),
     {
       name: 'analyzing-store',  // 스토어의 이름 (로컬 스토리지에서 이 이름으로 저장됩니다)
