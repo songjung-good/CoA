@@ -1,5 +1,6 @@
 "use client";
 
+import BellIcon from "@/icons/BellIcon";
 import userStore from "@/store/user";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,9 +9,10 @@ export default function AuthButton({ hasJWT }: { hasJWT: boolean }) {
   const authUserName = userStore((state) => state.AuthUserName);
   const userImage = userStore((state) => state.userImage);
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 items-center">
       {hasJWT ? (
         <>
+          <BellIcon />
           <Link href={`/user/${authUserName}`}>
             <div
               style={{

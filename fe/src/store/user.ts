@@ -16,7 +16,7 @@ const userStore = create<UserStore>((set) => ({
   setGithubUserName: (input: string) => set({ githubUserName: input }),
   gitlabUserName: "qsc3117",
   setGitlabUserName: (input: string) => set({ gitlabUserName: input }),
-  AuthUserName: "auth username",
+  AuthUserName: "Shin-3117",
   setAuthUserName: (input: string) => set({ AuthUserName: input }),
   userImage: "/image/chun.png",
   setUserImage: (input: string) => set({ userImage: input }),
