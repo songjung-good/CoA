@@ -1,7 +1,9 @@
+// RepoCard 컴포넌트는 프로젝트 카드를 나타내는 컴포넌트입니다.
+
 import React, { useState } from 'react';
 import tw from 'tailwind-styled-components';
 // 임시데이터
-import repocardDTO from '@/components/repocard/repocardDTO';
+import repocardDTO from '@/components/maincomponents/repocardDTO';
 
 interface RepoCardProps {
   data: {
@@ -102,22 +104,22 @@ const CardOverlay = tw.div`
   flex
   items-center
   justify-center
-  z-10
+  z-2
   pointer-events-none
 `;
 
 const Card = tw.div`
   w-[25rem] 
-  h-[20rem] 
+  h-[20rem]
   border
-  border-appYellow
+  border-appGrey2
   rounded-lg 
   m-2.5 
   flex
   flex-col
   p-4
-  bg-appBlue4
   justify-between
+  hover:border-appBlue1
 `;
 
 const AvatarWrapper = tw.div`
