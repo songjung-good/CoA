@@ -23,13 +23,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // 얘는 �
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
+            System.out.println("request = " + request.getHeader("JWT"));
+            System.out.println("request = " + request.getHeader("Authorization"));
             String jwt = getJwtFromRequest(request);
+            System.out.println("jwt = " + jwt);
 
             if (jwt != null && jwtTokenProvider.validateToken(jwt)) {
-                Long userId = jwtTokenProvider.getMemberIdFromJWT(jwt);
+                Long memberId = jwtTokenProvider.getMemberIdFromJWT(jwt);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userId, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                        memberId, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication); // 토큰을 검증하며 유효한 토큰에 대해 사용자 인증 정보를 SecurityContext에 설정합니다.
@@ -41,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // 얘는 �
         filterChain.doFilter(request, response);
     }
 
-    private String getJwtFromRequest(HttpServletRequest request) {
+    public String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);

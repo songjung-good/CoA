@@ -25,7 +25,9 @@ public class JwtAuthenticationCookieFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
+
         String jwt = extractJwtFromCookie(request); // 이 뒤로는 똑같은거 아닌가? TODO 여기 뒤로만 비교하면 맞추면 듯.
+
         if (jwt != null && jwtTokenProvider.validateToken(jwt)) {
 //            UsernamePasswordAuthenticationToken authentication = jwtTokenProvider.getAuthentication(jwt);
 

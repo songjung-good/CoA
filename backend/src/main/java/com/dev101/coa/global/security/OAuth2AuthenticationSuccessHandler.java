@@ -13,6 +13,7 @@ import com.dev101.coa.global.security.info.GitLabUserInfo;
 import com.dev101.coa.global.security.info.SocialUserInfo;
 import com.dev101.coa.global.security.oauth2user.CustomOAuth2User;
 import com.dev101.coa.global.security.oauth2user.platOAuth2User;
+import com.dev101.coa.global.security.service.EncryptionUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,24 +44,25 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final MemberRepository memberRepository;
     private final AccountLinkRepository accountLinkRepository;
     private final CodeRepository codeRepository;
+    private final EncryptionUtils encryptionUtils;
 
     @Value("${app.jwt.expiration-ms}")
     private int jwtExpirationInMs;
-    @Override // 요청 온것 , 보낼 반환 , 인증 과정에서 반환한 객체
+    @Override // 요청 온것 , 보낼 반환 , 인증 과정에서 반환한 객체 ( 인증 정보 저장은 의미 없는거 아닌가? )
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
 
         Long memberId = getMemberIdFromRequest(request);
         Object authe = authentication.getPrincipal();
 
+
         if (memberId != 0 && authe instanceof platOAuth2User) {
             Optional<Member> member = memberRepository.findByMemberId(memberId);
             Member linkMember = member.orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
-            makeAccountLink(linkMember, authentication);
-
             try {
+                makeAccountLink(linkMember, authentication);
                 String requestDomain = determineRedirectUrl(request);
-                response.sendRedirect(requestDomain + "/");
+                response.sendRedirect(requestDomain + "/auth/link");
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -75,7 +77,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             // 쿠키에 토큰 설정
             Cookie jwtCookie = new Cookie("JWT", token);
             jwtCookie.setHttpOnly(true);
-            jwtCookie.setSecure(true); // HTTPS에서만 쿠키를 전송
+            jwtCookie.setSecure(true);
             jwtCookie.setPath("/");
             jwtCookie.setMaxAge(jwtExpirationInMs);
             response.addCookie(jwtCookie);
@@ -117,6 +119,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private Long getMemberIdFromRequest(HttpServletRequest request) {
+        // 여기선 request에서 쿠키로 잘된다.
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -125,6 +128,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     try {
                         return jwtTokenProvider.getMemberIdFromJWT(jwt);
                     } catch (Exception e) {
+                        System.out.println("e = " + e);
                         System.out.println("Invalid JWT or Member not found");
                     }
                 }
@@ -136,8 +140,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 
     // 기존 회원에게 새 소셜 계정 연동
-    public void makeAccountLink(Member existingMember, Authentication authentication) {
-        
+    public void makeAccountLink(Member existingMember, Authentication authentication) throws Exception {
+
+        encryptionUtils.init();
         platOAuth2User oAuth2User = (platOAuth2User) authentication.getPrincipal();
         Code platCode = oAuth2User.getPlatCode();
         Map<String, Object> oAuth2UserAttribute = oAuth2User.getAttributes();
@@ -145,6 +150,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient(
                 oauthToken.getAuthorizedClientRegistrationId(), oauthToken.getName());
+
         String accessTokenValue = client.getAccessToken().getTokenValue();
         OAuth2RefreshToken refreshToken = client.getRefreshToken();
 
@@ -153,6 +159,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             refreshTokenValue = refreshToken.getTokenValue();
         }
 
+        String encryptedAccessToken = encryptionUtils.encrypt(accessTokenValue);
+        String encryptedRefreshToken = encryptionUtils.encrypt(refreshTokenValue);
+
         SocialUserInfo userInfo = null;
 
         if (platCode.equals(codeRepository.findByCodeId(1002L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND)))) {
@@ -160,13 +169,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         } else if (platCode.equals(codeRepository.findByCodeId(1003L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND)))) {
             userInfo = new GitLabUserInfo(oAuth2UserAttribute);
         }
-//
+
 //        System.out.println("userInfo = " + userInfo);
 //        System.out.println("userInfo = " + userInfo.getUsername());
         String userName = userInfo != null ? userInfo.getUsername() : null;
 
         // 기존에 연동된 계정인지 조회
-        AccountLink accountLink = accountLinkRepository.findByMemberAndCode(existingMember, platCode);
+        AccountLink accountLink = accountLinkRepository.findByMemberAndCode(existingMember, platCode).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
 
         if (accountLink == null) {
             // 연동된 정보가 없으면 새로 빌드하여 저장 TODO 정보 넣어주기
@@ -174,13 +183,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .member(existingMember)
                     .code(platCode)
                     .accountLinkNickname(userName)
-                    .accountLinkToken(accessTokenValue)
-                    .accountLinkRefreshToken(refreshTokenValue)
+                    .accountLinkToken(encryptedAccessToken)
+                    .accountLinkRefreshToken(encryptedRefreshToken)
                     .build();
             accountLinkRepository.save(accountLink);
         } else {
             // 이미 연동된 정보가 있다면, 닉네임 / 토큰 / 리프레시 토큰 갱신
-            accountLinkRepository.updateAccountLinkFields(accountLink.getAccountLinkId() ,userName ,accessTokenValue ,refreshTokenValue);
+            accountLink.updateAccountLinkFields(accountLink.getAccountLinkId() ,userName ,encryptedAccessToken ,encryptedRefreshToken);
+            accountLinkRepository.save(accountLink);
         }
     }
 

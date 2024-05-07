@@ -9,13 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 public interface AccountLinkRepository extends JpaRepository<AccountLink, Long> {
     Boolean existsAccountLinkByMemberAndAccountLinkId(Member member, Long accountLinkId);
 
     Boolean existsAccountLinkByMemberAndAccountLinkNickname(Member member, String accountLinkNickname);
 
-    AccountLink findByMemberAndCode(Member member, Code code);
+    Optional<AccountLink> findByMemberAndCode(Member member, Code code);
 
 
     @Modifying

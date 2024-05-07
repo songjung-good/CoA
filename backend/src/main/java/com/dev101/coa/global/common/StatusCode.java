@@ -22,6 +22,8 @@ public enum StatusCode {
     // Member : 600
     COOKIE_NOT_FOUND(false, 600, "쿠키가 존재하지 않습니다."),
     MEMBER_NOT_EXIST(false, 601, "사용자가 존재하지 않습니다."),
+    ACCOUNT_LINK_NOT_EXIST(false, 602, "계정 연동 정보가 없습니다."),
+    ACCOUNT_LINK_FAIL(false, 603, "계정 연동 실패"),
 
     // OAuth : 700
     JWT_KEY_ERROR(false, 701, "JWT 토큰 에러"),
