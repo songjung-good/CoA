@@ -15,8 +15,8 @@ export default function UserPage({ params }: { params: { id: string } }) {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
-  const userName = userStore((state) => state.userName);
-  const setUserName = userStore((state) => state.setUserName);
+  const userName = userStore((state) => state.githubUserName);
+  const setUserName = userStore((state) => state.setGithubUserName);
   const setRepos = repositoryStore((state) => state.setRepos);
 
   useEffect(() => {

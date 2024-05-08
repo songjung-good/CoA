@@ -1,30 +1,28 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from "axios";
 
 const serverUrl = process.env.NEXT_PUBLIC_URL_SERVER;
 
 const UseAxios = (): AxiosInstance => {
-
   const axiosInstance = axios.create({
     baseURL: serverUrl,
     withCredentials: true, // 쿠키를 담겠다는 의미
   });
-    
-    axiosInstance.interceptors.request.use(
-      (config) => {
-        // var jwtToken = getCookie('JWT')
-        // config.headers['Authorization'] = `Bearer ${jwtToken}`; // 인증 정보를 헤더에 추가
-        return config;
-      },
-      async (error) => {
-        console.log(error);
-      }
-    );
+
+  axiosInstance.interceptors.request.use(
+    (config) => {
+      // var jwtToken = getCookie('JWT')
+      // config.headers['Authorization'] = `Bearer ${jwtToken}`; // 인증 정보를 헤더에 추가
+      return config;
+    },
+    async (error) => {
+      console.log(error);
+    },
+  );
 
   // axiosInstance.interceptors.response.use(
   //   (response) => {
   //     return response;
   //   },
-
 
   //   async (error) => {
   //     const originalRequest = error.config;
@@ -55,23 +53,23 @@ const UseAxios = (): AxiosInstance => {
   //     return Promise.reject(error);
   //   }
   // );
-  
-	// 쿠키에서 지정된 이름의 값을 읽는 함수
-	function getCookie(name: string | any[]) {
-	    let cookieValue = null;
-	    if (document.cookie && document.cookie !== '') {
-	        const cookies = document.cookie.split(';');
-	        for (let i = 0; i < cookies.length; i++) {
-	            let cookie = cookies[i].trim();
-	            // 이 쿠키의 이름이 요청한 이름과 일치하는지 확인
-	            if (cookie.startsWith(name + '=')) {
-	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-	                break;
-	            }
-	        }
-	    }
-	    return cookieValue;
-	}
+
+  // 쿠키에서 지정된 이름의 값을 읽는 함수
+  function getCookie(name: string | any[]) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        // 이 쿠키의 이름이 요청한 이름과 일치하는지 확인
+        if (cookie.startsWith(name + "=")) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
 
   return axiosInstance;
 };

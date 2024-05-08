@@ -5,7 +5,7 @@ import IsStar from "./IsStar";
 import userStore from "@/store/user";
 
 export default function UserCard() {
-  const userName = userStore((state) => state.userName);
+  const userName = userStore((state) => state.githubUserName);
   return (
     <section className="card flex flex-col gap-4 ">
       <div className="flex flex-row gap-4">

@@ -9,7 +9,7 @@ import ChartCalendar from "./CalendarChart";
 
 const CalendarCard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const userName = userStore((state) => state.userName);
+  const userName = userStore((state) => state.githubUserName);
 
   // github에서 contributions(잔디) 가져오기
   const [totalContribution, setTotalContribution] = useState<

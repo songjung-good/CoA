@@ -1,13 +1,17 @@
 import Image from "next/image";
 import SearchBar from "./SearchBar";
 import LoadingAnalyzing from "./LoadingAnalyzing";
-import Notification from "./notification/Notification";
 import Link from "next/link";
-
+import AuthButton from "./AuthButton";
+import { cookies } from "next/headers";
 export default function Header() {
+  const cookieStore = cookies();
+  // cookie 존재 여부를 boolean으로 return
+  const hasJWT = cookieStore.has("JWT");
+
   return (
-    <header className="p-4 flex flex-row justify-between items-center min-h-24">
-      <Link href="/">
+    <header className="p-4 flex flex-row justify-between items-center">
+      <Link href="/main">
         <div className="flex flex-row items-center">
           <Image
             src="/image/logo48.png"
@@ -29,8 +33,7 @@ export default function Header() {
       </Link>
       <SearchBar />
       <LoadingAnalyzing />
-      <Notification />
-      <Link href="/auth/login">로그인</Link>
+      <AuthButton hasJWT={hasJWT} />
     </header>
   );
 }
