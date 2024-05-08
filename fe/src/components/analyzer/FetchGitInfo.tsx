@@ -20,7 +20,7 @@ interface Contributor {
 }
 
 // GitHub인지 GitLab인지 판단하여 정보 요청
-const FetchGitInfo = async (inputValue: string, setUserData: Function, GithubUser: string, GitlabUser: string) => {
+const FetchGitInfo = async (inputValue: string, setUserData: Function, GitlabUser: string) => {
 
   let gitInfo = ExtractUserInfo(inputValue);
 

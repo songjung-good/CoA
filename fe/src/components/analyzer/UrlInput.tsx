@@ -39,8 +39,8 @@ const UrlInput = () => {
   const [inputValue, setInputValue] = useState('');
   const [userData, setUserData] = useState<ApiResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const GithubUser = useStore(userStore).userName;
-  const GitlabUser = useStore(userStore).gitlabName;
+  const GitlabUser = useStore(userStore).gitlabUserName;
+;
 
   // 입력 값 변경 시 핸들러
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +56,7 @@ const UrlInput = () => {
 
   // FetchGithubInfo 컴포넌트를 불러와서 사용
   const fetchGitInfo = async () => {
-    FetchGitInfo(inputValue, setUserData, GithubUser, GitlabUser);
+    FetchGitInfo(inputValue, setUserData, GitlabUser);
     setIsModalOpen(true);
   };
 

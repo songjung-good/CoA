@@ -7,3 +7,4 @@
 1. src\components\analyzer\FetchGitInfo.tsx
 user의 gitlab과 github를 추후 수정이 예정되어있어서 변수 확인 해야함
 
+2. src\components\analyzer\UrlInput.tsx
