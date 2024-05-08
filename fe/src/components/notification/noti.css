@@ -1,0 +1,55 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.notification-fade-in {
+  animation: fadeIn 1.5s forwards;
+}
+
+.notification-fade-out {
+  animation: fadeOut 3s forwards;
+}
+
+.notification {
+  position: fixed;
+  top: 12vh;
+  left: 70%;
+  width: 200px;
+  text-align: center;
+  transform: translateX(-50%);
+  z-index: 1000;
+  font-weight: bold;
+  background-color: blue;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  opacity: 0.6;
+}
+
+.notification::after {
+  content: "";
+  position: absolute;
+  top: -15px; /* 삼각형을 상자 위로 이동 */
+  right: 20%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent blue transparent;
+}

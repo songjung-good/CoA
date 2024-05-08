@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter, useParams } from "next/navigation";
 import tw from "tailwind-styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 // store
@@ -11,14 +12,14 @@ import "@/app/result/[id]/_components/result.css";
 
 // 컴포넌트 import
 import ResultCommit from "@/app/result/[id]/_components/ResultCommit.tsx";
-import ResultContribution from "@/app/result/[id]/_components/ResultContribution.tsx";
+// import ResultContribution from "@/app/result/[id]/_components/ResultContribution.tsx"; 폐기했습니다
 import ResultReadme from "@/app/result/[id]/_components/ResultReadme.tsx";
 import ResultScore from "@/app/result/[id]/_components/ResultScore.tsx";
 
 export default function ResultTab() {
   const [tabIndex, setTabIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(0);
-  const { isOwn } = useResultStore((state) => state);
+  const isMine = useResultStore((state) => state.result.repoCardDto.isMine);
 
   useEffect(() => {
     console.log(`현재 선택된 탭: ${tabIndex}`);
@@ -29,14 +30,19 @@ export default function ResultTab() {
     setLastIndex(tabIndex);
   };
 
+  const router = useRouter();
+  const params = useParams();
+
+  const handleEditButton = () => {
+    const { id } = params;
+
+    router.push(`/result/${id}/edit`);
+    console.log(useResultStore.getState().result.repoCardDto.memberNickname);
+  };
+
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";
 
-  const tabComponents = [
-    <ResultReadme />,
-    <ResultContribution />,
-    <ResultCommit />,
-    <ResultScore />,
-  ];
+  const tabComponents = [<ResultReadme />, <ResultCommit />, <ResultScore />];
 
   return (
     <div className="w-full h-full">
@@ -48,31 +54,25 @@ export default function ResultTab() {
           >
             README
           </TabButtonLeft>
-          <TabButton
-            onClick={() => handleTab(1)}
-            className={`${tabIndex === 1 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
-          >
-            기여도
-          </TabButton>
-          {isOwn ? (
+          {isMine ? (
             <TabButton
-              onClick={() => handleTab(2)}
-              className={`${tabIndex === 2 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+              onClick={() => handleTab(1)}
+              className={`${tabIndex === 1 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
             >
               커밋분석
             </TabButton>
           ) : (
             <TabButtonRight
-              onClick={() => handleTab(2)}
-              className={`${tabIndex === 2 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+              onClick={() => handleTab(1)}
+              className={`${tabIndex === 1 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
             >
               커밋분석
             </TabButtonRight>
           )}
-          {isOwn ? (
+          {isMine ? (
             <TabButtonRight
-              onClick={() => handleTab(3)}
-              className={`${tabIndex === 3 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
+              onClick={() => handleTab(2)}
+              className={`${tabIndex === 2 ? "border-appBlue1 text-appBlue1" : ""} transition duration-300 ease-in-out`}
             >
               레포점수
             </TabButtonRight>
@@ -87,7 +87,7 @@ export default function ResultTab() {
         </CSSTransition>
       </TransitionGroup>
       <div className="flex justify-evenly mt-10">
-        {isOwn && <button>저장 후 수정</button>}
+        {isMine && <button onClick={handleEditButton}>저장 후 수정</button>}
         <Link href="/main">
           <button>홈으로</button>
         </Link>
@@ -97,7 +97,10 @@ export default function ResultTab() {
 }
 
 const TabButton = tw.button`
-border-2 border-black px-5 py-2
+  border-2 border-black px-3 py-2 text-sm
+  sm:px-4 sm:text-sm
+  md:px-4 md:text-base
+  lg:px-4 lg:text-lg
 `;
 
 const TabButtonLeft = tw(TabButton)`

@@ -1,11 +1,12 @@
 import Image from "next/image";
 import SearchBar from "./SearchBar";
 import LoadingAnalyzing from "./LoadingAnalyzing";
+import Notification from "./notification/Notification";
 import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="p-4 flex flex-row justify-between items-center">
+    <header className="p-4 flex flex-row justify-between items-center min-h-24">
       <Link href="/">
         <div className="flex flex-row items-center">
           <Image
@@ -28,6 +29,7 @@ export default function Header() {
       </Link>
       <SearchBar />
       <LoadingAnalyzing />
+      <Notification />
       <Link href="/auth/login">로그인</Link>
     </header>
   );
