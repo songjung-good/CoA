@@ -23,23 +23,20 @@ interface MyRepoProps {
 const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [notLink, setNotLink] = useState<boolean>(false);
   const axiosInstance = UseAxios();
 
   useEffect(() => {
     const fetchRepos = async () => {
       try {
         const response = await axiosInstance.get(`api/external/github/repos/${userID}`);
-
-        console.log(response.status)
-        console.log(response.data)
-        if (response.data.code === 303) {
-          alert("본인 여부(접근 권한) 및 토큰을 확인해주세요.")
-        } else if (response.data.code === 603) {
-          // TODO 여기에 계정연동이 안됐다는 처리 해야함.
-        }else if (response.data.code == 200) {
-          setRepos(response.data);
+        
+        if (response === 602) {
+          setNotLink(true)
+          return
         }
+        setRepos(JSON.parse(response.data.result));
+        
         setLoading(false);
       } catch (error) {
         console.error('해당 요청에 문제가 생겼습니다. : ', error);
@@ -52,6 +49,10 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
       // Cleanup
     };
   }, [userID]);
+
+  if (notLink) {
+    return <div>계정을 연동해주세요.</div>
+  }
 
   if (loading) {
     return <Loading>목록을 받아오는 중 입니다.</Loading>;
