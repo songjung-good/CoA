@@ -72,4 +72,5 @@ public class RepoView extends BaseEntity {
     public void updateCodeList(List<RepoViewSkill> repoViewSkillList){
         this.repoViewSkillList = repoViewSkillList;
     }
+
 }

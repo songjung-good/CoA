@@ -64,9 +64,13 @@ public class RepoService {
     private final WebClient webClient;
 
     public void editReadme(Long memberId, Long repoViewId, EditReadmeReqDto editReadmeReqDto) {
+        System.out.println("2222222222222222222");
         // 레포 뷰 존재 유무 확인
         RepoView repoView = repoViewRepository.findByRepoViewId(repoViewId)
                 .orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
+
+        // TODO: 지워라
+        memberId = 7L;
 
         // 로그인 사용자 예외 처리 (작성자 확인)
         if (memberId != repoView.getMember().getMemberId()) {
@@ -112,10 +116,12 @@ public class RepoService {
         });
 
 
-        // 레포 뷰 저장
+        // 레포 뷰, 레포 저장
         repoView.updateReadme(editReadmeReqDto.getRepoViewReadme());
         repoView.updateCommentList(commentList);
         repoView.updateCodeList(repoViewSkillList);
+        repoView.getRepo().updateRepoMemberCnt(editReadmeReqDto.getRepoMemberCnt());
+        repoRepository.save(repoView.getRepo());
         repoViewRepository.save(repoView);
     }
 
