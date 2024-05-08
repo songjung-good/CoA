@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 
 import useCommonCodeStore from "@/store/commoncode";
+import useResultStore from "@/store/result";
 import UseAxios from "@/api/common/useAxios";
 
 // Props 타입 정의
@@ -18,9 +19,44 @@ interface SkillOption {
 
 const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   const { response } = useCommonCodeStore.getState();
-  const [stacks, setStacks] = useState<string[]>([]);
   const [selectedStack, setSelectedStack] = useState("");
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
+
+  // 결과 데이터
+  const { result } = useResultStore((state) => state);
+  const [title, setTitle] = useState<string>(result.repoCardDto.repoViewTitle);
+  const [subtitle, setSubtitle] = useState<string>(
+    result.repoCardDto.repoViewSubtitle,
+  );
+  const [startDate, setStartDate] = useState<string>(
+    result.repoCardDto.repoStartDate,
+  );
+  const [endDate, setEndDate] = useState<string>(
+    result.repoCardDto.repoEndDate,
+  );
+  const [memberCount, setMemberCount] = useState<number>(
+    result.repoCardDto.repoMemberCnt,
+  );
+  const [stacks, setStacks] = useState<string[]>(
+    result.repoCardDto.skillList.map((skill) => skill.codeName),
+  );
+  // 결과 데이터
+
+  useEffect(() => {
+    setTitle(result.repoCardDto.repoViewTitle);
+    setSubtitle(result.repoCardDto.repoViewSubtitle);
+    setStartDate(result.repoCardDto.repoStartDate);
+    setEndDate(result.repoCardDto.repoEndDate);
+    setMemberCount(result.repoCardDto.repoMemberCnt);
+    setStacks(result.repoCardDto.skillList.map((skill) => skill.codeName));
+  }, [result]);
+
+  const handleDateChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    setDate: React.Dispatch<React.SetStateAction<string>>,
+  ) => {
+    setDate(event.target.value);
+  };
 
   useEffect(() => {
     // 스킬 목록 초기화
@@ -64,6 +100,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
             </label>
             <input
               type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               id="title"
               className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full py-2.5 px-4"
               placeholder="제목을 입력하세요."
@@ -79,6 +117,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
             </label>
             <input
               type="text"
+              value={subtitle}
+              onChange={(e) => setSubtitle(e.target.value)}
               id="subtitle"
               className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full py-2.5 px-4"
               placeholder="부제목을 입력하세요."
@@ -96,6 +136,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="date"
                 id="startDate"
+                value={startDate}
+                onChange={(e) => handleDateChange(e, setStartDate)}
                 className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full py-2.5 px-4"
                 required
               />
@@ -110,6 +152,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="date"
                 id="endDate"
+                value={endDate}
+                onChange={(e) => handleDateChange(e, setEndDate)}
                 className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full py-2.5 px-4"
                 required
               />
@@ -125,6 +169,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
             <input
               type="number"
               id="memberCount"
+              value={memberCount}
+              onChange={(e) => setMemberCount(Number(e.target.value))}
               className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full py-2.5 px-4"
               placeholder="인원 수를 입력하세요"
               min="1"
