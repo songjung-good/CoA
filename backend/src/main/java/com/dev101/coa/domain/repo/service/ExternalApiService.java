@@ -58,9 +58,21 @@ public class ExternalApiService {
 
     }
 
-    public String fetchGitlabMembers(String projectName, String userName, String accessToken) {
+    public String fetchGitlabProjects(String userName, String accessToken) {
         return webClient.get()
                 .uri("https://lab.ssafy.com/api/v4/projects/{userName}/users", userName)
+                .headers(headers -> headers.setBearerAuth(accessToken))
+                .retrieve()
+                .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
+                .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitHub repos fetching")))
+                .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub repos fetching")))
+                .bodyToMono(String.class)
+                .block();
+    }
+
+    public String fetchGitlabMembers(String projectId, String accessToken) {
+        return webClient.get()
+                .uri("https://lab.ssafy.com/api/v4/projects/${projectId}/members", projectId)
                 .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))

@@ -10,8 +10,6 @@ import com.dev101.coa.global.common.BaseResponse;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import com.dev101.coa.global.security.service.EncryptionUtils;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,30 +31,29 @@ public class ExternalController {
     private final EncryptionUtils encryptionUtils;
 
     @GetMapping("/github/repos/{userName}")
-    public ResponseEntity<BaseResponse<Object>> getGithubRepos(@AuthenticationPrincipal Long currentId, @PathVariable("userName") String userName) throws Exception {
+    public ResponseEntity<BaseResponse<String>> getGithubRepos(@AuthenticationPrincipal Long currentId, @PathVariable("userName") String userName) throws Exception {
         Member member = memberRepository.findByMemberId(currentId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
         AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
         String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
         String result = externalApiService.fetchGithubReposSync(userName, accessToken);
 
-        JsonArray jsonArray = JsonParser.parseString(result).getAsJsonArray();
-        System.out.println("jsonArray = " + jsonArray.get(0));
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(jsonArray.get(0).getAsJsonObject()));
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
 
     @GetMapping("/gitlab/repos/{userName}")
-    public ResponseEntity<BaseResponse<Object>> getGitlabRepos(@AuthenticationPrincipal Long currentId, @PathVariable("userName") String userName) throws Exception {
+    public ResponseEntity<BaseResponse<String>> getGitlabRepos(@AuthenticationPrincipal Long currentId, @PathVariable("userName") String userName) throws Exception {
         Member member = memberRepository.findByMemberId(currentId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
         AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
         String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
 
         String result = externalApiService.fetchGitlabRepos(userName, accessToken);
+
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
     @GetMapping("/github/members/{userName}/{projectName}")
-    public ResponseEntity<BaseResponse<Object>> getGitHubMembers(@AuthenticationPrincipal Long currentId, @PathVariable("userName") String userName, @PathVariable("projectName") String projectName) throws Exception {
+    public ResponseEntity<BaseResponse<String>> getGitHubMembers(@AuthenticationPrincipal Long currentId, @PathVariable("userName") String userName, @PathVariable("projectName") String projectName) throws Exception {
         Member member = memberRepository.findByMemberId(currentId).orElseThrow(()-> new BaseException(StatusCode.MEMBER_NOT_EXIST));
         AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
         String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
@@ -65,13 +62,23 @@ public class ExternalController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
-    @GetMapping("/gitlab/members/{userName}/{projectName}")
-    public ResponseEntity<BaseResponse<Object>> getGitlabMembers(@AuthenticationPrincipal Long currentId, @PathVariable("userName") String userName, @PathVariable("projectName") String projectName) throws Exception {
+    @GetMapping("/gitlab/projects/{userName}")
+    public ResponseEntity<BaseResponse<String>> getGitlabUserId(@AuthenticationPrincipal Long currentId, @PathVariable("userName") String userName) throws Exception {
         Member member = memberRepository.findByMemberId(currentId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
         AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
         String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
 
-        String result = externalApiService.fetchGitlabMembers(userName, projectName,accessToken);
+        String result = externalApiService.fetchGitlabProjects(userName,accessToken);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
+
+    @GetMapping("/gitlab/members/{projectId}")
+    public ResponseEntity<BaseResponse<String>> getGitlabMembers(@AuthenticationPrincipal Long currentId, @PathVariable("projectId") String projectId) throws Exception {
+        Member member = memberRepository.findByMemberId(currentId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+        String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
+
+        String result = externalApiService.fetchGitlabMembers(projectId, accessToken);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
