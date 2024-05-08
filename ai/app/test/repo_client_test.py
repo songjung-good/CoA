@@ -1,4 +1,4 @@
-from app.api.models.repo_client import GithubClient, GitLabClient
+from api.models.services.client.__init__ import GithubClient, GitLabClient
 import asyncio
 from dotenv import load_dotenv
 import os
@@ -10,7 +10,7 @@ async def test_github():
         access_token=os.getenv('GITHUB_ACCESS_TOKEN')
     )
 
-    result = await client.load("DoubleDeltas")
+    result = await client.load_commits("DoubleDeltas")
     print('github complete:')
     print(result)
 
@@ -22,7 +22,7 @@ async def test_gitlab():
         private_token=os.getenv('GITLAB_PRIVATE_TOKEN')
     )
 
-    result = await client.load("구본웅")
+    result = await client.load_commits("구본웅")
     print('gitlab complete', len(result))
 
 if __name__ == '__main__':

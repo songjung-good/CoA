@@ -45,9 +45,6 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):
 
             # total_commit_cnt, personal_commit_cnt 세기
 
-            # AI Context 생성
-            # ai_context = AiContext(request, content, commits)
-
             # AI 서비스 Lock 대기
             self.__update_status(dto, AnalysisStatus.WAITING_AI)
             # TODO ...
@@ -56,7 +53,7 @@ class AnalysisService(Generic[R], metaclass=ABCMeta):
             # AI에 학습 시키기
             self.__update_status(dto, AnalysisStatus.LEARNING_DATA)
             # TODO ...
-            # ai_service.learn(ai_context)
+            # ai_service.learn(content, commits)
 
             # 대화해서 학습 결과 긁어오기
             self.__update_status(dto, AnalysisStatus.GENERATING_README)
