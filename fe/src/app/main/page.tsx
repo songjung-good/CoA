@@ -20,8 +20,8 @@ import RepoCard from '@/components/maincomponents/RepoCard';
 import userStore from '@/store/user';
 
 const MainPage: React.FC = () => {
-  const github = useStore(userStore).userName;
-  const gitlab = useStore(userStore).gitlabName;
+  const github = useStore(userStore).githubUserName;
+  const gitlab = useStore(userStore).gitlabUserName;
 
   return (
     <Main>
