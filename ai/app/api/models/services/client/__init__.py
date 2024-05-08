@@ -1,19 +1,38 @@
 from abc import *
 from abc import abstractmethod
-from typing import Any
+from typing import Any, TypeVar, Generic
+
+from api.models.code import AnalysisStatus
+from api.models.dto import AnalysisRequest
+
+R = TypeVar('R', bound=AnalysisRequest, covariant=True)
 
 
-class RepoClient(metaclass=ABCMeta):
+class RepoClient(Generic[R], metaclass=ABCMeta):
     """
     레포지토리에서 파일, 커밋 데이터를 가져오기 위한 클라이언트의 기본 클래스입니다.
     """
+
+    @abstractmethod
+    def __init__(self, request: R):
+        pass
+
+    @abstractmethod
+    async def check_loadability(self, request: AnalysisRequest) -> AnalysisStatus | None:
+        """
+        레포 API로부터 데이터를 가져올 수 있을 지 미리 확인합니다.
+
+        Returns:
+            레포 API에서 데이터를 가져올 수 없는 원인으로 추측되는 상태, 없으면 ``None``.
+        """
+        pass
 
     @abstractmethod
     async def load(self, author_name: str) -> dict[Any, Any]:
         pass
 
 
-class RestRepoClient(RepoClient, metaclass=ABCMeta):
+class RestRepoClient(Generic[R], RepoClient[R], metaclass=ABCMeta):
     """
     REST API를 통해 레포에서 파일, 커밋 데이터를 가져오기 위한 클라이언트의 기본 클래스입니다.
     """

@@ -11,7 +11,7 @@ router = APIRouter(prefix='/analysis')
 def post_github(
         request: GithubAnalysisRequest,
         background_tasks: BackgroundTasks,
-        analysis_service: AnalysisService[GithubAnalysisRequest] = Depends(lambda: Container.github_analysis_service())
+        analysis_service: AnalysisService = Depends(lambda: Container.analysis_service()),
 ) -> bool:
     background_tasks.add_task(analysis_service.analyze, request)
     return True
@@ -21,7 +21,7 @@ def post_github(
 def post_gitlab(
         request: GitLabAnalysisRequest,
         background_tasks: BackgroundTasks,
-        analysis_service: AnalysisService[GitLabAnalysisRequest] = Depends(lambda: Container.gitlab_analysis_service())
+        analysis_service: AnalysisService = Depends(lambda: Container.analysis_service())
 ) -> bool:
     background_tasks.add_task(analysis_service.analyze, request)
     return True

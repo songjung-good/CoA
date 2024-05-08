@@ -2,15 +2,18 @@ from typing import Any
 
 import requests
 
+from api.models.code import AnalysisStatus
+from api.models.dto import AnalysisRequest, GitLabAnalysisRequest
+
 from api.models.services.client import RestRepoClient
 
 
-class GitLabClient(RestRepoClient):
+class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
     """
-    GitLab에서 파일, 커밋 데이터를 가져오기 위한 클라이언트입니다.
+    GitLab REST API에서 파일, 커밋 데이터를 가져오기 위한 클라이언트입니다.
     """
 
-    def __init__(self, base_url: str, project_id: int, private_token: str | None = None):
+    def __init__(self, request: GitLabAnalysisRequest):
         """
         GitLab 클라이언트를 만듭니다.
 
@@ -18,9 +21,12 @@ class GitLabClient(RestRepoClient):
             base_url: GitLab 저장소 기본 URL (예: https://github.example.com)
             project_id: GitLab Project ID
         """
-        self.base_url = base_url
-        self.project_id = project_id
-        self.private_token = private_token
+        self.base_url = request.baseUrl
+        self.project_id = request.projectId
+        self.private_token = request.privateToken
+
+    async def check_loadability(self, request: AnalysisRequest) -> AnalysisStatus | None:
+        pass
 
     async def _request_json(self, url: str) -> Any:
         """

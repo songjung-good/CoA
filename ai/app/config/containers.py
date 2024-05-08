@@ -5,6 +5,9 @@ from redis import Redis
 
 from api.models.dto import GithubAnalysisRequest, GitLabAnalysisRequest
 from api.models.services.analysis.mock import MockAnalysisService
+from api.models.services.client import RepoClient
+from api.models.services.client.github_rest import GithubRestClient
+from api.models.services.client.gitlab import GitLabClient
 
 
 class Container(DeclarativeContainer):
@@ -20,6 +23,8 @@ class Container(DeclarativeContainer):
         port=config.redis.port
     )
 
-    github_analysis_service = providers.Singleton(MockAnalysisService[GithubAnalysisRequest], redis_client)  # Mock
-    gitlab_analysis_service = providers.Singleton(MockAnalysisService[GitLabAnalysisRequest], redis_client)  # Mock
+    analysis_service = providers.Singleton(MockAnalysisService, redis_client)  # Mock
+
+    github_client: providers.Factory[RepoClient[GithubAnalysisRequest]] = providers.Factory(GithubRestClient)
+    gitlab_client: providers.Factory[RepoClient[GitLabAnalysisRequest]] = providers.Factory(GitLabClient)
 

@@ -2,23 +2,29 @@ from typing import Any
 
 import requests
 
+from api.models.code import AnalysisStatus
+from api.models.dto import AnalysisRequest, GithubAnalysisRequest
+
 from api.models.services.client import RepoClient, RestRepoClient
 
 
-class GithubRestClient(RestRepoClient):
+class GithubRestClient(RestRepoClient[GithubAnalysisRequest]):
     """
-    Github에서 파일, 커밋 데이터를 가져오기 위한 클라이언트입니다.
+    Github REST API에서 파일, 커밋 데이터를 가져오기 위한 클라이언트입니다.
     """
 
-    def __init__(self, path: str, access_token: str | None = None):
+    def __init__(self, request: GithubAnalysisRequest):
         """
         Github REST API 클라이언트를 만듭니다.
 
         Parameters:
             path: Github 저장소 경로 (예: DoubleDeltas/MineCollector)
         """
-        self.path = path
-        self.access_token = access_token
+        self.path = request.repoPath
+        self.access_token = request.accessToken
+
+    async def check_loadability(self, request: AnalysisRequest) -> AnalysisStatus | None:
+        pass
 
     async def _request_json(self, url: str) -> Any:
         """

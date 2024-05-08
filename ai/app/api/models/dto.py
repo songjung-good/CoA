@@ -117,7 +117,7 @@ class AnalysisDataDto:
 
     @staticmethod
     async def from_redis(redis_client: Redis, analysis_id: str) -> Union['AnalysisDataDto', None]:
-        json_str = await redis_client.get(analysis_id)
+        json_str: str | None = redis_client.get(analysis_id)
         if json_str is None:
             return None
         return AnalysisDataDto.from_dict(analysis_id, json.loads(json_str))

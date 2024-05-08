@@ -1,20 +1,28 @@
 import asyncio
-from typing import Generic, TypeVar, Any
+from typing import TypeVar, Any
+
+from dependency_injector.wiring import inject, Provide
 
 from api.models.code import AnalysisStatus
 from api.models.dto import AnalysisRequest, AnalysisDataDto, AiResultDto, CommitScoreDto
 from api.models.services.analysis import AnalysisService
+from api.models.services.client import RepoClient
 from exception import AnalysisException
 
 R = TypeVar('R', bound=AnalysisRequest, covariant=True)
 
 
-class MockAnalysisService(Generic[R], AnalysisService[R]):
+class MockAnalysisService(AnalysisService):
     """가짜 분석 서비스
     일정한 딜레이로 고정된 데이터를 보내줍니다.
     """
 
-    async def analyze(self, request: R) -> None:
+    @inject
+    async def analyze(
+            self,
+            request: R,
+            repo_client: RepoClient[R] = Provide[RepoClient[R]]
+    ) -> None:
         """
         분석을 시작합니다.
         DTO를 가져와 각 단계가 진행될 때마다 Redis에 상태를 업데이트합니다.
@@ -28,8 +36,7 @@ class MockAnalysisService(Generic[R], AnalysisService[R]):
             raise AnalysisException(AnalysisStatus.NO_REDIS_OBJECT)
 
         steps: list[AnalysisStatus] = [
-            AnalysisStatus.REQUESTING_CONTENT,
-            AnalysisStatus.REQUESTING_COMMITS,
+            AnalysisStatus.REQUESTING_TO_REPO,
             AnalysisStatus.WAITING_AI,
             AnalysisStatus.LEARNING_DATA,
             AnalysisStatus.GENERATING_README,
@@ -41,7 +48,7 @@ class MockAnalysisService(Generic[R], AnalysisService[R]):
 
         for step in steps:
             await asyncio.sleep(3)
-            self.__update_status(dto, step)
+            self._update_status(dto, step)
 
         new_dto = AnalysisDataDto(
             analysis_id=dto.analysis_id,
@@ -69,44 +76,3 @@ class MockAnalysisService(Generic[R], AnalysisService[R]):
         )
 
         new_dto.to_redis(self.redis_client)
-
-    async def assert_content_loadable(self, request: R) -> None:
-        """
-        레포에서 레포 내용을 가져올 수 있는지 미리 확인합니다. 내용을 모두 가져올 수 없다면 `AnalysisException``을 발생시킵니다.
-        이 구현체에선 호출한 지 1초 후 '호출 가능'으로 평가합니다.
-        """
-        await asyncio.sleep(1)
-        return
-
-    async def assert_commits_loadable(self, request: R) -> None:
-        """
-        레포에서 커밋 내용을 가져올 수 있는지 미리 확인합니다. 내용을 모두 가져올 수 없다면 `AnalysisException``을 발생시킵니다.
-        이 구현체에선 호출한 지 1초 후 '호출 가능'으로 평가합니다.
-        """
-        await asyncio.sleep(1)
-        return
-
-    async def load_content(self, request: R) -> dict[Any, Any]:
-        """
-        레포에서 레포 내용을 가져옵니다.
-        이 구현체에선 호출한 지 3초 후 미리 정의된 고정값을 가져옵니다.
-        """
-        await asyncio.sleep(3)
-        return {}
-
-    async def load_commits(self, request: R) -> list[dict[Any, Any]]:
-        """
-        레포에서 커밋 내용을 가져옵니다.
-        이 구현체에선 호출한 지 3초 후 미리 정의된 고정값을 가져옵니다.
-        """
-        await asyncio.sleep(3)
-        return [
-            {
-                'id': '5c47a3c8c3892f5277680a3f0cb934a9843ab1a3',
-                'patches': ['@@ -0,0 +1 @@\n+Hello, ssafy!']
-            },
-            {
-                'id': '71541e9e6d7850a27476063d10313f5f6d1d9baf',
-                'patches': ['@@ -0,0 +1,2 @@\n+# CoATest\n+test repo']
-            }
-        ]
