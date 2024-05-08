@@ -2,6 +2,7 @@ package com.dev101.coa.domain.repo.entity;
 
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.member.entity.Member;
+import com.dev101.coa.domain.repo.dto.RepoCardEditReqDto;
 import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -73,4 +74,11 @@ public class RepoView extends BaseEntity {
         this.repoViewSkillList = repoViewSkillList;
     }
 
+    public void updateRepoCard(RepoCardEditReqDto repoCardEditReqDto) {
+        this.repoViewTitle = repoCardEditReqDto.getRepoViewTitle();
+        this.repoViewSubtitle = repoCardEditReqDto.getRepoViewSubtitle();
+        this.repo.updateRepoMemberCnt(repoCardEditReqDto.getRepoMemberCnt());
+        this.repoStartDate = repoCardEditReqDto.getRepoStartDate();
+        this.repoEndDate = repoCardEditReqDto.getRepoEndDate();
+    }
 }
