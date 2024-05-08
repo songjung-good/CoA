@@ -26,10 +26,8 @@ public class RepoController {
 
     @Operation(description = "리드미 수정")
     @PutMapping("/{repoViewId}")
-//    public ResponseEntity<BaseResponse<Object>> editReadme(@AuthenticationPrincipal Long currentMemberId, @PathVariable Long repoViewId, @RequestBody EditReadmeReqDto editReadmeReqDto) {
-    public ResponseEntity<BaseResponse<Object>> editReadme(@PathVariable("repoViewId") Long repoViewId, @RequestBody EditReadmeReqDto editReadmeReqDto) {
-        
-        repoService.editReadme(7L, repoViewId, editReadmeReqDto);
+    public ResponseEntity<BaseResponse<Object>> editReadme(@AuthenticationPrincipal Long currentMemberId, @PathVariable Long repoViewId, @RequestBody EditReadmeReqDto editReadmeReqDto) {
+        repoService.editReadme(currentMemberId, repoViewId, editReadmeReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
@@ -70,8 +68,6 @@ public class RepoController {
     @GetMapping("/{repoViewId}")
     public ResponseEntity<BaseResponse<RepoDetailResDto>> readRepoView(@AuthenticationPrincipal Long currentMemberId, @PathVariable("repoViewId") Long repoViewId){
 
-        // TODO: 지워라
-        currentMemberId = 9L;
         RepoDetailResDto result = repoService.readRepoView(currentMemberId, repoViewId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
