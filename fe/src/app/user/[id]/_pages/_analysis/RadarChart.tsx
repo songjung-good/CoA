@@ -9,6 +9,19 @@ export default function RadarChart({
   scoreData: CommitScoreDto;
   scoreData2?: CommitScoreDto;
 }) {
+  const svgRef = useRef<SVGSVGElement>(null);
+  // let data2: { axis: string; value: number }[] | undefined;
+
+  const data2 =
+    scoreData2 === undefined
+      ? null
+      : Object.entries(scoreData2)
+          .filter(([key]) => key !== "total") // 'total' 키 필터링
+          .map(([key, value]) => ({
+            axis: key,
+            value: value,
+          }));
+
   // 'total' 키를 제외한 데이터 추출
   const data = Object.entries(scoreData)
     .filter(([key]) => key !== "total") // 'total' 키 필터링
@@ -16,27 +29,16 @@ export default function RadarChart({
       axis: key,
       value: value,
     }));
-  let data2: { axis: string; value: number }[] | undefined;
-  if (scoreData2 !== undefined) {
-    data2 = Object.entries(scoreData)
-      .filter(([key]) => key !== "total") // 'total' 키 필터링
-      .map(([key, value]) => ({
-        axis: key,
-        value: value,
-      }));
-  }
-  const svgRef = useRef<SVGSVGElement>(null);
-
   useEffect(() => {
     if (!svgRef.current) return;
     //중복생성방지
     d3.select(svgRef.current).selectAll("g").remove();
     // 레이더 차트 설정
-    const width = 400;
-    const height = 400;
-    const margin = { top: 20, right: 68, bottom: 20, left: 68 };
+    const width = 300;
+    const height = 220;
+    const margin = { top: 30, right: 60, bottom: 20, left: 60 };
     const radius =
-      Math.min(width, height) / 2 -
+      width / 2 -
       Math.max(margin.top, margin.right, margin.bottom, margin.left);
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -46,7 +48,10 @@ export default function RadarChart({
       .attr("width", width)
       .attr("height", height)
       .append("g")
-      .attr("transform", `translate(${width / 2}, ${height / 2})`);
+      .attr(
+        "transform",
+        `translate(${width / 2}, ${(height + margin.top) / 2})`,
+      );
 
     //radarLine 세팅
     const angleSlice = (Math.PI * 2) / data.length;
@@ -113,21 +118,25 @@ export default function RadarChart({
       .enter()
       .append("path")
       .attr("class", "radar")
-      .attr("d", radarLine)
-      .style("fill", (d) => color(d[0].axis))
-      .style("fill-opacity", 0.3);
-    if (data2 !== undefined) {
+      .attr("d", (d) => radarLine([...d, d[0]]))
+      .style("fill", "#88DDFB80")
+      .style("stroke", "#88DDFB") // 경계선 색상 지정
+      .style("stroke-width", "2px");
+    // .style("fill-opacity", 0.5);
+    if (data2 !== null) {
       svg
-        .selectAll(".radar")
+        .selectAll(".radar2")
         .data([data2])
         .enter()
         .append("path")
         .attr("class", "radar")
-        .attr("d", radarLine)
-        .style("fill", (d) => color(d[1].axis))
-        .style("fill-opacity", 0.3);
+        .attr("d", (d) => radarLine([...d, d[0]]))
+        .style("fill", "#FBA68880")
+        .style("stroke", "#FBA688") // 경계선 색상 지정
+        .style("stroke-width", "2px");
+      // .style("fill-opacity", 0.2);
     }
-  }, [data]);
+  }, [data, data2]);
 
   return <svg ref={svgRef}></svg>;
 }
