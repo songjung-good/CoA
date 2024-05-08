@@ -1,7 +1,7 @@
-from abc import ABCMeta
+import traceback
 from typing import TypeVar
 
-from dependency_injector.wiring import inject, Provide
+from dependency_injector.wiring import Provide
 from redis import Redis
 
 from api.models.code import AnalysisStatus, analysis_percentages
@@ -12,24 +12,20 @@ from exception import AnalysisException
 R = TypeVar('R', bound=AnalysisRequest, covariant=True)
 
 
-class AnalysisService(metaclass=ABCMeta):
-    # abstract class AnalysisService<R extends AnalysisRequest> { ... }
-    """분석 서비스의 기본 클래스"""
+class AnalysisService:
+    """분석 서비스"""
 
     def __init__(self, redis_client: Redis):
         self.redis_client = redis_client
 
-    @inject
-    async def analyze(
-            self,
-            request: R,
-            repo_client: RepoClient[R] = Provide[RepoClient[R]]
-    ) -> None:
+    async def analyze(self, request: R) -> None:
         """
         분석을 시작합니다.
         DTO를 가져와 각 단계가 진행될 때마다 Redis에 상태를 업데이트합니다.
         """
         # TODO: 각 단계를 나누어 추상 메소드를 호출하고 처리 상태 변경
+        from config.containers import Container         # runtime import to prevent circular import
+        repo_client: RepoClient[R] = Container.repo_client[type(request)](request)
 
         # DTO 가져오기
         dto: AnalysisDataDto = await AnalysisDataDto.from_redis(self.redis_client, request.analysisId)
@@ -43,7 +39,7 @@ class AnalysisService(metaclass=ABCMeta):
 
             # 레포에서 데이터 가져오기
             self._update_status(dto, AnalysisStatus.REQUESTING_TO_REPO)
-            repo_data = await repo_client.load(request)
+            repo_data = await repo_client.load(request.userName)
 
             # total_commit_cnt, personal_commit_cnt 세기
 
@@ -83,9 +79,10 @@ class AnalysisService(metaclass=ABCMeta):
             dto.percentage = 0
             self._update_status(dto, ex.status)
 
-        except Exception:   # 알 수 없는 내부 오류 발생!
+        except Exception as ex:   # 알 수 없는 내부 오류 발생!
             dto.percentage = 0
             self._update_status(dto, AnalysisStatus.INTERNAL_SERVER_ERROR)
+            traceback.print_exc()
 
     def _update_status(self, dto: AnalysisDataDto, next_status: AnalysisStatus) -> None:
         """

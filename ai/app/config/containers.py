@@ -1,13 +1,18 @@
+from typing import TypeVar, Type
+
 from dependency_injector import providers
 from dependency_injector.containers import DeclarativeContainer
 from dotenv import load_dotenv
 from redis import Redis
 
-from api.models.dto import GithubAnalysisRequest, GitLabAnalysisRequest
-from api.models.services.analysis.mock import MockAnalysisService
+from api.models.dto import GithubAnalysisRequest, GitLabAnalysisRequest, AnalysisRequest
+from api.models.services.analysis import AnalysisService
+# from api.models.services.analysis.mock import MockAnalysisService
 from api.models.services.client import RepoClient
 from api.models.services.client.github_rest import GithubRestClient
 from api.models.services.client.gitlab import GitLabClient
+
+R = TypeVar('R', bound=AnalysisRequest, covariant=True)
 
 
 class Container(DeclarativeContainer):
@@ -23,8 +28,10 @@ class Container(DeclarativeContainer):
         port=config.redis.port
     )
 
-    analysis_service = providers.Singleton(MockAnalysisService, redis_client)  # Mock
+    analysis_service = providers.Singleton(AnalysisService, redis_client)  # Mock
 
-    github_client: providers.Factory[RepoClient[GithubAnalysisRequest]] = providers.Factory(GithubRestClient)
-    gitlab_client: providers.Factory[RepoClient[GitLabAnalysisRequest]] = providers.Factory(GitLabClient)
+    repo_client: dict[R, providers.Factory[RepoClient[R]]] = {
+        GithubAnalysisRequest: providers.Factory(GithubRestClient),
+        GitLabAnalysisRequest: providers.Factory(GitLabClient)
+    }
 
