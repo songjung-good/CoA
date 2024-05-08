@@ -30,4 +30,11 @@ public class MemberController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<List<AlarmDto>>(result));
     }
+
+    @GetMapping("/alarms/count")
+    @Operation(description = "로그인한 유저의 확인하지 않은 알람 개수")
+    public ResponseEntity<BaseResponse<Long>> getNewAlarmCnt(@AuthenticationPrincipal Long memberId){
+        Long result = memberService.getNewAlarmCnt(memberId);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
 }
