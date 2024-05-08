@@ -50,4 +50,9 @@ public class Member extends BaseEntity {
     public void updateMemberImg (String memberImg) {
         this.memberImg = memberImg;
     }
+
+    public void updateMemberLastVisitCheck(LocalDateTime currentTime){
+        this.memberLastVisitCheck = currentTime;
+    }
+
 }
