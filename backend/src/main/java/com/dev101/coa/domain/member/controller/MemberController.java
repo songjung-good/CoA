@@ -2,6 +2,7 @@ package com.dev101.coa.domain.member.controller;
 
 import com.dev101.coa.domain.member.dto.AlarmDto;
 import com.dev101.coa.domain.member.dto.BookmarkResDto;
+import com.dev101.coa.domain.member.dto.MemberCardDto;
 import com.dev101.coa.domain.member.dto.MemberInfoDto;
 import com.dev101.coa.domain.member.service.MemberService;
 import com.dev101.coa.global.common.BaseResponse;
@@ -77,5 +78,13 @@ public class MemberController {
         BookmarkResDto result = memberService.toggleBookmark(loginMemberId, targetMemberUuid);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
+
+    @GetMapping("/bookmarks")
+    @Operation(description = "로그인 한 유저의 북마크 목록 조회")
+    public ResponseEntity<BaseResponse<List<MemberCardDto>>> getBookmarkList(@AuthenticationPrincipal Long  loginMemberId){
+        List<MemberCardDto> result = memberService.getBookmarkList(loginMemberId);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
+
 
 }
