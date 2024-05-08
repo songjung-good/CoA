@@ -10,6 +10,7 @@ import com.dev101.coa.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,8 @@ public class MemberService {
             alarmDtoList.add(alarm.convertToDto());
         }
 
+        targetMember.updateMemberLastVisitCheck(LocalDateTime.now());
+        
         return alarmDtoList;
 
     }
