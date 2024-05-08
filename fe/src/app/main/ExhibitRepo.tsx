@@ -4,12 +4,15 @@ import UseAxios from '@/api/common/useAxios';
 // 컴포넌트
 import MainRepoCard from '@/components/maincomponents/MainRepoCard';
 import useRepoDetailStore from '@/store/repodetail';
+import { useRouter } from "next/navigation";
 // 임시데이터
 import repocardDTO from '@/components/maincomponents/repocardDTO';
 
 const axios = UseAxios();
 
 const ExhibitRepo: React.FC = () => {
+  const router = useRouter();
+  // 임시데이터 값
   const data = repocardDTO.temporaryData;
 
   const setRepoDetail = useRepoDetailStore((state: any) => state.setRepoDetail);
@@ -26,7 +29,7 @@ const ExhibitRepo: React.FC = () => {
 
   const handleDetailClick = (repoViewId: string) => {
     getRepoView(repoViewId);
-    // 여기는 라우팅 처리
+    router.push(`/result/${repoViewId}/repo`);
   };
 
   return (
