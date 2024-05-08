@@ -1,17 +1,20 @@
-// GithubRepo 컴포넌트
-// 사용자의 GitHub ID를 받아 Repository 목록을 불러와 보여주는 컴포넌트
+// GitlabRepo 컴포넌트
+// 사용자의 Gitlab ID를 받아 Repository 목록을 불러와 보여주는 컴포넌트
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import tw from 'tailwind-styled-components';
 
+// 추후 axios 수정 필요
+import axios from 'axios';
+// import UseAxios from '@/api/common/useAxios';
+// const axios = UseAxios();
 // GitHub 개인 액세스 토큰
-const accessToken = process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKENS;
+const accessToken = process.env.NEXT_PUBLIC_GITLAB_ACCESS_TOKENS;
 
 interface Repo {
   id: number;
   name: string;
-  html_url: string;
+  web_url: string;
   isAnalyzed: boolean;
 }
 
@@ -19,7 +22,7 @@ interface MyRepoProps {
   userID: string;
 }
 
-const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
+const GitlabRepo: React.FC<MyRepoProps> = ({ userID }) => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -27,13 +30,14 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
     const fetchRepos = async () => {
       try {
         const response = await axios.get(
-          `https://api.github.com/users/${userID}/repos`,
+          `https://lab.ssafy.com/api/v4/users/${userID}/contributed_projects`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           }
-          );
+        );
+        console.log(response.data);
         setRepos(response.data);
         setLoading(false);
       } catch (error) {
@@ -55,8 +59,8 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
   return (
     <RepoList>
       {repos.map((repo) => (
-        <RepoItem key={repo.id} onMouseEnter={() => console.log('Mouse Enter')} onMouseLeave={() => console.log('Mouse Leave')}>
-          <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
+        <RepoItem key={repo.id}>
+          <a href={repo.web_url} target="_blank" rel="noopener noreferrer">
             {repo.name}
           </a>
           <Buttons>
@@ -126,4 +130,4 @@ const Button = tw.button`
   rounded
 `;
 
-export default GithubRepo;
+export default GitlabRepo;

@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from "axios";
 
 const serverUrl = process.env.NEXT_PUBLIC_URL_SERVER;
 
+
 const UseAxios = (): AxiosInstance => {
   const axiosInstance = axios.create({
     baseURL: serverUrl,

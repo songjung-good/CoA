@@ -1,9 +1,11 @@
-// RepoCard 컴포넌트는 프로젝트 카드를 나타내는 컴포넌트입니다.
+// 메인페이지의 프로젝트 카드를 나타내는 컴포넌트
 
+// 라이브러리
 import React, { useState } from 'react';
 import tw from 'tailwind-styled-components';
-// 임시데이터
-import repocardDTO from '@/components/maincomponents/repocardDTO';
+
+// 컴포넌트
+import DetailButton from './DetailButton'; // DetailButton 컴포넌트 가져오기
 
 interface RepoCardProps {
   data: {
@@ -17,11 +19,11 @@ interface RepoCardProps {
     dateRange: { startDate: string; endDate: string };
     isMine: boolean;
   };
+  onDetailClick: (repoViewId: string) => void;
 }
 
-const RepoCard: React.FC<RepoCardProps> = ({ data }) => {
+const MainRepoCard: React.FC<RepoCardProps> = ({ data, onDetailClick }) => {
   const [hovered, setHovered] = useState(false);
-
   const {
     memberNickName,
     memberImg,
@@ -34,22 +36,11 @@ const RepoCard: React.FC<RepoCardProps> = ({ data }) => {
 
   return (
     <div
-      className="relative" // 상대 위치 설정
+      className="relative"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {hovered && 
-      <CardOverlay>
-        <ButtonWrapper>
-          <button className="bg-appGrey1 text-black font-bold py-2 px-4 rounded mr-2">
-            결과분석
-          </button>
-          <button className="bg-appYellow text-white font-bold py-2 px-4 rounded">
-            재분석
-          </button>
-        </ButtonWrapper>
-      </CardOverlay>
-      }
+      <DetailButton hovered={hovered} repoViewId={data.repoViewId.toString()} onDetailClick={onDetailClick} />
       <Card>
         <AvatarWrapper>
           <Avatar src={data.memberImg} alt={memberNickName} />
@@ -63,11 +54,9 @@ const RepoCard: React.FC<RepoCardProps> = ({ data }) => {
             </Date>
           </div>
         </AvatarWrapper>
-        {/* skill 소제목 */}
         <div>
           <SkillLabel>프로젝트 스킬</SkillLabel>
           <SkillWrapper>
-            {/* skill 데이터 반복 */}
             {skillList.map((skill, index) => (
               <Skill key={index}>{skill}</Skill>
             ))}
@@ -78,43 +67,13 @@ const RepoCard: React.FC<RepoCardProps> = ({ data }) => {
   );
 };
 
-const data = repocardDTO.temporaryData;
-
-const RepoCardList: React.FC = () => {
-  return (
-    <div>
-    <div className='flex flex-wrap justify-start align-center mt-5'>
-      {data.map((item, index) => (
-        <RepoCard key={index} data={item} />
-      ))}
-    </div>
-    </div>
-  );
-};
-
-const CardOverlay = tw.div`
-  absolute
-  w-[25rem] 
-  h-[20rem] 
-  border
-  border-appYellow
-  rounded-lg 
-  bg-white
-  m-2.5 
-  flex
-  items-center
-  justify-center
-  z-2
-  pointer-events-none
-`;
-
 const Card = tw.div`
   w-[25rem] 
-  h-[20rem]
+  h-[15rem]
   border
   border-appGrey2
   rounded-lg 
-  m-2.5 
+  m-[3rem] 
   flex
   flex-col
   p-4
@@ -182,10 +141,4 @@ const Skill = tw.span`
   items-center 
 `;
 
-const ButtonWrapper = tw.div`
-  flex
-  align-center
-  justify-center
-`;
-
-export default RepoCardList;
+export default MainRepoCard;
