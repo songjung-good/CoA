@@ -50,7 +50,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
       <div className="bg-white p-5 rounded-lg shadow-lg relative w-full max-w-sm sm:max-w-lg lg:max-w-2xl">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-white bg-transparent hover:bg-gray-700 hover:text-white p-1 rounded-full"
+          className="absolute top-3 right-3 bg-transparent font-bold hover:text-red-600 p-1 rounded-full"
           aria-label="Close"
         >
           &#10005;
@@ -152,22 +152,25 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
               ))}
             </select>
           </div>
-          <div>기술 스택</div>
-          <ul className="flex flex-wrap">
-            {stacks.map((stack, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 hover:cursor-pointer shadow-lg rounded-lg"
-                onClick={() => handleRemoveStack(index)}
-              >
-                {stack}
-                {"  "}
-                <div className=" font-bold ml-2 text-xs text-red-600">
-                  &#10005;
-                </div>
-              </li>
-            ))}
-          </ul>
+          {stacks.length === 0 ? (
+            <div className="mb-2">사용한 기술 스택을 추가해주세요.</div>
+          ) : (
+            <ul className="flex flex-wrap">
+              {stacks.map((stack, index) => (
+                <li
+                  key={index}
+                  className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 hover:cursor-pointer shadow-lg rounded-lg"
+                  onClick={() => handleRemoveStack(index)}
+                >
+                  {stack}
+                  {"  "}
+                  <div className=" font-bold ml-2 text-xs text-red-600">
+                    &#10005;
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
           <div className="flex justify-center">
             <button
               type="submit"

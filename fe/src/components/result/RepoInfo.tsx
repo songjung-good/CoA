@@ -57,27 +57,31 @@ const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
             {repoInfo.repoViewSubtitle}
           </p>
         </div>
-        <div className="mb-2 flex flex-col justify-between items-end w-full h-full">
-          <div>
-            <p className="font-extrabold text-start">
-              프로젝트 기간 :
-              {`${repoInfo.repoStartDate} ~ ${repoInfo.repoEndDate} (${projectDays}일)`}
-            </p>
-            <p className="font-extrabold text-start">
-              프로젝트 인원: {repoInfo.repoMemberCnt}명
-            </p>
-          </div>
-          {repoInfo.isMine && (
-            <div className="mt-2">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-full flex justify-center items-center"
-                onClick={openModal}
-              >
-                <EditIcon width={20} height={20} />
-                수정하기
-              </button>
+        <div className="w-full h-full lg:flex lg:flex-col lg:justify-between">
+          <div className="mb-2 flex flex-col justify-between items-start lg:items-end w-full h-full">
+            <div>
+              <p className="font-extrabold text-start">
+                프로젝트 기간 :
+                {`${repoInfo.repoStartDate} ~ ${repoInfo.repoEndDate} (${projectDays}일)`}
+              </p>
+              <p className="font-extrabold text-start">
+                프로젝트 인원: {repoInfo.repoMemberCnt}명
+              </p>
             </div>
-          )}
+          </div>
+          <div className="flex justify-end w-full">
+            {repoInfo.isMine && (
+              <div className="mt-2">
+                <button
+                  className=" bg-appBlue1 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-full flex justify-center items-center"
+                  onClick={openModal}
+                >
+                  <EditIcon width={20} height={20} />
+                  수정하기
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </RepoInfoDiv>
