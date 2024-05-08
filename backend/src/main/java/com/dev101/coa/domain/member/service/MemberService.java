@@ -20,7 +20,7 @@ public class MemberService {
     private final AlarmRepository alarmRepository;
     private final MemberRepository memberRepository;
     public List<AlarmDto> getAlarmList(Long memberId) {
-        
+
         Member targetMember = memberRepository.findById(memberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
         List<Alarm> alarmList = alarmRepository.findByAlarmTargetIdOrderByCreatedAtDesc(memberId);
