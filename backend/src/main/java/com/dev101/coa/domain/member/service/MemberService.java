@@ -33,7 +33,7 @@ public class MemberService {
         List<AccountLink> accountLinks = accountLinkRepository.findAllByMember(member);
 
         MemberInfoDto.MemberInfoDtoBuilder builder = MemberInfoDto.builder()
-                .memberId(member.getMemberId())
+                .memberUuid(member.getMemberUuid())
                 .memberImg(member.getMemberImg())
                 .memberNickName(member.getMemberNickname());
 
