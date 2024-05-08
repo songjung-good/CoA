@@ -72,7 +72,7 @@ public class MemberController {
     }
 
     @PostMapping("/bookmarks/{targetMemberUuid}")
-    @Operation(description = "북마크 토글 기능")
+    @Operation(description = "북마크 토글 기능, 북마크 생성시 알람도 함꼐 저장")
     public ResponseEntity<BaseResponse<BookmarkResDto>> toggleBookmark(@AuthenticationPrincipal Long  loginMemberId, @PathVariable("targetMemberUuid") String targetMemberUuid){
         BookmarkResDto result = memberService.toggleBookmark(loginMemberId, targetMemberUuid);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
