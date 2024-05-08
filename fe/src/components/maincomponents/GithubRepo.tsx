@@ -23,7 +23,7 @@ interface MyRepoProps {
 const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [notLink, setNotLink] = useState<boolean>(false);
+  const [notLink, setNotLink] = useState<number>(0);
   const axiosInstance = UseAxios();
 
   useEffect(() => {
@@ -31,12 +31,13 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
       try {
         const response = await axiosInstance.get(`api/external/github/repos/${userID}`);
         
-        if (response === 602) {
-          setNotLink(true)
+        if (response.data.code === 602 || response.data.code === 303) {
+          setNotLink(response.data.code)
           return
         }
+        if (response.data.code === 200) {
         setRepos(JSON.parse(response.data.result));
-        
+        }
         setLoading(false);
       } catch (error) {
         console.error('해당 요청에 문제가 생겼습니다. : ', error);
@@ -50,8 +51,11 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
     };
   }, [userID]);
 
-  if (notLink) {
+  if (notLink === 602) {
     return <div>계정을 연동해주세요.</div>
+  }
+  if (notLink === 303) {
+    return <div>토큰을 갱신해주세요.</div>
   }
 
   if (loading) {

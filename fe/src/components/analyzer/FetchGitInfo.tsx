@@ -42,10 +42,10 @@ const fetchGitHubData = async (gitInfo: any, setUserData: Function, accessTokenH
   try {
     const response = await axiosInstance.get(`/api/external/github/members/${gitInfo.UserName}/${gitInfo.ProjectName}`)
     
-    if (response === 602) {
+    if (response.data.code === 602) {
       throw alert("GitHub 계정을 연동해주세요.")
     }
-    if (response === 303) {
+    if (response.data.code === 303) {
       throw alert("본인 여부(접근 권한) 및 토큰을 확인해주세요.")
     }
 
@@ -78,10 +78,10 @@ const fetchGitlabMembers = async (projectname: string, username: string, accessT
   try {
     const projectsResponse = await axiosInstance.get(`/api/external/gitlab/projects/${username}`)
 
-    if (projectsResponse === 602) {
+    if (projectsResponse.data.code === 602) {
       throw alert("GitLab 계정을 연동해주세요.")
     }
-    if (projectsResponse === 303) {
+    if (projectsResponse.data.code === 303) {
       throw alert("본인 여부(접근 권한) 및 토큰을 확인해주세요.")
     }
     let projectId = '';
@@ -94,10 +94,10 @@ const fetchGitlabMembers = async (projectname: string, username: string, accessT
     });
 
     const membersResponse = await axiosInstance.get(`/api/external/gitlab/members/${projectId}`)
-    if (membersResponse === 602) {
+    if (membersResponse.data.code === 602) {
       throw alert("GitLab 계정을 연동해주세요.")
     }
-    if (membersResponse === 303) {
+    if (membersResponse.data.code === 303) {
       throw alert("본인 여부(접근 권한) 및 토큰을 확인해주세요.")
     }
     return JSON.parse(membersResponse.data.result);
