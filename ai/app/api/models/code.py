@@ -27,17 +27,17 @@ class AnalysisStatus(IntEnum):
     NO_REDIS_OBJECT = 311
     INTERNAL_SERVER_ERROR = 312
     REPO_TOKEN_ERROR = 320
-    GITHUB_ACCESS_TOKEN_INVALID = 321
-    GITLAB_PRIVATE_TOKEN_INVALID = 322
+    ACCESS_TOKEN_INVALID = 321
     REPO_REQUEST_FAILED = 330
     INSUFFICIENT_GITHUB_REQUEST = 331
     INSUFFICIENT_GITLAB_REQUEST = 332
     REPO_REQUEST_TIMEOUT = 333
 
 
-AnalysisPercentages: dict[AnalysisStatus, int] = {
+analysis_percentages: dict[AnalysisStatus, int] = {
     AnalysisStatus.BEFORE_RECEIVING: 0,
     AnalysisStatus.CHECKING_FOR_REQUESTING: 5,
+    AnalysisStatus.REQUESTING_TO_REPO: 15,
     AnalysisStatus.REQUESTING_CONTENT: 10,
     AnalysisStatus.REQUESTING_COMMITS: 20,
     AnalysisStatus.WAITING_AI: 25,
