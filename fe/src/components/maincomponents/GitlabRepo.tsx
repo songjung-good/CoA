@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import tw from 'tailwind-styled-components';
-
+import UseAxios from '@/api/common/useAxios';
 // GitHub 개인 액세스 토큰
 const accessToken = process.env.NEXT_PUBLIC_GITLAB_ACCESS_TOKENS;
 
@@ -22,19 +22,21 @@ interface MyRepoProps {
 const GitlabRepo: React.FC<MyRepoProps> = ({ userID }) => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const axiosInstance = UseAxios();
 
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const response = await axios.get(
-          `https://lab.ssafy.com/api/v4/users/${userID}/contributed_projects`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setRepos(response.data);
+        const response = await axiosInstance.get(`api/external/gitlab/repos/${userID}`);
+        console.log(response)
+        console.log(response.data)
+        if (response.data.code === 303) {
+          alert("본인 여부(접근 권한) 및 토큰을 확인해주세요.")
+        } else if (response.data.code === 603) {
+          // TODO 여기에 계정연동이 안됐다는 처리 해야함.
+        }else if (response.data.code == 200) {
+          setRepos(response.data);
+        }
         setLoading(false);
       } catch (error) {
         console.error('해당 요청에 문제가 생겼습니다. : ', error);
