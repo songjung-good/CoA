@@ -2,15 +2,10 @@ package com.dev101.coa.domain.member.service;
 
 import com.dev101.coa.domain.member.dto.AlarmDto;
 import com.dev101.coa.domain.member.dto.BookmarkResDto;
+import com.dev101.coa.domain.member.dto.MemberCardDto;
 import com.dev101.coa.domain.member.dto.MemberInfoDto;
-import com.dev101.coa.domain.member.entity.AccountLink;
-import com.dev101.coa.domain.member.entity.Alarm;
-import com.dev101.coa.domain.member.entity.Bookmark;
-import com.dev101.coa.domain.member.entity.Member;
-import com.dev101.coa.domain.member.repository.AccountLinkRepository;
-import com.dev101.coa.domain.member.repository.AlarmRepository;
-import com.dev101.coa.domain.member.repository.BookmarkRepository;
-import com.dev101.coa.domain.member.repository.MemberRepository;
+import com.dev101.coa.domain.member.entity.*;
+import com.dev101.coa.domain.member.repository.*;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +25,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final AccountLinkRepository accountLinkRepository;
     private final BookmarkRepository bookmarkRepository;
+    private final MemberSkillRepository memberSkillRepository;
 
 
     public MemberInfoDto getMemberInfo(Long memberId) {
@@ -120,5 +116,22 @@ public class MemberService {
                     .build();
 
         }
+    }
+
+    public List<MemberCardDto> getBookmarkList(Long loginMemberId) {
+        // 로그인 멤버 찾기
+        Member loginMember = memberRepository.findById(loginMemberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));
+
+        // 북마크 목록 가져오기
+        List<Bookmark> bookmarkList = bookmarkRepository.findByBookmarkMember(loginMember);
+
+        // MemberCardDto로 바꾸기
+        List<MemberCardDto> memberCardDtoList = new ArrayList<>();
+        for(Bookmark bookmark : bookmarkList){
+            Member targetMember = bookmark.getBookmarkTargetMember();
+            List<MemberSkill> targetMemberSkillList = memberSkillRepository.findByMember(targetMember);
+            memberCardDtoList.add(MemberCardDto.createDto(targetMember, targetMemberSkillList));
+        }
+        return memberCardDtoList;
     }
 }
