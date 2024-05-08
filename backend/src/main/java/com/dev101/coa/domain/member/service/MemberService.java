@@ -1,8 +1,11 @@
 package com.dev101.coa.domain.member.service;
 
 import com.dev101.coa.domain.member.dto.AlarmDto;
+import com.dev101.coa.domain.member.dto.MemberInfoDto;
+import com.dev101.coa.domain.member.entity.AccountLink;
 import com.dev101.coa.domain.member.entity.Alarm;
 import com.dev101.coa.domain.member.entity.Member;
+import com.dev101.coa.domain.member.repository.AccountLinkRepository;
 import com.dev101.coa.domain.member.repository.AlarmRepository;
 import com.dev101.coa.domain.member.repository.MemberRepository;
 import com.dev101.coa.global.common.StatusCode;
@@ -20,6 +23,38 @@ public class MemberService {
 
     private final AlarmRepository alarmRepository;
     private final MemberRepository memberRepository;
+    private final AccountLinkRepository accountLinkRepository;
+
+
+    public MemberInfoDto getMemberInfo(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+
+        List<AccountLink> accountLinks = accountLinkRepository.findAllByMember(member);
+
+        MemberInfoDto.MemberInfoDtoBuilder builder = MemberInfoDto.builder()
+                .memberId(member.getMemberId())
+                .memberImg(member.getMemberImg())
+                .memberNickName(member.getMemberNickname());
+
+        for (AccountLink link : accountLinks) {
+            switch (link.getCode().getCodeName()) {
+                case "Github":
+                    builder.githubNickName(link.getAccountLinkNickname());
+                    break;
+                case "GitLab":
+                    builder.gitlabNickName(link.getAccountLinkNickname());
+                    break;
+                case "solvedac":
+                    builder.solvedNickName(link.getAccountLinkNickname());
+                    break;
+                case "Codeforces":
+                    builder.codeforcesNickName(link.getAccountLinkNickname());
+                    break;
+            }
+        }
+        return builder.build();
+    }
     public List<AlarmDto> getAlarmList(Long memberId) {
 
         Member targetMember = memberRepository.findById(memberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));

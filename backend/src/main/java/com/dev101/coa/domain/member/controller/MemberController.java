@@ -1,6 +1,7 @@
 package com.dev101.coa.domain.member.controller;
 
 import com.dev101.coa.domain.member.dto.AlarmDto;
+import com.dev101.coa.domain.member.dto.MemberInfoDto;
 import com.dev101.coa.domain.member.service.MemberService;
 import com.dev101.coa.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +23,15 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @Operation(description = "로그인한 유저의 정보")
+    @GetMapping("")
+    public ResponseEntity<BaseResponse<MemberInfoDto>> getMemberInfo(@AuthenticationPrincipal Long memberId){
+
+        MemberInfoDto memberInfoDto = memberService.getMemberInfo(memberId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(memberInfoDto));
+    }
 
     @GetMapping("/alarms")
     @Operation(description = "로그인한 유저가 받은 알람 목록")
