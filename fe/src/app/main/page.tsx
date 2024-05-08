@@ -1,16 +1,28 @@
+// mainpage > UrlInput > FetchGithubInfo(ExtractUserInfo) > UserModal
+
 'use client'
 
-// src/app/main/page.tsx
+// 라이브러리
 import React from 'react';
-// 레포지토리 분석기(URL 입력)
+import tw from 'tailwind-styled-components';
+import { useStore } from 'zustand';
+
+// 컴포넌트
+// URL 입력(레포지토리 분석을 위한)
 import UrlInput from '@/components/analyzer/UrlInput';
 // 개인 레포 불러오기
-import MyRepo from '@/components/maincomponents/MyRepo';
-// 임시 레포 카드
+import GitlabRepo from '@/components/maincomponents/GitlabRepo';
+import GithubRepo from '@/components/maincomponents/GithubRepo';
+// 레포 카드(수정 필요)
 import RepoCard from '@/components/maincomponents/RepoCard';
-import tw from 'tailwind-styled-components';
 
-const MainPage = () => {
+// 전역변수
+import userStore from '@/store/user';
+
+const MainPage: React.FC = () => {
+  const github = useStore(userStore).userName;
+  const gitlab = useStore(userStore).gitlabName;
+
   return (
     <Main>
       <Header>
@@ -28,11 +40,11 @@ const MainPage = () => {
       <RepoDiv>
         <RepoLeft>
           <Heading>여기는 github</Heading>
-          {/* <MyRepo userID='songjung-good' /> */}
+          <GithubRepo userID={github} />
         </RepoLeft>
         <RepoRight>
           <Heading>여기는 gitlab</Heading>
-          {/* <MyRepo userID='songjung-good' /> */}
+          <GitlabRepo userID={gitlab} />
         </RepoRight>
       </RepoDiv>
       <Div>
@@ -56,10 +68,10 @@ const Main = tw.main`
 
 const Header = tw.div`
   max-w-screen-xl
+  w-full
   mx-auto
   bg-white
   mt-10
-  p-20
   border
   shadow-lg
   rounded-2xl
@@ -74,31 +86,49 @@ const Description = tw.div`
   max-w-screen-xl
 `;
 
+const TextWrapper = tw.div`
+  mx-auto
+  p-[2rem]
+`;
+
 const Title = tw.h1`
   font-bold
   text-left
   mb-4
-  xl:text-5xl
-  md:text-4xl
-  sm:text-3xl
+  lg:text-5xl
+  md:text-3xl
+  sm:text-xl
 `;
 
 const SubTitle = tw.p`
   font-light
-  text-lg
   text-left
-`;
-
-const TextWrapper = tw.div`
-  mx-auto
+  lg:text-lg
+  md:text-sm
+  sm:text-xs
 `;
 
 const Img = tw.img`
-  mx-auto
   ml-10
+  w-auto
   opacity-60
-  rounded-md
+  blur-l-xl
+  rounded-r-2xl
   shadow-md
+`;
+
+const Div1 = tw.div`
+  max-w-screen-xl
+  flex
+  justify-center
+  w-full
+  bg-white
+  mt-10
+  p-4
+  border
+  shadow-lg
+  rounded-2xl
+  hover:border-appBlue1
 `;
 
 const RepoDiv = tw.div`
@@ -140,24 +170,10 @@ const Div = tw.div`
   rounded-2xl
   hover:border-appBlue1
 `;
-  
-
-const Div1 = tw.div`
-  max-w-screen-xl
-  flex
-  justify-center
-  w-2/3
-  bg-white
-  mt-10
-  p-4
-  border
-  shadow-lg
-  rounded-2xl
-  hover:border-appBlue1
-`;
 
 const Heading = tw.h3`
-  text
+  font-bold
+  text-xl
 `;
 
 export default MainPage;
