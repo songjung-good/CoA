@@ -125,7 +125,7 @@ export default function LinkPage() {
     }
   };
   return (
-    <main className="bg-appGrey1 h-appVh">
+    <main className="bg-appGrey1  flex flex-col items-center">
       <div className="max-w-screen-xl w-full flex flex-col py-4 gap-4">
         <h1 className="text-xl font-bold">계정 연동하기</h1>
         <section className="card flex flex-col md:flex-row gap-4 justify-between">

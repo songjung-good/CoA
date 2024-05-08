@@ -22,8 +22,11 @@ const config: Config = {
         appGrey2: "#E2E8E6",
       },
       height: {
-        appVh: "calc(100vh - 80px)",
+        appVh: "calc(100vh - 96px)",
       },
+      minWidth: {
+        "760px": "760px",
+      }
     },
   },
   plugins: [],
