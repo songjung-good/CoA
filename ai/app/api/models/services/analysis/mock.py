@@ -18,11 +18,7 @@ class MockAnalysisService(AnalysisService):
     """
 
     @inject
-    async def analyze(
-            self,
-            request: R,
-            repo_client: RepoClient[R] = Provide[RepoClient[R]]
-    ) -> None:
+    async def analyze(self, request: R) -> None:
         """
         분석을 시작합니다.
         DTO를 가져와 각 단계가 진행될 때마다 Redis에 상태를 업데이트합니다.
