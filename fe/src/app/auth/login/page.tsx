@@ -1,9 +1,9 @@
-'use client'
+"use client";
 import Image from "next/image";
 
 export default function LoginPage() {
   const serverUrl = process.env.NEXT_PUBLIC_URL_SERVER;
-  
+
   // GitHub 로그인 버튼 클릭 시 이벤트 핸들러
   const handleKakaoLogin = () => {
     window.location.href = `${serverUrl}/oauth2/authorization/kakao`;
@@ -12,7 +12,6 @@ export default function LoginPage() {
   const handleGoogleLogin = () => {
     window.location.href = `${serverUrl}/oauth2/authorization/google`; // OAuth는 fetch나 axios로 보낼 시 무조건 CORS에 막히는 듯
   };
-
 
   return (
     <main className="flex justify-center items-center h-appVh">
@@ -30,16 +29,22 @@ export default function LoginPage() {
               <h1 className="text-3xl">시작하기</h1>
             </div>
             <div className="grid gap-4">
-              <button className="flex gap-4 p-4 rounded-xl shadow-md" onClick={handleKakaoLogin}>
+              <button
+                className="flex gap-4 p-4 rounded-xl shadow-md"
+                onClick={handleKakaoLogin}
+              >
                 <Image
-                  src="/image/githubSSO.png"
+                  src="/image/oauth/KakaoTalk_logo.svg"
                   alt="githubSSO"
                   width={24}
                   height={24}
                 />
                 Sign in with Kakao
               </button>
-              <button className="flex gap-4 p-4 rounded-xl shadow-md" onClick={handleGoogleLogin}>
+              <button
+                className="flex gap-4 p-4 rounded-xl shadow-md"
+                onClick={handleGoogleLogin}
+              >
                 <Image
                   src="/image/googleSSO.png"
                   alt="googleSSO"
