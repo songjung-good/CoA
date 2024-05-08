@@ -40,13 +40,6 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(memberInfoDto));
     }
 
-    @GetMapping("/alarms")
-    @Operation(description = "로그인한 유저가 받은 알람 목록")
-    public ResponseEntity<BaseResponse<List<AlarmDto>>> getAlarmList(@AuthenticationPrincipal Long memberId){
-        List<AlarmDto> result = memberService.getAlarmList(memberId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<List<AlarmDto>>(result));
-    }
 
 
     @PostMapping("/logout")
@@ -63,5 +56,20 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, response.getHeader(HttpHeaders.SET_COOKIE))
                 .body(new BaseResponse<>(StatusCode.SUCCESS));
+    }
+
+    @GetMapping("/alarms/count")
+    @Operation(description = "로그인한 유저의 확인하지 않은 알람 개수")
+    public ResponseEntity<BaseResponse<Long>> getNewAlarmCnt(@AuthenticationPrincipal Long memberId){
+        Long result = memberService.getNewAlarmCnt(memberId);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
+
+    @GetMapping("/alarms")
+    @Operation(description = "로그인한 유저가 받은 알람 목록")
+    public ResponseEntity<BaseResponse<List<AlarmDto>>> getAlarmList(@AuthenticationPrincipal Long memberId){
+        List<AlarmDto> result = memberService.getAlarmList(memberId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<List<AlarmDto>>(result));
     }
 }

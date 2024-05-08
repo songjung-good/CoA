@@ -71,4 +71,12 @@ public class MemberService {
         return alarmDtoList;
 
     }
+
+    public Long getNewAlarmCnt(Long memberId) {
+        Member targetMember = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+
+        LocalDateTime checkedTime = targetMember.getMemberLastVisitCheck();
+
+        return alarmRepository.countAllByAlarmTargetIdAndCreatedAtGreaterThan(memberId, checkedTime);
+    }
 }
