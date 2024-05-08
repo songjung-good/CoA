@@ -1,6 +1,7 @@
 package com.dev101.coa.domain.member.controller;
 
 import com.dev101.coa.domain.member.dto.AlarmDto;
+import com.dev101.coa.domain.member.dto.BookmarkResDto;
 import com.dev101.coa.domain.member.dto.MemberInfoDto;
 import com.dev101.coa.domain.member.service.MemberService;
 import com.dev101.coa.global.common.BaseResponse;
@@ -15,10 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -72,4 +70,12 @@ public class MemberController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<List<AlarmDto>>(result));
     }
+
+    @PostMapping("/bookmarks/{targetMemberUuid}")
+    @Operation(description = "북마크 토글 기능")
+    public ResponseEntity<BaseResponse<BookmarkResDto>> toggleBookmark(@AuthenticationPrincipal Long  loginMemberId, @PathVariable("targetMemberUuid") String targetMemberUuid){
+        BookmarkResDto result = memberService.toggleBookmark(loginMemberId, targetMemberUuid);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
+
 }
