@@ -1,7 +1,6 @@
 import traceback
 from typing import TypeVar
 
-from dependency_injector.wiring import Provide
 from redis import Redis
 
 from api.models.code import AnalysisStatus, analysis_percentages

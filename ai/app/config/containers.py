@@ -7,7 +7,6 @@ from redis import Redis
 
 from api.models.dto import GithubAnalysisRequest, GitLabAnalysisRequest, AnalysisRequest
 from api.models.services.analysis import AnalysisService
-# from api.models.services.analysis.mock import MockAnalysisService
 from api.models.services.client import RepoClient
 from api.models.services.client.github_rest import GithubRestClient
 from api.models.services.client.gitlab import GitLabClient
