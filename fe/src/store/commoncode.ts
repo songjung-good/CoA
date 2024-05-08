@@ -1,4 +1,4 @@
-import {create,  StateCreator } from 'zustand';
+import { create, StateCreator } from 'zustand';
 import { persist, createJSONStorage, PersistOptions } from 'zustand/middleware'
 
 interface Code {
@@ -15,7 +15,9 @@ interface ApiResponse {
   isSuccess: boolean;
   message: string;
   code: number;
-  commonCodes: CodeType[];
+  result: {  
+    commonCodeList: CodeType[];
+  };
 }
 
 interface CommonCodeState {
@@ -30,18 +32,18 @@ type commonPersist = (
 
 const useCommonCodeStore = create<CommonCodeState>((persist as commonPersist)(
   (set) => ({
-  response: {
-    isSuccess: false,
-    message: '',
-    code: 0,
-    commonCodes: []
-  },
-
-  setResponse: (response) => set({ response })
-}),
-{
-  name: 'common-code-store',
-  storage: createJSONStorage(() => localStorage)
-}));
+    response: {
+      isSuccess: false,
+      message: '',
+      code: 0,
+      result: { commonCodeList: [] } 
+    },
+    setResponse: (response) => set({ response })
+  }),
+  {
+    name: 'common-code-store',
+    storage: createJSONStorage(() => localStorage)
+  }
+));
 
 export default useCommonCodeStore;
