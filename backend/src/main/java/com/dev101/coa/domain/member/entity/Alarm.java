@@ -27,7 +27,7 @@ public class Alarm extends BaseEntity {
     private Member alarmMember;
 
     @ManyToOne
-    @JoinColumn(name = "repo_view_id", nullable = false)
+    @JoinColumn(name = "repo_view_id", nullable = true)
     private RepoView alarmRepoView;
 
     @Column(name = "alarm_target_id", nullable = false)
