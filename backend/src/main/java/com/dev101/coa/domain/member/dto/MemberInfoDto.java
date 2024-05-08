@@ -15,8 +15,6 @@ public class MemberInfoDto {
     private UUID memberUuid;
     private String memberImg;
     private String memberNickName;
-    private String githubNickName;
-    private String gitlabNickName;
-    private String solvedNickName;
-    private String codeforcesNickName;
+
+    private AccountLinkInfoDto accountLinkInfoDto;
 }

@@ -20,6 +20,8 @@ public interface AccountLinkRepository extends JpaRepository<AccountLink, Long> 
 
     Optional<AccountLink> findByMemberAndCode(Member member, Code code);
 
+    Optional<AccountLink> findByMemberAndCodeCodeId(Member member, Long codeId);
+
     List<AccountLink> findByAccountLinkNicknameContaining(String keyword);
 
     @Modifying
