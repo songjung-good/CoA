@@ -53,14 +53,13 @@ const UserAvatar = ({ src, alt, isSelected, ...props }: UserAvatarProps) => {
 };
 
 // axios를 이용해 서버로 사용자 데이터를 요청
-const requestAnalysis = async (repoUrl: string, userName: string, projectId: string) => {
+const requestAnalysis = async (repoUrl: string, userName: any, projectId: any) => {
   try {
     const response = await axios.post('/api/repos/analysis', {
       repoUrl,
       userName,
       projectId,
     });
-    console.log(response.data);
   } catch (error) {
     console.error(error);
   }
@@ -78,8 +77,6 @@ const UserModal: React.FC<UserModalProps> = ({ userData, onClose, url }) => {
     setSelectedUser(null);
     onClose(); // 부모 컴포넌트로부터 받은 모달 닫기 함수 호출
   };
-
-  console.log(userData);
 
   return (
     <ModalOverlay>
@@ -110,7 +107,7 @@ const UserModal: React.FC<UserModalProps> = ({ userData, onClose, url }) => {
       <div>
       <button 
         className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-        onClick={() => requestAnalysis(repoUrl, userName, projectId)}
+        onClick={() => requestAnalysis(url, selectedUser!.login||selectedUser!.username, userData.projectId)}
       >
         분석하기
       </button>
