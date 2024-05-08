@@ -88,5 +88,5 @@ class AnalysisService:
         Redis에 분석 상태를 업데이트합니다.
         """
         dto.status = next_status
-        dto.percentage = analysis_percentages[dto.status]
+        dto.percentage = analysis_percentages.get(dto.status, 0)
         dto.to_redis(redis_client=self.redis_client)

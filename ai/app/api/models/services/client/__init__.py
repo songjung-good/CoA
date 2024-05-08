@@ -2,8 +2,12 @@ from abc import *
 from abc import abstractmethod
 from typing import Any, TypeVar, Generic
 
+import requests.exceptions
+from requests import HTTPError
+
 from api.models.code import AnalysisStatus
 from api.models.dto import AnalysisRequest
+from exception import AnalysisException
 
 R = TypeVar('R', bound=AnalysisRequest, covariant=True)
 
@@ -12,6 +16,11 @@ class RepoClient(Generic[R], metaclass=ABCMeta):
     """
     레포지토리에서 파일, 커밋 데이터를 가져오기 위한 클라이언트의 기본 클래스입니다.
     """
+
+    HTTP_STATUS_TO_ANALYSIS_STATUS: dict[int, AnalysisStatus] = {
+        401: AnalysisStatus.REPO_TOKEN_ERROR,
+        403: AnalysisStatus.REPO_REQUEST_FAILED
+    }
 
     @abstractmethod
     def __init__(self, request: R):
@@ -27,8 +36,20 @@ class RepoClient(Generic[R], metaclass=ABCMeta):
         """
         pass
 
-    @abstractmethod
     async def load(self, author_name: str) -> dict[Any, Any]:
+        try:
+            return await self._load_repo_data(author_name)
+        except HTTPError as err:
+            analysis_status = RepoClient.HTTP_STATUS_TO_ANALYSIS_STATUS.get(
+                err.response.status_code,
+                AnalysisStatus.REPO_REQUEST_FAILED
+            )
+            raise AnalysisException(analysis_status)
+        except requests.exceptions.Timeout:
+            raise AnalysisException(AnalysisStatus.REPO_REQUEST_TIMEOUT)
+
+    @abstractmethod
+    async def _load_repo_data(self, author_name: str) -> dict[Any, Any]:
         pass
 
 
@@ -50,7 +71,7 @@ class RestRepoClient(Generic[R], RepoClient[R], metaclass=ABCMeta):
         """
         pass
 
-    async def load(self, author_name: str) -> dict[Any, Any]:
+    async def _load_repo_data(self, author_name: str) -> dict[Any, Any]:
         return {
             'content': await self.load_content(),
             'commits': await self.load_commits(author_name)
