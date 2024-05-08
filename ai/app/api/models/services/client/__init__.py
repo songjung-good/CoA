@@ -18,7 +18,7 @@ class RepoClient(Generic[R], metaclass=ABCMeta):
 
     HTTP_STATUS_TO_ANALYSIS_STATUS: dict[int, AnalysisStatus] = {
         401: AnalysisStatus.REPO_TOKEN_ERROR,
-        403: AnalysisStatus.REPO_REQUEST_FAILED
+        403: AnalysisStatus.ACCESS_TOKEN_INVALID
     }
 
     @abstractmethod
