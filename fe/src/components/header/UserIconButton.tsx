@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import userStore from "@/store/user";
 import Image from "next/image";
@@ -56,7 +56,7 @@ export default function UserIconButton() {
         </div>
       </button>
       {isOpen ? (
-        <div className="absolute top-11 right-0 card min-w-28">
+        <div className="absolute top-11 right-0 card min-w-28 z-50">
           <ul className="flex flex-col gap-4">
             <li>
               <Link href={`/user/${authUserName}`}>마이 페이지</Link>

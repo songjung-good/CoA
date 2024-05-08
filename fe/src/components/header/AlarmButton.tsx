@@ -33,7 +33,7 @@ export default function AlarmButton() {
         <BellIcon />
       </button>
       {alarmModal ? (
-        <div className="absolute top-10 right-0 card" ref={modalRef}>
+        <div className="absolute top-10 right-0 card z-50" ref={modalRef}>
           <ul className="flex flex-col gap-4 min-w-16">
             <li>알림 목록</li>
             <li>알림 1</li>
