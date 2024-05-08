@@ -2,8 +2,7 @@ from abc import *
 from abc import abstractmethod
 from typing import Any, TypeVar, Generic
 
-import requests.exceptions
-from requests import HTTPError
+from requests import HTTPError, Timeout
 
 from api.models.code import AnalysisStatus
 from api.models.dto import AnalysisRequest
@@ -45,7 +44,7 @@ class RepoClient(Generic[R], metaclass=ABCMeta):
                 AnalysisStatus.REPO_REQUEST_FAILED
             )
             raise AnalysisException(analysis_status)
-        except requests.exceptions.Timeout:
+        except Timeout:
             raise AnalysisException(AnalysisStatus.REPO_REQUEST_TIMEOUT)
 
     @abstractmethod
