@@ -16,14 +16,13 @@ interface UserModalProps {
 
 interface User {
   avatar_url: string;
-  contributions: number;
   id: number;
   login: string;
-  username?: string;
   type: string;
   url: string;
   projectId: number;
   repositoryName: string;
+  username?: string;
 }
 
 type UserAvatarProps = React.ImgHTMLAttributes<HTMLImageElement> & {
