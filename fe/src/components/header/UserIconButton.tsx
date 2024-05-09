@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import UseAxios from "@/api/common/useAxios";
 import useCommonCodeStore from "@/store/commoncode";
+import UserMenu from "./UserMenu";
 
 export default function UserIconButton() {
   const UUID = userStore((state) => state.UUID);
@@ -103,21 +104,7 @@ export default function UserIconButton() {
           />
         </div>
       </button>
-      {isOpen ? (
-        <div className="absolute top-11 right-0 card min-w-28 z-50">
-          <ul className="flex flex-col gap-4">
-            <li>
-              <Link href={`/user/${UUID}`}>마이 페이지</Link>
-            </li>
-            <li>
-              <Link href={`/auth/link`}>연동 페이지</Link>
-            </li>
-            <li>
-              <button onClick={logout}>로그아웃</button>
-            </li>
-          </ul>
-        </div>
-      ) : null}
+      {isOpen ? <UserMenu /> : null}
     </div>
   );
 }

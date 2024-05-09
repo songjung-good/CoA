@@ -4,6 +4,7 @@ import BellIcon from "@/icons/BellIcon";
 import { useEffect, useRef, useState } from "react";
 import UseAxios from "@/api/common/useAxios";
 import { Alarm, getAlarmCountData, getAlarmData } from "@/api/alarm/apiAlarm";
+import AlarmModal from "./AlarmModal";
 
 export default function AlarmButton() {
   const [alarmModal, setAlarmModal] = useState(false);
@@ -34,11 +35,12 @@ export default function AlarmButton() {
   }, []);
 
   const handleAlarmButton = () => {
+    setAlarmModal(!alarmModal);
     // if (alarmModal === false) {
-    getAlarmData().then((data) => {
-      setAlarmData(data);
-    });
-    setAlarmModal(true);
+    // getAlarmData().then((data) => {
+    //   setAlarmData(data);
+    // });
+    // setAlarmModal(true);
     // }
     // else {
     //   getAlarmCountData().then((count) => {
@@ -58,7 +60,8 @@ export default function AlarmButton() {
       </button>
       {alarmModal ? (
         <div className="absolute top-10 right-0 card z-50" ref={modalRef}>
-          <p>알림 목록</p>
+          <AlarmModal />
+          {/* <p>알림 목록</p>
           <ul className="flex flex-col gap-4 min-w-16">
             {alarmData.map((alarm, index) => (
               <li key={index}>
@@ -73,7 +76,7 @@ export default function AlarmButton() {
                 <p>{alarm.createAt}</p>
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
       ) : null}
     </div>
