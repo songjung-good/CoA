@@ -4,7 +4,7 @@ import com.dev101.coa.domain.code.dto.CodeCntDto;
 import com.dev101.coa.domain.code.dto.CodeDto;
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.code.repository.CodeRepository;
-import com.dev101.coa.domain.member.dto.AlarmDto;
+import com.dev101.coa.domain.member.entity.AccountLink;
 import com.dev101.coa.domain.member.entity.Alarm;
 import com.dev101.coa.domain.member.entity.Member;
 import com.dev101.coa.domain.member.repository.AccountLinkRepository;
@@ -47,10 +47,6 @@ public class RepoService {
     private String gitHubApiUrl;
 
 
-    @Value("${token.github}")
-    private String githubToken;
-
-
     private final RepoRepository repoRepository;
     private final RepoViewRepository repoViewRepository;
     private final CommentRepository commentRepository;
@@ -68,7 +64,7 @@ public class RepoService {
     private final WebClient webClient;
 
     public void editReadme(Long memberId, Long repoViewId, String editReadmeReq) {
-        Member loginMember = memberRepository.findById(memberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        Member loginMember = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
         // 레포 뷰 존재 유무 확인
         RepoView repoView = repoViewRepository.findByRepoViewId(repoViewId)
@@ -85,12 +81,12 @@ public class RepoService {
     }
 
     public void editComment(Long currentMemberId, Long repoViewId, List<CommitCommentDto> editCommentListReq) {
-        Member loginMember = memberRepository.findById(currentMemberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        Member loginMember = memberRepository.findById(currentMemberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
-        RepoView repoView = repoViewRepository.findById(repoViewId).orElseThrow(()-> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
+        RepoView repoView = repoViewRepository.findById(repoViewId).orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
 
         // 본인의 레포 뷰인지 확인
-        if(loginMember.getMemberId() != repoView.getMember().getMemberId()){
+        if (loginMember.getMemberId() != repoView.getMember().getMemberId()) {
             throw new BaseException(StatusCode.MEMBER_NOT_OWN_REPO);
         }
 
@@ -124,12 +120,12 @@ public class RepoService {
     }
 
     public void editRepoCard(Long currentMemberId, Long repoViewId, RepoCardEditReqDto repoCardEditReqDto) {
-        Member loginMember = memberRepository.findById(currentMemberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        Member loginMember = memberRepository.findById(currentMemberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
-        RepoView repoView = repoViewRepository.findById(repoViewId).orElseThrow(()-> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
+        RepoView repoView = repoViewRepository.findById(repoViewId).orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
 
         // 본인의 레포 뷰인지 확인
-        if(loginMember.getMemberId() != repoView.getMember().getMemberId()){
+        if (loginMember.getMemberId() != repoView.getMember().getMemberId()) {
             throw new BaseException(StatusCode.MEMBER_NOT_OWN_REPO);
         }
 
@@ -343,10 +339,10 @@ public class RepoService {
         return map;
     }
 
-    private JsonObject getJsonObject(String url) {
+    private JsonObject getJsonObject(String url, String accessToken) {
         String jsonStrResponse = webClient.get()
                 .uri(url)
-                .header("Authorization", "Bearer " + githubToken)  // Authorization 헤더 추가
+                .header("Authorization", "Bearer " + accessToken)  // Authorization 헤더 추가
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()  // 응답을 검색
                 .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
@@ -358,11 +354,11 @@ public class RepoService {
         return JsonParser.parseString(jsonStrResponse).getAsJsonObject();
     }
 
-    private Integer getRepoMemberCnt(String url) {
+    private Integer getRepoMemberCnt(String url, String accessToken) {
         // 4-3. contributors
         String jsonStrResponse = webClient.get()
                 .uri(url)
-                .header("Authorization", "Bearer " + githubToken)  // Authorization 헤더 추가
+                .header("Authorization", "Bearer " + accessToken)  // Authorization 헤더 추가
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()  // 응답을 검색
                 .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
@@ -411,22 +407,30 @@ public class RepoService {
         Map<String, LocalDate> projectPeriod;
         Integer repoMemberCnt;
         if (analysisReqDto.getProjectId() == null) { // github
+            Code code = codeRepository.findById(1002L).orElseThrow(()->new BaseException(StatusCode.CODE_NOT_FOUND));
+            AccountLink accountLink = accountLinkRepository.findByMemberAndCode(member, code).orElseThrow(()->new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+
             String[] split = analysisReqDto.getRepoUrl().split("/");
             String repoName = split[split.length - 1];
             String userName = split[split.length - 2];
-            JsonObject jsonObject = getJsonObject(gitHubApiUrl + "/repos/" + userName + "/" + repoName);
+
+            JsonObject jsonObject = getJsonObject(gitHubApiUrl + "/repos/" + userName + "/" + repoName, accountLink.getAccountLinkReceiveToken());
             projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "pushed_at");
 
-            repoMemberCnt = getRepoMemberCnt(gitHubApiUrl + "/repos/" + userName + "/" + repoName + "/" + "contributors");
+            repoMemberCnt = getRepoMemberCnt(gitHubApiUrl + "/repos/" + userName + "/" + repoName + "/" + "contributors", accountLink.getAccountLinkReceiveToken());
 
         } else { // gitlab
+            Code code = codeRepository.findById(1003L).orElseThrow(()->new BaseException(StatusCode.CODE_NOT_FOUND));
+            AccountLink accountLink = accountLinkRepository.findByMemberAndCode(member, code).orElseThrow(()->new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+
             String[] split = analysisReqDto.getRepoUrl().split("/");
             String projectUrl = split[split.length - 5];
             String gitLabApiUrl = "https://" + projectUrl + "/api/v4/projects/" + projectId;
-            JsonObject jsonObject = getJsonObject(gitLabApiUrl);
+
+            JsonObject jsonObject = getJsonObject(gitLabApiUrl, accountLink.getAccountLinkReceiveToken());
             projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "updated_at");
 
-            repoMemberCnt = getRepoMemberCnt(gitLabApiUrl + "/" + "contributors");
+            repoMemberCnt = getRepoMemberCnt(gitLabApiUrl + "/" + "contributors", accountLink.getAccountLinkReceiveToken());
         }
 
 
