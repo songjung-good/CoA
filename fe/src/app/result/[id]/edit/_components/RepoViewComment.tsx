@@ -1,11 +1,13 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import useResultStore from "@/store/result";
+import CommentItem from "./CommentItem";
 
 interface Comment {
   commentStartIndex: number;
   commentEndIndex: number;
   commentContent: string;
+  commentTargetString: string;
 }
 
 export default function RepoViewComment() {
@@ -15,7 +17,8 @@ export default function RepoViewComment() {
   const [startIndex, setStartIndex] = useState<number | null>(null);
   const [endIndex, setEndIndex] = useState<number | null>(null);
   const [commentContent, setCommentContent] = useState("");
-  const [selectedText, setSelectedText] = useState(""); // 선택한 텍스트를 저장할 상태
+  const [commentTargetString, setcommentTargetString] = useState(""); // 선택한 텍스트를 저장할 상태
+  const [warning, setWarning] = useState(""); // 경고 메시지를 저장할 상태
   const textRef = useRef<HTMLDivElement>(null);
 
   const handleMouseUp = () => {
@@ -31,7 +34,8 @@ export default function RepoViewComment() {
 
       setStartIndex(start);
       setEndIndex(end);
-      setSelectedText(text); // 선택한 텍스트 상태 업데이트
+      setcommentTargetString(text); // 선택한 텍스트 상태 업데이트
+      setWarning(""); // 경고 메시지 초기화
     }
   };
 
@@ -41,37 +45,73 @@ export default function RepoViewComment() {
         commentStartIndex: startIndex,
         commentEndIndex: endIndex,
         commentContent,
+        commentTargetString: commentTargetString,
       };
       setComments((prevComments) => [...prevComments, newComment]);
       setCommentContent(""); // 입력 필드 초기화
+      setStartIndex(null);
+      setEndIndex(null);
+      setcommentTargetString("");
+    } else {
+      setWarning("선택한 텍스트와 코멘트 내용을 모두 입력해주세요."); // 경고 메시지 설정
     }
   };
 
+  const deleteComment = (index: number) => {
+    setComments((prevComments) =>
+      prevComments.filter((_, idx) => idx !== index),
+    );
+  };
+
+  useEffect(() => {
+    setComments(
+      useResultStore.getState().result.basicDetailDto.commentList as Comment[],
+    );
+  }, []);
+
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="flex justify-center items-center w-4/5 min-h-20 p-5 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl">
+    <div className="w-4/5 flex flex-col items-center">
+      <div className="flex justify-center items-center w-full min-h-20 p-5 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl">
         <div ref={textRef} onMouseUp={handleMouseUp}>
           {result.repoViewResult}
         </div>
       </div>
-      {selectedText && ( // 선택한 텍스트가 있으면 화면에 표시
-        <div className="mt-2 text-gray-600">
-          선택된 텍스트: "{selectedText}"
+      {commentTargetString ? (
+        <div className="mt-2 p-2 text-xl text-gray-600">
+          "{commentTargetString}"
+        </div>
+      ) : warning ? (
+        <div className="mt-2 p-2 text-xl text-red-500">{warning}</div>
+      ) : (
+        <div className="mt-2 p-2 text-xl text-gray-600">
+          코멘트를 작성 할 텍스트를 선택해주세요.
         </div>
       )}
       <input
         type="text"
         value={commentContent}
         onChange={(e) => setCommentContent(e.target.value)}
-        placeholder="Enter comment here"
-        className="mt-2 p-2 border rounded"
+        placeholder="코멘트를 작성해주세요."
+        className="mt-2 p-2 w-full border rounded"
       />
       <button
         onClick={addComment}
         className="mt-2 p-2 bg-blue-500 text-white rounded"
       >
-        Add Comment
+        추가하기
       </button>
+      <hr className=" border-black w-full my-4" />
+      <div className="flex flex-col w-full">
+        {comments.map((e, index) => (
+          <CommentItem
+            key={index}
+            commentTargetString={e.commentTargetString}
+            commentContent={e.commentContent}
+            deleteComment={() => deleteComment(index)}
+          />
+        ))}
+      </div>
+      <button>코멘트 저장하기</button>
     </div>
   );
 }
