@@ -49,6 +49,7 @@ class GithubRestClient(RestRepoClient[GithubAnalysisRequest]):
 
     async def load_content(self) -> list[dict[Any, Any]]:
         # TODO: 리팩토링은 나중에...
+        # TODO: pagination
 
         result: list[dict[Any, Any]] = []
 
