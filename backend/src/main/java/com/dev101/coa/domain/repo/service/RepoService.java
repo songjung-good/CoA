@@ -97,6 +97,27 @@ public class RepoService {
             commentRepository.save(comment);
         }));
 
+
+        // 레포 뷰
+        repoView.updateReadme(editReadmeReqDto.getRepoViewReadme());
+        repoView.updateCommentList(commentList);
+        repoRepository.save(repoView.getRepo());
+    }
+
+    public void editRepoCard(Long currentMemberId, Long repoViewId, RepoCardEditReqDto repoCardEditReqDto) {
+        Member loginMember = memberRepository.findById(currentMemberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));
+
+        RepoView repoView = repoViewRepository.findById(repoViewId).orElseThrow(()-> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
+
+        // 본인의 레포 뷰인지 확인
+        if(loginMember.getMemberId() != repoView.getMember().getMemberId()){
+            throw new BaseException(StatusCode.MEMBER_NOT_OWN_REPO);
+        }
+
+        // 수정
+        repoView.updateRepoCard(repoCardEditReqDto);
+
+        // 스킬리스트 삭제 후 저장 수정
         // 요청으로 받은 codeList 삭제 후 저장
         List<RepoViewSkill> repoViewSkillList = new ArrayList<>();
         List<Long> skillIdList = repoView.getRepoViewSkillList().stream()
@@ -105,7 +126,7 @@ public class RepoService {
 
         skillIdList.forEach(repoViewSkillRepository::deleteById);
 
-        editReadmeReqDto.getCodeList().forEach((codeId) -> {
+        repoCardEditReqDto.getSkillIdList().forEach((codeId) -> {
             Code code = codeRepository.findByCodeId(codeId).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
             RepoViewSkill repoviewSkill = RepoViewSkill.builder()
                     .repoView(repoView)
@@ -115,12 +136,8 @@ public class RepoService {
             repoViewSkillRepository.save(repoviewSkill);
         });
 
-
-        // 레포 뷰, 레포 저장
-        repoView.updateReadme(editReadmeReqDto.getRepoViewReadme());
-        repoView.updateCommentList(commentList);
         repoView.updateCodeList(repoViewSkillList);
-        repoView.getRepo().updateRepoMemberCnt(editReadmeReqDto.getRepoMemberCnt());
+
         repoRepository.save(repoView.getRepo());
         repoViewRepository.save(repoView);
     }

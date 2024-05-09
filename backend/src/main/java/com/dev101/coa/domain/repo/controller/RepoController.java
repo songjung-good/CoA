@@ -26,14 +26,31 @@ public class RepoController {
 
     @Operation(description = "리드미 수정")
     @PutMapping("/{repoViewId}")
-    public ResponseEntity<BaseResponse<Object>> editReadme(@AuthenticationPrincipal Long currentMemberId, @PathVariable Long repoViewId, @RequestBody EditReadmeReqDto editReadmeReqDto) {
+    public ResponseEntity<BaseResponse<Object>> editReadme (
+            @AuthenticationPrincipal Long currentMemberId
+            , @PathVariable("repoViewId") Long repoViewId
+            , @RequestBody EditReadmeReqDto editReadmeReqDto) {
         repoService.editReadme(currentMemberId, repoViewId, editReadmeReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
+    @Operation(description = "레포카드 수정")
+    @PutMapping("/repoCard/{repoViewId}")
+    public ResponseEntity<BaseResponse<Object>> editRepoCard(
+            @AuthenticationPrincipal Long currentMemberId
+            , @PathVariable("repoViewId") Long repoViewId
+            , @RequestBody RepoCardEditReqDto repoCardEditReqDto){
+        repoService.editRepoCard(currentMemberId, repoViewId, repoCardEditReqDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
+    }
+
+
     @Operation(description = "분석 결과 저장")
     @PostMapping("/{analysisId}")
-    public ResponseEntity<BaseResponse<Object>> saveAnalysis(@AuthenticationPrincipal Long currentMemberId, @PathVariable String analysisId, @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) {
+    public ResponseEntity<BaseResponse<Object>> saveAnalysis(
+            @AuthenticationPrincipal Long currentMemberId,
+            @PathVariable("analysisId") String analysisId,
+            @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) {
 
         repoService.saveAnalysis(currentMemberId, analysisId, saveAnalysisReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
@@ -41,7 +58,9 @@ public class RepoController {
 
     @Operation(description = "분석 요청")
     @PostMapping("/analysis")
-    public ResponseEntity<BaseResponse<String>> startAnalysis(@AuthenticationPrincipal Long currentMemberId, HttpServletRequest request, @RequestBody AnalysisReqDto analysisReqDto) {
+    public ResponseEntity<BaseResponse<String>> startAnalysis(
+            @AuthenticationPrincipal Long currentMemberId,
+            @RequestBody AnalysisReqDto analysisReqDto) {
 
         String analysisId = repoService.startAnalysis(currentMemberId, analysisReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<String>(analysisId));
@@ -49,7 +68,9 @@ public class RepoController {
 
     @Operation(description = "분석 진척도 체크")
     @GetMapping("/analysis/{analysisId}")
-    public ResponseEntity<BaseResponse<AnalysisCheckResDto>> checkAnalysis(@AuthenticationPrincipal Long currentMemberId, HttpServletRequest request, @PathVariable String analysisId) {
+    public ResponseEntity<BaseResponse<AnalysisCheckResDto>> checkAnalysis(
+            @AuthenticationPrincipal Long currentMemberId,
+            @PathVariable("analysisId") String analysisId) {
 
         AnalysisCheckResDto result = repoService.checkAnalysis(currentMemberId, analysisId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
@@ -58,7 +79,9 @@ public class RepoController {
 
     @Operation(description = "완료된 분석 결과 가져오기")
     @GetMapping("/analysis/done/{analysisId}")
-    public ResponseEntity<BaseResponse<RepoDetailResDto>> getDoneAnalysis(@AuthenticationPrincipal Long currentMemberId, HttpServletRequest request, @PathVariable String analysisId) {
+    public ResponseEntity<BaseResponse<RepoDetailResDto>> getDoneAnalysis(
+            @AuthenticationPrincipal Long currentMemberId,
+            @PathVariable("analysisId") String analysisId) {
 
         RepoDetailResDto result = repoService.getDoneAnalysis(currentMemberId, analysisId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
@@ -66,7 +89,9 @@ public class RepoController {
 
     @Operation(description = "특정 레포 뷰 조회")
     @GetMapping("/{repoViewId}")
-    public ResponseEntity<BaseResponse<RepoDetailResDto>> readRepoView(@AuthenticationPrincipal Long currentMemberId, @PathVariable("repoViewId") Long repoViewId){
+    public ResponseEntity<BaseResponse<RepoDetailResDto>> readRepoView(
+            @AuthenticationPrincipal Long currentMemberId,
+            @PathVariable("repoViewId") Long repoViewId){
 
         RepoDetailResDto result = repoService.readRepoView(currentMemberId, repoViewId);
 

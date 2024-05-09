@@ -7,7 +7,5 @@ import java.util.List;
 @Getter
 public class EditReadmeReqDto {
     private String repoViewReadme;
-    private Integer repoMemberCnt;
     private List<CommitCommentDto> commitCommentDtoList;
-    private List<Long> codeList;
 }
