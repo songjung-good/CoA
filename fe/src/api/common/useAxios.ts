@@ -1,6 +1,17 @@
+'use client'
 import axios, { AxiosInstance } from "axios";
 
-const serverUrl = process.env.NEXT_PUBLIC_URL_SERVER;
+function getDomainAddress() {
+  var hostname = window.location.hostname; // 현재 도메인 이름을 가져옵니다.
+  if (hostname === "localhost") {
+      return "http://localhost:8080";
+  } else {
+      return window.location.protocol + "//" + hostname;
+  }
+}
+var domainAddress = getDomainAddress();
+
+const serverUrl = domainAddress
 
 const UseAxios = (): AxiosInstance => {
   const axiosInstance = axios.create({
