@@ -6,15 +6,15 @@ import { useRouter, useParams } from "next/navigation";
 import tw from "tailwind-styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 // store
-import useResultStore from "@/store/result";
+import useResultStore from "@/store/repo";
 
 import "@/app/result/[id]/_components/result.css";
 
 // 컴포넌트 import
-import ResultCommit from "@/app/result/[id]/_components/ResultCommit";
+import ResultCommit from "@/app/repo/[id]/_components/ResultCommit";
 // import ResultContribution from "@/app/result/[id]/_components/ResultContribution.tsx"; 폐기했습니다
-import ResultReadme from "@/app/result/[id]/_components/ResultReadme";
-import ResultScore from "@/app/result/[id]/_components/ResultScore";
+import ResultReadme from "@/app/repo/[id]/_components/ResultReadme";
+import ResultScore from "@/app/repo/[id]/_components/ResultScore";
 
 export default function ResultTab() {
   const [tabIndex, setTabIndex] = useState(0);

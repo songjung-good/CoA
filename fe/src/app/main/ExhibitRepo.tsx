@@ -21,7 +21,9 @@ const ExhibitRepo: React.FC = () => {
     try {
       const response = await axios.get(`/api/repos/${repoViewId}`);
       console.log(response.data);
-      setRepoDetail(response.data); // store에 데이터 저장
+      // axios로 잠시 대체
+      // setRepoDetail(response.data);
+      setRepoDetail(repocardDTO.temporaryData[0])
     } catch (error) {
       console.error(error);
     }

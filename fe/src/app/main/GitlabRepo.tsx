@@ -2,12 +2,9 @@
 // 사용자의 Gitlab ID를 받아 Repository 목록을 불러와 보여주는 컴포넌트
 
 import React, { useState, useEffect } from 'react';
-import tw from 'tailwind-styled-components';
-
-// 추후 axios 수정 필요
 import axios from 'axios';
-// import UseAxios from '@/api/common/useAxios';
-// const axios = UseAxios();
+import tw from 'tailwind-styled-components';
+import UseAxios from '@/api/common/useAxios';
 // GitHub 개인 액세스 토큰
 const accessToken = process.env.NEXT_PUBLIC_GITLAB_ACCESS_TOKENS;
 
@@ -25,20 +22,21 @@ interface MyRepoProps {
 const GitlabRepo: React.FC<MyRepoProps> = ({ userID }) => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [notLink, setNotLink] = useState<number>(0);
+  const axiosInstance = UseAxios();
 
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const response = await axios.get(
-          `https://lab.ssafy.com/api/v4/users/${userID}/contributed_projects`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        console.log(response.data);
-        setRepos(response.data);
+        const response = await axiosInstance.get(`api/external/gitlab/repos/${userID}`);
+
+        if (response.data.code === 602 || response.data.code === 303) {
+          setNotLink(response.data.code)
+          return
+        }
+        if (response.data.code === 200) {
+          setRepos(JSON.parse(response.data.result));
+        }        
         setLoading(false);
       } catch (error) {
         console.error('해당 요청에 문제가 생겼습니다. : ', error);
@@ -52,6 +50,12 @@ const GitlabRepo: React.FC<MyRepoProps> = ({ userID }) => {
     };
   }, [userID]);
 
+  if (notLink === 602) {
+    return <div>계정을 연동해주세요.</div>
+  }
+  if (notLink === 303) {
+    return <div>토큰을 갱신해주세요.</div>
+  }
   if (loading) {
     return <Loading>목록을 받아오는 중 입니다.</Loading>;
   }

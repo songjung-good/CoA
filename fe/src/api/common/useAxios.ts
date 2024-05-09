@@ -2,7 +2,6 @@ import axios, { AxiosInstance } from "axios";
 
 const serverUrl = process.env.NEXT_PUBLIC_URL_SERVER;
 
-
 const UseAxios = (): AxiosInstance => {
   const axiosInstance = axios.create({
     baseURL: serverUrl,
@@ -19,6 +18,18 @@ const UseAxios = (): AxiosInstance => {
       console.log(error);
     },
   );
+
+  axiosInstance.interceptors.response.use(
+    (response) => {
+      if (response.data.code === 303) {
+        return response
+      } else if (response.data.code === 602) {
+        return response
+      }else if (response.data.code == 200) {
+        return response
+      }    
+    }
+  )
 
   // axiosInstance.interceptors.response.use(
   //   (response) => {
