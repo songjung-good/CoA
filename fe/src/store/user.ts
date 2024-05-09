@@ -9,6 +9,8 @@ interface UserStore {
   setAuthUserName: (input: string) => void;
   userImage: string;
   setUserImage: (input: string) => void;
+  UUID: string;
+  setUUID: (input: string) => void;
 }
 
 const userStore = create<UserStore>((set) => ({
@@ -20,6 +22,8 @@ const userStore = create<UserStore>((set) => ({
   setAuthUserName: (input: string) => set({ AuthUserName: input }),
   userImage: "/image/chun.png",
   setUserImage: (input: string) => set({ userImage: input }),
+  UUID: "",
+  setUUID: (input: string) => set({ UUID: input }),
 }));
 
 export default userStore;
