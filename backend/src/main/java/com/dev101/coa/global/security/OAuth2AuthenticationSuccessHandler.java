@@ -93,17 +93,23 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private String determineRedirectUrl(HttpServletRequest request) throws Exception {
         String refererHeader = request.getHeader("Referer");
+        System.out.println("refererHeader = " + refererHeader);
 
         if (refererHeader != null && isAllowedDomain(refererHeader)) {
             URL refererUrl = new URL(refererHeader);
             String domain = refererUrl.getHost();
             int port = refererUrl.getPort();
+            System.out.println("refererUrl = " + refererUrl);
+            System.out.println("domain = " + domain);
+            System.out.println("port = " + port);
 
             if (domain.equals("localhost") && port == 3000) {
                 return "http://localhost:3000";
             } else if (domain.equals("k10e101.p.ssafy.io")) {
+                System.out.println("domain = " + domain);
                 return "https://k10e101.p.ssafy.io";
             } else if (domain.equals("commitanalyze.com")) {
+                System.out.println("domain = " + domain);
                 return "https://commitanalyze.com";
             }
         }
