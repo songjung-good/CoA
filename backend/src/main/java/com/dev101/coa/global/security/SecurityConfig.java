@@ -29,7 +29,7 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
-                            config.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 허용할 Origin -> "https://k10e101.p.ssafy.io/" 배포는 오리진이 같아서 괜찮은 듯.
+                            config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://k10e101.p.ssafy.io", "https://commitanalyze.com")); // 허용할 Origin -> "https://k10e101.p.ssafy.io/" 배포는 오리진이 같아서 괜찮은 듯.
                             config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // 허용할 HTTP 메소드
                             config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "Access-Token", "X-CSRF-TOKEN")); // 허용할 헤더
 //                            config.setAllowedHeaders(List.of("*")); // 허용할 헤더
