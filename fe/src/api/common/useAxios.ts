@@ -1,19 +1,22 @@
-'use client'
+"use client";
 import axios, { AxiosInstance } from "axios";
 
-function getDomainAddress() {
-  var hostname = window.location.hostname; // 현재 도메인 이름을 가져옵니다.
-  if (hostname === "localhost") {
-      return "http://localhost:8080";
-  } else {
-      return window.location.protocol + "//" + hostname;
-  }
-}
-var domainAddress = getDomainAddress();
-
-const serverUrl = domainAddress
-
 const UseAxios = (): AxiosInstance => {
+  
+  function getDomainAddress() {
+    if (typeof window === "undefined") {
+      // 서버 사이드에서 실행되는 경우
+      return "http://localhost:8080"; // 또는 다른 기본 URL
+    }
+    var hostname = window.location.hostname; // 현재 도메인 이름을 가져옵니다.
+    if (hostname === "localhost") {
+        return "http://localhost:8080";
+    } else {
+        return window.location.protocol + "//" + hostname;
+    }
+  }
+  const serverUrl = getDomainAddress();
+
   const axiosInstance = axios.create({
     baseURL: serverUrl,
     withCredentials: true, // 쿠키를 담겠다는 의미
