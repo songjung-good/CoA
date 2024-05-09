@@ -44,8 +44,13 @@ public class MemberController {
 
     @GetMapping("/alarms")
     @Operation(description = "로그인한 유저가 받은 알람 목록")
-    public ResponseEntity<BaseResponse<List<AlarmDto>>> getAlarmList(@AuthenticationPrincipal Long memberId){
-        List<AlarmDto> result = memberService.getAlarmList(memberId);
+    public ResponseEntity<BaseResponse<List<AlarmDto>>> getAlarmList(
+            @AuthenticationPrincipal Long memberId
+            , @RequestParam(value = "page", defaultValue = "0") int page
+            , @RequestParam(value = "size", defaultValue = "20") int size
+    ){
+        memberId = 9L;
+        List<AlarmDto> result = memberService.getAlarmList(memberId, page, size);
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<List<AlarmDto>>(result));
     }
