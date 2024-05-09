@@ -105,8 +105,10 @@ public class RepoService {
                     .repoView(repoView)
                     .commentStartIndex(cd.getCommentStartIndex())
                     .commentEndIndex(cd.getCommentEndIndex())
+                    .commentTargetString(cd.getCommentTargetString())
                     .commentContent(cd.getCommentContent())
                     .build();
+            System.out.println("comment = " + comment);
             commentList.add(comment);
             commentRepository.save(comment);
         }));
