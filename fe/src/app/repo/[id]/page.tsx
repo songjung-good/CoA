@@ -3,7 +3,7 @@
 import RepoInfo from "./_components/RepoInfo";
 import useRepoDetailStore from "@/store/repodetail";
 
-import "../../result/[id]/_components/result.css";
+import "@/app/repo/[id]/_components/result.css";
 
 export default function RepoPage({ params }: { params: { id: string } }) {
   const userNickName = useRepoDetailStore(

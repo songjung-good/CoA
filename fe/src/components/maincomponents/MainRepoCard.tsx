@@ -81,6 +81,23 @@ const Card = tw.div`
   hover:border-appBlue1
 `;
 
+// const Card = tw.div`
+//   w-[25rem] 
+//   h-[15rem]
+//   border
+//   border-appGrey2
+//   rounded-lg 
+//   m-[2rem] 
+//   flex
+//   flex-col
+//   p-4
+//   justify-between
+//   hover:border-appBlue1
+//   lg:w-[32rem] h-[25rem]
+//   md:w-[28rem] h-[18rem]
+//   sm:w-[25rem] h-[15rem]
+// `;
+
 const AvatarWrapper = tw.div`
   flex
   items-center
