@@ -1,6 +1,8 @@
 package com.dev101.coa.domain.repo.repository;
 
 import com.dev101.coa.domain.repo.entity.Repo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
