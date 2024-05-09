@@ -23,7 +23,7 @@ interface MyScore {
   [key: string]: CommitScoreDto;
 }
 
-interface RepoAnalysisResponse {
+export interface RepoAnalysisResponse {
   jobs: Jobs;
   myScore: MyScore;
   repos: RepoAnalysisDto[];
