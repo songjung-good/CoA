@@ -64,7 +64,7 @@ const LinesOfCodeChart = () => {
       .attr("y", (d) => y(d.language)!)
       .attr("width", (d) => (d.lines / totalLines) * width)
       .attr("height", y.bandwidth())
-      .attr("fill", (d) => colorMapping[d.language]); // 색상 지정
+      .attr("fill", (d) => colorMapping[d.language] || "steelblue"); // 색상 지정
 
     // Append a label for each language.
     svg

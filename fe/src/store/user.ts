@@ -1,29 +1,45 @@
 import { create } from "zustand";
 
 interface UserStore {
-  githubUserName: string;
-  setGithubUserName: (input: string) => void;
-  gitlabUserName: string;
-  setGitlabUserName: (input: string) => void;
-  AuthUserName: string;
-  setAuthUserName: (input: string) => void;
-  userImage: string;
-  setUserImage: (input: string) => void;
   UUID: string;
-  setUUID: (input: string) => void;
+  userImage: string;
+  githubUserName: string | null;
+  isGithubToken: boolean | null;
+  gitlabUserName: string | null;
+  isGitlabToken: boolean | null;
+  AuthUserName: string | null;
+  solvedacNickName: string | null;
+  codeforcesNickName: string | null;
+  // setUUID: (input: string) => void;
+  // setUserImage: (input: string) => void;
+  // setAuthUserName: (input: string) => void;
+  // setGithubUserName: (input: string) => void;
+  // setGitlabUserName: (input: string) => void;
+  // setIsGithubToken: (input: boolean) => void;
+  // setIsGitlabToken: (input: boolean) => void;
+  // setSolvedacNickName: (input: string) => void; // 추가
+  // setCodeforcesNickName: (input: string) => void; // 추가
 }
 
 const userStore = create<UserStore>((set) => ({
-  githubUserName: "HOONTP",
-  setGithubUserName: (input: string) => set({ githubUserName: input }),
-  gitlabUserName: "qsc3117",
-  setGitlabUserName: (input: string) => set({ gitlabUserName: input }),
-  AuthUserName: "Shin-3117",
-  setAuthUserName: (input: string) => set({ AuthUserName: input }),
-  userImage: "/image/chun.png",
-  setUserImage: (input: string) => set({ userImage: input }),
   UUID: "",
-  setUUID: (input: string) => set({ UUID: input }),
+  userImage: "/image/chun.png",
+  AuthUserName: "",
+  githubUserName: null,
+  isGithubToken: null,
+  gitlabUserName: null,
+  isGitlabToken: null,
+  solvedacNickName: null,
+  codeforcesNickName: null,
+  // setUUID: (input: string) => set({ UUID: input }),
+  // setUserImage: (input: string) => set({ userImage: input }),
+  // setAuthUserName: (input: string) => set({ AuthUserName: input }),
+  // setGithubUserName: (input: string) => set({ githubUserName: input }),
+  // setIsGithubToken: (input: boolean) => set({ isGithubToken: input }),
+  // setGitlabUserName: (input: string) => set({ gitlabUserName: input }),
+  // setIsGitlabToken: (input: boolean) => set({ isGitlabToken: input }),
+  // setSolvedacNickName: (input: string) => set({ solvedacNickName: input }), // 추가
+  // setCodeforcesNickName: (input: string) => set({ codeforcesNickName: input }),
 }));
 
 export default userStore;

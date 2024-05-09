@@ -61,7 +61,7 @@ const MyPageRepositoryCardChart = ({
       .selectAll()
       .data(arcs)
       .join("path")
-      .attr("fill", (d) => colorMapping[d.data.language])
+      .attr("fill", (d) => colorMapping[d.data.language] || "steelblue")
       .attr("d", (d) => {
         const defaultArcObject: d3.DefaultArcObject = {
           innerRadius: 0,

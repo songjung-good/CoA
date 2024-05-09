@@ -6,7 +6,11 @@ import { useRouter } from "next/navigation";
 
 export default function Dummy() {
   const [UserName, setUserName] = useState("");
-  const { githubUserName, setGithubUserName } = userStore();
+  const { githubUserName } = userStore();
+  // userStore의 다른 속성 삭제하는지 관찰 필요
+  const setGithubUserName = (newName: string) => {
+    userStore.setState({ githubUserName: newName });
+  };
   const router = useRouter();
   const onClick = () => {
     setGithubUserName(UserName);
