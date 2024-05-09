@@ -87,7 +87,8 @@ export default function ResultTab() {
         </CSSTransition>
       </TransitionGroup>
       <div className="flex justify-evenly mt-10">
-        {isMine && <button onClick={handleEditButton}>저장 후 수정</button>}
+        {isMine && <button>저장하기</button>}
+        {isMine && <button onClick={handleEditButton}>수정하기</button>}
         <Link href="/main">
           <button>홈으로</button>
         </Link>
