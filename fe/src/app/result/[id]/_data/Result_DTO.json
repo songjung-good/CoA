@@ -14,11 +14,11 @@
         "repoMemberCnt": 6,
         "skillList": [
           {
-            "codeId": 101,
+            "codeId": 3002,
             "codeName": "JavaScript"
           },
           {
-            "codeId": 102,
+            "codeId": 3003,
             "codeName": "Python"
           }
         ],

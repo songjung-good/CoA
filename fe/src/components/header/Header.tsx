@@ -3,6 +3,7 @@ import SearchBar from "./SearchBar";
 import LoadingAnalyzing from "./LoadingAnalyzing";
 import Link from "next/link";
 import AuthButton from "./AuthButton";
+import Notification from "../notification/Notification";
 import { cookies } from "next/headers";
 export default function Header() {
   const cookieStore = cookies();
@@ -33,6 +34,7 @@ export default function Header() {
       </Link>
       <SearchBar />
       <LoadingAnalyzing />
+      <Notification />
       <AuthButton hasJWT={hasJWT} />
     </header>
   );

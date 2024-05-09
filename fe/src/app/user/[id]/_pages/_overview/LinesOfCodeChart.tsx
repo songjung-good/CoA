@@ -80,9 +80,7 @@ const LinesOfCodeChart = () => {
       .attr("dx", (d) => d.lines.toString().length * 10 + marginLeft)
       .text((d) => d.lines)
       .attr("fill", "black");
-    // .attr("text-anchor", "start");
     // Create the axes
-
     svg
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
