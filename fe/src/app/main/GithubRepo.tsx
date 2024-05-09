@@ -17,7 +17,7 @@ interface Repo {
 }
 
 interface MyRepoProps {
-  userID: string;
+  userID: string | null;
 }
 
 const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
@@ -28,21 +28,25 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
 
   useEffect(() => {
     const fetchRepos = async () => {
-      try {
-        const response = await axiosInstance.get(
-          `api/external/github/repos/${userID}`,
-        );
+      if (userID !== null) {
+        try {
+          const response = await axiosInstance.get(
+            `api/external/github/repos/${userID}`,
+          );
 
-        if (response.data.code === 602 || response.data.code === 303) {
-          setNotLink(response.data.code);
-          return;
+          if (response.data.code === 602 || response.data.code === 303) {
+            setNotLink(response.data.code);
+            return;
+          }
+          if (response.data.code === 200) {
+            setRepos(JSON.parse(response.data.result));
+          }
+          setLoading(false);
+        } catch (error) {
+          console.error("해당 요청에 문제가 생겼습니다. : ", error);
         }
-        if (response.data.code === 200) {
-          setRepos(JSON.parse(response.data.result));
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error("해당 요청에 문제가 생겼습니다. : ", error);
+      } else {
+        console.log(`userID가 null입니다. ${userID}`);
       }
     };
 
