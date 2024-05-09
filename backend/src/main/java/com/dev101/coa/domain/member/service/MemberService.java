@@ -10,6 +10,9 @@ import com.dev101.coa.domain.member.repository.*;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -49,11 +52,12 @@ public class MemberService {
         return builder.build();
     }
 
-    public List<AlarmDto> getAlarmList(Long memberId) {
+    public List<AlarmDto> getAlarmList(Long memberId, int page, int size) {
 
+        Pageable pageable = PageRequest.of(page, size);
         Member targetMember = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
-        List<Alarm> alarmList = alarmRepository.findByAlarmTargetIdOrderByCreatedAtDesc(memberId);
+        Page<Alarm> alarmList = alarmRepository.findByAlarmTargetIdOrderByCreatedAtDesc(memberId, pageable);
 
 
         List<AlarmDto> alarmDtoList = new ArrayList<>();
