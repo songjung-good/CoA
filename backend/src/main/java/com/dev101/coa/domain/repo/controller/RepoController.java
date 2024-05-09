@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Repo Controller", description = "Repo와 관련된 API")
 @RestController
 @RequiredArgsConstructor
@@ -25,12 +27,22 @@ public class RepoController {
     private final RepoService repoService;
 
     @Operation(description = "리드미 수정")
-    @PutMapping("/{repoViewId}")
+    @PutMapping("/readme/{repoViewId}")
     public ResponseEntity<BaseResponse<Object>> editReadme (
             @AuthenticationPrincipal Long currentMemberId
             , @PathVariable("repoViewId") Long repoViewId
-            , @RequestBody EditReadmeReqDto editReadmeReqDto) {
-        repoService.editReadme(currentMemberId, repoViewId, editReadmeReqDto);
+            , @RequestBody String editReadmeReq) {
+        repoService.editReadme(currentMemberId, repoViewId, editReadmeReq);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
+    }
+
+    @Operation(description = "코멘트 수정")
+    @PutMapping("/comments/{repoViewId}")
+    public ResponseEntity<BaseResponse<Object>> editCommentList(
+            @AuthenticationPrincipal Long currentMemberId
+            , @PathVariable("repoViewId") Long repoViewId
+            , @RequestBody List<CommitCommentDto> editCommentListReq){
+        repoService.editComment(currentMemberId, repoViewId,editCommentListReq);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
