@@ -31,7 +31,7 @@ export default function UserIconButton() {
 
   const logout = async () => {
     try {
-      const response = await axiosInstance.post("/api/member/logout");
+      const response = await axiosInstance.post("/api/auth/logout");
       window.location.href = '/'
     } catch (error) {
       console.error("logout 중 오류가 발생했습니다:", error);
