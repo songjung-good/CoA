@@ -48,19 +48,18 @@ public class SecurityConfig {
 
                 // 요청 권한 설정 TODO 서버의(JWT) 인증 부분
                 .authorizeHttpRequests(auth -> auth
-                                .anyRequest().permitAll()
-//                                .requestMatchers("/auth").permitAll()
-//                                .anyRequest().authenticated()
+//                                .anyRequest().permitAll()
+                                .requestMatchers("/api/swagger-ui/**", "/api/auth/**").permitAll()
+                                .anyRequest().authenticated()
                 )
-//                .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
+
+                .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
 
                 // 세션 관리 전략 설정
                 .sessionManagement(session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //
 //                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // TODO 선택적으로 해야하나
                 )
-
-
 
                 // OAuth2 로그인 설정 // oauth2Login 사용자가 로그인 안되어 있으면 일로 보낸다는데? http://localhost:8080/oauth2/authorization/google
                 //Spring Security는 애플리케이션의 /login/oauth2/code/* 경로를 리다이렉트 URI로 사용하여 OAuth 2.0 프로바이더로부터 인증 코드를 받습니다.
