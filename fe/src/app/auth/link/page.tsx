@@ -136,6 +136,7 @@ export default function LinkPage() {
                 alt="github"
                 width={100}
                 height={100}
+                style={{ width: "100px", height: "100px" }}
               />
             </div>
             <div>
@@ -153,10 +154,11 @@ export default function LinkPage() {
               onClick={handleGithubLogin}
             >
               <Image
-                src="/image/githubSSO.png"
+                src="/image/oauth/github-mark.svg"
                 alt="githubSSO"
                 width={24}
                 height={24}
+                style={{ width: "24px", height: "24px" }}
               />
               Sign in with GitHub
             </button>
@@ -167,10 +169,11 @@ export default function LinkPage() {
               }}
             >
               <Image
-                src="/image/githubSSO.png"
+                src="/image/oauth/github-mark.svg"
                 alt="githubSSO"
                 width={24}
                 height={24}
+                style={{ width: "24px", height: "24px" }}
               />
               access token 등록
             </button>
