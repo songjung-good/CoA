@@ -1,7 +1,6 @@
 package com.dev101.coa.domain.search.service;
 
 import com.dev101.coa.domain.code.dto.CodeDto;
-import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.member.dto.MemberCardDto;
 import com.dev101.coa.domain.member.entity.AccountLink;
 import com.dev101.coa.domain.member.entity.Member;
@@ -17,6 +16,10 @@ import com.dev101.coa.domain.repo.repository.RepoViewRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,21 +38,26 @@ public class SearchService {
     private final MemberSkillRepository memberSkillRepository;
 
 
-    public List<RepoCardDto> searchRepoView(String keyword) {
+    public List<RepoCardDto> searchRepoView(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         if (keyword.isEmpty()) {
             throw new BaseException(StatusCode.KEYWORD_EMPTY);
         }
 
         List<Repo> repoList = repoRepository.findByRepoPathContaining(keyword);
+
         List<RepoCardDto> repoCardDtoList = new ArrayList<>();
         List<RepoView> repoViewList = new ArrayList<>();
         for (Repo repo : repoList) {
-            repoViewList.addAll(repoViewRepository.findAllByRepo(repo));
+            Page<RepoView> pageRepoViewList = repoViewRepository.findAllByRepo(repo, pageable);
+            for(RepoView prv: pageRepoViewList){
+                repoViewList.add(prv);
+            }
         }
         // createdAt 내림차순으로 정렬
-        repoViewList = repoViewList.stream()
-                .sorted(Comparator.comparing(RepoView::getCreatedAt).reversed())
-                .collect(Collectors.toList());
+//        repoViewList = repoViewList.stream()
+//                .sorted(Comparator.comparing(RepoView::getCreatedAt).reversed())
+//                .collect(Collectors.toList());
 
         for (RepoView repoView : repoViewList) {
             System.out.println("repoView.getRepoViewSkillList() = " + repoView.getRepoViewSkillList());
