@@ -12,8 +12,8 @@ import dynamic from "next/dynamic";
 // 높이 계산 로직이나 이거에 대해서 추후 고민해볼 것
 const calculateHeight = (text: string) => {
   const lines = text.split("\n").length;
-  const lineHeight = 35;
-  const minEditorHeight = 200;
+  const lineHeight = 25;
+  const minEditorHeight = 300;
   const calculatedHeight = lines * lineHeight;
 
   return Math.max(calculatedHeight, minEditorHeight);
