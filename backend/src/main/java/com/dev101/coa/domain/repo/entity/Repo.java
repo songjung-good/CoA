@@ -53,4 +53,8 @@ public class Repo extends BaseEntity {
         this.repoMemberCnt = repoInfo.getRepoMemberCnt();
         this.setUpdatedAt(LocalDateTime.now());
     }
+
+    public void updateRepoMemberCnt(Integer repoMemberCnt){
+        this.repoMemberCnt = repoMemberCnt;
+    }
 }

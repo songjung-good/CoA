@@ -52,7 +52,7 @@ public class SecurityConfig {
                                 .requestMatchers("/auth").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
+//                .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
 
                 // 세션 관리 전략 설정
                 .sessionManagement(session -> session

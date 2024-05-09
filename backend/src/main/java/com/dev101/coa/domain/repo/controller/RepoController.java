@@ -66,7 +66,8 @@ public class RepoController {
 
     @Operation(description = "특정 레포 뷰 조회")
     @GetMapping("/{repoViewId}")
-    public ResponseEntity<BaseResponse<RepoDetailResDto>> readRepoView(@AuthenticationPrincipal Long currentMemberId, @PathVariable Long repoViewId){
+    public ResponseEntity<BaseResponse<RepoDetailResDto>> readRepoView(@AuthenticationPrincipal Long currentMemberId, @PathVariable("repoViewId") Long repoViewId){
+
         RepoDetailResDto result = repoService.readRepoView(currentMemberId, repoViewId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));

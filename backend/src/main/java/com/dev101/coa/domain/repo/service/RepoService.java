@@ -4,8 +4,11 @@ import com.dev101.coa.domain.code.dto.CodeCntDto;
 import com.dev101.coa.domain.code.dto.CodeDto;
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.code.repository.CodeRepository;
+import com.dev101.coa.domain.member.dto.AlarmDto;
+import com.dev101.coa.domain.member.entity.Alarm;
 import com.dev101.coa.domain.member.entity.Member;
 import com.dev101.coa.domain.member.repository.AccountLinkRepository;
+import com.dev101.coa.domain.member.repository.AlarmRepository;
 import com.dev101.coa.domain.member.repository.MemberRepository;
 import com.dev101.coa.domain.redis.RedisRepoRepository;
 import com.dev101.coa.domain.redis.RedisResult;
@@ -57,6 +60,7 @@ public class RepoService {
     private final MemberRepository memberRepository;
     private final LineOfCodeRepository lineOfCodeRepository;
     private final CommitScoreRepository commitScoreRepository;
+    private final AlarmRepository alarmRepository;
 
     private final RedisRepoRepository redisRepoRepository;
 
@@ -112,10 +116,12 @@ public class RepoService {
         });
 
 
-        // 레포 뷰 저장
+        // 레포 뷰, 레포 저장
         repoView.updateReadme(editReadmeReqDto.getRepoViewReadme());
         repoView.updateCommentList(commentList);
         repoView.updateCodeList(repoViewSkillList);
+        repoView.getRepo().updateRepoMemberCnt(editReadmeReqDto.getRepoMemberCnt());
+        repoRepository.save(repoView.getRepo());
         repoViewRepository.save(repoView);
     }
 
@@ -161,7 +167,7 @@ public class RepoService {
 
         // repoView 저장
         // 분석 요구자와 레포의 주인이 일치하는 경우(redisData.get("isOwn") == true)만 저장
-        if(!redisData.getIsOwn()) return;
+        if (!redisData.getIsOwn()) return;
 
         List<Long> skillCodeIdList = saveAnalysisReqDto.getRepoViewSkillList();
         List<Code> skillCodeList = new ArrayList<>();
@@ -422,7 +428,6 @@ public class RepoService {
                 .block();
 
 
-
         if (response.equals("false")) {
             throw new BaseException(StatusCode.AI_SERVER_ERROR);
         }
@@ -559,6 +564,15 @@ public class RepoService {
 
         //  로그인한 유저 != 레포 주인 (commit score만 뺴고)
         if (!Objects.equals(memberId, repoView.getMember().getMemberId())) {
+
+            // 알림 기능 추가
+            Member loginMember = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+            alarmRepository.save(Alarm.builder()
+                    .alarmMember(loginMember)
+                    .alarmRepoView(repoView)
+                    .alarmTargetId(repoView.getMember().getMemberId())
+                    .build());
+
             return RepoDetailResDto.builder()
                     .repoCardDto(repoCardDto)
                     .basicDetailDto(basicDetailDto)
