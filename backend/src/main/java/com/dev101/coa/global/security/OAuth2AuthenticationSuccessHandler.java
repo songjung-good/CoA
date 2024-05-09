@@ -81,13 +81,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             jwtCookie.setPath("/");
             jwtCookie.setMaxAge(jwtExpirationInMs);
             response.addCookie(jwtCookie);
-
-            System.out.println("request.getRequestURL() = " + request.getRequestURL());
-            StringBuffer requestURL = request.getRequestURL();
-            String urlString = requestURL.toString();  // 전체 URL을 문자열로 가져옵니다.
-            URL url = new URL(urlString);  // URL 객체를 생성합니다.
-            System.out.println("url = " + url);
-
             try {
                 String requestDomain = determineRedirectUrl(request);
                 response.sendRedirect(requestDomain + "/main");
@@ -99,23 +92,21 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private String determineRedirectUrl(HttpServletRequest request) throws Exception {
-        String refererHeader = request.getHeader("Referer");
-        System.out.println("refererHeader = " + refererHeader);
+//        String refererHeader = request.getHeader("Referer"); // https -> http의 경우 헤더가 보안상 사라짐
+//        System.out.println("refererHeader = " + refererHeader);
+        String urlString = request.getRequestURL().toString();
+        URL url = new URL(urlString);  // URL 객체를 생성합니다.
+        String domain = url.getHost();
 
-        if (refererHeader != null && isAllowedDomain(refererHeader)) {
-            URL refererUrl = new URL(refererHeader);
-            String domain = refererUrl.getHost();
-            int port = refererUrl.getPort();
-            System.out.println("refererUrl = " + refererUrl);
-            System.out.println("domain = " + domain);
-            System.out.println("port = " + port);
-
-            if (domain.equals("localhost") && port == 3000) {
+        switch (domain) {
+            case "localhost" -> {
                 return "http://localhost:3000";
-            } else if (domain.equals("k10e101.p.ssafy.io")) {
+            }
+            case "k10e101.p.ssafy.io" -> {
                 System.out.println("domain = " + domain);
                 return "https://k10e101.p.ssafy.io";
-            } else if (domain.equals("commitanalyze.com")) {
+            }
+            case "commitanalyze.com" -> {
                 System.out.println("domain = " + domain);
                 return "https://commitanalyze.com";
             }
