@@ -15,7 +15,7 @@ export default function ResultCommit() {
         분석결과
       </p>
       <div className="flex justify-center items-center w-full min-h-20 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl">
-        <div className="">{result.repoViewResult}</div>
+        <div>{result.repoViewResult}</div>
       </div>
     </div>
   );
