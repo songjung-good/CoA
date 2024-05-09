@@ -8,6 +8,7 @@ import com.dev101.coa.domain.member.entity.AccountLink;
 import com.dev101.coa.domain.member.entity.Member;
 import com.dev101.coa.domain.member.repository.AccountLinkRepository;
 import com.dev101.coa.domain.member.repository.MemberRepository;
+import com.dev101.coa.domain.member.service.MemberService;
 import com.dev101.coa.global.common.BaseResponse;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
@@ -36,6 +37,7 @@ public class AccountLinkController {
     private final CodeRepository codeRepository;
     private final AccountLinkRepository accountLinkRepository;
     private final EncryptionUtils encryptionUtils;
+    private final MemberService memberService;
 
     @Operation(description = "연결 페이지 정보")
     @GetMapping("")
@@ -46,7 +48,7 @@ public class AccountLinkController {
         AccountLinkInfoDto dto = accountLinks.stream()
                 .collect(Collectors.collectingAndThen(
                         Collectors.toList(),
-                        this::aggregateLinksIntoDto));
+                        memberService::aggregateLinksIntoDto));
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(dto));
     }
@@ -138,29 +140,6 @@ public class AccountLinkController {
         // 외부 API 토큰 업데이트
         accountLink.updateReceiveToken(encryptedToken);
         accountLinkRepository.save(accountLink);
-    }
-
-    private AccountLinkInfoDto aggregateLinksIntoDto(List<AccountLink> links) {
-        AccountLinkInfoDto.AccountLinkInfoDtoBuilder dtoBuilder = AccountLinkInfoDto.builder();
-        for (AccountLink link : links) {
-            switch (link.getCode().getCodeName()) {
-                case "Github":
-                    dtoBuilder.githubNickName(link.getAccountLinkNickname())
-                            .isGithubToken(link.getAccountLinkReceiveToken() != null);
-                    break;
-                case "GitLab":
-                    dtoBuilder.gitlabNickName(link.getAccountLinkNickname())
-                            .isGitlabToken(link.getAccountLinkReceiveToken() != null);
-                    break;
-                case "solvedac":
-                    dtoBuilder.solvedacNickName(link.getAccountLinkNickname());
-                    break;
-                case "Codeforces":
-                    dtoBuilder.codeforcesNickName(link.getAccountLinkNickname());
-                    break;
-            }
-        }
-        return dtoBuilder.build();
     }
 
 }

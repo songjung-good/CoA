@@ -41,8 +41,6 @@ public class AuthenticationService {
     }
     private Member updateOrCreateMember(OAuth2User oauthUser, String registrationId) {
 
-//        System.out.println("oauthUser + registrationId = " + oauthUser + registrationId);
-//        System.out.println("oauthUser.getAttributes() = " + oauthUser.getAttributes());
         SocialUserInfo userInfo = extractUserInfo(registrationId, oauthUser);
 
         String email = userInfo.getEmail();
