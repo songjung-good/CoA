@@ -35,8 +35,11 @@ public class SearchController {
 
     @Operation(description = "키워드로 멤버 검색(범위: CoA 멤버 닉네임 + 연동된 계정 닉네임")
     @GetMapping("/members")
-    public ResponseEntity<BaseResponse<List<MemberCardDto>>> searchMember(@RequestParam String keyword) {
-        List<MemberCardDto> result = searchService.searchMember(keyword);
+    public ResponseEntity<BaseResponse<List<MemberCardDto>>> searchMember(
+            @RequestParam(value = "keyword") String keyword
+            , @RequestParam(value = "page", defaultValue = "0") int page
+            , @RequestParam(value = "size", defaultValue = "20") int size) {
+        List<MemberCardDto> result = searchService.searchMember(keyword, page, size);
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }

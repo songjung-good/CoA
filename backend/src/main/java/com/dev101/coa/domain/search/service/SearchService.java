@@ -86,24 +86,21 @@ public class SearchService {
         return repoCardDtoList;
     }
 
-    public List<MemberCardDto> searchMember(String keyword) {
+    public List<MemberCardDto> searchMember(String keyword, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
         if (keyword.isEmpty()) {
             throw new BaseException(StatusCode.KEYWORD_EMPTY);
         }
 
-        List<Member> memberList = memberRepository.findByMemberNicknameContaining(keyword);
-        List<AccountLink> accountLinkList = accountLinkRepository.findByAccountLinkNicknameContaining(keyword);
+        // JPA는 같은 트랜젝션 내의 동일한 엔티티 ID에 대해 중복 관리가 됨. 따라서 멤버 중복 체크를 안해도 됨
+        Page<Member> memberList = memberRepository.findMemberByNickname(keyword, pageable);
 
-        // AccountLinkList에서 멤버 추출
-        accountLinkList.forEach(acl -> {
-            memberList.add(acl.getMember());
-        });
-        // 중복 제거 - CoA 서비스 닉네임 일치도 우선, 연동계정 닉네임 일치도 후순위
-        List<Member> mergedMemberList = memberList.stream().distinct().toList();
 
         // memberCardDto List 만들기
         List<MemberCardDto> memberCardDtoList = new ArrayList<>();
-        for (Member member : mergedMemberList) {
+        for (Member member : memberList) {
             // skillList
             List<MemberSkill> memberSkillList = memberSkillRepository.findByMember(member);
 
