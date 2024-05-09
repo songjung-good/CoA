@@ -3,11 +3,13 @@
 import { usePathname, useRouter } from "next/navigation";
 import useAnalyzingStore from "@/store/analyze";
 import useResultStore from "@/store/result";
+import UseAxios from "@/api/common/useAxios";
 
 // 임시데이터
 import dummy from "@/app/result/[id]/_data/Result_DTO.json";
 
 export default function LoadingAnalyzing({ hasJWT }: { hasJWT: boolean }) {
+  const axios = UseAxios();
   const router = useRouter();
   const {
     isAnalyzing,
@@ -19,8 +21,20 @@ export default function LoadingAnalyzing({ hasJWT }: { hasJWT: boolean }) {
     resetAnalysis,
   } = useAnalyzingStore((state) => state);
 
+  const { updateResultState } = useResultStore.getState();
+
   const handleCompletedButton = async () => {
     // axios 분석 결과 받아오기
+
+    // 임시
+    // axios
+    //   .get(`/api/repos/analysis/done/${analyzeId}`)
+    //   .then((res) => {
+    //     updateResultState(res.data);  // 분석 결과 데이터 저장
+    //   })
+    //   .then((res) => {
+    //     resetAnalysis;                // 분석 상태 초기화
+    //   });
     // result store에 저장
     // 페이지 이동
     // 임시

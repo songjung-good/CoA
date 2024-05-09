@@ -1,9 +1,9 @@
 import { create, StateCreator  } from "zustand";
 import { persist, createJSONStorage, PersistOptions  } from 'zustand/middleware'
-import useInterval from "../components/hooks/UseInterval";
-
+import UseAxios from "@/api/common/useAxios";
 // 분석 중이 아니면 분석% 및 완료 버튼 안보이게 하기 위해서
 // isAnalyzing을 통해 false 일때는 Header에서 분석결과에 대한 정보 안보이게 하기 위함
+const axios = UseAxios();
 
 interface AnalyzingState {
   isAnalyzing: boolean;  // true 일때 Header에 분석 정보 표시
@@ -61,6 +61,27 @@ const useAnalyzingStore = create<AnalyzingState, []>(
           }
         }
       }
+      // 실사용 api
+      // feachApi: () => {
+      //   // 분석 중인지 확인
+      //   if (useAnalyzingStore.getState().isAnalyzing) {
+      //     const analysisId = useAnalyzingStore.getState().analyzeId;
+      //     // 서버에 현재 분석 상태를 요청
+      //     axios.get(`/api/repos/analysis/${analysisId}`).then((res) => {
+      //       const newPercent = res.data.percentage;  // 서버로부터 받은 진행도
+      //       set({ analyzingPercent: newPercent });  // 상태 업데이트
+      
+      //       // 진행도가 100%에 도달했을 경우 분석을 완료합니다.
+      //       if (newPercent >= 100) {
+      //         set({ isCompleted: true, showNotification: true });
+      //         console.log("분석 완료");
+      //       }
+      //     }).catch(error => {
+      //       console.error('분석 상태 업데이트 실패:', error);
+      //       // 에러 처리 로직 필요
+      //     });
+      //   }
+      // }
     }),
     {
       name: 'analyzing-store',  // 스토어의 이름 (로컬 스토리지에서 이 이름으로 저장됩니다)
