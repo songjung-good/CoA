@@ -19,17 +19,16 @@ const UseAxios = (): AxiosInstance => {
     },
   );
 
-  axiosInstance.interceptors.response.use(
-    (response) => {
-      if (response.data.code === 303) {
-        return response
-      } else if (response.data.code === 602) {
-        return response
-      }else if (response.data.code == 200) {
-        return response
-      }    
+  axiosInstance.interceptors.response.use((response) => {
+    if (response.data.code === 303) {
+      return response;
+    } else if (response.data.code === 602) {
+      return response;
+    } else if (response.data.code == 200) {
+      return response;
     }
-  )
+    return response; // 모든 코드 경로에서 AxiosResponse를 반환
+  });
 
   // axiosInstance.interceptors.response.use(
   //   (response) => {
