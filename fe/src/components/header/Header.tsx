@@ -4,7 +4,9 @@ import LoadingAnalyzing from "./LoadingAnalyzing";
 import Link from "next/link";
 import AuthButton from "./AuthButton";
 import Notification from "../notification/Notification";
+import RequestApi from "./RequestApi";
 import { cookies } from "next/headers";
+
 export default function Header() {
   const cookieStore = cookies();
   // cookie 존재 여부를 boolean으로 return
@@ -36,6 +38,7 @@ export default function Header() {
       <LoadingAnalyzing hasJWT={hasJWT} />
       <Notification hasJWT={hasJWT} />
       <AuthButton hasJWT={hasJWT} />
+      <RequestApi />
     </header>
   );
 }

@@ -26,6 +26,7 @@ export default function LoadingAnalyzing({ hasJWT }: { hasJWT: boolean }) {
     // 임시
     await useResultStore.getState().updateResultState(dummy);
     await useAnalyzingStore.getState().setAnalyzeId(1);
+    await useAnalyzingStore.getState().resetAnalysis();
     // await console.log(useResultStore.getState().result);
     if (router) {
       await router.push(`/result/${analyzeId}`);
