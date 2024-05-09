@@ -1,5 +1,6 @@
 package com.dev101.coa.domain.member.service;
 
+import com.dev101.coa.domain.member.dto.AccountLinkInfoDto;
 import com.dev101.coa.domain.member.dto.AlarmDto;
 import com.dev101.coa.domain.member.dto.BookmarkResDto;
 import com.dev101.coa.domain.member.dto.MemberCardDto;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,26 +37,15 @@ public class MemberService {
         List<AccountLink> accountLinks = accountLinkRepository.findAllByMember(member);
 
         MemberInfoDto.MemberInfoDtoBuilder builder = MemberInfoDto.builder()
-                .memberId(member.getMemberId())
+                .memberUuid(member.getMemberUuid())
                 .memberImg(member.getMemberImg())
                 .memberNickName(member.getMemberNickname());
 
-        for (AccountLink link : accountLinks) {
-            switch (link.getCode().getCodeName()) {
-                case "Github":
-                    builder.githubNickName(link.getAccountLinkNickname());
-                    break;
-                case "GitLab":
-                    builder.gitlabNickName(link.getAccountLinkNickname());
-                    break;
-                case "solvedac":
-                    builder.solvedNickName(link.getAccountLinkNickname());
-                    break;
-                case "Codeforces":
-                    builder.codeforcesNickName(link.getAccountLinkNickname());
-                    break;
-            }
-        }
+        AccountLinkInfoDto accountLinkInfoDto = accountLinks.stream()
+                .collect(Collectors.collectingAndThen(Collectors.toList(), this::aggregateLinksIntoDto));
+
+        builder.accountLinkInfoDto(accountLinkInfoDto);
+
         return builder.build();
     }
 
@@ -81,6 +72,29 @@ public class MemberService {
         LocalDateTime checkedTime = targetMember.getMemberLastVisitCheck();
 
         return alarmRepository.countAllByAlarmTargetIdAndCreatedAtGreaterThan(memberId, checkedTime);
+    }
+
+    public AccountLinkInfoDto aggregateLinksIntoDto(List<AccountLink> links) {
+        AccountLinkInfoDto.AccountLinkInfoDtoBuilder dtoBuilder = AccountLinkInfoDto.builder();
+        for (AccountLink link : links) {
+            switch (link.getCode().getCodeName()) {
+                case "Github":
+                    dtoBuilder.githubNickName(link.getAccountLinkNickname())
+                            .isGithubToken(link.getAccountLinkReceiveToken() != null);
+                    break;
+                case "GitLab":
+                    dtoBuilder.gitlabNickName(link.getAccountLinkNickname())
+                            .isGitlabToken(link.getAccountLinkReceiveToken() != null);
+                    break;
+                case "solvedac":
+                    dtoBuilder.solvedacNickName(link.getAccountLinkNickname());
+                    break;
+                case "Codeforces":
+                    dtoBuilder.codeforcesNickName(link.getAccountLinkNickname());
+                    break;
+            }
+        }
+        return dtoBuilder.build();
     }
 
     public BookmarkResDto toggleBookmark(Long loginMemberId, String targetMemberUuid) {
