@@ -31,7 +31,7 @@ public class SecurityConfig {
                             CorsConfiguration config = new CorsConfiguration();
                             config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://k10e101.p.ssafy.io", "https://commitanalyze.com")); // 허용할 Origin -> "https://k10e101.p.ssafy.io/" 배포는 오리진이 같아서 괜찮은 듯.
                             config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // 허용할 HTTP 메소드
-                            config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "Access-Token", "X-CSRF-TOKEN", "Referrer-Policy", "Referer-Policy")); // 허용할 헤더
+                            config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "Access-Token", "X-CSRF-TOKEN")); // 허용할 헤더
 //                            config.setAllowedHeaders(List.of("*")); // 허용할 헤더
                             config.setAllowCredentials(true); // 인증 정보 허용 설정
                             config.setMaxAge(3600L); // pre-flight 요청의 캐시 지속 시간

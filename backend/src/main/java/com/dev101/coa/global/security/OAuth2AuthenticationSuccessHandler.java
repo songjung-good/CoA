@@ -81,6 +81,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             jwtCookie.setPath("/");
             jwtCookie.setMaxAge(jwtExpirationInMs);
             response.addCookie(jwtCookie);
+
+            System.out.println("request.getRequestURL() = " + request.getRequestURL());
+            StringBuffer requestURL = request.getRequestURL();
+            String urlString = requestURL.toString();  // 전체 URL을 문자열로 가져옵니다.
+            URL url = new URL(urlString);  // URL 객체를 생성합니다.
+            System.out.println("url = " + url);
+
             try {
                 String requestDomain = determineRedirectUrl(request);
                 response.sendRedirect(requestDomain + "/main");
