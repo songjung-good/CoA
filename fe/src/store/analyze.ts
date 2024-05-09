@@ -1,5 +1,6 @@
 import { create, StateCreator  } from "zustand";
 import { persist, createJSONStorage, PersistOptions  } from 'zustand/middleware'
+import useInterval from "../components/hooks/UseInterval";
 
 // 분석 중이 아니면 분석% 및 완료 버튼 안보이게 하기 위해서
 // isAnalyzing을 통해 false 일때는 Header에서 분석결과에 대한 정보 안보이게 하기 위함
@@ -16,6 +17,8 @@ interface AnalyzingState {
   updatePercent: (percent: number) => void;
   resetAnalysis: () => void;  // 분석 결과 확인
   toggleNotification: (visible: boolean) => void;
+
+  feachApi: () => void; // 분석 api 요청
 }
 
 // Next + Zustand + TypeScript + Persist 사용시 타입 에러 발생
@@ -41,8 +44,23 @@ const useAnalyzingStore = create<AnalyzingState, []>(
       }, // 분석 완료
       setAnalyzeId: (id: number) => set({analyzeId: id}),
       updatePercent: (percent: number) => set({ analyzingPercent: percent }), // 진행도 갱신
-      resetAnalysis: () => set({ isAnalyzing: false, isCompleted: false, analyzingPercent: 0, analyzeId: -1 }), // 분석상태 초기화
+      resetAnalysis: () => set({ isAnalyzing: false, isCompleted: false, showNotification: false, analyzingPercent: 0, analyzeId: -1 }), // 분석상태 초기화
       toggleNotification: (visible: boolean) => set({ showNotification: visible }),
+      feachApi: () => {
+        // 분석 중이고, 100%에 도달하지 않았을 경우
+        if (useAnalyzingStore.getState().isAnalyzing && useAnalyzingStore.getState().analyzingPercent < 100) {
+          // 임시적으로 진행도를 10%씩 증가시키는 로직
+          const newPercent = useAnalyzingStore.getState().analyzingPercent + 10;
+          set({ analyzingPercent: newPercent });
+          console.log(`${newPercent}% 완료`)
+
+          // 진행도가 100%에 도달했을 경우 분석을 완료합니다.
+          if (newPercent >= 100) {
+            set({ isCompleted: true, showNotification: true });
+            console.log("분석 완료")
+          }
+        }
+      }
     }),
     {
       name: 'analyzing-store',  // 스토어의 이름 (로컬 스토리지에서 이 이름으로 저장됩니다)
