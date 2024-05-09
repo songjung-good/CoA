@@ -1,43 +1,95 @@
+"use client";
 // 라이브러리
-import React from 'react';
+import React, { use, useEffect, useState } from 'react';
 import UseAxios from '@/api/common/useAxios';
 // 컴포넌트
-import MainRepoCard from '@/components/maincomponents/MainRepoCard';
-import useRepoDetailStore from '@/store/repodetail';
-import { useRouter } from "next/navigation";
-// 임시데이터
-import repocardDTO from '@/components/maincomponents/repocardDTO';
+import MainRepoCard from '@/components/maincomponents/MainRepoCard'
+// 인터페이스
+interface Skill {
+  codeId: number;
+  codeName: string;
+}
+
+interface RepoLineCnt {
+  codeName: string;
+  lineCnt: number;
+}
+
+interface Comment {
+  commentStartIndex: number;
+  commentEndIndex: number;
+  commentContent: string;
+}
+
+interface RepoCardDto {
+  memberId: number;
+  memberNickname: string;
+  memberImg: string;
+  repoViewId: number;
+  repoViewPath: string;
+  repoViewTitle: string;
+  repoViewSubtitle: string;
+  repoMemberCnt: number;
+  skillList: Skill[];
+  repoStartDate: string;
+  repoEndDate: string;
+  isMine: boolean;
+}
+
+interface BasicDetailDto {
+  repoReadme: string;
+  repoViewResult: string;
+  commentList: Comment[];
+  repoViewTotalCommitCnt: number;
+  repoViewCommitCnt: number;
+  repoViewMemberCnt: number;
+  repoLineCntList: RepoLineCnt[];
+}
+
+interface CommitScoreDto {
+  readability: number;
+  performance: number;
+  reusability: number;
+  testability: number;
+  exception: number;
+  total: number;
+  scoreComment: string;
+}
+
+interface RepoData {
+  repoCardDto: RepoCardDto;
+  basicDetailDto: BasicDetailDto;
+  commitScoreDto: CommitScoreDto;
+}
 
 const axios = UseAxios();
 
 const ExhibitRepo: React.FC = () => {
-  const router = useRouter();
-  // 임시데이터 값
-  const data = repocardDTO.temporaryData;
+  const [data, setData] = useState<RepoData[]>([]); // 데이터 상태
+  const repoViewIds = [3, 4, 5, 6]; // 추후 수정
 
-  const setRepoDetail = useRepoDetailStore((state: any) => state.setRepoDetail);
-
-  const getRepoView = async (repoViewId: string) => {
-    try {
-      const response = await axios.get(`/api/repos/${repoViewId}`);
-      console.log(response.data);
-      // axios로 잠시 대체
-      // setRepoDetail(response.data);
-      setRepoDetail(repocardDTO.temporaryData[0])
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleDetailClick = (repoViewId: string) => {
-    getRepoView(repoViewId);
-    router.push(`/result/${repoViewId}/repo`);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const results = await Promise.all(
+          repoViewIds.map(async (id) => {
+            const response = await axios.get(`/api/repos/${id}`);
+            return response.data.result;
+          })
+        );
+        setData(results);
+      } catch (error) {
+        console.error("API 요청 중 에러 발생:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
 
   return (
     <div className='flex flex-wrap justify-center align-center mt-5'>
       {data.map((item, index) => (
-        <MainRepoCard key={index} data={item} onDetailClick={handleDetailClick} /> // 데이터와 콜백 함수 전달
+        <MainRepoCard key={index} data={item} />
       ))}
     </div>
   );
