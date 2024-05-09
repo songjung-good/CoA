@@ -19,8 +19,7 @@ const UseAxios = (): AxiosInstance => {
     },
   );
 
-  axiosInstance.interceptors.response.use(
-    (response) => {
+  axiosInstance.interceptors.response.use((response) => {
       if (response.data.code === 303) {
         return response
       } else if (response.data.code === 602) {
