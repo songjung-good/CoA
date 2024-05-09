@@ -31,13 +31,13 @@ export default function UserIconButton() {
 
   const logout = async () => {
     try {
-      const response = await axiosInstance.post("/api/auth/logout");
-      window.location.href = '/'
+      const response = await axiosInstance.post("/api/member/logout");
+      window.location.href = "/";
     } catch (error) {
       console.error("logout 중 오류가 발생했습니다:", error);
     }
   };
-  
+
   return (
     <div className="relative flex justify-center items-center" ref={modalRef}>
       <button
@@ -52,7 +52,16 @@ export default function UserIconButton() {
             overflow: "hidden",
           }}
         >
-          <Image src={userImage} alt="logo" width={48} height={48} />
+          <Image
+            src={userImage}
+            alt="logo"
+            width={48}
+            height={48}
+            style={{
+              width: "48px",
+              height: "48px",
+            }}
+          />
         </div>
       </button>
       {isOpen ? (

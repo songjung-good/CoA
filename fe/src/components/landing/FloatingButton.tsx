@@ -10,7 +10,7 @@ interface FloatingButtonProps {
 }
 
 interface ButtonsContainerProps {
-  show: boolean;
+  $show: boolean;
 }
 
 export default function FloatingButton({
@@ -20,7 +20,7 @@ export default function FloatingButton({
   return (
     <>
       <div>
-        <ButtonsContainer show={showFloatingButton}>
+        <ButtonsContainer $show={showFloatingButton}>
           <button
             className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full"
             onClick={scrollToTitle}
@@ -48,6 +48,6 @@ const ButtonsContainer = styled.div<ButtonsContainerProps>`
   padding: 8px 16px;
   border-radius: 8px;
   z-index: 50;
-  transform: ${(props) => (props.show ? "translateY(0)" : "translateY(100%)")};
+  transform: ${(props) => (props.$show ? "translateY(0)" : "translateY(100%)")};
   transition: transform 200ms ease-out;
 `;
