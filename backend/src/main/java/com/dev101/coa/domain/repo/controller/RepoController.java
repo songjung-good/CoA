@@ -42,6 +42,7 @@ public class RepoController {
             @AuthenticationPrincipal Long currentMemberId
             , @PathVariable("repoViewId") Long repoViewId
             , @RequestBody List<CommitCommentDto> editCommentListReq){
+        currentMemberId = 7L;
         repoService.editComment(currentMemberId, repoViewId,editCommentListReq);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
@@ -105,6 +106,7 @@ public class RepoController {
             @AuthenticationPrincipal Long currentMemberId,
             @PathVariable("repoViewId") Long repoViewId){
 
+        currentMemberId = 7L;
         RepoDetailResDto result = repoService.readRepoView(currentMemberId, repoViewId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
