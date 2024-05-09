@@ -140,10 +140,7 @@ const RunBarChart: React.FC = () => {
       svg
         .select(".date")
         .text(chartDate)
-        .attr(
-          "transform",
-          `translate(${width + margin.left}, ${height + margin.top})`,
-        )
+        .attr("transform", `translate(${width + margin.left - 20}, ${height})`)
         .attr("text-anchor", "end")
         .style("font-size", "24px"); // 텍스트 크기 설정
       // .style("fill", "red");
