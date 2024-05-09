@@ -1,18 +1,15 @@
 "use client";
-
+// 라이브러리
 import Image from "next/image";
 import Link from "next/link";
 import tw from "tailwind-styled-components";
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
+// 전역데이터
 import EditIcon from "@/icons/EditIcon";
-
-import useResultStore from "@/store/result";
+import useRepoDetailStore from "@/store/repodetail";
 
 export default function RepoInfo() {
-  // 통신 결과로 setRepoInfo를 업데이트
-  const repoInfo = useResultStore((state) => state.result.repoCardDto);
-
+  const repoInfo = useRepoDetailStore((state) => state.result.repoCardDto);
   const [isEditHover, setIsEditHover] = useState(false);
 
   // 프로젝트 일수 계산
@@ -51,11 +48,12 @@ export default function RepoInfo() {
             <Image
               src="/image/githubSSO.png"
               alt="github logo"
-              width={30}
-              height={30}
+              width={30} height={30}
             ></Image>
           ) : (
-            <Image src="" alt="gitlab logo" width={30} height={30}></Image>
+            <Image 
+              src="/image/googleSSO.png" alt="gitlab logo" width={30} height={30}
+            ></Image>
           )}
           <Link
             href={`${repoInfo.repoViewPath}`}
@@ -85,7 +83,18 @@ export default function RepoInfo() {
 }
 
 const RepoInfoDiv = tw.div`
-  relative w-full min-h-20 flex flex-col lg:flex-row flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2
+  relative 
+  w-full 
+  min-h-20 
+  flex flex-col 
+  lg:flex-row 
+  flex-wrap 
+  justify-between 
+  shadow-lg 
+  bg-white 
+  rounded-2xl 
+  p-5 
+  space-y-2
   `;
 
 function calculateDaysBetweenDates(startDate: string, endDate: string) {
