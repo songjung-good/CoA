@@ -1,10 +1,7 @@
 // GitHub 또는 GitLab API를 사용하여 사용자 정보를 가져오는 함수
 
-// 라이브러리
-import axios from 'axios';
-
 // 컴포넌트
-import { ExtractUserInfo } from '@/components/analyzer/ExtractUserInfo';
+import { ExtractUserInfo } from '@/app/main/analyzer/ExtractUserInfo';
 import UseAxios from '@/api/common/useAxios';
 
 // 토큰

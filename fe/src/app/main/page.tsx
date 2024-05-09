@@ -9,12 +9,12 @@ import { useStore } from 'zustand';
 
 // 컴포넌트
 // URL 입력(레포지토리 분석을 위한)
-import UrlInput from '@/components/analyzer/UrlInput';
-// 개인 레포 불러오기
-import GitlabRepo from '@/components/maincomponents/GitlabRepo';
-import GithubRepo from '@/components/maincomponents/GithubRepo';
-// 레포 카드(수정 필요)
-import RepoCard from '@/components/maincomponents/RepoCard';
+import UrlInput from '@/app/main/analyzer/UrlInput';
+// 나의 레포
+import GitlabRepo from '@/app/main/GitlabRepo';
+import GithubRepo from '@/app/main/GithubRepo';
+// 레포 카드
+import ExhibitRepo from '@/app/main/ExhibitRepo';
 
 // 전역변수
 import userStore from '@/store/user';
@@ -35,21 +35,22 @@ const MainPage: React.FC = () => {
         </Description>
       </Header>
       <Div1>
+        <Heading>프로젝트 분석</Heading>
         <UrlInput />
       </Div1>
       <RepoDiv>
         <RepoLeft>
-          <Heading>여기는 github</Heading>
+          <Heading>GitHub</Heading>
           <GithubRepo userID={github} />
         </RepoLeft>
         <RepoRight>
-          <Heading>여기는 gitlab</Heading>
+          <Heading>GitLab</Heading>
           <GitlabRepo userID={gitlab} />
         </RepoRight>
       </RepoDiv>
       <Div>
         <Heading>여기는 자주찾는 레포</Heading>
-        <RepoCard />
+        <ExhibitRepo />
       </Div>
       <Div>
         <Heading>여기는 통계 컴포넌트</Heading>
@@ -78,7 +79,7 @@ const Header = tw.div`
   hover:border-appBlue1
 `;
 
-const Description = tw.div`
+const Description = tw.h3`
   flex
   flex-row
   items-center
@@ -91,7 +92,7 @@ const TextWrapper = tw.div`
   p-[2rem]
 `;
 
-const Title = tw.h1`
+const Title = tw.h2`
   font-bold
   text-left
   mb-4
@@ -119,7 +120,6 @@ const Img = tw.img`
 
 const Div1 = tw.div`
   max-w-screen-xl
-  flex
   justify-center
   w-full
   bg-white
@@ -171,7 +171,7 @@ const Div = tw.div`
   hover:border-appBlue1
 `;
 
-const Heading = tw.h3`
+const Heading = tw.h2`
   font-bold
   text-xl
 `;
