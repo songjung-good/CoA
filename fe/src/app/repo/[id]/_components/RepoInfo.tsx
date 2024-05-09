@@ -48,11 +48,12 @@ export default function RepoInfo() {
             <Image
               src="/image/githubSSO.png"
               alt="github logo"
-              width={30}
-              height={30}
+              width={30} height={30}
             ></Image>
           ) : (
-            <Image src="" alt="gitlab logo" width={30} height={30}></Image>
+            <Image 
+              src="/image/googleSSO.png" alt="gitlab logo" width={30} height={30}
+            ></Image>
           )}
           <Link
             href={`${repoInfo.repoViewPath}`}
@@ -82,7 +83,18 @@ export default function RepoInfo() {
 }
 
 const RepoInfoDiv = tw.div`
-  relative w-full min-h-20 flex flex-col lg:flex-row flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2
+  relative 
+  w-full 
+  min-h-20 
+  flex flex-col 
+  lg:flex-row 
+  flex-wrap 
+  justify-between 
+  shadow-lg 
+  bg-white 
+  rounded-2xl 
+  p-5 
+  space-y-2
   `;
 
 function calculateDaysBetweenDates(startDate: string, endDate: string) {
