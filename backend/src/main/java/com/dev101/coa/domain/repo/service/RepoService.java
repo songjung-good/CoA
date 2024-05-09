@@ -67,16 +67,34 @@ public class RepoService {
     // AI server 통신을 위한 WebClient
     private final WebClient webClient;
 
-    public void editReadme(Long memberId, Long repoViewId, EditReadmeReqDto editReadmeReqDto) {
+    public void editReadme(Long memberId, Long repoViewId, String editReadmeReq) {
+        Member loginMember = memberRepository.findById(memberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));
+
         // 레포 뷰 존재 유무 확인
         RepoView repoView = repoViewRepository.findByRepoViewId(repoViewId)
                 .orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
 
         // 로그인 사용자 예외 처리 (작성자 확인)
-        if (memberId != repoView.getMember().getMemberId()) {
+        if (loginMember.getMemberId() != repoView.getMember().getMemberId()) {
             throw new BaseException(StatusCode.MEMBER_NOT_OWN_REPO);
         }
 
+        // 레포 뷰
+        repoView.updateReadme(editReadmeReq);
+        repoRepository.save(repoView.getRepo());
+    }
+
+    public void editComment(Long currentMemberId, Long repoViewId, List<CommitCommentDto> editCommentListReq) {
+        Member loginMember = memberRepository.findById(currentMemberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));
+
+        RepoView repoView = repoViewRepository.findById(repoViewId).orElseThrow(()-> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
+
+        // 본인의 레포 뷰인지 확인
+        if(loginMember.getMemberId() != repoView.getMember().getMemberId()){
+            throw new BaseException(StatusCode.MEMBER_NOT_OWN_REPO);
+        }
+
+        // 수정
         // commentList db 내의 코멘트 목록을 삭제
         List<Long> commentIdList = repoView.getCommentList().stream()
                 .map(Comment::getCommentId)
@@ -86,7 +104,7 @@ public class RepoService {
 
         // 요청으로 받은 commitcommentList 저장
         List<Comment> commentList = new ArrayList<>();
-        editReadmeReqDto.getCommitCommentDtoList().forEach((cd -> {
+        editCommentListReq.forEach((cd -> {
             Comment comment = Comment.builder()
                     .repoView(repoView)
                     .commentStartIndex(cd.getCommentStartIndex())
@@ -98,10 +116,11 @@ public class RepoService {
         }));
 
 
-        // 레포 뷰
-        repoView.updateReadme(editReadmeReqDto.getRepoViewReadme());
+        // 저장
         repoView.updateCommentList(commentList);
         repoRepository.save(repoView.getRepo());
+
+
     }
 
     public void editRepoCard(Long currentMemberId, Long repoViewId, RepoCardEditReqDto repoCardEditReqDto) {
