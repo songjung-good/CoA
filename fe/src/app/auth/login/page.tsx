@@ -1,8 +1,19 @@
 "use client";
 import Image from "next/image";
 
+function getDomainAddress() {
+  var hostname = window.location.hostname; // 현재 도메인 이름을 가져옵니다.
+  if (hostname === "localhost") {
+      return "http://localhost:8080";
+  } else {
+      return window.location.protocol + "//" + hostname;
+  }
+}
+
+var domainAddress = getDomainAddress();
+
 export default function LoginPage() {
-  const serverUrl = process.env.NEXT_PUBLIC_URL_SERVER;
+  const serverUrl = domainAddress;
 
   // GitHub 로그인 버튼 클릭 시 이벤트 핸들러
   const handleKakaoLogin = () => {
