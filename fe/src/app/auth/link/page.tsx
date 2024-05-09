@@ -33,8 +33,8 @@ export default function LinkPage() {
     try {
       const response = await axiosInstance.get("api/accountLink");
 
-      console.log(response.data);
-      console.log(response.data.result);
+      // console.log(response.data);
+      // console.log(response.data.result);
       const getData = response.data.result;
 
       setHubNickName(getData.githubNickName);
@@ -141,7 +141,10 @@ export default function LinkPage() {
             <div>
               <p className="text-xl font-bold">GitHub</p>
               <p>UserName : {hubNickName}</p>
-              <p>Token 등록: {isHubToken}</p>
+              <p>
+                Token 등록:{" "}
+                {isHubToken ? "토큰 등록 완료" : "등록된 토큰이 없어요"}
+              </p>
             </div>
           </div>
           <div>
@@ -225,7 +228,10 @@ export default function LinkPage() {
             <div>
               <p className="text-xl font-bold">GitLab</p>
               <p>UserName : {labNickName}</p>
-              <p>Token 등록: {isLabToken}</p>
+              <p>
+                Token 등록:{" "}
+                {isLabToken ? "토큰 등록 완료" : "등록된 토큰이 없어요"}
+              </p>
             </div>
           </div>
           <div>
