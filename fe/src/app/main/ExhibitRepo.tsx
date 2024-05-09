@@ -66,7 +66,7 @@ const axios = UseAxios();
 
 const ExhibitRepo: React.FC = () => {
   const [data, setData] = useState<RepoData[]>([]); // 데이터 상태
-  const repoViewIds = [3, 4, 5, 6]; // 추후 수정
+  const repoViewIds = [3, 14, 5, 6]; // 추후 수정
 
   useEffect(() => {
     const fetchData = async () => {

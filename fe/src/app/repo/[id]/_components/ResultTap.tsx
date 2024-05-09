@@ -5,23 +5,17 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import tw from "tailwind-styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-// 전역데이터
-import useResultStore from "@/store/result";
-
-// 컴포넌트 import
+// 컴포넌트
 import ResultCommit from "@/app/repo/[id]/_components/ResultCommit";
-// import ResultContribution from "@/app/result/[id]/_components/ResultContribution.tsx"; 폐기했습니다
 import ResultReadme from "@/app/repo/[id]/_components/ResultReadme";
 import ResultScore from "@/app/repo/[id]/_components/ResultScore";
+// 전역데이터
+import useRepoDetailStore from "@/store/repodetail";
 
 export default function ResultTab() {
   const [tabIndex, setTabIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(0);
-  const isMine = useResultStore((state) => state.result.repoCardDto.isMine);
-
-  useEffect(() => {
-    console.log(`현재 선택된 탭: ${tabIndex}`);
-  }, [tabIndex]);
+  const isMine = useRepoDetailStore((state) => state.result.repoCardDto.isMine);
 
   const handleTab = (index: number) => {
     setTabIndex(index);
@@ -35,7 +29,7 @@ export default function ResultTab() {
     const { id } = params;
 
     router.push(`/result/${id}/edit`);
-    console.log(useResultStore.getState().result.repoCardDto.memberNickname);
+    console.log(useRepoDetailStore.getState().result.repoCardDto.memberNickname);
   };
 
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";
@@ -102,9 +96,9 @@ const TabButton = tw.button`
 `;
 
 const TabButtonLeft = tw(TabButton)`
-rounded-tl-xl rounded-bl-xl
+  rounded-tl-xl rounded-bl-xl
 `;
 
 const TabButtonRight = tw(TabButton)`
-rounded-tr-xl rounded-br-xl
+  rounded-tr-xl rounded-br-xl
 `;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import useResultStore from "@/store/result";
+import useRepoDetailStore from "@/store/repodetail";
 
 // mdEditor-------------------------------------------
 import type { NextPage } from "next";
@@ -24,10 +24,9 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 });
 const ResultReadme: NextPage = () => {
   const [md, setMd] = useState<string | undefined>(
-    useResultStore.getState().result.basicDetailDto.repoReadme,
+    useRepoDetailStore.getState().result.basicDetailDto.repoReadme,
   );
-  const { setIsOther, setIsMine } = useResultStore((state) => state);
-  const isMine = useResultStore((state) => state.result.repoCardDto.isMine);
+  const isMine = useRepoDetailStore((state) => state.result.repoCardDto.isMine);
   const [editorHeight, setEditorHeight] = useState(calculateHeight(md || "")); // 초기 높이 계산
 
   useEffect(() => {
@@ -45,11 +44,6 @@ const ResultReadme: NextPage = () => {
         height={editorHeight}
         style={{ width: "100%" }}
       />
-
-      <div className=" ">
-        <button onClick={setIsMine}>본인</button>
-        <button onClick={setIsOther}>타인</button>
-      </div>
     </div>
   );
 };

@@ -1,8 +1,8 @@
-import useResultStore from "@/store/result";
+import useRepoDetailStore from "@/store/repodetail";
 
 export default function ResultCommit() {
-  const repo = useResultStore.getState().result.repoCardDto;
-  const result = useResultStore.getState().result.basicDetailDto;
+  const repo = useRepoDetailStore.getState().result.repoCardDto;
+  const result = useRepoDetailStore.getState().result.basicDetailDto;
 
   return (
     <div className="flex flex-col w-full justify-between">

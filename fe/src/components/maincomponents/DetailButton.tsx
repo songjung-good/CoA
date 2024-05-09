@@ -23,7 +23,6 @@ const DetailButton: React.FC<DetailButtonProps> = ({ hovered, repoViewId }) => {
     try {
       const response = await axios.get(`/api/repos/${repoViewId}`);
       setRepoDetail(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -32,7 +31,7 @@ const DetailButton: React.FC<DetailButtonProps> = ({ hovered, repoViewId }) => {
   // 버튼 클릭시 데이터 저장 이후 상세정보 페이지로 이동
   const handleDetailClick = async (repoViewId: string) => {
     await getRepoView(repoViewId);
-    await router.push(`/repo/${repoViewId}`);
+    router.push(`/repo/${repoViewId}`);
   };
 
   return (

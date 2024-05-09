@@ -1,8 +1,8 @@
-import useResultStore from "@/store/result";
+import useRepoDetailStore from "@/store/repodetail";
 import RepoScore from "./RepoScore";
 
 export default function ResultScore() {
-  const codeScore = useResultStore.getState().result.commitScoreDto;
+  const codeScore = useRepoDetailStore.getState().result.commitScoreDto;
 
   return (
     <div className="flex flex-col items-center w-full">

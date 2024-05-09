@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import useResultStore from "@/store/result";
+import useRepoDetailStore from "@/store/repodetail";
 
 // Register the necessary components
 ChartJS.register(
@@ -21,7 +21,7 @@ ChartJS.register(
 );
 
 export default function RepoScore() {
-  const codeScore = useResultStore.getState().result.commitScoreDto;
+  const codeScore = useRepoDetailStore.getState().result.commitScoreDto;
 
   const chartData = {
     labels: ["가독성", "성능", "재활용성", "테스트 용이성", "예외 처리"],

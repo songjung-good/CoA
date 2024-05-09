@@ -1,6 +1,7 @@
 "use client";
 
 import RepoInfo from "./_components/RepoInfo";
+import ResultTap from "./_components/ResultTap";
 import useRepoDetailStore from "@/store/repodetail";
 
 export default function RepoPage({ params }: { params: { id: string } }) {
@@ -14,7 +15,7 @@ export default function RepoPage({ params }: { params: { id: string } }) {
           {`${userNickName}님의 레포지토리 분석 결과입니다.`}
         </p>
         <RepoInfo />
-        {/* <ResultTap /> */}
+        <ResultTap />
       </div>
     </div>
   );
