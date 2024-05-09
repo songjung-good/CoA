@@ -32,9 +32,9 @@ export default function Header() {
           </div>
         </div>
       </Link>
-      <SearchBar />
-      <LoadingAnalyzing />
-      <Notification />
+      <SearchBar hasJWT={hasJWT} />
+      <LoadingAnalyzing hasJWT={hasJWT} />
+      <Notification hasJWT={hasJWT} />
       <AuthButton hasJWT={hasJWT} />
     </header>
   );
