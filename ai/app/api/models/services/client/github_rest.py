@@ -1,3 +1,4 @@
+import base64
 from typing import Any
 
 import requests
@@ -24,7 +25,7 @@ class GithubRestClient(RestRepoClient[GithubAnalysisRequest]):
         self.access_token = request.accessToken
 
     async def check_loadability(self, request: AnalysisRequest) -> AnalysisStatus | None:
-        pass
+        return None     # TODO - 일단은 항상 load할 수 있다고 생각합시다.
 
     async def _request_json(self, url: str) -> Any:
         """
@@ -45,6 +46,35 @@ class GithubRestClient(RestRepoClient[GithubAnalysisRequest]):
         response = requests.get(url=url, headers=headers)
         response.raise_for_status()  # Raise an exception for 4XX and 5XX status codes
         return response.json()
+
+    async def load_content(self) -> list[dict[Any, Any]]:
+        # TODO: 리팩토링은 나중에...
+
+        result: list[dict[Any, Any]] = []
+
+        # default branch 이름 가져오기
+        repo_json = await self._request_json(f'https://api.github.com/repos/{self.path}')
+        default_branch: str = repo_json['default_branch']
+
+        # 모든 파일을 flat하게 가져오기
+        git_trees_json = await self._request_json(
+            f'https://api.github.com/repos/{self.path}/git/trees/{default_branch}?recursive=1'
+        )
+        for entry in git_trees_json['trees']:
+            if entry['type'] == 'tree':     # 해당 entry는 directory
+                continue
+
+            # 내부 내용을 가져오자
+            file_json = await self._request_json(entry['url'])
+            encoded_content = file_json['content']
+            decoded_content = base64.b64decode(encoded_content).decode('utf-8')
+
+            result.append({
+                'file_path': entry['path'],
+                'file_content': decoded_content
+            })
+
+        return result
 
     def _get_commits_root_url(self, author_name: str) -> str:
         """
