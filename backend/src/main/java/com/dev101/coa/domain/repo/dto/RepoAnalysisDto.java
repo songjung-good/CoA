@@ -8,8 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 public class RepoAnalysisDto {
     private Long repoViewId;
-    private String comment;
-    private CommitScoreDto commitScore;
+    private CommitScoreDto commitScoreDto;
 
     // Constructors, getters, setters, and additional methods
 }

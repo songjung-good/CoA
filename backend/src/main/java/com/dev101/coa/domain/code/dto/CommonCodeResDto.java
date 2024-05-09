@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class CommonCodeResDto {
     private List<TypeCodeDto> commonCodeList;
 
-    public CommonCodeResDto(Map<String, Map<Long, String>> groupedCodes, Map<String, Type> types) {
+    public CommonCodeResDto(Map<Short, Map<Long, String>> groupedCodes, Map<Short, Type> types) {
         this.commonCodeList = groupedCodes.entrySet().stream()
                 .map(entry -> new TypeCodeDto(entry.getKey(), types.get(entry.getKey()).getTypeName(), entry.getValue()))
                 .collect(Collectors.toList());

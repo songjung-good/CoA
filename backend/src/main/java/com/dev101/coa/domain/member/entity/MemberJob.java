@@ -3,24 +3,24 @@ package com.dev101.coa.domain.member.entity;
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class MemberSkill extends BaseEntity {
+public class MemberJob extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberSkillId;
+    private Long memberJobId;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "code_id", nullable = false)
-    private Code skillCode;
+    private Code jobCode;
 }

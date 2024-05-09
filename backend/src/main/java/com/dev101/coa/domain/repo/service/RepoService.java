@@ -676,4 +676,62 @@ public class RepoService {
         System.out.println("json 저장 완료");
         // =============== testData
     }
+
+
+    public List<RepoAnalysisDto> getMyReposCommitScore(List<CommitScore> commitScores) {
+        List<RepoAnalysisDto> repoAnalysisDtoList = new ArrayList<>();
+        for (CommitScore commitScore : commitScores) {
+            CommitScoreDto commitScoreDto = new CommitScoreDto(commitScore);
+            repoAnalysisDtoList.add(new RepoAnalysisDto(commitScore.getRepoView().getRepoViewId(), commitScoreDto));
+        }
+
+        return repoAnalysisDtoList;
+    }
+
+    public Map<Long, Map<String, Double>> getMyRepoAnalysisByJob(List<CommitScore> commitScores) {
+
+        // repoViewId를 키로 하고 Member 객체를 값으로 하는 맵 생성
+        Map<Long, Member> memberMap = commitScores.stream()
+                .map(CommitScore::getRepoView)
+                .distinct()
+                .collect(Collectors.toMap(RepoView::getRepoViewId, RepoView::getMember));
+
+        // 직업별로 점수를 분류하고 평균 계산
+        Map<Long, Map<String, List<Short>>> scoresByJob = new HashMap<>();
+        Map<Long, Map<String, Double>> averageScoresByJob = new HashMap<>();
+        scoresByJob.put(2000L, new HashMap<>());
+
+        // 각 직업별 점수와 카운트 집계
+        for (CommitScore score : commitScores) {
+            Member member = memberMap.get(score.getRepoView().getRepoViewId());
+            Long jobCodeId = member.getMemberJob().getJobCode().getCodeId();
+
+            Map<String, List<Short>> scores = scoresByJob.computeIfAbsent(jobCodeId, k -> new HashMap<>());
+            accumulateScores(scores, score);
+            accumulateScores(scoresByJob.get(2000L), score);  // Accumulate scores in the 2000L map
+        }
+
+        System.out.println("scoresByJob = " + scoresByJob);
+
+        // 평균 점수 계산
+        for (Map.Entry<Long, Map<String, List<Short>>> entry : scoresByJob.entrySet()) {
+            Map<String, Double> averageScores = new HashMap<>();
+            Map<String, List<Short>> scores = entry.getValue();
+            scores.forEach((key, valueList) -> averageScores.put(key, valueList.stream().mapToInt(Short::intValue).average().orElse(0.0)));
+            averageScoresByJob.put(entry.getKey(), averageScores);
+        }
+        return averageScoresByJob;
+//
+//        MyRepoAnalysis response = new MyRepoAnalysis(jobsMap, new CommitScoreDto(), List.of(new RepoAnalysisDto(1L, "Repository Analysis", new CommitScoreDto())));
+//
+    }
+
+    private void accumulateScores(Map<String, List<Short>> scores, CommitScore score) {
+        scores.computeIfAbsent("readability", k -> new ArrayList<>()).add(score.getScoreReadability());
+        scores.computeIfAbsent("performance", k -> new ArrayList<>()).add(score.getScorePerformance());
+        scores.computeIfAbsent("reusability", k -> new ArrayList<>()).add(score.getScoreReusability());
+        scores.computeIfAbsent("testability", k -> new ArrayList<>()).add(score.getScoreTestability());
+        scores.computeIfAbsent("exception", k -> new ArrayList<>()).add(score.getScoreException());
+        scores.computeIfAbsent("total", k -> new ArrayList<>()).add(score.getScoreTotal());
+    }
 }
