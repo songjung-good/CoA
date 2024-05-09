@@ -27,6 +27,9 @@ public class Comment extends BaseEntity {
     @Column(name = "comment_end_index")
     private Integer commentEndIndex;
 
+    @Column(name = "comment_target_string")
+    private String commentTargetString;
+
     @Column(name = "comment_content", length = 255)
     private String commentContent;
 
@@ -34,6 +37,7 @@ public class Comment extends BaseEntity {
         return CommitCommentDto.builder()
                 .commentStartIndex(this.commentStartIndex)
                 .commentEndIndex(this.commentEndIndex)
+                .commentTargetString(this.commentTargetString)
                 .commentContent(this.commentContent)
                 .build();
     }

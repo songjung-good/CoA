@@ -10,6 +10,7 @@ import lombok.*;
 public class CommitCommentDto {
     private Integer commentStartIndex;
     private Integer commentEndIndex;
+    private String commentTargetString;
     private String commentContent;
 
     // Getters and setters
