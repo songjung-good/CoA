@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
@@ -49,7 +48,7 @@ public class SecurityConfig {
                 // 요청 권한 설정 TODO 서버의(JWT) 인증 부분
                 .authorizeHttpRequests(auth -> auth
 //                                .anyRequest().permitAll()
-                                .requestMatchers("/auth").permitAll()
+                                .requestMatchers("/api/swagger-ui/**").permitAll()
                                 .anyRequest().authenticated()
                 )
 //                .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
