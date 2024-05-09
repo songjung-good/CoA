@@ -80,6 +80,16 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     setStacks((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
+    // 폼 제출 로직 구현, 예: API 호출 등
+    console.log("수정 API 구현해라!");
+    // 여기에 수정 로직을 추가하세요
+
+    // 수정 완료 후 모달 닫기
+    onClose();
+  };
+
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -93,7 +103,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
         </button>
         <h2 className="text-2xl font-bold mb-2">레포정보 수정하기</h2>
         <hr className="mb-2" />
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="title" className="block mb-2 text-sm font-medium">
               제목 (Title)

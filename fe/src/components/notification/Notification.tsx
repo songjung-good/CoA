@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import useAnalyzingStore from "@/store/analyze";
 import "./noti.css";
 
-export default function Notification() {
+export default function Notification({ hasJWT }: { hasJWT: boolean }) {
   const { showNotification } = useAnalyzingStore((state) => state);
   const notificationRef = useRef<HTMLDivElement | null>(null); // DOM 참조를 저장하기 위한 ref
   const [notificationClass, setNotificationClass] = useState(
@@ -46,8 +46,13 @@ export default function Notification() {
   if (!showNotification) return null;
 
   return (
-    <div ref={notificationRef} className={`notification ${notificationClass}`}>
-      <p>분석이 완료되었습니다!</p>
-    </div>
+    hasJWT && (
+      <div
+        ref={notificationRef}
+        className={`notification ${notificationClass}`}
+      >
+        <p>분석이 완료되었습니다!</p>
+      </div>
+    )
   );
 }
