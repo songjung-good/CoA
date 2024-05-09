@@ -27,7 +27,8 @@ const UseAxios = (): AxiosInstance => {
         return response
       }else if (response.data.code == 200) {
         return response
-      }    
+      }
+      return response;  
     }
   )
 
