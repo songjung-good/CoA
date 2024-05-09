@@ -7,8 +7,6 @@ import { useRouter } from "next/navigation";
 import UseAxios from '@/api/common/useAxios';
 // 데이터
 import useRepoDetailStore from '@/store/repodetail';
-// 라이브러리 사용
-const axios = UseAxios();
 
 interface DetailButtonProps {
   hovered: boolean;
@@ -25,19 +23,19 @@ const DetailButton: React.FC<DetailButtonProps> = ({ hovered, repoViewId }) => {
   const getRepoView = async (repoViewId: string) => {
     try {
       const response = await axios.get(`/api/repos/${repoViewId}`);
-      console.log(response.data);
       setRepoDetail(response.data);
+      console.log(response);
     } catch (error) {
       console.error(error);
     }
   };
   
   // 버튼 클릭시 데이터 저장 이후 상세정보 페이지로 이동
-  const handleDetailClick = (repoViewId: string) => {
-    const router = useRouter();
-    getRepoView(repoViewId);
-    router.push(`/result/${repoViewId}/repo`);
+  const handleDetailClick = async (repoViewId: string) => {
+    await getRepoView(repoViewId);
+    await router.push(`/repo/${repoViewId}`);
   };
+
   return (
     hovered && (
       <CardOverlay>

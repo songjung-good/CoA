@@ -1,14 +1,12 @@
 "use client";
-
+// 라이브러리
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import tw from "tailwind-styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-// store
-import useResultStore from "@/store/repo";
-
-import "@/app/result/[id]/_components/result.css";
+// 전역데이터
+import useResultStore from "@/store/result";
 
 // 컴포넌트 import
 import ResultCommit from "@/app/repo/[id]/_components/ResultCommit";

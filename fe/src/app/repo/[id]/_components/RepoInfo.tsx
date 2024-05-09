@@ -1,18 +1,15 @@
 "use client";
-
+// 라이브러리
 import Image from "next/image";
 import Link from "next/link";
 import tw from "tailwind-styled-components";
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
+// 전역데이터
 import EditIcon from "@/icons/EditIcon";
-
-import useResultStore from "@/store/result";
+import useRepoDetailStore from "@/store/repodetail";
 
 export default function RepoInfo() {
-  // 통신 결과로 setRepoInfo를 업데이트
-  const repoInfo = useResultStore((state) => state.result.repoCardDto);
-
+  const repoInfo = useRepoDetailStore((state) => state.result.repoCardDto);
   const [isEditHover, setIsEditHover] = useState(false);
 
   // 프로젝트 일수 계산

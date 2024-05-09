@@ -1,6 +1,6 @@
 "use client";
 
-import RepoEdit from "../_components/RepoEdit.tsx";
+import RepoEdit from "../../../repo/[id]/_components/RepoEdit.tsx";
 import RepoInfo from "@/components/result/RepoInfo.tsx";
 import useResultStore from "@/store/result.ts";
 import { useEffect } from "react";
