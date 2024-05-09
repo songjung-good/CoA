@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import UseAxios from "@/api/common/useAxios";
+import useCommonCodeStore from "@/store/commoncode";
 
 export default function UserIconButton() {
   const authUserName = userStore((state) => state.AuthUserName);
@@ -12,8 +13,18 @@ export default function UserIconButton() {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const axiosInstance = UseAxios();
-
+  const { response, setResponse } = useCommonCodeStore.getState();
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get("/api/common/code");
+      setResponse(response.data);
+    } catch (error) {
+      console.error("'/api/common/code'요청 에러", error);
+    }
+  };
   useEffect(() => {
+    fetchData();
+    //모달 밖을 누르면 모달창 닫힘
     function handleClickOutside(event: MouseEvent) {
       if (
         modalRef.current &&
@@ -31,7 +42,7 @@ export default function UserIconButton() {
 
   const logout = async () => {
     try {
-      const response = await axiosInstance.post("/api/member/logout");
+      const response = await axiosInstance.post("/api/auth/logout");
       window.location.href = "/";
     } catch (error) {
       console.error("logout 중 오류가 발생했습니다:", error);
@@ -75,6 +86,15 @@ export default function UserIconButton() {
             </li>
             <li>
               <button onClick={logout}>로그아웃</button>
+            </li>
+            <li>
+              <button
+                onClick={() => {
+                  console.log(response);
+                }}
+              >
+                test
+              </button>
             </li>
           </ul>
         </div>
