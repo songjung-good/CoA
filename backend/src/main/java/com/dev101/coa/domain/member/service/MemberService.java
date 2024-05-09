@@ -55,12 +55,18 @@ public class MemberService {
 
         List<Alarm> alarmList = alarmRepository.findByAlarmTargetIdOrderByCreatedAtDesc(memberId);
 
+
         List<AlarmDto> alarmDtoList = new ArrayList<>();
         for (Alarm alarm : alarmList) {
-            alarmDtoList.add(alarm.convertToDto());
+            AlarmDto alarmDto = alarm.convertToDto();
+            if(alarm.getAlarmRepoView() != null){
+                alarmDto.updateRepoViewInfo(alarm.getAlarmRepoView().getRepoViewId(), alarm.getAlarmRepoView().getRepoViewTitle());
+            }
+            alarmDtoList.add(alarmDto);
         }
 
         targetMember.updateMemberLastVisitCheck(LocalDateTime.now());
+        memberRepository.save(targetMember);
 
         return alarmDtoList;
 

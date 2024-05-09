@@ -37,8 +37,6 @@ public class Alarm extends BaseEntity {
         return AlarmDto.builder()
                 .memberId(this.alarmMember.getMemberId())
                 .memberNickName(this.alarmMember.getMemberNickname())
-                .repoViewId(this.alarmRepoView.getRepoViewId())
-                .repoViewTitle(this.alarmRepoView.getRepoViewTitle())
                 .createAt(LocalDateTime.now())
                 .build();
     }

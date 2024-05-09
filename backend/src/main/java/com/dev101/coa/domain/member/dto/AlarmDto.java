@@ -13,4 +13,9 @@ public class AlarmDto {
     private Long repoViewId;
     private String repoViewTitle;
     private LocalDateTime createAt;
+
+    public void updateRepoViewInfo(Long repoViewId, String repoViewTitle){
+        this.repoViewId = repoViewId;
+        this.repoViewTitle = repoViewTitle;
+    }
 }
