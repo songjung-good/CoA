@@ -1,7 +1,6 @@
 package com.dev101.coa.domain.search.service;
 
 import com.dev101.coa.domain.code.dto.CodeDto;
-import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.member.dto.MemberCardDto;
 import com.dev101.coa.domain.member.entity.AccountLink;
 import com.dev101.coa.domain.member.entity.Member;
@@ -17,6 +16,10 @@ import com.dev101.coa.domain.repo.repository.RepoViewRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,21 +38,26 @@ public class SearchService {
     private final MemberSkillRepository memberSkillRepository;
 
 
-    public List<RepoCardDto> searchRepoView(String keyword) {
+    public List<RepoCardDto> searchRepoView(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         if (keyword.isEmpty()) {
             throw new BaseException(StatusCode.KEYWORD_EMPTY);
         }
 
         List<Repo> repoList = repoRepository.findByRepoPathContaining(keyword);
+
         List<RepoCardDto> repoCardDtoList = new ArrayList<>();
         List<RepoView> repoViewList = new ArrayList<>();
         for (Repo repo : repoList) {
-            repoViewList.addAll(repoViewRepository.findAllByRepo(repo));
+            Page<RepoView> pageRepoViewList = repoViewRepository.findAllByRepo(repo, pageable);
+            for(RepoView prv: pageRepoViewList){
+                repoViewList.add(prv);
+            }
         }
         // createdAt 내림차순으로 정렬
-        repoViewList = repoViewList.stream()
-                .sorted(Comparator.comparing(RepoView::getCreatedAt).reversed())
-                .collect(Collectors.toList());
+//        repoViewList = repoViewList.stream()
+//                .sorted(Comparator.comparing(RepoView::getCreatedAt).reversed())
+//                .collect(Collectors.toList());
 
         for (RepoView repoView : repoViewList) {
             System.out.println("repoView.getRepoViewSkillList() = " + repoView.getRepoViewSkillList());
@@ -78,24 +86,21 @@ public class SearchService {
         return repoCardDtoList;
     }
 
-    public List<MemberCardDto> searchMember(String keyword) {
+    public List<MemberCardDto> searchMember(String keyword, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
         if (keyword.isEmpty()) {
             throw new BaseException(StatusCode.KEYWORD_EMPTY);
         }
 
-        List<Member> memberList = memberRepository.findByMemberNicknameContaining(keyword);
-        List<AccountLink> accountLinkList = accountLinkRepository.findByAccountLinkNicknameContaining(keyword);
+        // JPA는 같은 트랜젝션 내의 동일한 엔티티 ID에 대해 중복 관리가 됨. 따라서 멤버 중복 체크를 안해도 됨
+        Page<Member> memberList = memberRepository.findMemberByNickname(keyword, pageable);
 
-        // AccountLinkList에서 멤버 추출
-        accountLinkList.forEach(acl -> {
-            memberList.add(acl.getMember());
-        });
-        // 중복 제거 - CoA 서비스 닉네임 일치도 우선, 연동계정 닉네임 일치도 후순위
-        List<Member> mergedMemberList = memberList.stream().distinct().toList();
 
         // memberCardDto List 만들기
         List<MemberCardDto> memberCardDtoList = new ArrayList<>();
-        for (Member member : mergedMemberList) {
+        for (Member member : memberList) {
             // skillList
             List<MemberSkill> memberSkillList = memberSkillRepository.findByMember(member);
 
