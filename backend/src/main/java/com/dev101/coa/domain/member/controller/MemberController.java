@@ -1,9 +1,6 @@
 package com.dev101.coa.domain.member.controller;
 
-import com.dev101.coa.domain.member.dto.AlarmDto;
-import com.dev101.coa.domain.member.dto.BookmarkResDto;
-import com.dev101.coa.domain.member.dto.MemberCardDto;
-import com.dev101.coa.domain.member.dto.MemberInfoDto;
+import com.dev101.coa.domain.member.dto.*;
 import com.dev101.coa.domain.member.entity.Member;
 import com.dev101.coa.domain.member.entity.MemberSkill;
 import com.dev101.coa.domain.member.repository.MemberRepository;
@@ -21,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -52,6 +50,17 @@ public class MemberController {
         MemberCardDto memberCardDto = memberService.getMemberCardDto(currentMember, pageMember, targetMemberSkillList);
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(memberCardDto));
+    }
+
+    @Operation(description = "멤버 정보 수정")
+    @PutMapping("/edit")
+    public ResponseEntity<BaseResponse<Objects>> editMemberCardInfo(
+            @AuthenticationPrincipal Long memberId,
+            @RequestBody MemberCardReq memberCardReq) {
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        memberService.editMemberCard(member, memberCardReq);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
     @GetMapping("/alarms/count")

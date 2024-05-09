@@ -1,10 +1,8 @@
 package com.dev101.coa.domain.member.service;
 
-import com.dev101.coa.domain.member.dto.AccountLinkInfoDto;
-import com.dev101.coa.domain.member.dto.AlarmDto;
-import com.dev101.coa.domain.member.dto.BookmarkResDto;
-import com.dev101.coa.domain.member.dto.MemberCardDto;
-import com.dev101.coa.domain.member.dto.MemberInfoDto;
+import com.dev101.coa.domain.code.entity.Code;
+import com.dev101.coa.domain.code.repository.CodeRepository;
+import com.dev101.coa.domain.member.dto.*;
 import com.dev101.coa.domain.member.entity.*;
 import com.dev101.coa.domain.member.repository.*;
 import com.dev101.coa.global.common.StatusCode;
@@ -15,9 +13,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +26,7 @@ public class MemberService {
     private final AccountLinkRepository accountLinkRepository;
     private final BookmarkRepository bookmarkRepository;
     private final MemberSkillRepository memberSkillRepository;
+    private final CodeRepository codeRepository;
 
 
     public MemberInfoDto getMemberInfo(Long memberId) {
@@ -156,5 +155,25 @@ public class MemberService {
         Boolean isMine = (currentMember == targetMember);
         Boolean isBookmark = bookmarkRepository.findByBookmarkMemberAndBookmarkTargetMember(currentMember, targetMember).isPresent();
         return MemberCardDto.createDto(currentMember, targetMemberSkillList, isMine, isBookmark);
+    }
+
+    public void editMemberCard(Member member, MemberCardReq memberCardReq) {
+        List<MemberSkill> currentSkillList = memberSkillRepository.findAllByMember(member);
+        List<Long> skillIdList = currentSkillList.stream()
+                .map(MemberSkill::getMemberSkillId)
+                .toList();
+        skillIdList.forEach(memberSkillRepository::deleteById);
+
+        member.updateMemberIntro(memberCardReq.getIntroduce());
+
+        memberCardReq.getSkillIdList().forEach((codeId) -> {
+            Code code = codeRepository.findByCodeId(codeId).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+            MemberSkill memberSkill = MemberSkill.builder()
+                    .member(member)
+                    .skillCode(code)
+                    .build();
+            memberSkillRepository.save(memberSkill);
+        });
+        return;
     }
 }
