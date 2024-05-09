@@ -4,14 +4,14 @@
 // 라이브러리
 import React, { useState } from "react";
 import tw from "tailwind-styled-components";
-import { useStore } from 'zustand';
+import { useStore } from "zustand";
 
 // 컴포넌트 불러오기
-import UserModal from '@/app/main/analyzer/UserModal';
-import FetchGitInfo from '@/app/main/analyzer/FetchGitInfo';
+import UserModal from "@/app/main/analyzer/UserModal";
+import FetchGitInfo from "@/app/main/analyzer/FetchGitInfo";
 
 // 전역변수
-import userStore from '@/store/user';
+import userStore from "@/store/user";
 
 // 타입 정리
 interface UserData {
@@ -36,12 +36,10 @@ interface GitLabResponse {
 type ApiResponse = GitHubResponse | GitLabResponse;
 
 const UrlInput = () => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [userData, setUserData] = useState<ApiResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const GitlabUser = useStore(userStore).gitlabUserName;
-;
-
   // 입력 값 변경 시 핸들러
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -49,15 +47,19 @@ const UrlInput = () => {
 
   // Enter 키 입력 시 실행될 함수
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       fetchGitInfo();
     }
   };
 
   // FetchGithubInfo 컴포넌트를 불러와서 사용
   const fetchGitInfo = async () => {
-    FetchGitInfo(inputValue, setUserData, GitlabUser);
-    setIsModalOpen(true);
+    if (GitlabUser !== null) {
+      FetchGitInfo(inputValue, setUserData, GitlabUser);
+      setIsModalOpen(true);
+    } else {
+      console.log(`GitlabUser가 null 입니다.`);
+    }
   };
 
   // 모달 닫기 함수
@@ -75,12 +77,21 @@ const UrlInput = () => {
         onKeyDown={handleKeyDown}
       />
       <StyledButton onClick={fetchGitInfo}>분석하기</StyledButton>
-      {isModalOpen && userData && 
-        ('projectId' in userData ? 
-          <UserModal userData={userData as GitHubResponse} onClose={closeModal} url={inputValue}/> :
-          <UserModal userData={userData as GitLabResponse} onClose={closeModal} url={inputValue}/>
-        )
-      } 
+      {isModalOpen &&
+        userData &&
+        ("projectId" in userData ? (
+          <UserModal
+            userData={userData as GitHubResponse}
+            onClose={closeModal}
+            url={inputValue}
+          />
+        ) : (
+          <UserModal
+            userData={userData as GitLabResponse}
+            onClose={closeModal}
+            url={inputValue}
+          />
+        ))}
     </Container>
   );
 };

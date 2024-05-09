@@ -58,14 +58,14 @@ query {
       },
     },
   );
-  console.log("요청결과");
-  console.log(response);
-  console.log("forked 제외");
-  console.log(
-    response.data.data.user.repositories.nodes.filter(
-      (repo: any) => !repo.isFork,
-    ),
-  );
+  // console.log("요청결과");
+  // console.log(response);
+  // console.log("forked 제외");
+  // console.log(
+  //   response.data.data.user.repositories.nodes.filter(
+  //     (repo: any) => !repo.isFork,
+  //   ),
+  // );
   return response.data.data.user.repositories.nodes.filter(
     (repo: any) => !repo.isFork,
   );
@@ -115,7 +115,7 @@ export async function getTotalLinesOfCode(
       repo.languages = sortedLanguages;
     });
 
-    console.log(repositories);
+    // console.log(repositories);
     return repositories;
   } catch (error) {
     console.error("getTotalLinesOfCode 에러:", error);

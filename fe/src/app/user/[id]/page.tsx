@@ -11,16 +11,13 @@ import repositoryStore from "./../../../store/repos";
 
 export default function UserPage({ params }: { params: { id: string } }) {
   const [tabIndex, setTabIndex] = useState(0);
-  const [text, setText] = useState("");
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-  };
   const userName = userStore((state) => state.githubUserName);
-  const setUserName = userStore((state) => state.setGithubUserName);
   const setRepos = repositoryStore((state) => state.setRepos);
 
   useEffect(() => {
-    setRepos(userName);
+    if (userName !== null) {
+      setRepos(userName);
+    }
   }, [userName, setRepos]);
 
   //탭에 따른 랜더링될 페이지
@@ -44,19 +41,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
   };
   return (
     <>
-      {/* <div className="p-4 bg-appGrey1 flex">
-        <input onChange={onChange} value={text} />
-        <button
-          className="p-2 bg-appGrey2"
-          onClick={() => {
-            setUserName(text);
-          }}
-        >
-          유저 이름 변경
-        </button>
-      </div> */}
       <UserPageTabBar onClickTap={onClickTap} tabIndex={tabIndex} />
-      {/* <h1>User Page ID: {params.id}</h1> */}
       {renderTabContent()}
     </>
   );

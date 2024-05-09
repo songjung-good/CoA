@@ -24,7 +24,7 @@ const CalendarCard: React.FC = () => {
   // github에서 contributions(잔디) 가져오기
   useEffect(() => {
     const fetchData = async () => {
-      const res = await getContributions(userName);
+      const res = await getContributions(userName!);
       setTotalContribution(res.total);
 
       // data를 년도별로 분류
@@ -47,7 +47,9 @@ const CalendarCard: React.FC = () => {
 
       setIsLoading(false);
     };
-    fetchData();
+    if (userName !== null) {
+      fetchData();
+    }
   }, []);
 
   const handleYear = (year: string) => {

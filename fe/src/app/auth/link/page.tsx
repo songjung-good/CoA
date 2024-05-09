@@ -33,8 +33,8 @@ export default function LinkPage() {
     try {
       const response = await axiosInstance.get("api/accountLink");
 
-      console.log(response.data);
-      console.log(response.data.result);
+      // console.log(response.data);
+      // console.log(response.data.result);
       const getData = response.data.result;
 
       setHubNickName(getData.githubNickName);
@@ -136,12 +136,16 @@ export default function LinkPage() {
                 alt="github"
                 width={100}
                 height={100}
+                style={{ width: "100px", height: "100px" }}
               />
             </div>
             <div>
               <p className="text-xl font-bold">GitHub</p>
               <p>UserName : {hubNickName}</p>
-              <p>Token 등록: {isHubToken}</p>
+              <p>
+                Token 등록:{" "}
+                {isHubToken ? "토큰 등록 완료" : "등록된 토큰이 없어요"}
+              </p>
             </div>
           </div>
           <div>
@@ -150,10 +154,11 @@ export default function LinkPage() {
               onClick={handleGithubLogin}
             >
               <Image
-                src="/image/githubSSO.png"
+                src="/image/oauth/github-mark.svg"
                 alt="githubSSO"
                 width={24}
                 height={24}
+                style={{ width: "24px", height: "24px" }}
               />
               Sign in with GitHub
             </button>
@@ -164,10 +169,11 @@ export default function LinkPage() {
               }}
             >
               <Image
-                src="/image/githubSSO.png"
+                src="/image/oauth/github-mark.svg"
                 alt="githubSSO"
                 width={24}
                 height={24}
+                style={{ width: "24px", height: "24px" }}
               />
               access token 등록
             </button>
@@ -225,7 +231,10 @@ export default function LinkPage() {
             <div>
               <p className="text-xl font-bold">GitLab</p>
               <p>UserName : {labNickName}</p>
-              <p>Token 등록: {isLabToken}</p>
+              <p>
+                Token 등록:{" "}
+                {isLabToken ? "토큰 등록 완료" : "등록된 토큰이 없어요"}
+              </p>
             </div>
           </div>
           <div>
