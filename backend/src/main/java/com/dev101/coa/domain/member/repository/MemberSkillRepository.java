@@ -11,4 +11,6 @@ import java.util.List;
 public interface MemberSkillRepository extends JpaRepository<MemberSkill, Long> {
 
     List<MemberSkill> findByMember(Member member);
+
+    List<MemberSkill> findAllByMember(Member member);
 }

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
-    Optional<Bookmark> findByBookmarkMemberAndAndBookmarkTargetMember(Member member, Member targetMember);
+    Optional<Bookmark> findByBookmarkMemberAndBookmarkTargetMember(Member member, Member targetMember);
 
     List<Bookmark> findByBookmarkMember(Member member);
 }

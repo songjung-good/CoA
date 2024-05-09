@@ -3,7 +3,10 @@ package com.dev101.coa.domain.member.entity;
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -54,5 +57,7 @@ public class Member extends BaseEntity {
     public void updateMemberLastVisitCheck(LocalDateTime currentTime){
         this.memberLastVisitCheck = currentTime;
     }
+
+    public void updateMemberIntro(String memberIntro) { this.memberIntro = memberIntro; }
 
 }
