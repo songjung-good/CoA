@@ -27,18 +27,20 @@
         "isMine": true
       },
       "basicDetailDto": {
-        "repoReadme": "# Hello World! \n ## 레포 리드미 테스트 \n ### h3 작동 확인",
+        "repoReadme": "# Hello World!!!! \n ## 레포 리드미 테스트 \n ### h3 작동 확인",
         "repoViewResult": "Project executed successfully with minor warnings.",
         "commentList": [
           {
             "commentStartIndex": 0,
-            "commentEndIndex": 28,
-            "commentContent": "Great job on the initial commit!"
+            "commentEndIndex": 10,
+            "commentContent": "Great job on the initial commit!",
+            "commentTargetString": "Project ex"
           },
           {
-            "commentStartIndex": 30,
-            "commentEndIndex": 57,
-            "commentContent": "Need to improve error handling."
+            "commentStartIndex": 20,
+            "commentEndIndex": 25,
+            "commentContent": "Need to improve error handling.",
+            "commentTargetString": "ssful"
           }
         ],
         "repoViewTotalCommitCnt": 10,
