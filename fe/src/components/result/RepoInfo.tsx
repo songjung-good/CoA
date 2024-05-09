@@ -5,11 +5,18 @@ import Link from "next/link";
 import tw from "tailwind-styled-components";
 import { useState, useEffect } from "react";
 
+// import file
 import EditIcon from "@/icons/EditIcon";
 
+// store
 import useResultStore from "@/store/result";
 
-export default function RepoInfo() {
+// TypeScript 인터페이스로 Props 타입 정의
+interface RepoInfoProps {
+  openModal: () => void; // 모달을 여는 함수
+}
+
+const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
   // 통신 결과로 setRepoInfo를 업데이트
   const repoInfo = useResultStore((state) => state.result.repoCardDto);
 
@@ -23,70 +30,67 @@ export default function RepoInfo() {
 
   return (
     <RepoInfoDiv>
-      {repoInfo.isMine && (
-        <div className="absolute -bottom-8 -right-8 z-10 p-4">
-          <div className="relative">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 rounded-full"
-              onMouseEnter={() => {
-                setIsEditHover(true);
-              }}
-              onMouseLeave={() => {
-                setIsEditHover(false);
-              }}
+      <div className="flex flex-col lg:flex-row items-start justify-between w-full ">
+        <div>
+          <div className="flex items-center mb-5">
+            {repoInfo.repoViewPath.includes("github") ? (
+              <Image
+                src="/image/githubSSO.png"
+                alt="github logo"
+                width={30}
+                height={30}
+              />
+            ) : (
+              <Image src="" alt="gitlab logo" width={30} height={30} />
+            )}
+            <Link
+              href={`${repoInfo.repoViewPath}`}
+              className="ml-2 font-bold truncate"
             >
-              <EditIcon width={20} height={20} />
-            </button>
-            {isEditHover && (
-              <div className="absolute -right-5 flex whitespace-nowrap p-2 mt-2 bg-white shadow-lg rounded-lg z-20 text-center">
-                수정하기
+              {repoInfo.repoViewPath}
+            </Link>
+          </div>
+          <p className="text-2xl font-semibold lg:text-3xl mb-5 truncate">
+            {repoInfo.repoViewTitle}
+          </p>
+          <p className="text-xl font-bold lg:text-2xl mb-2 truncate">
+            {repoInfo.repoViewSubtitle}
+          </p>
+        </div>
+        <div className="w-full h-full lg:flex lg:flex-col lg:justify-between">
+          <div className="mb-2 flex flex-col justify-between items-start lg:items-end w-full h-full">
+            <div>
+              <p className="font-extrabold text-start">
+                프로젝트 기간 :
+                {`${repoInfo.repoStartDate} ~ ${repoInfo.repoEndDate} (${projectDays}일)`}
+              </p>
+              <p className="font-extrabold text-start">
+                프로젝트 인원: {repoInfo.repoMemberCnt}명
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-end w-full">
+            {repoInfo.isMine && (
+              <div className="mt-2">
+                <button
+                  className=" bg-appBlue1 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-full flex justify-center items-center"
+                  onClick={openModal}
+                >
+                  <EditIcon width={20} height={20} />
+                  수정하기
+                </button>
               </div>
             )}
           </div>
         </div>
-      )}
-      <div className="flex flex-col items-start">
-        <div className="flex items-center mb-5">
-          {repoInfo.repoViewPath.includes("github") ? (
-            <Image
-              src="/image/githubSSO.png"
-              alt="github logo"
-              width={30}
-              height={30}
-            ></Image>
-          ) : (
-            <Image src="" alt="gitlab logo" width={30} height={30}></Image>
-          )}
-          <Link
-            href={`${repoInfo.repoViewPath}`}
-            className="ml-2 font-bold truncate"
-          >
-            {repoInfo.repoViewPath}
-          </Link>
-        </div>
-        <p className="text-2xl font-semibold lg:text-3xl mb-5 truncate">
-          {repoInfo.repoViewTitle}
-        </p>
-        <p className="text-xl font-bold lg:text-2xl mb-2 truncate">
-          {repoInfo.repoViewSubtitle}
-        </p>
-      </div>
-      <div className="mb-2">
-        <p className="font-extrabold">
-          프로젝트 기간 :
-          {`${repoInfo.repoStartDate} ~ ${repoInfo.repoEndDate} (${projectDays}일)`}
-        </p>
-        <p className="font-extrabold">
-          프로젝트 인원: {repoInfo.repoMemberCnt}명
-        </p>
       </div>
     </RepoInfoDiv>
   );
-}
+};
 
 const RepoInfoDiv = tw.div`
-  relative w-full min-h-20 flex flex-col lg:flex-row flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2
-  `;
+  w-full min-h-20 flex flex-col lg:flex-row flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2
+`;
 
 function calculateDaysBetweenDates(startDate: string, endDate: string) {
   const start = new Date(startDate).getTime(); // Date를 밀리초 단위 타임스탬프로 변환
@@ -95,3 +99,4 @@ function calculateDaysBetweenDates(startDate: string, endDate: string) {
   const days = difference / (1000 * 60 * 60 * 24); // 밀리초를 일수로 변환
   return Math.ceil(days); // 소수점이 있는 경우를 대비해 올림 처리
 }
+export default RepoInfo;

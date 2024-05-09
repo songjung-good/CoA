@@ -23,7 +23,6 @@ export default function ReadmeEditPage() {
         ) : (
           <p className="mb-5 text-xl font-bold sm:text-2xl">로딩 중...</p>
         )}
-        <RepoInfo />
       </div>
     </div>
   );
