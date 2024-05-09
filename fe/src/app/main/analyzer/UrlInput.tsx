@@ -7,8 +7,8 @@ import tw from "tailwind-styled-components";
 import { useStore } from 'zustand';
 
 // 컴포넌트 불러오기
-import UserModal from '@/components/analyzer/UserModal';
-import FetchGitInfo from '@/components/analyzer/FetchGitInfo';
+import UserModal from '@/app/main/analyzer/UserModal';
+import FetchGitInfo from '@/app/main/analyzer/FetchGitInfo';
 
 // 전역변수
 import userStore from '@/store/user';

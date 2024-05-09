@@ -25,7 +25,12 @@ const SearchInput: React.FC<SearchProps> = ({ onSearch }) => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Input type="text" value={query} onChange={handleQueryChange} placeholder="검색어를 입력하세요" />
+      <Input 
+        type="text" 
+        value={query} 
+        onChange={handleQueryChange} 
+        placeholder={type === 'repo' ? '예시) https://github.com/ssafy-mate/ssafy-mate_front-end' : '예시) songjung-good'}
+      />
       <Label>
         <Radio type="radio" value="repo" checked={type === 'repo'} onChange={handleTypeChange} />
         레포지토리

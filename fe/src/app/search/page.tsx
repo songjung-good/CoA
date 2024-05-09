@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import tw from 'tailwind-styled-components';
 
 // 컴포넌트 import
-import SearchInput from '@/components/searchcomponents/SearchInput';
+import SearchInput from '@/app/search/SearchInput';
 import SearchResult from '@/components/searchcomponents/SearchResult'; 
 
 // 임시 데이터 import
