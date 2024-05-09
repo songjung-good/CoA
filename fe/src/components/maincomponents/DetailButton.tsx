@@ -17,19 +17,18 @@ interface DetailButtonProps {
 const DetailButton: React.FC<DetailButtonProps> = ({ hovered, repoViewId }) => {
   const router = useRouter();
   const axios = UseAxios();
-  const setRepoDetail = useRepoDetailStore((state: any) => state.setRepoDetail);
-
+  const setRepoDetail = useRepoDetailStore((state) => state.updateResultState);
   // 레포지토리 상세정보 보내기
   const getRepoView = async (repoViewId: string) => {
     try {
       const response = await axios.get(`/api/repos/${repoViewId}`);
       setRepoDetail(response.data);
-      console.log(response);
+      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
   };
-  
+
   // 버튼 클릭시 데이터 저장 이후 상세정보 페이지로 이동
   const handleDetailClick = async (repoViewId: string) => {
     await getRepoView(repoViewId);
