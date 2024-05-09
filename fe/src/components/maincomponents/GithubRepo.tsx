@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import tw from 'tailwind-styled-components';
+import UseAxios from '@/api/common/useAxios';
 
 // GitHub 개인 액세스 토큰
 const accessToken = process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKENS;
@@ -22,19 +23,21 @@ interface MyRepoProps {
 const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [notLink, setNotLink] = useState<number>(0);
+  const axiosInstance = UseAxios();
 
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const response = await axios.get(
-          `https://api.github.com/users/${userID}/repos`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-          );
-        setRepos(response.data);
+        const response = await axiosInstance.get(`api/external/github/repos/${userID}`);
+        
+        if (response.data.code === 602 || response.data.code === 303) {
+          setNotLink(response.data.code)
+          return
+        }
+        if (response.data.code === 200) {
+        setRepos(JSON.parse(response.data.result));
+        }
         setLoading(false);
       } catch (error) {
         console.error('해당 요청에 문제가 생겼습니다. : ', error);
@@ -47,6 +50,13 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
       // Cleanup
     };
   }, [userID]);
+
+  if (notLink === 602) {
+    return <div>계정을 연동해주세요.</div>
+  }
+  if (notLink === 303) {
+    return <div>토큰을 갱신해주세요.</div>
+  }
 
   if (loading) {
     return <Loading>목록을 받아오는 중 입니다.</Loading>;

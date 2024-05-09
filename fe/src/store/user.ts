@@ -14,7 +14,7 @@ interface UserStore {
 }
 
 const userStore = create<UserStore>((set) => ({
-  githubUserName: "Shin-3117",
+  githubUserName: "HOONTP",
   setGithubUserName: (input: string) => set({ githubUserName: input }),
   gitlabUserName: "qsc3117",
   setGitlabUserName: (input: string) => set({ gitlabUserName: input }),

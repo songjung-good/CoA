@@ -5,10 +5,12 @@ import axios from 'axios';
 
 // 컴포넌트
 import { ExtractUserInfo } from '@/components/analyzer/ExtractUserInfo';
+import UseAxios from '@/api/common/useAxios';
 
 // 토큰
 const accessTokenHub = process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKENS;
 const accessTokenLab = process.env.NEXT_PUBLIC_GITLAB_ACCESS_TOKENS;
+  const axiosInstance = UseAxios();
 
 interface Contributor {
   id: number;
@@ -21,6 +23,7 @@ interface Contributor {
 
 // GitHub인지 GitLab인지 판단하여 정보 요청
 const FetchGitInfo = async (inputValue: string, setUserData: Function, GitlabUser: string) => {
+  const axiosInstance = UseAxios();
 
   let gitInfo = ExtractUserInfo(inputValue);
 
@@ -37,17 +40,19 @@ const FetchGitInfo = async (inputValue: string, setUserData: Function, GitlabUse
 // Github프로젝트의 기여자 정보
 const fetchGitHubData = async (gitInfo: any, setUserData: Function, accessTokenHub: any) => {
   try {
-    const response = await axios.get(
-      `https://api.github.com/repos/${gitInfo.UserName}/${gitInfo.ProjectName}/contributors`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessTokenHub}`,
-        },
-      }
-    );
+    const response = await axiosInstance.get(`/api/external/github/members/${gitInfo.UserName}/${gitInfo.ProjectName}`)
+    
+    if (response.data.code === 602) {
+      throw alert("GitHub 계정을 연동해주세요.")
+    }
+    if (response.data.code === 303) {
+      throw alert("본인 여부(접근 권한) 및 토큰을 확인해주세요.")
+    }
+
     setUserData({
-      data: response.data
+      data: JSON.parse(response.data.result)
     });
+
   } catch (error) {
     console.error("GitHub 정보를 가져오는 데 실패했습니다.", error);
   }
@@ -57,6 +62,7 @@ const fetchGitHubData = async (gitInfo: any, setUserData: Function, accessTokenH
 const fetchGitLabData = async (gitInfo: any, setUserData: Function, accessTokenLab: any) => {
   try {
     const members = await fetchGitlabMembers(gitInfo.ProjectName, gitInfo.UserName, accessTokenLab);
+
     // GitLab projectId를 반환 값에 포함
     setUserData({
       data: members,
@@ -70,32 +76,31 @@ const fetchGitLabData = async (gitInfo: any, setUserData: Function, accessTokenL
 // GitLab 프로젝트 멤버 정보
 const fetchGitlabMembers = async (projectname: string, username: string, accessToken: string): Promise<Contributor[]> => {
   try {
-    const projectsResponse = await axios.get(
-      `https://lab.ssafy.com/api/v4/users/${username}/contributed_projects`,
-      {
-        headers: {
-          'PRIVATE-TOKEN': accessToken,
-        },
-      }
-    );
+    const projectsResponse = await axiosInstance.get(`/api/external/gitlab/projects/${username}`)
 
+    if (projectsResponse.data.code === 602) {
+      throw alert("GitLab 계정을 연동해주세요.")
+    }
+    if (projectsResponse.data.code === 303) {
+      throw alert("본인 여부(접근 권한) 및 토큰을 확인해주세요.")
+    }
     let projectId = '';
-    projectsResponse.data.forEach((project: any) => {
+
+    
+    JSON.parse(projectsResponse.data.result).forEach((project: any) => {
       if (project.name === projectname) {
         projectId = project.id;
       }
     });
 
-
-    const membersResponse = await axios.get(
-      `https://lab.ssafy.com/api/v4/projects/${projectId}/members`,
-      {
-        headers: {
-          'PRIVATE-TOKEN': accessToken,
-        },
-      }
-    );
-    return membersResponse.data;
+    const membersResponse = await axiosInstance.get(`/api/external/gitlab/members/${projectId}`)
+    if (membersResponse.data.code === 602) {
+      throw alert("GitLab 계정을 연동해주세요.")
+    }
+    if (membersResponse.data.code === 303) {
+      throw alert("본인 여부(접근 권한) 및 토큰을 확인해주세요.")
+    }
+    return JSON.parse(membersResponse.data.result);
 
   } catch (error) {
     console.error('멤버 찾는데 실패하였습니다. : ', error);
