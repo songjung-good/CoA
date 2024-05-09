@@ -262,6 +262,9 @@ public class RepoService {
                 .scoreComment(commitScoreDto.getScoreComment())
                 .build());
 
+        // 레디스에 임시 저장된 분석결과 삭제
+        redisRepoRepository.deleteById(analysisId);
+
     }
 
     private RepoInfo getRepoInfo(RedisResult redisData) {
