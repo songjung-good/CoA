@@ -86,7 +86,9 @@ const RunBarChart: React.FC = () => {
     const width = svgWidth - margin.left - margin.right;
     const height = svgHeight - margin.top - margin.bottom;
     svg.attr("height", svgHeight);
+
     const updateChart = (index: number) => {
+      const chartDate = data[index].date;
       const newData = [...prevData, ...data[index].languages];
       // 데이터를 크기순으로 정렬
       const sortedData = newData.sort((a, b) => b.value - a.value);
@@ -134,16 +136,29 @@ const RunBarChart: React.FC = () => {
         .duration(duration)
         .attr("transform", `translate(${margin.left}, ${margin.top})`)
         .call((g) => xAxis(g as any));
-
+      //날짜 추가
+      svg
+        .select(".date")
+        .text(chartDate)
+        .attr(
+          "transform",
+          `translate(${width + margin.left}, ${height + margin.top})`,
+        )
+        .attr("text-anchor", "end")
+        .style("font-size", "24px"); // 텍스트 크기 설정
+      // .style("fill", "red");
+      //bars 설정
       const bars = svg
         .selectAll(".bar")
         .data(currentData, (d: any) => d.language);
+      //기존 bar 제거
       bars
         .exit()
         .transition()
         .duration(duration)
         .attr("width", margin.left)
         .remove();
+      //bar 추가
       bars
         .enter()
         .append("rect")
@@ -156,7 +171,7 @@ const RunBarChart: React.FC = () => {
         .transition()
         .duration(duration)
         .attr("width", (d) => x(d.value));
-
+      //언어 이름 추가
       bars
         .transition()
         .duration(duration)
@@ -181,6 +196,7 @@ const RunBarChart: React.FC = () => {
     <svg className="w-full" ref={svgRef}>
       <g className="x-axis" />
       <g className="y-axis" />
+      <text className="date" />
     </svg>
   );
 };
