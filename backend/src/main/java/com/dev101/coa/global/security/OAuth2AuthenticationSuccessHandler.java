@@ -103,9 +103,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 return "http://localhost:3000";
             } else if (domain.equals("k10e101.p.ssafy.io")) {
                 return "https://k10e101.p.ssafy.io";
+            } else if (domain.equals("commitanalyze.com")) {
+                return "https://commitanalyze.com";
             }
         }
-        return "https://k10e101.p.ssafy.io";
+        return "http://localhost:3000";
     }
 
     private boolean isAllowedDomain(String url) {
