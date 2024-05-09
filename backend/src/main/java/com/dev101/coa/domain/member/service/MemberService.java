@@ -103,7 +103,7 @@ public class MemberService {
         Member targetMember = memberRepository.findByMemberUuid(UUID.fromString(targetMemberUuid)).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
         // 북마크 존재 유무 확인
-        Optional<Bookmark> optionalBookmark = bookmarkRepository.findByBookmarkMemberAndAndBookmarkTargetMember(loginMember, targetMember);
+        Optional<Bookmark> optionalBookmark = bookmarkRepository.findByBookmarkMemberAndBookmarkTargetMember(loginMember, targetMember);
 
         if (optionalBookmark.isPresent()) {
             // 북마크 삭제
@@ -144,8 +144,17 @@ public class MemberService {
         for(Bookmark bookmark : bookmarkList){
             Member targetMember = bookmark.getBookmarkTargetMember();
             List<MemberSkill> targetMemberSkillList = memberSkillRepository.findByMember(targetMember);
-            memberCardDtoList.add(MemberCardDto.createDto(targetMember, targetMemberSkillList));
+            memberCardDtoList.add(getMemberCardDto(loginMember, targetMember, targetMemberSkillList));
         }
         return memberCardDtoList;
+    }
+
+    public MemberCardDto getMemberCardDto(
+            Member currentMember,
+            Member targetMember,
+            List<MemberSkill> targetMemberSkillList) {
+        Boolean isMine = (currentMember == targetMember);
+        Boolean isBookmark = bookmarkRepository.findByBookmarkMemberAndBookmarkTargetMember(currentMember, targetMember).isPresent();
+        return MemberCardDto.createDto(currentMember, targetMemberSkillList, isMine, isBookmark);
     }
 }

@@ -2,12 +2,12 @@ package com.dev101.coa.domain.search.service;
 
 import com.dev101.coa.domain.code.dto.CodeDto;
 import com.dev101.coa.domain.member.dto.MemberCardDto;
-import com.dev101.coa.domain.member.entity.AccountLink;
 import com.dev101.coa.domain.member.entity.Member;
 import com.dev101.coa.domain.member.entity.MemberSkill;
 import com.dev101.coa.domain.member.repository.AccountLinkRepository;
 import com.dev101.coa.domain.member.repository.MemberRepository;
 import com.dev101.coa.domain.member.repository.MemberSkillRepository;
+import com.dev101.coa.domain.member.service.MemberService;
 import com.dev101.coa.domain.repo.dto.RepoCardDto;
 import com.dev101.coa.domain.repo.entity.Repo;
 import com.dev101.coa.domain.repo.entity.RepoView;
@@ -23,9 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +34,7 @@ public class SearchService {
     private final MemberRepository memberRepository;
     private final AccountLinkRepository accountLinkRepository;
     private final MemberSkillRepository memberSkillRepository;
+    private final MemberService memberService;
 
 
     public List<RepoCardDto> searchRepoView(String keyword, int page, int size) {
@@ -86,7 +85,7 @@ public class SearchService {
         return repoCardDtoList;
     }
 
-    public List<MemberCardDto> searchMember(String keyword, int page, int size) {
+    public List<MemberCardDto> searchMember(Member currentMember,String keyword, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -97,14 +96,13 @@ public class SearchService {
         // JPA는 같은 트랜젝션 내의 동일한 엔티티 ID에 대해 중복 관리가 됨. 따라서 멤버 중복 체크를 안해도 됨
         Page<Member> memberList = memberRepository.findMemberByNickname(keyword, pageable);
 
-
         // memberCardDto List 만들기
         List<MemberCardDto> memberCardDtoList = new ArrayList<>();
         for (Member member : memberList) {
             // skillList
             List<MemberSkill> memberSkillList = memberSkillRepository.findByMember(member);
 
-            MemberCardDto memberCardDto = MemberCardDto.createDto(member, memberSkillList);
+            MemberCardDto memberCardDto = memberService.getMemberCardDto(currentMember, member, memberSkillList);
             memberCardDtoList.add(memberCardDto);
         }
 

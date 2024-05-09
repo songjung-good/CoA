@@ -4,8 +4,14 @@ import com.dev101.coa.domain.member.dto.AlarmDto;
 import com.dev101.coa.domain.member.dto.BookmarkResDto;
 import com.dev101.coa.domain.member.dto.MemberCardDto;
 import com.dev101.coa.domain.member.dto.MemberInfoDto;
+import com.dev101.coa.domain.member.entity.Member;
+import com.dev101.coa.domain.member.entity.MemberSkill;
+import com.dev101.coa.domain.member.repository.MemberRepository;
+import com.dev101.coa.domain.member.repository.MemberSkillRepository;
 import com.dev101.coa.domain.member.service.MemberService;
 import com.dev101.coa.global.common.BaseResponse;
+import com.dev101.coa.global.common.StatusCode;
+import com.dev101.coa.global.exception.BaseException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/member")
@@ -23,6 +30,8 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
+    private final MemberSkillRepository memberSkillRepository;
 
     @Operation(description = "로그인한 유저의 정보")
     @GetMapping("")
@@ -33,7 +42,17 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(memberInfoDto));
     }
 
+    @Operation(description = "페이지 멤버 카드 정보")
+    @GetMapping("/{memberUuid}")
+    public ResponseEntity<BaseResponse<MemberCardDto>> getMemberCardInfo(@AuthenticationPrincipal Long memberId, @PathVariable("memberUuid") UUID memberUuid){
+        Member currentMember = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        Member pageMember = memberRepository.findByMemberUuid(memberUuid).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
+        List<MemberSkill> targetMemberSkillList = memberSkillRepository.findByMember(pageMember);
+        MemberCardDto memberCardDto = memberService.getMemberCardDto(currentMember, pageMember, targetMemberSkillList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(memberCardDto));
+    }
 
     @GetMapping("/alarms/count")
     @Operation(description = "로그인한 유저의 확인하지 않은 알람 개수")
