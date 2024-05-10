@@ -2,18 +2,17 @@
 
 import userStore from "@/store/user";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import UseAxios from "@/api/common/useAxios";
 import useCommonCodeStore from "@/store/commoncode";
+import UserMenu from "./UserMenu";
 
 export default function UserIconButton() {
-  const UUID = userStore((state) => state.UUID);
   const userImage = userStore((state) => state.userImage);
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const axiosInstance = UseAxios();
-  const { response, setResponse } = useCommonCodeStore.getState();
+  const { setResponse } = useCommonCodeStore.getState();
 
   const fetchCommonCodeData = async () => {
     try {
@@ -23,11 +22,11 @@ export default function UserIconButton() {
       console.error("'/api/common/code'요청 에러", error);
     }
   };
-
+  //서버에서 유저 데이터를 받아오고 전역state에 저장
   const fetchMemberData = async () => {
     try {
       const response = await axiosInstance.get("/api/member");
-      console.log(response);
+      // console.log(response);
       const memberData = response.data.result;
       userStore.setState({
         UUID: memberData.memberUuid,
@@ -63,15 +62,6 @@ export default function UserIconButton() {
     };
   }, []);
 
-  const logout = async () => {
-    try {
-      const response = await axiosInstance.post("/api/auth/logout");
-      window.location.href = "/";
-    } catch (error) {
-      console.error("logout 중 오류가 발생했습니다:", error);
-    }
-  };
-
   return (
     <div className="relative flex justify-center items-center" ref={modalRef}>
       <button
@@ -103,21 +93,7 @@ export default function UserIconButton() {
           />
         </div>
       </button>
-      {isOpen ? (
-        <div className="absolute top-11 right-0 card min-w-28 z-50">
-          <ul className="flex flex-col gap-4">
-            <li>
-              <Link href={`/user/${UUID}`}>마이 페이지</Link>
-            </li>
-            <li>
-              <Link href={`/auth/link`}>연동 페이지</Link>
-            </li>
-            <li>
-              <button onClick={logout}>로그아웃</button>
-            </li>
-          </ul>
-        </div>
-      ) : null}
+      {isOpen ? <UserMenu /> : null}
     </div>
   );
 }

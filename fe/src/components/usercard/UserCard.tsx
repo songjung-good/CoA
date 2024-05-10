@@ -3,6 +3,8 @@
 import Image from "next/image";
 import IsStar from "./IsStar";
 import userStore from "@/store/user";
+import EditIcon from "@/icons/EditIcon";
+import EditIconDark from "@/icons/EditIconDark";
 
 export default function UserCard() {
   const userName = userStore((state) => state.githubUserName);
@@ -13,7 +15,10 @@ export default function UserCard() {
         <div className="grow flex flex-col gap-2">
           <div className="flex justify-between">
             <p>닉네임 / userName: {userName}</p>
-            <IsStar />
+            {/* <IsStar /> */}
+            <button>
+              <EditIconDark />
+            </button>
           </div>
           <div className="bg-appGrey1 p-4 rounded-2xl grow">
             <p>자기소개 글</p>
