@@ -1,3 +1,4 @@
+import base64
 from typing import Any
 
 import requests
@@ -49,6 +50,9 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
     async def load_content(self) -> list[dict[Any, Any]]:
         # TODO: 리팩토링은 나중에...
         # TODO: pagination
+
+        result: list[dict[Any, Any]] = []
+
         tree_json = await self._request_json(
             f'https://lab.ssafy.com/api/v4/projects/{self.project_id}/repository/tree?recursive=1'
         )
@@ -57,7 +61,18 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
             if entry['type'] == 'tree':     # 해당 entry는 directory
                 continue
 
-            file_json = await self._request_json() # TODO
+            file_json = await self._request_json(
+                f"https://lab.ssafy.com/api/v4/projects/{self.project_id}/repository/blobs/{entry['id']}"
+            )
+            encoded_content = file_json['content']
+            decoded_content = base64.b64decode(encoded_content).decode('utf-8')
+
+            result.append({
+                'file_path': entry['path'],
+                'file_content': decoded_content
+            })
+
+        return result
 
     def _get_commits_root_url(self, author_name: str) -> str:
         """
