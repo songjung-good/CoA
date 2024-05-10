@@ -1,21 +1,37 @@
 "use client";
 
 import Image from "next/image";
-import IsStar from "./IsStar";
 import userStore from "@/store/user";
-import EditIcon from "@/icons/EditIcon";
 import EditIconDark from "@/icons/EditIconDark";
+import UseAxios from "@/api/common/useAxios";
 
 export default function MyUserCard() {
-  const userName = userStore((state) => state.githubUserName);
+  const { AuthUserName, userImage } = userStore();
+  const putMyData = async (
+    introduce: string,
+    skillIdList: number[],
+    jobCodeId: number,
+  ) => {
+    try {
+      const putResponse = await UseAxios().put(`/api/member/edit`, {
+        introduce: introduce,
+        skillIdList: skillIdList,
+        jobCodeId: jobCodeId,
+      });
+    } catch (error) {
+      console.error("'유저 정보 수정'요청 에러", error);
+    }
+  };
   return (
     <section className="card flex flex-col gap-4 ">
       <div className="flex flex-row gap-4">
-        <Image src="/image/logo144.png" alt="logo" width={144} height={144} />
+        {/* <Image src="/image/logo144.png" alt="logo" width={144} height={144} /> */}
+        <div className="rounded-full overflow-hidden">
+          <img src={userImage} alt="logo" width={144} height={144} />
+        </div>
         <div className="grow flex flex-col gap-2">
           <div className="flex justify-between">
-            <p>닉네임 / userName: {userName}</p>
-            {/* <IsStar /> */}
+            <p>{AuthUserName}</p>
             <button>
               <EditIconDark />
             </button>
