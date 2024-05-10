@@ -1,6 +1,8 @@
 package com.dev101.coa.global.security.service;
 
 
+import com.dev101.coa.global.common.StatusCode;
+import com.dev101.coa.global.exception.BaseException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -36,6 +38,7 @@ public class EncryptionUtils {
     }
 
     public String decrypt(String encryptedData) throws Exception {
+        if(encryptedData == null) { throw new BaseException(StatusCode.NOT_EXIST_ACCESS); }
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
         byte[] original = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
