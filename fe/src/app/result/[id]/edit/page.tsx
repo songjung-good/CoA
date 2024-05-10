@@ -11,14 +11,19 @@ import "@/app/result/[id]/_components/result.css";
 import { useEffect, useState } from "react";
 
 export default function ReadmeEditPage() {
-  const userNickName =
-    useResultStore.getState().result.repoCardDto.memberNickname;
+  const repoTitle = useResultStore.getState().result.repoCardDto.repoViewTitle;
   const [tabIndex, setTabIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(0);
 
+  const [title, setTitle] = useState("");
+
+  // useEffect(() => {
+  //   console.log(`현재 선택된 탭: ${tabIndex}`);
+  // }, [tabIndex]);
+
   useEffect(() => {
-    console.log(`현재 선택된 탭: ${tabIndex}`);
-  }, [tabIndex]);
+    setTitle(repoTitle);
+  }, []);
 
   const handleTab = (index: number) => {
     setTabIndex(index);
@@ -31,9 +36,9 @@ export default function ReadmeEditPage() {
   return (
     <div className="bg-appGrey1 h-full">
       <div className="flex flex-col items-center pt-4 w-full h-full">
-        {userNickName ? (
+        {repoTitle ? (
           <p className="mb-5 text-xl font-bold sm:text-2xl">
-            {`상세 수정 페이지`}
+            {`${repoTitle} 프로젝트 수정`}
           </p>
         ) : (
           <p className="mb-5 text-xl font-bold sm:text-2xl">로딩 중...</p>
