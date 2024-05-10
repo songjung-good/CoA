@@ -7,9 +7,12 @@ from api.models.services.client.github_rest import GithubRestClient
 
 
 async def test_github():
-    request = GithubAnalysisRequest()
-    request.repoPath = "DoubleDeltas/CoaTest"
-    request.accessToken = os.getenv("GITHUB_ACCESS_TOKEN")
+    request = GithubAnalysisRequest(
+        analysisId="0",
+        userName="DoubleDeltas",
+        repoPath="DoubleDeltas/CoaTest",
+        accessToken=os.getenv("GITHUB_ACCESS_TOKEN")
+    )
 
     client = GithubRestClient(request)
 

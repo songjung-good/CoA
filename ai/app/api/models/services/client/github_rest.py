@@ -61,7 +61,7 @@ class GithubRestClient(RestRepoClient[GithubAnalysisRequest]):
         git_trees_json = await self._request_json(
             f'https://api.github.com/repos/{self.path}/git/trees/{default_branch}?recursive=1'
         )
-        for entry in git_trees_json['trees']:
+        for entry in git_trees_json['tree']:
             if entry['type'] == 'tree':     # 해당 entry는 directory
                 continue
 
