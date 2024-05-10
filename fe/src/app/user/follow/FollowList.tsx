@@ -11,11 +11,14 @@ interface Skill {
 }
 
 interface Member {
-  memberId: number;
+  memberUuid: number;
   memberNickName: string;
   memberImg: string;
   memberIntro: string;
   skillList: Skill[];
+  memberJobCodeId: number;
+  isMine: boolean;
+  isBookmark: boolean;
 }
 
 interface ApiResponse {
@@ -24,7 +27,7 @@ interface ApiResponse {
 
 const dummyData: Member[] = [
   {
-    memberId: 1,
+    memberUuid: 1,
     memberNickName: "노마드 코더",
     memberImg:
       "https://yt3.googleusercontent.com/ytc/AIdro_kZGbEvWmB_2CZMcZVcCpjFsiQNVQZEehF8jinP6zlFJ7s=s176-c-k-c0x00ffffff-no-rj",
@@ -33,9 +36,12 @@ const dummyData: Member[] = [
       { codeId: 1, codeName: "JavaScript" },
       { codeId: 2, codeName: "React.js" },
     ],
+    memberJobCodeId: 0,
+    isMine: false,
+    isBookmark: true,
   },
   {
-    memberId: 2,
+    memberUuid: 2,
     memberNickName: "개발바닥",
     memberImg:
       "https://yt3.googleusercontent.com/ytc/AIdro_mDWXwLF9kj8Hzm_nh3ZDVo0LAzH-DzXyaFa8odzPeBTw=s176-c-k-c0x00ffffff-no-rj",
@@ -44,15 +50,21 @@ const dummyData: Member[] = [
       { codeId: 3, codeName: "Python" },
       { codeId: 4, codeName: "Django" },
     ],
+    memberJobCodeId: 0,
+    isMine: false,
+    isBookmark: true,
   },
 ];
 const noFollowData = [
   {
-    memberId: 0,
+    memberUuid: 0,
     memberNickName: "팔로우한 유저가 없어요!",
     memberImg: "/image/logo200.png",
     memberIntro: `다른 유저를 팔로우 해보세요!`,
     skillList: [],
+    memberJobCodeId: 0,
+    isMine: false,
+    isBookmark: true,
   },
 ];
 export default function FollowList() {
@@ -63,6 +75,7 @@ export default function FollowList() {
       const response = await UseAxios().get<ApiResponse>(
         "/api/member/bookmarks",
       );
+      console.log(response.data);
       if (response.data.result.length === 0) {
         setData(noFollowData);
       } else {
@@ -88,7 +101,7 @@ export default function FollowList() {
       ) : (
         <ul className="flex flex-col gap-4">
           {data.map((member) => (
-            <li key={member.memberId} className="card flex flex-col gap-4">
+            <li key={member.memberUuid} className="card flex flex-col gap-4">
               <div className="flex flex-row gap-4">
                 <img
                   src={member.memberImg}
