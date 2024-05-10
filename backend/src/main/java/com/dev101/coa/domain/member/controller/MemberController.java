@@ -124,6 +124,7 @@ public class MemberController {
 
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(repoCardDtoList));
+    }
 
     @GetMapping("/random")
     @Operation(description = "파도타기")
