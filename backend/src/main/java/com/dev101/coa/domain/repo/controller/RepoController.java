@@ -60,22 +60,28 @@ public class RepoController {
 
     @Operation(description = "분석 결과 저장")
     @PostMapping("/{analysisId}")
-    public ResponseEntity<BaseResponse<Object>> saveAnalysis(
+    public ResponseEntity<BaseResponse<Long>> saveAnalysis(
             @AuthenticationPrincipal Long currentMemberId,
             @PathVariable("analysisId") String analysisId,
             @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) {
-
-        repoService.saveAnalysis(currentMemberId, analysisId, saveAnalysisReqDto);
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
+        Long result = repoService.saveAnalysis(currentMemberId, analysisId, saveAnalysisReqDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
     @Operation(description = "분석 요청")
     @PostMapping("/analysis")
     public ResponseEntity<BaseResponse<String>> startAnalysis(
             @AuthenticationPrincipal Long currentMemberId,
-            @RequestBody AnalysisReqDto analysisReqDto) {
+            @RequestBody AnalysisReqDto analysisReqDto) throws Exception {
 
-        String analysisId = repoService.startAnalysis(currentMemberId, analysisReqDto);
+        currentMemberId = 7L;
+        String analysisId = null;
+        try {
+            analysisId = repoService.startAnalysis(currentMemberId, analysisReqDto);
+        } catch (Exception e) {
+            System.out.println("e.getMessage() = " + e.getMessage());
+            throw new BaseException(StatusCode.UNAUTHORIZED_API_ERROR);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<String>(analysisId));
     }
 
