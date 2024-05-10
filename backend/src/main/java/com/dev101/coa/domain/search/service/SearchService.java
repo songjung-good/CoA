@@ -69,7 +69,7 @@ public class SearchService {
             });
 
             repoCardDtoList.add(RepoCardDto.builder()
-                    .memberId(member.getMemberId())
+                    .memberUuid(member.getMemberUuid())
                     .memberNickname(member.getMemberNickname())
                     .memberImg(member.getMemberImg())
                     .repoViewId(repoView.getRepoViewId())

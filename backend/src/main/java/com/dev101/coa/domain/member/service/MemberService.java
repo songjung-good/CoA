@@ -8,9 +8,11 @@ import com.dev101.coa.domain.member.repository.*;
 import com.dev101.coa.domain.repo.dto.CommitScoreDto;
 import com.dev101.coa.domain.repo.dto.MyRepoAnalysisResDto;
 import com.dev101.coa.domain.repo.dto.RepoAnalysisDto;
+import com.dev101.coa.domain.repo.dto.RepoCardDto;
 import com.dev101.coa.domain.repo.entity.CommitScore;
 import com.dev101.coa.domain.repo.entity.RepoView;
 import com.dev101.coa.domain.repo.repository.CommitScoreRepository;
+import com.dev101.coa.domain.repo.repository.RepoViewRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,7 @@ public class MemberService {
     private final CodeRepository codeRepository;
     private final CommitScoreRepository commitScoreRepository;
     private final MemberJobRepository memberJobRepository;
+    private final RepoViewRepository repoViewRepository;
 
 
     public MemberInfoDto getMemberInfo(Long memberId) {
@@ -275,5 +278,15 @@ public class MemberService {
         scores.computeIfAbsent("testability", k -> new ArrayList<>()).add(score.getScoreTestability());
         scores.computeIfAbsent("exception", k -> new ArrayList<>()).add(score.getScoreException());
         scores.computeIfAbsent("total", k -> new ArrayList<>()).add(score.getScoreTotal());
+    }
+
+    public List<RepoCardDto> makeMemberRepos(Member pageMember) {
+
+        List<RepoView> repoViewList = repoViewRepository.findAllByMember(pageMember);
+
+        // RepoView 목록을 RepoCardDto 목록으로 변환
+        return repoViewList.stream()
+                .map(repoView -> RepoCardDto.createRepoCardDto(repoView, pageMember.getMemberUuid()))
+                .collect(Collectors.toList());
     }
 }

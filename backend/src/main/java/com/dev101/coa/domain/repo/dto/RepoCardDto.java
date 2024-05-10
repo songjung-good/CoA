@@ -7,11 +7,12 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 @Getter
 public class RepoCardDto {
-    private Long memberId;
+    private UUID memberUuid;
 
     private String memberNickname;
 
@@ -35,13 +36,13 @@ public class RepoCardDto {
 
     private Boolean isMine;
 
-    public static RepoCardDto createRepoCardDto(RepoView repoView, Long memberId){
+    public static RepoCardDto createRepoCardDto(RepoView repoView, UUID memberUuid){
 
         // 현재 로그인한 memberId와 레포 뷰의 주인 매치 여부 확인
-        Boolean isMine = memberId == repoView.getMember().getMemberId();
+        Boolean isMine = memberUuid == repoView.getMember().getMemberUuid();
 
         return RepoCardDto.builder()
-                .memberId(repoView.getMember().getMemberId())
+                .memberUuid(repoView.getMember().getMemberUuid())
                 .memberNickname(repoView.getMember().getMemberNickname())
                 .memberImg(repoView.getMember().getMemberImg())
                 .repoViewId(repoView.getRepoViewId())
