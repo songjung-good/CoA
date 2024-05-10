@@ -45,6 +45,9 @@ class AnalysisService:
             repo_data = await repo_client.load(request.userName)
 
             # total_commit_cnt, personal_commit_cnt 세기
+            # TODO
+            dto.result.total_commit_cnt = 123       # TODO
+            dto.result.personal_commit_cnt = 123    # TODO
 
             # AI 서비스 Lock 대기
             self._update_status(dto, AnalysisStatus.WAITING_AI)
