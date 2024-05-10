@@ -1,4 +1,4 @@
-from dependency_injector.wiring import inject, Provide
+from dependency_injector.wiring import inject
 from fastapi import APIRouter, Depends
 from redis import Redis
 

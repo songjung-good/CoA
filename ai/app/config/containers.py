@@ -1,12 +1,16 @@
 import os
-from typing import TypeVar, Type
+from typing import TypeVar
 
 from dependency_injector import providers
 from dependency_injector.containers import DeclarativeContainer
 from dotenv import load_dotenv
+from langchain_community.llms.llamacpp import LlamaCpp
+from langchain_core.language_models import BaseLLM, BaseChatModel
+from langchain_experimental.chat_models import Llama2Chat
 from redis import Redis
 
 from api.models.dto import GithubAnalysisRequest, GitLabAnalysisRequest, AnalysisRequest
+from api.models.services.ai import AiService
 from api.models.services.analysis import AnalysisService
 from api.models.services.client import RepoClient
 from api.models.services.client.github_rest import GithubRestClient
@@ -19,8 +23,10 @@ class Container(DeclarativeContainer):
     config = providers.Configuration()
 
     load_dotenv(os.getenv('ENV_FILE_PATH'))
-    config.redis.host.from_env('REDIS_HOST', as_=str, default='')
-    config.redis.port.from_env('REDIS_PORT', as_=int, default=0)
+    config.redis.host.from_env('REDIS_HOST', as_=str, required=True)
+    config.redis.port.from_env('REDIS_PORT', as_=int, required=True)
+
+    config.ai.model_path.from_env('MODEL_PATH', as_=str, required=True)
 
     redis_client = providers.Resource(
         provides=Redis,
@@ -35,3 +41,18 @@ class Container(DeclarativeContainer):
         GitLabAnalysisRequest: providers.Factory(GitLabClient)
     }
 
+    llm = providers.Resource(
+        provides=LlamaCpp,
+        model_path=config.ai.model_path,
+        n_gpu_layers=-1,
+        temperature=0.3,
+        f16_kv=True,
+        verbose=False
+    )
+    chat_model = providers.Resource(
+        provides=Llama2Chat,
+        llm=llm,
+        temparature=0.3
+    )
+
+    ai_service = providers.Singleton(AiService, llm, chat_model)
