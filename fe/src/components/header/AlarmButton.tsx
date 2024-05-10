@@ -14,11 +14,13 @@ export default function AlarmButton() {
     getAlarmCountData().then((count) => {
       setAlarmCount(count);
     });
+    //AlarmButton 밖을 누르면 동작하는 함수
     function handleClickOutside(event: MouseEvent) {
       if (
         modalRef.current &&
         !modalRef.current.contains(event.target as Node)
       ) {
+        //미열람 알람수를 받아옴
         getAlarmCountData().then((count) => {
           setAlarmCount(count);
         });
