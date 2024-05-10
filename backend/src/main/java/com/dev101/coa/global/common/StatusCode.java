@@ -28,6 +28,7 @@ public enum StatusCode {
     ACCOUNT_LINK_FAIL(false, 603, "계정 연동 실패"),
     MEMBER_NOT_OWN_REPO(false, 604, "사용자의 레포지토리 뷰가 아닙니다."),
     MEMBER_NOT_AUTH(false, 605, "본인의 권한이 없는 요청입니다."),
+    NOT_EXIST_ACCESS(false, 606, "액세스 토큰이 없습니다."),
 
     // OAuth : 700
     JWT_KEY_ERROR(false, 701, "JWT 토큰 에러"),
