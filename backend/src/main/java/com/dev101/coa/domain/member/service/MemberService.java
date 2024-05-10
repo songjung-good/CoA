@@ -34,6 +34,7 @@ public class MemberService {
     private final MemberSkillRepository memberSkillRepository;
     private final CodeRepository codeRepository;
     private final CommitScoreRepository commitScoreRepository;
+    private final MemberJobRepository memberJobRepository;
 
 
     public MemberInfoDto getMemberInfo(Long memberId) {
@@ -171,14 +172,21 @@ public class MemberService {
         return MemberCardDto.createDto(currentMember, targetMemberSkillList, isMine, isBookmark);
     }
 
-    public void editMemberCard(Member member, MemberCardReq memberCardReq) {
+    public void editMember(Member member, MemberCardReq memberCardReq) {
+        member.updateMemberIntro(memberCardReq.getIntroduce());
+
+        Code jobCode = codeRepository.findByCodeId(memberCardReq.getJobCodeId())
+                .orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+
+        MemberJob memberJob = new MemberJob(member, jobCode);
+        memberJobRepository.save(memberJob);
+
         List<MemberSkill> currentSkillList = memberSkillRepository.findAllByMember(member);
         List<Long> skillIdList = currentSkillList.stream()
                 .map(MemberSkill::getMemberSkillId)
                 .toList();
         skillIdList.forEach(memberSkillRepository::deleteById);
 
-        member.updateMemberIntro(memberCardReq.getIntroduce());
 
         memberCardReq.getSkillIdList().forEach((codeId) -> {
             Code code = codeRepository.findByCodeId(codeId).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
@@ -196,9 +204,10 @@ public class MemberService {
 
         List<CommitScore> allCommitScore = commitScoreRepository.findAll();
         List<CommitScore> memberCommitScore = commitScoreRepository.findAllByRepoViewMember(member);
+        MemberJob memberJob = memberJobRepository.findByMember(member);
         return MyRepoAnalysisResDto.builder()
                 .jobs(getMyRepoAnalysisByJob(allCommitScore))
-                .myScoreAverage(getMyRepoAnalysisByJob(memberCommitScore).get(member.getMemberJob().getJobCode().getCodeId()))
+                .myScoreAverage(getMyRepoAnalysisByJob(memberCommitScore).get(memberJob.getJobCode().getCodeId()))
                 .repos(getMyReposCommitScore(memberCommitScore))
                 .build();
     }
@@ -236,7 +245,8 @@ public class MemberService {
         // 각 직업별 점수와 카운트 집계
         for (CommitScore score : commitScores) {
             Member member = memberMap.get(score.getRepoView().getRepoViewId());
-            Long jobCodeId = member.getMemberJob().getJobCode().getCodeId();
+            MemberJob memberJob = memberJobRepository.findByMember(member);
+            Long jobCodeId = memberJob.getJobCode().getCodeId();
 
             Map<String, List<Short>> scores = scoresByJob.computeIfAbsent(jobCodeId, k -> new HashMap<>());
             accumulateScores(scores, score);

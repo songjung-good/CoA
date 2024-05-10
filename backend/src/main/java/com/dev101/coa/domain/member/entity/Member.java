@@ -42,10 +42,6 @@ public class Member extends BaseEntity {
     @Column(name = "member_uuid", nullable = false)
     private UUID memberUuid;
 
-    @OneToOne
-    @JoinColumn(name = "memberJob_id")
-    private MemberJob memberJob;
-
     @ManyToOne
     @JoinColumn(name = "code_id", nullable = false)
     private Code memberPlatformCode;

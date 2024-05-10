@@ -23,4 +23,15 @@ public class MemberJob extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "code_id", nullable = false)
     private Code jobCode;
+
+
+    @OneToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    // 직접 정의한 생성자
+    public MemberJob(Member member, Code jobCode) {
+        this.member = member;
+        this.jobCode = jobCode;
+    }
 }
