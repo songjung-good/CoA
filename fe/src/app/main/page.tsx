@@ -20,8 +20,10 @@ import ExhibitRepo from '@/app/main/ExhibitRepo';
 import userStore from '@/store/user';
 
 const MainPage: React.FC = () => {
-  const github = useStore(userStore).githubUserName;
-  const gitlab = useStore(userStore).gitlabUserName;
+  const githubUserName = useStore(userStore).githubUserName;
+  const isGithubToken = useStore(userStore).isGithubToken;
+  const gitlabUserName = useStore(userStore).gitlabUserName;
+  const isGitlabToken = useStore(userStore).isGitlabToken;
 
   return (
     <Main>
@@ -41,11 +43,11 @@ const MainPage: React.FC = () => {
       <RepoDiv>
         <RepoLeft>
           <Heading>GitHub</Heading>
-          <GithubRepo userID={github} />
+          <GithubRepo userID={githubUserName} isToken={isGithubToken}/>
         </RepoLeft>
         <RepoRight>
           <Heading>GitLab</Heading>
-          <GitlabRepo userID={gitlab} />
+          <GitlabRepo userID={gitlabUserName} isToken={isGitlabToken}/>
         </RepoRight>
       </RepoDiv>
       <Div>
