@@ -11,6 +11,7 @@ public enum StatusCode {
     REPO_REQ_MEMBER_NOT_MATCH(false, 301, "레포지토리 분석을 요청한 사용자가 아닙니다."),
     REPO_COMMIT_SCORE_NOT_EXIST(false, 302, "해당 레포지토리의 커밋 점수가 존재하지 않습니다."),
     UNAUTHORIZED_API_ERROR(false, 303, "외부 요청 ERROR"),
+    CANNOT_SAVE_OTHERS_REPO_VIEW(false, 304, "레포 뷰를 저장할 수 없습니다"),
 
     // CODE : 400
     CODE_NOT_FOUND(false, 400, "코드를 찾을 수 없습니다."),

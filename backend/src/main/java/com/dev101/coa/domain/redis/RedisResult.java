@@ -18,7 +18,7 @@ public class RedisResult {
     @Id
     private String analysisId;
     private String repoPath;
-    private String projectId;
+    private Integer projectId;
     private String userName;
     private Long memberId;
     private Boolean isOwn;

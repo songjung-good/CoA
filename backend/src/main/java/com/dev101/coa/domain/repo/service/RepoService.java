@@ -17,6 +17,7 @@ import com.dev101.coa.domain.repo.entity.*;
 import com.dev101.coa.domain.repo.repository.*;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
+import com.dev101.coa.global.security.service.EncryptionUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -62,6 +63,11 @@ public class RepoService {
 
     // AI server 통신을 위한 WebClient
     private final WebClient webClient;
+
+    // 토큰 복호화를 위한 클래스
+    private final EncryptionUtils encryptionUtils;
+
+
 
     public void editReadme(Long memberId, Long repoViewId, String editReadmeReq) {
         Member loginMember = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
@@ -159,7 +165,7 @@ public class RepoService {
         repoViewRepository.save(repoView);
     }
 
-    public void saveAnalysis(Long memberId, String analysisId, SaveAnalysisReqDto saveAnalysisReqDto) {
+    public Long saveAnalysis(Long memberId, String analysisId, SaveAnalysisReqDto saveAnalysisReqDto) {
 
         // redis에서 analysisId 로 값 조회시 존재 여부 판단
         RedisResult redisData = redisRepoRepository.findById(analysisId).orElseThrow(() -> new BaseException(StatusCode.ANALYSIS_RESULT_NOT_EXIST));
@@ -201,7 +207,8 @@ public class RepoService {
 
         // repoView 저장
         // 분석 요구자와 레포의 주인이 일치하는 경우(redisData.get("isOwn") == true)만 저장
-        if (!redisData.getIsOwn()) return;
+        if (!redisData.getIsOwn())
+            throw new BaseException(StatusCode.CANNOT_SAVE_OTHERS_REPO_VIEW);
 
         List<Long> skillCodeIdList = saveAnalysisReqDto.getRepoViewSkillList();
         List<Code> skillCodeList = new ArrayList<>();
@@ -222,7 +229,8 @@ public class RepoService {
                 .repoEndDate(saveAnalysisReqDto.getRepoEndDate())
                 .build();
 
-        repoViewRepository.save(repoView);
+        RepoView saveRepoView = repoViewRepository.save(repoView);
+
 
         // skillCode 업데이트
         for (Code code : skillCodeList) {
@@ -263,10 +271,12 @@ public class RepoService {
         // 레디스에 임시 저장된 분석결과 삭제
         redisRepoRepository.deleteById(analysisId);
 
+        return saveRepoView.getRepoViewId();
+
     }
 
     private RepoInfo getRepoInfo(RedisResult redisData) {
-        String redisProjectId = redisData.getProjectId();
+        Integer redisProjectId = redisData.getProjectId();
 
         // gitHub
         if (redisProjectId == null) { // ex: https://api.github.com/repos/rlagkdud/Spring-Pay-System
@@ -390,13 +400,12 @@ public class RepoService {
      * @param analysisReqDto
      * @return
      */
-    public String startAnalysis(Long memberId, AnalysisReqDto analysisReqDto) {
-
+    public String startAnalysis(Long memberId, AnalysisReqDto analysisReqDto) throws Exception {
 
         // 로그인한 member 받아오기
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
-        String projectId = analysisReqDto.getProjectId();
+        Integer projectId = analysisReqDto.getProjectId();
 
         // isOwn 값 처리하기 : 로그인한 사용자의 본인 레포를 분석하는지 여부
         Boolean isOwn = accountLinkRepository.existsAccountLinkByMemberAndAccountLinkNickname(member, analysisReqDto.getUserName());
@@ -408,31 +417,62 @@ public class RepoService {
         // key: analysisId, fields:repoPath, useranme, memaberId, isOwn, percent 0, repoStartDate, repoEndDate
         Map<String, LocalDate> projectPeriod;
         Integer repoMemberCnt;
+
+        // ai 서버 요청 디티오
+        AiGithubAnalysisReqDto githubAnalysisReqDto = null;
+        AiGitlabAnalysisReqDto gitlabAnalysisReqDto = null;
+
+        // 키 초기화
+        encryptionUtils.init();
+
         if (analysisReqDto.getProjectId() == null) { // github
-            Code code = codeRepository.findById(1002L).orElseThrow(()->new BaseException(StatusCode.CODE_NOT_FOUND));
-            AccountLink accountLink = accountLinkRepository.findByMemberAndCode(member, code).orElseThrow(()->new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+            // 엑세스 토큰 가져오기
+            Code code = codeRepository.findById(1002L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+            AccountLink accountLink = accountLinkRepository.findByMemberAndCode(member, code).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+
+            String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
 
             String[] split = analysisReqDto.getRepoUrl().split("/");
             String repoName = split[split.length - 1];
             String userName = split[split.length - 2];
 
-            JsonObject jsonObject = getJsonObject(gitHubApiUrl + "/repos/" + userName + "/" + repoName, accountLink.getAccountLinkReceiveToken());
+            JsonObject jsonObject = getJsonObject(gitHubApiUrl + "/repos/" + userName + "/" + repoName, accessToken);
             projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "pushed_at");
 
-            repoMemberCnt = getRepoMemberCnt(gitHubApiUrl + "/repos/" + userName + "/" + repoName + "/" + "contributors", accountLink.getAccountLinkReceiveToken());
+            repoMemberCnt = getRepoMemberCnt(gitHubApiUrl + "/repos/" + userName + "/" + repoName + "/" + "contributors", accessToken);
+
+            // ai 요청 디티오
+            githubAnalysisReqDto = AiGithubAnalysisReqDto.builder()
+                    .analysisId(analysisId)
+                    .repoPath(analysisReqDto.getRepoUrl())
+                    .userName(analysisReqDto.getUserName())
+                    .accessToken(accessToken)
+                    .build();
 
         } else { // gitlab
-            Code code = codeRepository.findById(1003L).orElseThrow(()->new BaseException(StatusCode.CODE_NOT_FOUND));
-            AccountLink accountLink = accountLinkRepository.findByMemberAndCode(member, code).orElseThrow(()->new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+            // 엑세스 토큰 가져오기
+            Code code = codeRepository.findById(1003L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+            AccountLink accountLink = accountLinkRepository.findByMemberAndCode(member, code).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+
+            String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
 
             String[] split = analysisReqDto.getRepoUrl().split("/");
-            String projectUrl = split[split.length - 5];
-            String gitLabApiUrl = "https://" + projectUrl + "/api/v4/projects/" + projectId;
+            String baseUrl = split[split.length - 5];
+            String gitLabApiUrl = "https://" + baseUrl + "/api/v4/projects/" + projectId;
 
-            JsonObject jsonObject = getJsonObject(gitLabApiUrl, accountLink.getAccountLinkReceiveToken());
+            JsonObject jsonObject = getJsonObject(gitLabApiUrl, accessToken);
             projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "updated_at");
 
-            repoMemberCnt = getRepoMemberCnt(gitLabApiUrl + "/" + "contributors", accountLink.getAccountLinkReceiveToken());
+            repoMemberCnt = getRepoMemberCnt(gitLabApiUrl + "/" + "contributors", accessToken);
+
+            // ai 요청 디티오
+            gitlabAnalysisReqDto = AiGitlabAnalysisReqDto.builder()
+                    .analysisId(analysisId)
+                    .baseUrl(baseUrl)
+                    .projectId(projectId)
+                    .userName(analysisReqDto.getUserName())
+                    .privateToken(accessToken)
+                    .build();
         }
 
 
@@ -453,25 +493,32 @@ public class RepoService {
 
         // AI 서버로 요청 보내기 (body: repoUrl, userName, memberId, isOwn)
         // platform code에 따라 요청 보낼 url 분기처리
-        String aiUrl = "";
-        if (projectId == null) aiUrl = aiServerUrl + "/github";
-        else aiUrl = aiServerUrl + "/gitlab";
+        String response;
+        if (projectId == null) {
+            String aiUrl = aiServerUrl + "/github";
 
-        String response = webClient.post()
-                .uri(aiUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(
-                        AiAnalysisReqDto.builder()
-                                .repoUrl(analysisReqDto.getRepoUrl())
-                                .projectId(projectId)
-                                .userName(analysisReqDto.getUserName())
-                                .isOwn(isOwn)
-                                .build()
-                ), AiAnalysisReqDto.class)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+            response = webClient.post()
+                    .uri(aiUrl)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(
+                            githubAnalysisReqDto
+                    ), AiGithubAnalysisReqDto.class)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } else {
+            String aiUrl = aiServerUrl + "/gitlab";
 
+            response = webClient.post()
+                    .uri(aiUrl)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(
+                            gitlabAnalysisReqDto
+                    ), AiGitlabAnalysisReqDto.class)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        }
 
         if (response.equals("false")) {
             throw new BaseException(StatusCode.AI_SERVER_ERROR);
@@ -662,13 +709,14 @@ public class RepoService {
                 .repoPath("https://github.com/rlagkdud/Spring-Pay-System")
                 .projectId(null)
                 .userName("rlagkdud")
-                .memberId(7L)
+                .memberId(12L)
                 .isOwn(true)
                 .percentage(100)
                 .repoStartDate(LocalDate.now())
                 .repoEndDate(LocalDate.now())
                 .result(resultTest)
                 .repoMemberCnt(6)
+                .expireSec(86400L)
                 .build();
 
         redisRepoRepository.save(redisResult);
