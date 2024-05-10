@@ -15,10 +15,13 @@ export default function UserMenu() {
   };
 
   return (
-    <div className="absolute top-11 right-0 card min-w-28 z-50">
+    <div className="absolute top-11 right-0 card min-w-32 z-50">
       <ul className="flex flex-col gap-4">
         <li>
           <Link href={`/user/${UUID}`}>마이 페이지</Link>
+        </li>
+        <li>
+          <Link href={`/user/follow`}>팔로우 페이지</Link>
         </li>
         <li>
           <Link href={`/auth/link`}>연동 페이지</Link>

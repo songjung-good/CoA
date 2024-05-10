@@ -22,7 +22,7 @@ export default function UserIconButton() {
       console.error("'/api/common/code'요청 에러", error);
     }
   };
-
+  //서버에서 유저 데이터를 받아오고 전역state에 저장
   const fetchMemberData = async () => {
     try {
       const response = await axiosInstance.get("/api/member");
