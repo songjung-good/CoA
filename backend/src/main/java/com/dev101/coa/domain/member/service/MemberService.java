@@ -152,13 +152,11 @@ public class MemberService {
 
         // 북마크 목록 가져오기
         List<Bookmark> bookmarkList = bookmarkRepository.findByBookmarkMember(loginMember);
-        System.out.println("bookmarkList = " + bookmarkList);
 
         // MemberCardDto로 바꾸기
         List<MemberCardDto> memberCardDtoList = new ArrayList<>();
         for(Bookmark bookmark : bookmarkList){
             Member targetMember = bookmark.getBookmarkTargetMember();
-            System.out.println("targetMember = " + targetMember.getMemberId());
             List<MemberSkill> targetMemberSkillList = memberSkillRepository.findByMember(targetMember);
             memberCardDtoList.add(getMemberCardDto(loginMember, targetMember, targetMemberSkillList));
         }

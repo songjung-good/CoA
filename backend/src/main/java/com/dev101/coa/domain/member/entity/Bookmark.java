@@ -12,7 +12,6 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "bookmark")
-@ToString
 public class Bookmark extends BaseEntity {
 
     @Id

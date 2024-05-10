@@ -93,7 +93,6 @@ public class MemberController {
     @GetMapping("/bookmarks")
     @Operation(description = "로그인 한 유저의 북마크 목록 조회")
     public ResponseEntity<BaseResponse<List<MemberCardDto>>> getBookmarkList(@AuthenticationPrincipal Long  loginMemberId){
-        loginMemberId = 17L;
         List<MemberCardDto> result = memberService.getBookmarkList(loginMemberId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
