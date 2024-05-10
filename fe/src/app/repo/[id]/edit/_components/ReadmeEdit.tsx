@@ -6,7 +6,7 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
 // mdEditor-------------------------------------------
-import useResultStore from "@/store/result";
+import useRepoDetailStore from "@/store/repodetail";
 import UseAxios from "@/api/common/useAxios";
 import { useState, useEffect } from "react";
 
@@ -25,7 +25,7 @@ const calculateHeight = (text: string) => {
 
 const ReadmeEdit: NextPage = () => {
   const [md, setMd] = useState<string | undefined>(
-    useResultStore.getState().result.basicDetailDto.repoReadme,
+    useRepoDetailStore.getState().result.basicDetailDto.repoReadme,
   );
   const [editorHeight, setEditorHeight] = useState(calculateHeight(md || "")); // 초기 높이 계산
   const axiosInstance = UseAxios();

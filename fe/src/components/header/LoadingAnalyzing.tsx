@@ -54,7 +54,7 @@ export default function LoadingAnalyzing({ hasJWT }: { hasJWT: boolean }) {
   };
 
   const handleStartAnalyze = async () => {
-    await setAnalyzeId("0bd05a23-610b-48a5-9729-a098d65688aa");
+    await setAnalyzeId("1234bc19-865d-49e7-8929-2416a920eb6c");
     await startAnalysis();
   };
 
