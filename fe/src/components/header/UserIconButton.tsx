@@ -2,19 +2,17 @@
 
 import userStore from "@/store/user";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import UseAxios from "@/api/common/useAxios";
 import useCommonCodeStore from "@/store/commoncode";
 import UserMenu from "./UserMenu";
 
 export default function UserIconButton() {
-  const UUID = userStore((state) => state.UUID);
   const userImage = userStore((state) => state.userImage);
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const axiosInstance = UseAxios();
-  const { response, setResponse } = useCommonCodeStore.getState();
+  const { setResponse } = useCommonCodeStore.getState();
 
   const fetchCommonCodeData = async () => {
     try {
@@ -28,7 +26,7 @@ export default function UserIconButton() {
   const fetchMemberData = async () => {
     try {
       const response = await axiosInstance.get("/api/member");
-      console.log(response);
+      // console.log(response);
       const memberData = response.data.result;
       userStore.setState({
         UUID: memberData.memberUuid,
@@ -63,15 +61,6 @@ export default function UserIconButton() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  const logout = async () => {
-    try {
-      const response = await axiosInstance.post("/api/auth/logout");
-      window.location.href = "/";
-    } catch (error) {
-      console.error("logout 중 오류가 발생했습니다:", error);
-    }
-  };
 
   return (
     <div className="relative flex justify-center items-center" ref={modalRef}>

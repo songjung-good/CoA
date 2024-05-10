@@ -2,14 +2,12 @@
 
 import BellIcon from "@/icons/BellIcon";
 import { useEffect, useRef, useState } from "react";
-import UseAxios from "@/api/common/useAxios";
-import { Alarm, getAlarmCountData, getAlarmData } from "@/api/alarm/apiAlarm";
+import { Alarm, getAlarmCountData } from "@/api/alarm/apiAlarm";
 import AlarmModal from "./AlarmModal";
 
 export default function AlarmButton() {
   const [alarmModal, setAlarmModal] = useState(false);
   const [alarmCount, setAlarmCount] = useState(0);
-  const [alarmData, setAlarmData] = useState<Alarm[]>([]);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,18 +34,6 @@ export default function AlarmButton() {
 
   const handleAlarmButton = () => {
     setAlarmModal(!alarmModal);
-    // if (alarmModal === false) {
-    // getAlarmData().then((data) => {
-    //   setAlarmData(data);
-    // });
-    // setAlarmModal(true);
-    // }
-    // else {
-    //   getAlarmCountData().then((count) => {
-    //     setAlarmCount(count);
-    //   });
-    //   setAlarmModal(false);
-    // }
   };
 
   return (
@@ -61,22 +47,6 @@ export default function AlarmButton() {
       {alarmModal ? (
         <div className="absolute top-10 right-0 card z-50" ref={modalRef}>
           <AlarmModal />
-          {/* <p>알림 목록</p>
-          <ul className="flex flex-col gap-4 min-w-16">
-            {alarmData.map((alarm, index) => (
-              <li key={index}>
-                {alarm.repoViewTitle !== null ? (
-                  <p>
-                    {alarm.memberNickName}님이 {alarm.repoViewTitle}를
-                    조회했어요!
-                  </p>
-                ) : (
-                  <p>{alarm.memberNickName}님이 팔로우했어요!</p>
-                )}
-                <p>{alarm.createAt}</p>
-              </li>
-            ))}
-          </ul> */}
         </div>
       ) : null}
     </div>
