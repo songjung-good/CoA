@@ -18,7 +18,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberCardDto {
-    private Long memberId;
     private UUID memberUuid;
     private String memberNickName;
     private String memberImg;
@@ -39,7 +38,6 @@ public class MemberCardDto {
         }
 
         return MemberCardDto.builder()
-                .memberId(member.getMemberId())
                 .memberUuid(member.getMemberUuid())
                 .memberNickName(member.getMemberNickname())
                 .memberImg(member.getMemberImg())
