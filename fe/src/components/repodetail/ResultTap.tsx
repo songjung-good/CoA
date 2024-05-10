@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import tw from "tailwind-styled-components";
@@ -14,19 +14,15 @@ import UseAxios from "@/api/common/useAxios";
 import "@/app/result/[id]/_components/result.css";
 
 // 컴포넌트 import
-import ResultCommit from "@/app/result/[id]/_components/ResultCommit";
+import ResultCommit from "@/app/repo/[id]/_components/ResultCommit";
 // import ResultContribution from "@/app/result/[id]/_components/ResultContribution.tsx"; 폐기했습니다
-import ResultReadme from "@/app/result/[id]/_components/ResultReadme";
-import ResultScore from "@/app/result/[id]/_components/ResultScore";
+import ResultReadme from "@/app/repo/[id]/_components/ResultReadme";
+import ResultScore from "@/app/repo/[id]/_components/ResultScore";
 
-interface ResultTabProps {
-  openModal: () => void;
-}
-
-const ResultTap: React.FC<ResultTabProps> = ({ openModal }) => {
+export default function ResultTab() {
   const [tabIndex, setTabIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(0);
-  const isMine = useResultStore((state) => state.result.repoCardDto.isMine);
+  const isMine = useRepoDetailStore((state) => state.result.repoCardDto.isMine);
   const axios = UseAxios();
 
   useEffect(() => {
@@ -44,8 +40,10 @@ const ResultTap: React.FC<ResultTabProps> = ({ openModal }) => {
   const handleEditButton = () => {
     const { id } = params;
 
-    router.push(`/result/${id}/edit`);
-    console.log(useResultStore.getState().result.repoCardDto.memberNickname);
+    router.push(`/repo/${id}/edit`);
+    console.log(
+      useRepoDetailStore.getState().result.repoCardDto.memberNickname,
+    );
   };
 
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";
@@ -95,25 +93,14 @@ const ResultTap: React.FC<ResultTabProps> = ({ openModal }) => {
         </CSSTransition>
       </TransitionGroup>
       <div className="flex justify-evenly mt-10">
-        {isMine && (
-          <button
-            onClick={async () => {
-              // axios 저장 && return store에 저장  && repoViewId로 route.push
-              // 임시
-              await openModal();
-            }}
-          >
-            저장하기
-          </button>
-        )}
-        {/* {isMine && <button onClick={handleEditButton}>수정하기</button>} */}
+        {isMine && <button onClick={handleEditButton}>수정하기</button>}
         <Link href="/main">
           <button>홈으로</button>
         </Link>
       </div>
     </div>
   );
-};
+}
 
 const TabButton = tw.button`
   border-2 border-black px-3 py-2 text-sm
@@ -129,5 +116,3 @@ rounded-tl-xl rounded-bl-xl
 const TabButtonRight = tw(TabButton)`
 rounded-tr-xl rounded-br-xl
 `;
-
-export default ResultTap;

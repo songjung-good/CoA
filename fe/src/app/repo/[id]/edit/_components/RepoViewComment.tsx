@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import useResultStore from "@/store/result";
+import useRepoDetailStore from "@/store/repodetail";
 import CommentItem from "./CommentItem";
 
 interface Comment {
@@ -11,7 +11,7 @@ interface Comment {
 }
 
 export default function RepoViewComment() {
-  const result = useResultStore.getState().result.basicDetailDto;
+  const result = useRepoDetailStore.getState().result.basicDetailDto;
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [startIndex, setStartIndex] = useState<number | null>(null);
@@ -68,7 +68,7 @@ export default function RepoViewComment() {
 
   useEffect(() => {
     // useResultStore에서 반환된 값을 배열로 확정
-    const initialComments = useResultStore.getState().result.basicDetailDto
+    const initialComments = useRepoDetailStore.getState().result.basicDetailDto
       .commentList as Comment[];
     setComments(Array.isArray(initialComments) ? initialComments : []);
   }, []);

@@ -26,7 +26,6 @@ const ResultReadme: NextPage = () => {
   const [md, setMd] = useState<string | undefined>(
     useResultStore.getState().result.basicDetailDto.repoReadme,
   );
-  const { setIsOther, setIsMine } = useResultStore((state) => state);
   const isMine = useResultStore((state) => state.result.repoCardDto.isMine);
   const [editorHeight, setEditorHeight] = useState(calculateHeight(md || "")); // 초기 높이 계산
 
@@ -45,11 +44,6 @@ const ResultReadme: NextPage = () => {
         height={editorHeight}
         style={{ width: "100%" }}
       />
-
-      <div className=" ">
-        <button onClick={setIsMine}>본인</button>
-        <button onClick={setIsOther}>타인</button>
-      </div>
     </div>
   );
 };
