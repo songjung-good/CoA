@@ -51,7 +51,7 @@ export default function RepoPage({ params }: { params: { id: string } }) {
   };
   return (
     <div className="flex flex-col items-center bg-appGrey1 pt-5 p-10 w-full h-full">
-      <div className="sm:w-4/5 lg:w-3/5 lg:min-w-760px">
+      <div className="sm:w-4/5 lg:w-3/5 lg:min-w-[850px]">
         <p className="mb-5 text-xl font-bold sm:text-2xl text-center">
           {`${repoTitle} 레포지토리 상세 정보입니다.`}
         </p>
