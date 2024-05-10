@@ -124,5 +124,12 @@ public class MemberController {
 
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(repoCardDtoList));
+
+    @GetMapping("/random")
+    @Operation(description = "파도타기")
+    public ResponseEntity<BaseResponse<UUID>> getMemberAnalysis(
+            @AuthenticationPrincipal Long memberId) {
+        UUID result = memberService.getMemberRandom(memberId);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 }

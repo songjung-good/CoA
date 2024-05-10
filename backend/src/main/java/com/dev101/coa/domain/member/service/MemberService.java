@@ -173,7 +173,7 @@ public class MemberService {
         Boolean isMine = (currentMember == targetMember);
         Boolean isBookmark = bookmarkRepository.findByBookmarkMemberAndBookmarkTargetMember(currentMember, targetMember).isPresent();
         Long jobCodeId = memberJobRepository.findByMember(targetMember).getJobCode().getCodeId();
-        return MemberCardDto.createDto(currentMember, targetMemberSkillList, isMine, isBookmark, jobCodeId);
+        return MemberCardDto.createDto(targetMember, targetMemberSkillList, isMine, isBookmark, jobCodeId);
     }
 
     public void editMember(Member member, MemberCardReq memberCardReq) {
@@ -288,5 +288,24 @@ public class MemberService {
         return repoViewList.stream()
                 .map(repoView -> RepoCardDto.createRepoCardDto(repoView, pageMember.getMemberUuid()))
                 .collect(Collectors.toList());
+
+    public UUID getMemberRandom(Long memberId) {
+        // 로그인한 멤버
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+
+        UUID loginMemberUuid = member.getMemberUuid();
+        UUID randomUuid = loginMemberUuid;
+
+        List<UUID> memberUuidList = new ArrayList<>();
+        memberRepository.findAll().forEach((m)->memberUuidList.add(m.getMemberUuid()));
+
+        Random random = new Random();
+        while(loginMemberUuid.equals(randomUuid)){
+            int randomIdx = random.nextInt(memberUuidList.size());
+            randomUuid = memberUuidList.get(randomIdx);
+        }
+
+        return randomUuid;
+
     }
 }
