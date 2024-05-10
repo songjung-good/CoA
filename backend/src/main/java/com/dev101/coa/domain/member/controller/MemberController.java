@@ -93,6 +93,7 @@ public class MemberController {
     @GetMapping("/bookmarks")
     @Operation(description = "로그인 한 유저의 북마크 목록 조회")
     public ResponseEntity<BaseResponse<List<MemberCardDto>>> getBookmarkList(@AuthenticationPrincipal Long  loginMemberId){
+        loginMemberId = 17L;
         List<MemberCardDto> result = memberService.getBookmarkList(loginMemberId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
@@ -111,5 +112,13 @@ public class MemberController {
         MyRepoAnalysisResDto myRepoAnalysisResDto = memberService.makeMemberAnalysis(pageMember);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(myRepoAnalysisResDto));
 
+    }
+
+    @GetMapping("/random")
+    @Operation(description = "파도타기")
+    public ResponseEntity<BaseResponse<UUID>> getMemberAnalysis(
+            @AuthenticationPrincipal Long memberId) {
+        UUID result = memberService.getMemberRandom(memberId);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 }
