@@ -43,9 +43,9 @@ public class MemberController {
 
     @Operation(description = "페이지 멤버 카드 정보")
     @GetMapping("/{memberUuid}")
-    public ResponseEntity<BaseResponse<MemberCardDto>> getMemberCardInfo(@AuthenticationPrincipal Long memberId, @PathVariable("memberUuid") UUID memberUuid){
+    public ResponseEntity<BaseResponse<MemberCardDto>> getMemberCardInfo(@AuthenticationPrincipal Long memberId, @PathVariable("memberUuid") String memberUuid){
         Member currentMember = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
-        Member pageMember = memberRepository.findByMemberUuid(memberUuid).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        Member pageMember = memberRepository.findByMemberUuid(UUID.fromString(memberUuid)).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
         List<MemberSkill> targetMemberSkillList = memberSkillRepository.findByMember(pageMember);
         MemberCardDto memberCardDto = memberService.getMemberCardDto(currentMember, pageMember, targetMemberSkillList);
@@ -102,10 +102,11 @@ public class MemberController {
     @Operation(description = "멤버 심층 분석")
     public ResponseEntity<BaseResponse<MyRepoAnalysisResDto>> getMemberAnalysis(
             @AuthenticationPrincipal Long memberId,
-            @PathVariable("memberUuid") UUID memberUuid) {
+            @PathVariable("memberUuid") String memberUuid) {
+
         Member currentMember = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
-        Member pageMember = memberRepository.findByMemberUuid(memberUuid).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
-        if (currentMember != pageMember) {return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(null));}
+        Member pageMember = memberRepository.findByMemberUuid(UUID.fromString(memberUuid)).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        if (currentMember != pageMember) {throw new BaseException(StatusCode.MEMBER_NOT_AUTH);}
 
         MyRepoAnalysisResDto myRepoAnalysisResDto = memberService.makeMemberAnalysis(pageMember);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(myRepoAnalysisResDto));
