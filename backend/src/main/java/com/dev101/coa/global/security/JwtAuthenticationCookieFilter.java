@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -26,6 +27,7 @@ public class JwtAuthenticationCookieFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
 
+        try {
         String jwt = extractJwtFromCookie(request); // 이 뒤로는 똑같은거 아닌가? TODO 여기 뒤로만 비교하면 맞추면 듯.
 
         if (jwt != null && jwtTokenProvider.validateToken(jwt)) {
@@ -40,6 +42,13 @@ public class JwtAuthenticationCookieFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication); // 여기에 저장된 상태로 아래 filterChain을 통해 대상 서블릿이나 컨트롤러에 감.
         }
         filterChain.doFilter(request, response);
+        } catch (AuthenticationException e) {
+            // 에러 처리
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 설정
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Authentication Error: " + e.getMessage() + "\"}");
+            response.getWriter().flush();
+        }
     }
 
     public String extractJwtFromCookie(HttpServletRequest request) {
