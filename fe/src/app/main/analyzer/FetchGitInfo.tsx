@@ -4,11 +4,6 @@
 import { ExtractUserInfo } from '@/app/main/analyzer/ExtractUserInfo';
 import UseAxios from '@/api/common/useAxios';
 
-// 토큰
-const accessTokenHub = process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKENS;
-const accessTokenLab = process.env.NEXT_PUBLIC_GITLAB_ACCESS_TOKENS;
-  const axiosInstance = UseAxios();
-
 interface Contributor {
   id: number;
   username: string;
@@ -19,26 +14,26 @@ interface Contributor {
 }
 
 // GitHub인지 GitLab인지 판단하여 정보 요청
-const FetchGitInfo = async (inputValue: string, setUserData: Function, GitlabUser: string) => {
-  const axiosInstance = UseAxios();
+const FetchGitInfo = async (inputValue: string, setUserData: Function) => {
 
   let gitInfo = ExtractUserInfo(inputValue);
 
   if (gitInfo.Platform === '1') {
-    await fetchGitHubData(gitInfo, setUserData, accessTokenHub);
+    await fetchGitHubData(gitInfo, setUserData);
   } else if (gitInfo.Platform === '2') {
-    gitInfo = { ...gitInfo, UserName: GitlabUser };
-    await fetchGitLabData(gitInfo, setUserData, accessTokenLab);
+    gitInfo = { ...gitInfo, setUserData};
+    await fetchGitLabData(gitInfo, setUserData);
   } else {
     console.log("유효한 GitHub URL을 입력하세요.");
   }
 };
 
 // Github프로젝트의 기여자 정보
-const fetchGitHubData = async (gitInfo: any, setUserData: Function, accessTokenHub: any) => {
+const fetchGitHubData = async (gitInfo: any, setUserData: Function) => {
+  const axios = UseAxios();
+
   try {
-    const response = await axiosInstance.get(`/api/external/github/members/${gitInfo.UserName}/${gitInfo.ProjectName}`)
-    
+    const response = await axios.get(`/api/external/github/members/${gitInfo.UserName}/${gitInfo.ProjectName}`)
     if (response.data.code === 602) {
       throw alert("GitHub 계정을 연동해주세요.")
     }
@@ -56,9 +51,9 @@ const fetchGitHubData = async (gitInfo: any, setUserData: Function, accessTokenH
 };
 
 // GitLab 프로젝트의 기여자 정보와 프로젝트 ID
-const fetchGitLabData = async (gitInfo: any, setUserData: Function, accessTokenLab: any) => {
+const fetchGitLabData = async (gitInfo: any, setUserData: Function) => {
   try {
-    const members = await fetchGitlabMembers(gitInfo.ProjectName, gitInfo.UserName, accessTokenLab);
+    const members = await fetchGitlabMembers(gitInfo.ProjectName, gitInfo.UserName);
 
     // GitLab projectId를 반환 값에 포함
     setUserData({
@@ -71,9 +66,10 @@ const fetchGitLabData = async (gitInfo: any, setUserData: Function, accessTokenL
 };
 
 // GitLab 프로젝트 멤버 정보
-const fetchGitlabMembers = async (projectname: string, username: string, accessToken: string): Promise<Contributor[]> => {
+const fetchGitlabMembers = async (projectname: string, username: string): Promise<Contributor[]> => {
+  const axios = UseAxios();
   try {
-    const projectsResponse = await axiosInstance.get(`/api/external/gitlab/projects/${username}`)
+    const projectsResponse = await axios.get(`/api/external/gitlab/projects/${username}`)
 
     if (projectsResponse.data.code === 602) {
       throw alert("GitLab 계정을 연동해주세요.")
@@ -90,7 +86,7 @@ const fetchGitlabMembers = async (projectname: string, username: string, accessT
       }
     });
 
-    const membersResponse = await axiosInstance.get(`/api/external/gitlab/members/${projectId}`)
+    const membersResponse = await axios.get(`/api/external/gitlab/members/${projectId}`)
     if (membersResponse.data.code === 602) {
       throw alert("GitLab 계정을 연동해주세요.")
     }

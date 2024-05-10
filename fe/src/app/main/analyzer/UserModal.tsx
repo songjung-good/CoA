@@ -96,7 +96,11 @@ const UserModal: React.FC<UserModalProps> = ({ userData, onClose, url }) => {
   return (
     <ModalOverlay>
       <ModalContent>
-        <ModalCloseButton onClick={closeModal}>X</ModalCloseButton>
+        <ModalCloseButton onClick={closeModal}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </ModalCloseButton>
         {userData.data && (
           <ModalUserGrid>
             {userData.data.map((user, index) => (
@@ -156,8 +160,6 @@ const ModalCloseButton = tw.button`
   text-black 
   top-2.5 
   right-2.5
-  bg-orange-500 
-  border-none 
   rounded-full 
   w-7 
   h-7 
