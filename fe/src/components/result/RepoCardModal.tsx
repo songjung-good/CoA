@@ -24,21 +24,23 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
 
   // 결과 데이터
   const { result } = useResultStore((state) => state);
-  const [title, setTitle] = useState<string>(result.repoCardDto.repoViewTitle);
+  const [title, setTitle] = useState<string>(
+    result.repoCardDto.repoViewTitle || "",
+  );
   const [subtitle, setSubtitle] = useState<string>(
-    result.repoCardDto.repoViewSubtitle,
+    result.repoCardDto.repoViewSubtitle || "",
   );
   const [startDate, setStartDate] = useState<string>(
-    result.repoCardDto.repoStartDate,
+    result.repoCardDto.repoStartDate || "",
   );
   const [endDate, setEndDate] = useState<string>(
-    result.repoCardDto.repoEndDate,
+    result.repoCardDto.repoEndDate || "",
   );
   const [memberCount, setMemberCount] = useState<number>(
-    result.repoCardDto.repoMemberCnt,
+    result.repoCardDto.repoMemberCnt || 0,
   );
   const [stacks, setStacks] = useState<string[]>(
-    result.repoCardDto.skillList.map((skill) => skill.codeName),
+    result.repoCardDto.skillList?.map((skill) => skill.codeName) || [],
   );
   // 결과 데이터
 
@@ -48,7 +50,9 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     setStartDate(result.repoCardDto.repoStartDate);
     setEndDate(result.repoCardDto.repoEndDate);
     setMemberCount(result.repoCardDto.repoMemberCnt);
-    setStacks(result.repoCardDto.skillList.map((skill) => skill.codeName));
+    setStacks(
+      result.repoCardDto.skillList?.map((skill) => skill.codeName) || [],
+    );
   }, [result]);
 
   const handleDateChange = (

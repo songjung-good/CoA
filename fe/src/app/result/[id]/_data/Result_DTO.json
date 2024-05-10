@@ -27,7 +27,7 @@
         "isMine": true
       },
       "basicDetailDto": {
-        "repoReadme": "# Hello World!!!! \n ## 레포 리드미 테스트 \n ### h3 작동 확인",
+        "repoReadme": "# Hello World!!!!\n## 레포 리드미 테스트\n### h3 작동 확인",
         "repoViewResult": "Project executed successfully with minor warnings.",
         "commentList": [
           {
