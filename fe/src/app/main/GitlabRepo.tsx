@@ -33,7 +33,7 @@ const GitlabRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
           const response = await axiosInstance.get(
             `api/external/gitlab/repos/${userID}`,
           );
-          if (response.data.code === 602 || response.data.code === 303) {
+          if (response.data.code !== 200) {
             setNotLink(response.data.code);
           }
           if (response.data.code === 200) {
@@ -66,7 +66,7 @@ const GitlabRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
       </Div>
     );
   }
-  if (notLink === 303) {
+  if (notLink === 303 || notLink === 606) {
     return (
       <Div>
         <Button onClick={() => router.push('/auth/link')}>계정 연동하기</Button>
