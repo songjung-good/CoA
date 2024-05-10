@@ -47,7 +47,10 @@ export default function RepoViewComment() {
         commentContent,
         commentTargetString: commentTargetString,
       };
-      setComments((prevComments) => [...prevComments, newComment]);
+      setComments((prevComments) => [
+        ...(Array.isArray(prevComments) ? prevComments : []),
+        newComment,
+      ]);
       setCommentContent(""); // 입력 필드 초기화
       setStartIndex(null);
       setEndIndex(null);
@@ -64,9 +67,10 @@ export default function RepoViewComment() {
   };
 
   useEffect(() => {
-    setComments(
-      useResultStore.getState().result.basicDetailDto.commentList as Comment[],
-    );
+    // useResultStore에서 반환된 값을 배열로 확정
+    const initialComments = useResultStore.getState().result.basicDetailDto
+      .commentList as Comment[];
+    setComments(Array.isArray(initialComments) ? initialComments : []);
   }, []);
 
   return (
@@ -101,16 +105,20 @@ export default function RepoViewComment() {
         추가하기
       </button>
       <hr className=" border-black w-full my-4" />
-      <div className="flex flex-col w-full">
-        {comments.map((e, index) => (
-          <CommentItem
-            key={index}
-            commentTargetString={e.commentTargetString}
-            commentContent={e.commentContent}
-            deleteComment={() => deleteComment(index)}
-          />
-        ))}
-      </div>
+      {comments === null ? (
+        <div>코멘트를 작성해주세요.</div>
+      ) : (
+        <div className="flex flex-col w-full">
+          {comments.map((e, index) => (
+            <CommentItem
+              key={index}
+              commentTargetString={e.commentTargetString}
+              commentContent={e.commentContent}
+              deleteComment={() => deleteComment(index)}
+            />
+          ))}
+        </div>
+      )}
       <button>코멘트 저장하기</button>
     </div>
   );

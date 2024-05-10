@@ -72,6 +72,14 @@ function splitTextByComments(text: string, comments: Comment[]) {
   let lastEnd = 0;
   const parts: { text: string; isComment: boolean; comment?: Comment }[] = [];
 
+  // comments 배열이 유효한지 확인하고, 유효하지 않은 요소를 제거합니다.
+  if (!comments) {
+    comments = []; // 또는 적절한 기본값 할당
+  } else {
+    comments = comments.filter((comment) => comment != null);
+  }
+
+  // comments 배열을 시작 인덱스에 따라 정렬합니다.
   comments.sort((a, b) => a.commentStartIndex - b.commentStartIndex);
 
   comments.forEach((comment) => {
