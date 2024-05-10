@@ -44,7 +44,7 @@ const useAnalyzingStore = create<AnalyzingState, []>(
       }, // 분석 완료
       setAnalyzeId: (id: string) => set({analyzeId: id}),
       updatePercent: (percent: number) => set({ analyzingPercent: percent }), // 진행도 갱신
-      resetAnalysis: () => set({ isAnalyzing: false, isCompleted: false, showNotification: false, analyzingPercent: 0, analyzeId: "none" }), // 분석상태 초기화
+      resetAnalysis: () => set({ isAnalyzing: false, isCompleted: false, showNotification: false, analyzingPercent: 0}), // 분석상태 초기화
       toggleNotification: (visible: boolean) => set({ showNotification: visible }),
       // 실사용 api
       feachApi: () => {
