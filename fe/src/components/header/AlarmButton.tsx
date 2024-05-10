@@ -2,7 +2,7 @@
 
 import BellIcon from "@/icons/BellIcon";
 import { useEffect, useRef, useState } from "react";
-import { Alarm, getAlarmCountData } from "@/api/alarm/apiAlarm";
+import { getAlarmCountData } from "@/api/alarm/apiAlarm";
 import AlarmModal from "./AlarmModal";
 
 export default function AlarmButton() {
@@ -37,7 +37,7 @@ export default function AlarmButton() {
   };
 
   return (
-    <div className="relative flex justify-center items-center">
+    <div className="relative flex justify-center items-center" ref={modalRef}>
       <button onClick={handleAlarmButton}>
         <BellIcon />
         {alarmCount !== 0 ? (
@@ -45,7 +45,7 @@ export default function AlarmButton() {
         ) : null}
       </button>
       {alarmModal ? (
-        <div className="absolute top-10 right-0 card z-50" ref={modalRef}>
+        <div className="absolute top-10 right-0 card z-50">
           <AlarmModal />
         </div>
       ) : null}
