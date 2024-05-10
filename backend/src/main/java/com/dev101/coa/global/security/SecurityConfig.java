@@ -55,8 +55,13 @@ public class SecurityConfig {
 //                )
                 .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
 
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+//                .exceptionHandling(exceptionHandling -> exceptionHandling
+//                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+//                .formLogin(formLogin ->
+//                        formLogin.loginPage("/auth/login")
+////                                .failureHandler(new CustomAuthenticationFailureHandler()) // 실패 핸들러 추가
+//                                .permitAll()
+//                )
 
                 // 세션 관리 전략 설정
                 .sessionManagement(session -> session
@@ -71,6 +76,8 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(new CustomAuthenticationFailureHandler()) // 실패 핸들러 추가
+
                 );
 
         return http.build();
