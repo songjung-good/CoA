@@ -13,5 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 public class MemberCardReq {
     private String introduce;
+
     private List<Long> skillIdList;
+
+    private Long jobCodeId;
 }
