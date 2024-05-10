@@ -70,20 +70,36 @@ const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
               </p>
             </div>
           </div>
-          <div className="flex justify-end w-full">
-            {repoInfo.isMine && (
-              <div className="mt-2">
-                <button
-                  className=" bg-appBlue1 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-full flex justify-center items-center"
-                  onClick={openModal}
-                >
-                  <EditIcon width={20} height={20} />
-                  수정하기
-                </button>
-              </div>
-            )}
-          </div>
         </div>
+      </div>
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center w-full">
+        {repoInfo.skillList === null ? (
+          <div className="flex-grow font-bold">
+            프로젝트에 사용한 기술 스택을 추가해주세요
+          </div>
+        ) : (
+          <ul className="flex">
+            {repoInfo.skillList.map((skill, index) => (
+              <li
+                key={index}
+                className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold"
+              >
+                {skill.codeName}
+              </li>
+            ))}
+          </ul>
+        )}
+        {repoInfo.isMine && (
+          <div className="mt-2 sm:mt-0 flex justify-end">
+            <button
+              className="bg-appBlue1 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-full flex justify-center items-center"
+              onClick={openModal}
+            >
+              <EditIcon width={20} height={20} />
+              수정하기
+            </button>
+          </div>
+        )}
       </div>
     </RepoInfoDiv>
   );

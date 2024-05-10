@@ -2,7 +2,7 @@
 
 import tw from "tailwind-styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import useResultStore from "@/store/result.ts";
+import useRepoDetailStore from "@/store/repodetail";
 import ReadmeEdit from "./_components/ReadmeEdit";
 import RepoViewComment from "./_components/RepoViewComment";
 
@@ -11,7 +11,8 @@ import "@/app/result/[id]/_components/result.css";
 import { useEffect, useState } from "react";
 
 export default function ReadmeEditPage() {
-  const repoTitle = useResultStore.getState().result.repoCardDto.repoViewTitle;
+  const repoTitle =
+    useRepoDetailStore.getState().result.repoCardDto.repoViewTitle;
   const [tabIndex, setTabIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(0);
 
