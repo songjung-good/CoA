@@ -11,6 +11,7 @@ from redis import Redis
 
 from api.models.dto import GithubAnalysisRequest, GitLabAnalysisRequest, AnalysisRequest
 from api.models.services.ai import AiService
+from api.models.services.ai.mutex import AiMutex
 from api.models.services.analysis import AnalysisService
 from api.models.services.client import RepoClient
 from api.models.services.client.github_rest import GithubRestClient
@@ -34,8 +35,6 @@ class Container(DeclarativeContainer):
         port=config.redis.port
     )
 
-    analysis_service = providers.Singleton(AnalysisService, redis_client)  # Mock
-
     repo_client: dict[R, providers.Factory[RepoClient[R]]] = {
         GithubAnalysisRequest: providers.Factory(GithubRestClient),
         GitLabAnalysisRequest: providers.Factory(GitLabClient)
@@ -55,4 +54,7 @@ class Container(DeclarativeContainer):
         temparature=0.3
     )
 
-    ai_service = providers.Singleton(AiService, llm, chat_model)
+    ai_mutex = providers.Singleton(AiMutex, chat_model)
+    ai_service = providers.Singleton(AiService, chat_model, ai_mutex)
+
+    analysis_service = providers.Singleton(AnalysisService, redis_client, ai_mutex, ai_service)

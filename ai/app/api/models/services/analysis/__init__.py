@@ -1,10 +1,12 @@
 import traceback
 from typing import TypeVar
 
+from pip._internal import req
 from redis import Redis
 
 from api.models.code import AnalysisStatus, analysis_percentages
 from api.models.dto import AnalysisRequest, AnalysisDataDto
+from api.models.services.ai import AiMutex, AiService
 from api.models.services.client import RepoClient
 from exception import AnalysisException
 
@@ -14,8 +16,10 @@ R = TypeVar('R', bound=AnalysisRequest, covariant=True)
 class AnalysisService:
     """분석 서비스"""
 
-    def __init__(self, redis_client: Redis):
+    def __init__(self, redis_client: Redis, ai_mutex: AiMutex, ai_service: AiService):
         self.redis_client = redis_client
+        self.ai_mutex = ai_mutex
+        self.ai_service = ai_service
 
     async def analyze(self, request: R) -> None:
         """
@@ -45,31 +49,26 @@ class AnalysisService:
             # AI 서비스 Lock 대기
             self._update_status(dto, AnalysisStatus.WAITING_AI)
             # TODO ...
-            # ai_service = await ai_mutex.wait_for_ai_service()
+            conversation = await self.ai_mutex.wait_for_conversation(request.analysisId)
+
 
             # AI에 학습 시키기
             self._update_status(dto, AnalysisStatus.LEARNING_DATA)
-            # TODO ...
-            # ai_service.learn(repo_data)
+            await self.ai_service.train(conversation, repo_data)
 
             # 대화해서 학습 결과 긁어오기
             self._update_status(dto, AnalysisStatus.GENERATING_README)
-            # TODO ...
-            # dto.result.readme = await ai_service.generate_readme()
+            dto.result.readme = await self.ai_service.generate_readme(conversation)
 
             self._update_status(dto, AnalysisStatus.JUDGING_COMMITS)
-            # TODO ...
-            # dto.result.repo_view_result = await ai_service.judge_commits()
+            dto.result.repo_view_result = await self.ai_service.judge_commits(conversation)
 
             self._update_status(dto, AnalysisStatus.SCORING_COMMITS)
-            # TODO ...
-            # dto.result.commit_score = ai_service.score_commits()
+            dto.result.commit_score = await self.ai_service.score_commits(conversation)
 
             # 학습 되돌리기
             self._update_status(dto, AnalysisStatus.RESETTING_LEARNED_DATA)
-            # TODO ...
-            # ai_service.reset_learning()
-            # ai_mutex.unlock()
+            await self.ai_mutex.release(conversation)
 
             # 완료 처리
             self._update_status(dto, AnalysisStatus.DONE)
