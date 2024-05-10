@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -18,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class MemberCardDto {
     private Long memberId;
+    private UUID memberUuid;
     private String memberNickName;
     private String memberImg;
     private String memberIntro;
@@ -38,6 +40,7 @@ public class MemberCardDto {
 
         return MemberCardDto.builder()
                 .memberId(member.getMemberId())
+                .memberUuid(member.getMemberUuid())
                 .memberNickName(member.getMemberNickname())
                 .memberImg(member.getMemberImg())
                 .memberIntro(member.getMemberIntro())

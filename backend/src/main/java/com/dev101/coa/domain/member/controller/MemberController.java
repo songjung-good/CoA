@@ -77,7 +77,6 @@ public class MemberController {
             , @RequestParam(value = "page", defaultValue = "0") int page
             , @RequestParam(value = "size", defaultValue = "20") int size
     ){
-        memberId = 9L;
         List<AlarmDto> result = memberService.getAlarmList(memberId, page, size);
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<List<AlarmDto>>(result));
