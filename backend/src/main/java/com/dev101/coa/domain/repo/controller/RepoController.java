@@ -42,7 +42,6 @@ public class RepoController {
             @AuthenticationPrincipal Long currentMemberId
             , @PathVariable("repoViewId") Long repoViewId
             , @RequestBody List<CommitCommentDto> editCommentListReq){
-        currentMemberId = 7L;
         repoService.editComment(currentMemberId, repoViewId,editCommentListReq);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
@@ -73,8 +72,6 @@ public class RepoController {
     public ResponseEntity<BaseResponse<String>> startAnalysis(
             @AuthenticationPrincipal Long currentMemberId,
             @RequestBody AnalysisReqDto analysisReqDto) throws Exception {
-
-        currentMemberId = 7L;
         String analysisId = null;
         try {
             analysisId = repoService.startAnalysis(currentMemberId, analysisReqDto);
@@ -111,8 +108,6 @@ public class RepoController {
     public ResponseEntity<BaseResponse<RepoDetailResDto>> readRepoView(
             @AuthenticationPrincipal Long currentMemberId,
             @PathVariable("repoViewId") Long repoViewId){
-
-        currentMemberId = 7L;
         RepoDetailResDto result = repoService.readRepoView(currentMemberId, repoViewId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
