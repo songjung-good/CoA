@@ -169,7 +169,8 @@ public class MemberService {
             List<MemberSkill> targetMemberSkillList) {
         Boolean isMine = (currentMember == targetMember);
         Boolean isBookmark = bookmarkRepository.findByBookmarkMemberAndBookmarkTargetMember(currentMember, targetMember).isPresent();
-        return MemberCardDto.createDto(currentMember, targetMemberSkillList, isMine, isBookmark);
+        Long jobCodeId = memberJobRepository.findByMember(targetMember).getJobCode().getCodeId();
+        return MemberCardDto.createDto(currentMember, targetMemberSkillList, isMine, isBookmark, jobCodeId);
     }
 
     public void editMember(Member member, MemberCardReq memberCardReq) {
