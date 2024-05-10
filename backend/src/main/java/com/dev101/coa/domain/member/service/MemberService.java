@@ -288,6 +288,7 @@ public class MemberService {
         return repoViewList.stream()
                 .map(repoView -> RepoCardDto.createRepoCardDto(repoView, pageMember.getMemberUuid()))
                 .collect(Collectors.toList());
+    }
 
     public UUID getMemberRandom(Long memberId) {
         // 로그인한 멤버
