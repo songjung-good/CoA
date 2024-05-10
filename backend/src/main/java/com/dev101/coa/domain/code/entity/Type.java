@@ -12,7 +12,7 @@ import lombok.*;
 public class Type extends BaseEntity {
 
     @Id
-    @Column(name = "type_id", length = 5, nullable = false)
+    @Column(name = "type_id", length =  5, nullable = false)
     private String typeId;
 
     @Column(name = "type_name", length = 20, nullable = false)
