@@ -220,6 +220,7 @@ public class MemberService {
             RepoView repoView = commitScore.getRepoView();
 
             repoAnalysisDtoList.add(RepoAnalysisDto.builder()
+                    .repoViewId(repoView.getRepoViewId())
                     .repoTitle(repoView.getRepoViewTitle())
                     .repoSubTitle(repoView.getRepoViewSubtitle())
                     .repoStartDate(repoView.getRepoStartDate())
@@ -252,9 +253,9 @@ public class MemberService {
             Map<String, List<Short>> scores = scoresByJob.computeIfAbsent(jobCodeId, k -> new HashMap<>());
             accumulateScores(scores, score);
             accumulateScores(scoresByJob.get(2000L), score);  // Accumulate scores in the 2000L map
+
         }
 
-        System.out.println("scoresByJob = " + scoresByJob);
 
         // 평균 점수 계산
         for (Map.Entry<Long, Map<String, List<Short>>> entry : scoresByJob.entrySet()) {
