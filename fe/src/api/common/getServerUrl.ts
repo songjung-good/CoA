@@ -1,3 +1,4 @@
+'use client'
 const getServerUrl = () => {
     if (typeof window === "undefined") {
       // 서버 사이드에서 실행되는 경우
