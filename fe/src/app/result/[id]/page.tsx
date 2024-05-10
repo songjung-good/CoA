@@ -32,8 +32,8 @@ export default function ResultPage({ params }: { params: { id: string } }) {
         <p className="mb-5 text-xl font-bold sm:text-2xl text-center">
           {`${userNickName}님의 레포지토리 분석 결과입니다.`}
         </p>
-        <RepoInfo openModal={openModal} />
-        <ResultTap />
+        <RepoInfo />
+        <ResultTap openModal={openModal} />
         {isModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <RepoCardModal isOpen={isModalOpen} onClose={closeModal} />

@@ -1,14 +1,17 @@
 // UserModal은 레포지토리의 기여자를 모달 형태로 보여주는 컴포넌트
 // 라이브러리
-import React, { useState } from 'react';
-import tw from 'tailwind-styled-components';
-import axios from 'axios';
+import React, { useState } from "react";
+import tw from "tailwind-styled-components";
+import axios from "axios";
+
+//stroe
+import useAnalyzingStore from "@/store/analyze";
 
 // 타입 정리
 interface UserModalProps {
   userData: {
     data: User[];
-    projectId? : number;
+    projectId?: number;
   };
   onClose: () => void;
   url: string;
@@ -36,9 +39,9 @@ const UserAvatar = ({ src, alt, isSelected, ...props }: UserAvatarProps) => {
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
 
-  let borderColor = 'border-gray-200';
-  if (isHovered) borderColor = 'border-gray-500';
-  if (isSelected) borderColor = 'border-blue-500';
+  let borderColor = "border-gray-200";
+  if (isHovered) borderColor = "border-gray-500";
+  if (isSelected) borderColor = "border-blue-500";
 
   return (
     <img
@@ -53,13 +56,25 @@ const UserAvatar = ({ src, alt, isSelected, ...props }: UserAvatarProps) => {
 };
 
 // axios를 이용해 서버로 사용자 데이터를 요청
-const requestAnalysis = async (repoUrl: string, userName: any, projectId: any) => {
+const requestAnalysis = async (
+  repoUrl: string,
+  userName: any,
+  projectId: any,
+) => {
   try {
-    const response = await axios.post('/api/repos/analysis', {
-      repoUrl,
-      userName,
-      projectId,
-    });
+    await axios
+      .post("/api/repos/analysis", {
+        repoUrl,
+        userName,
+        projectId,
+      })
+      .then((res) => {
+        console.log(res);
+        useAnalyzingStore.getState().setAnalyzeId(res.data.result);
+      })
+      .then((res) => {
+        useAnalyzingStore.getState().startAnalysis();
+      });
   } catch (error) {
     console.error(error);
   }
@@ -81,36 +96,42 @@ const UserModal: React.FC<UserModalProps> = ({ userData, onClose, url }) => {
   return (
     <ModalOverlay>
       <ModalContent>
-      <ModalCloseButton onClick={closeModal}>
-        X
-      </ModalCloseButton>
-      {userData.data && (
-        <ModalUserGrid>
-          {userData.data.map((user, index) => (
-            <ModalUser key={index} onClick={() => toggleUser(user)}>
-              <UserAvatar
-                src={user.avatar_url}
-                alt={user.login}
-                isSelected={selectedUser?.id === user.id}
-              />
-              <UserId>{user.login}</UserId>
-              <UserId>{user.username}</UserId>
-            </ModalUser>
-          ))}
-        </ModalUserGrid>
-      )}
-      {!userData.data && <p>사용자 데이터를 가져올 수 없습니다.</p>}
-      <div>
-        <p>프로젝트 URL : {url}</p>
-        <p>분석대상 : {selectedUser?.login} {selectedUser?.username}</p>
-      </div>
-      <div>
-      <button 
-        className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-        onClick={() => requestAnalysis(url, selectedUser!.login||selectedUser!.username, userData.projectId)}
-      >
-        분석하기
-      </button>
+        <ModalCloseButton onClick={closeModal}>X</ModalCloseButton>
+        {userData.data && (
+          <ModalUserGrid>
+            {userData.data.map((user, index) => (
+              <ModalUser key={index} onClick={() => toggleUser(user)}>
+                <UserAvatar
+                  src={user.avatar_url}
+                  alt={user.login}
+                  isSelected={selectedUser?.id === user.id}
+                />
+                <UserId>{user.login}</UserId>
+                <UserId>{user.username}</UserId>
+              </ModalUser>
+            ))}
+          </ModalUserGrid>
+        )}
+        {!userData.data && <p>사용자 데이터를 가져올 수 없습니다.</p>}
+        <div>
+          <p>프로젝트 URL : {url}</p>
+          <p>
+            분석대상 : {selectedUser?.login} {selectedUser?.username}
+          </p>
+        </div>
+        <div>
+          <button
+            className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+            onClick={() =>
+              requestAnalysis(
+                url,
+                selectedUser!.login || selectedUser!.username,
+                userData.projectId,
+              )
+            }
+          >
+            분석하기
+          </button>
         </div>
       </ModalContent>
     </ModalOverlay>

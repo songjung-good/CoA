@@ -9,11 +9,19 @@ import { useState, useEffect } from "react";
 import EditIcon from "@/icons/EditIcon";
 
 // store
-import useResultStore from "@/store/result";
+// import useResultStore from "@/store/result";
+import useRepoDetailStore from "@/store/repodetail";
 
-const RepoInfo: React.FC = () => {
+// TypeScript 인터페이스로 Props 타입 정의
+interface RepoInfoProps {
+  openModal: () => void; // 모달을 여는 함수
+}
+
+const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
   // 통신 결과로 setRepoInfo를 업데이트
-  const repoInfo = useResultStore((state) => state.result.repoCardDto);
+  const repoInfo = useRepoDetailStore((state) => state.result.repoCardDto);
+
+  const [isEditHover, setIsEditHover] = useState(false);
 
   // 프로젝트 일수 계산
   const projectDays = calculateDaysBetweenDates(
@@ -47,11 +55,7 @@ const RepoInfo: React.FC = () => {
             {repoInfo.repoViewTitle}
           </p>
           <p className="text-xl font-bold lg:text-2xl mb-2 truncate">
-            {repoInfo.repoViewSubtitle ? (
-              <span>{repoInfo.repoViewSubtitle}</span>
-            ) : (
-              <span>부제목을 작성해주세요.</span>
-            )}
+            {repoInfo.repoViewSubtitle}
           </p>
         </div>
         <div className="w-full h-full lg:flex lg:flex-col lg:justify-between">
@@ -65,6 +69,19 @@ const RepoInfo: React.FC = () => {
                 프로젝트 인원: {repoInfo.repoMemberCnt}명
               </p>
             </div>
+          </div>
+          <div className="flex justify-end w-full">
+            {repoInfo.isMine && (
+              <div className="mt-2">
+                <button
+                  className=" bg-appBlue1 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-full flex justify-center items-center"
+                  onClick={openModal}
+                >
+                  <EditIcon width={20} height={20} />
+                  수정하기
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

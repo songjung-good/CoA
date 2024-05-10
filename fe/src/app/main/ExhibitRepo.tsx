@@ -1,6 +1,6 @@
 "use client";
 // 라이브러리
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UseAxios from '@/api/common/useAxios';
 // 컴포넌트
 import MainRepoCard from '@/components/maincomponents/MainRepoCard'

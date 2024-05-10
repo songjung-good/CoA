@@ -1,13 +1,9 @@
-// GithubRepo 컴포넌트
 // 사용자의 GitHub ID를 받아 Repository 목록을 불러와 보여주는 컴포넌트
-
+// 라이브러리
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useRouter } from "next/navigation";
 import tw from "tailwind-styled-components";
 import UseAxios from "@/api/common/useAxios";
-
-// GitHub 개인 액세스 토큰
-const accessToken = process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKENS;
 
 interface Repo {
   id: number;
@@ -18,25 +14,26 @@ interface Repo {
 
 interface MyRepoProps {
   userID: string | null;
+  isToken: boolean | null;
 }
 
-const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
+const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
   const [notLink, setNotLink] = useState<number>(0);
   const axiosInstance = UseAxios();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchRepos = async () => {
-      if (userID !== null) {
+      if (isToken !== null) {
         try {
           const response = await axiosInstance.get(
             `api/external/github/repos/${userID}`,
           );
-
           if (response.data.code === 602 || response.data.code === 303) {
             setNotLink(response.data.code);
-            return;
           }
           if (response.data.code === 200) {
             setRepos(JSON.parse(response.data.result));
@@ -48,8 +45,8 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
       } else {
         console.log(`userID가 null입니다. ${userID}`);
       }
+      setLoadingAuth(false);
     };
-
     fetchRepos();
 
     return () => {
@@ -57,17 +54,28 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
     };
   }, [userID]);
 
-  if (notLink === 602) {
-    return <div>계정을 연동해주세요.</div>;
+  if (loadingAuth) {
+    return <Loading>인증 상태를 확인하는 중입니다.</Loading>;
+  }
+  if (notLink === 602 || isToken === null) {
+    return (
+      <Div>
+        <Button onClick={() => router.push('/auth/link')}>계정 연동하기</Button>
+        <p>연동된 github 계정이 없습니다.</p>
+      </Div>
+    );
   }
   if (notLink === 303) {
-    return <div>토큰을 갱신해주세요.</div>;
+    return (
+      <Div>
+        <Button onClick={() => router.push('/auth/link')}>계정 연동하기</Button>
+        <p>엑세스 토큰을 갱신해주세요.</p>
+      </Div>
+    );
   }
-
   if (loading) {
     return <Loading>목록을 받아오는 중 입니다.</Loading>;
   }
-
   return (
     <RepoList>
       {repos.map((repo) => (
@@ -79,10 +87,6 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID }) => {
           <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
             {repo.name}
           </a>
-          <Buttons>
-            <Button>분석하기</Button>
-            {repo.isAnalyzed && <Button>상세보기</Button>}
-          </Buttons>
         </RepoItem>
       ))}
     </RepoList>
@@ -118,29 +122,25 @@ const RepoItem = tw.li`
   hover:shadow-md
 `;
 
-const Buttons = tw.div`
-  buttons
-  absolute
-  top-1/2
-  left-1/2
-  transform
-  -translate-x-1/2
-  -translate-y-1/2
-  opacity-0
-  invisible
-  transition-all
-  duration-300
+const Div = tw.div`
+  mx-auto
+  my-1
+  p-4
+  px-[12rem]
   flex
-  gap-2
+  flex-col
+  justify-center
+  items-center
 `;
 
 const Button = tw.button`
-  bg-blue-500
-  text-white
+  bg-appYellow
+  text-black
   font-bold
-  py-1
-  px-2
-  text-sm
+  py-[0.75rem]
+  px-[1.25rem]
+  my-[1rem]
+  text-md
   rounded
 `;
 
