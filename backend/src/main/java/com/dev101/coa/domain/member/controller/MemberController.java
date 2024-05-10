@@ -7,6 +7,7 @@ import com.dev101.coa.domain.member.repository.MemberRepository;
 import com.dev101.coa.domain.member.repository.MemberSkillRepository;
 import com.dev101.coa.domain.member.service.MemberService;
 import com.dev101.coa.domain.repo.dto.MyRepoAnalysisResDto;
+import com.dev101.coa.domain.repo.dto.RepoCardDto;
 import com.dev101.coa.global.common.BaseResponse;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
@@ -112,6 +113,17 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(myRepoAnalysisResDto));
 
     }
+
+    @GetMapping("/{memberUuid}/repos")
+    @Operation(description = "멤버 레포 목록")
+    public ResponseEntity<BaseResponse<List<RepoCardDto>>> getMemberRepoList(
+            @PathVariable("memberUuid") String memberUuid) {
+        Member pageMember = memberRepository.findByMemberUuid(UUID.fromString(memberUuid)).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+
+        List<RepoCardDto> repoCardDtoList = memberService.makeMemberRepos(pageMember);
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(repoCardDtoList));
 
     @GetMapping("/random")
     @Operation(description = "파도타기")
