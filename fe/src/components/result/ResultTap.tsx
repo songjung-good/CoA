@@ -103,7 +103,7 @@ const ResultTap: React.FC<ResultTabProps> = ({ openModal }) => {
               await openModal();
             }}
           >
-            저장하기
+            수정 후 저장
           </button>
         )}
         {/* {isMine && <button onClick={handleEditButton}>수정하기</button>} */}

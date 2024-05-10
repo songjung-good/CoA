@@ -99,12 +99,10 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     await onClose();
 
     const analyzeId = useAnalyzingStore.getState().analyzeId;
-    await axios
-      .get(`/api/repos/analysis/done/1234bc19-865d-49e7-8929-2416a920eb6c`)
-      .then((res) => {
-        useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
-        console.log(res);
-      });
+    await axios.get(`/api/repos/9`).then((res) => {
+      useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
+      console.log(res);
+    });
     await await router.push(`/repo/1`);
   };
 

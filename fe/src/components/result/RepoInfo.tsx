@@ -23,7 +23,7 @@ const RepoInfo: React.FC = () => {
 
   return (
     <RepoInfoDiv>
-      <div className="flex flex-col lg:flex-row items-start justify-between w-full ">
+      <div className="flex flex-col lg:flex-row items-start justify-between w-full lg:min-w-[800px]">
         <div>
           <div className="flex items-center mb-5">
             {repoInfo.repoViewPath.includes("github") ? (
@@ -66,6 +66,21 @@ const RepoInfo: React.FC = () => {
               </p>
             </div>
           </div>
+          <div className="flex-col justify-end">
+            <div className="flex flex-row justify-end">
+              {repoInfo.skillList === null ? (
+                <div className="font-bold">
+                  프로젝트에 사용한 기술 스택을 추가해주세요
+                </div>
+              ) : (
+                <div>
+                  {repoInfo.skillList.map((e) => (
+                    <div>{e.codeName}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </RepoInfoDiv>
@@ -73,7 +88,7 @@ const RepoInfo: React.FC = () => {
 };
 
 const RepoInfoDiv = tw.div`
-  w-full min-h-20 flex flex-col lg:flex-row flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2
+  w-full min-h-20 flex flex-col lg:flex-row lg:min-w-[800px] flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2
 `;
 
 function calculateDaysBetweenDates(startDate: string, endDate: string) {
