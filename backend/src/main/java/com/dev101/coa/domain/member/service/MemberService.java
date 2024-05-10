@@ -5,6 +5,12 @@ import com.dev101.coa.domain.code.repository.CodeRepository;
 import com.dev101.coa.domain.member.dto.*;
 import com.dev101.coa.domain.member.entity.*;
 import com.dev101.coa.domain.member.repository.*;
+import com.dev101.coa.domain.repo.dto.CommitScoreDto;
+import com.dev101.coa.domain.repo.dto.MyRepoAnalysisResDto;
+import com.dev101.coa.domain.repo.dto.RepoAnalysisDto;
+import com.dev101.coa.domain.repo.entity.CommitScore;
+import com.dev101.coa.domain.repo.entity.RepoView;
+import com.dev101.coa.domain.repo.repository.CommitScoreRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +33,7 @@ public class MemberService {
     private final BookmarkRepository bookmarkRepository;
     private final MemberSkillRepository memberSkillRepository;
     private final CodeRepository codeRepository;
+    private final CommitScoreRepository commitScoreRepository;
 
 
     public MemberInfoDto getMemberInfo(Long memberId) {
@@ -185,5 +189,79 @@ public class MemberService {
             memberSkillRepository.save(memberSkill);
         });
         return;
+    }
+
+
+    public MyRepoAnalysisResDto makeMemberAnalysis(Member member) {
+
+        List<CommitScore> allCommitScore = commitScoreRepository.findAll();
+        List<CommitScore> memberCommitScore = commitScoreRepository.findAllByRepoViewMember(member);
+        return MyRepoAnalysisResDto.builder()
+                .jobs(getMyRepoAnalysisByJob(allCommitScore))
+                .myScoreAverage(getMyRepoAnalysisByJob(memberCommitScore).get(member.getMemberJob().getJobCode().getCodeId()))
+                .repos(getMyReposCommitScore(memberCommitScore))
+                .build();
+    }
+
+    public List<RepoAnalysisDto> getMyReposCommitScore(List<CommitScore> commitScores) {
+        List<RepoAnalysisDto> repoAnalysisDtoList = new ArrayList<>();
+        for (CommitScore commitScore : commitScores) {
+            CommitScoreDto commitScoreDto = new CommitScoreDto(commitScore);
+            RepoView repoView = commitScore.getRepoView();
+
+            repoAnalysisDtoList.add(RepoAnalysisDto.builder()
+                    .repoTitle(repoView.getRepoViewTitle())
+                    .repoSubTitle(repoView.getRepoViewSubtitle())
+                    .repoStartDate(repoView.getRepoStartDate())
+                    .repoEndDate(repoView.getRepoEndDate())
+                    .commitScoreDto(commitScoreDto).build());
+        }
+
+        return repoAnalysisDtoList;
+    }
+
+    public Map<Long, Map<String, Double>> getMyRepoAnalysisByJob(List<CommitScore> commitScores) {
+
+        // repoViewId를 키로 하고 Member 객체를 값으로 하는 맵 생성
+        Map<Long, Member> memberMap = commitScores.stream()
+                .map(CommitScore::getRepoView)
+                .distinct()
+                .collect(Collectors.toMap(RepoView::getRepoViewId, RepoView::getMember));
+
+        // 직업별로 점수를 분류하고 평균 계산
+        Map<Long, Map<String, List<Short>>> scoresByJob = new HashMap<>();
+        Map<Long, Map<String, Double>> averageScoresByJob = new HashMap<>();
+        scoresByJob.put(2000L, new HashMap<>());
+
+        // 각 직업별 점수와 카운트 집계
+        for (CommitScore score : commitScores) {
+            Member member = memberMap.get(score.getRepoView().getRepoViewId());
+            Long jobCodeId = member.getMemberJob().getJobCode().getCodeId();
+
+            Map<String, List<Short>> scores = scoresByJob.computeIfAbsent(jobCodeId, k -> new HashMap<>());
+            accumulateScores(scores, score);
+            accumulateScores(scoresByJob.get(2000L), score);  // Accumulate scores in the 2000L map
+        }
+
+        System.out.println("scoresByJob = " + scoresByJob);
+
+        // 평균 점수 계산
+        for (Map.Entry<Long, Map<String, List<Short>>> entry : scoresByJob.entrySet()) {
+            Map<String, Double> averageScores = new HashMap<>();
+            Map<String, List<Short>> scores = entry.getValue();
+            scores.forEach((key, valueList) -> averageScores.put(key, valueList.stream().mapToInt(Short::intValue).average().orElse(0.0)));
+            averageScoresByJob.put(entry.getKey(), averageScores);
+        }
+        return averageScoresByJob;
+
+    }
+
+    private void accumulateScores(Map<String, List<Short>> scores, CommitScore score) {
+        scores.computeIfAbsent("readability", k -> new ArrayList<>()).add(score.getScoreReadability());
+        scores.computeIfAbsent("performance", k -> new ArrayList<>()).add(score.getScorePerformance());
+        scores.computeIfAbsent("reusability", k -> new ArrayList<>()).add(score.getScoreReusability());
+        scores.computeIfAbsent("testability", k -> new ArrayList<>()).add(score.getScoreTestability());
+        scores.computeIfAbsent("exception", k -> new ArrayList<>()).add(score.getScoreException());
+        scores.computeIfAbsent("total", k -> new ArrayList<>()).add(score.getScoreTotal());
     }
 }

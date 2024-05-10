@@ -6,6 +6,7 @@ import com.dev101.coa.domain.member.entity.MemberSkill;
 import com.dev101.coa.domain.member.repository.MemberRepository;
 import com.dev101.coa.domain.member.repository.MemberSkillRepository;
 import com.dev101.coa.domain.member.service.MemberService;
+import com.dev101.coa.domain.repo.dto.MyRepoAnalysisResDto;
 import com.dev101.coa.global.common.BaseResponse;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
@@ -77,10 +78,9 @@ public class MemberController {
             , @RequestParam(value = "page", defaultValue = "0") int page
             , @RequestParam(value = "size", defaultValue = "20") int size
     ){
-        memberId = 9L;
         List<AlarmDto> result = memberService.getAlarmList(memberId, page, size);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<List<AlarmDto>>(result));
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
     @PostMapping("/bookmarks/{targetMemberUuid}")
@@ -98,4 +98,17 @@ public class MemberController {
     }
 
 
+    @GetMapping("/{memberUuid}/analysis")
+    @Operation(description = "멤버 심층 분석")
+    public ResponseEntity<BaseResponse<MyRepoAnalysisResDto>> getMemberAnalysis(
+            @AuthenticationPrincipal Long memberId,
+            @PathVariable("memberUuid") UUID memberUuid) {
+        Member currentMember = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        Member pageMember = memberRepository.findByMemberUuid(memberUuid).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        if (currentMember != pageMember) {return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(null));}
+
+        MyRepoAnalysisResDto myRepoAnalysisResDto = memberService.makeMemberAnalysis(pageMember);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(myRepoAnalysisResDto));
+
+    }
 }

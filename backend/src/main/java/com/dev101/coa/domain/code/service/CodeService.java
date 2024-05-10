@@ -26,10 +26,10 @@ public class CodeService {
 
     public CommonCodeResDto getAllCommonCodes() {
         List<Code> codes = codeRepository.findAll();
-        Map<Short, Type> types = typeRepository.findAll().stream()
+        Map<String, Type> types = typeRepository.findAll().stream()
                 .collect(Collectors.toMap(Type::getTypeId, type -> type));
 
-        Map<Short, Map<Long, String>> groupedCodes = codes.stream()
+        Map<String, Map<Long, String>> groupedCodes = codes.stream()
                 .collect(Collectors.groupingBy(
                         code -> code.getType().getTypeId(),
                         Collectors.toMap(

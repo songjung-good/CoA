@@ -12,9 +12,12 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyRepoAnalysis {
+public class MyRepoAnalysisResDto {
 
     private Map<Long, Map<String, Double>> jobs;
-    private CommitScoreDto myScoreAverage;
+
+    private Map<String, Double> myScoreAverage;
+
     private List<RepoAnalysisDto> repos;
+
 }
