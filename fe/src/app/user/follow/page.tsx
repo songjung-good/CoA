@@ -2,9 +2,10 @@ import FollowList from "./FollowList";
 
 export default function FollowPage() {
   return (
-    <>
-      <h1>팔로우 목록</h1>
-      <FollowList />
-    </>
+    <main className="bg-appGrey1 flex flex-col justify-center items-center">
+      <div className="max-w-screen-xl w-full flex flex-col py-4 gap-4">
+        <FollowList />
+      </div>
+    </main>
   );
 }
