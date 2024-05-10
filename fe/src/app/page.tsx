@@ -14,7 +14,6 @@ import LandingCarousel from "@/components/landing/LandingCarousel.tsx";
 
 // Intersection Observer 커스텀 훅
 import { useObserver } from "@/components/landing/ObserverOption.tsx";
-import Dummy from "@/components/dummyInput.tsx";
 
 export default function HomePage() {
   const [windowWidth, setWindowWidth] = useState(0);
@@ -122,7 +121,6 @@ export default function HomePage() {
 
   return (
     <div ref={titleRef} className=" overflow-hidden bg-appGrey1">
-      <Dummy />
       <div className="relative">
         <LandingCarousel />
       </div>
