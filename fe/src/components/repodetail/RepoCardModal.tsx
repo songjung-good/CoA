@@ -1,11 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 import useCommonCodeStore from "@/store/commoncode";
-import useResultStore from "@/store/result";
-import useAnalyzingStore from "@/store/analyze";
+// import useRepoDetailStore from "@/store/result";
 import useRepoDetailStore from "@/store/repodetail";
 import UseAxios from "@/api/common/useAxios";
 
@@ -24,11 +22,9 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   const { response } = useCommonCodeStore.getState();
   const [selectedStack, setSelectedStack] = useState("");
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
-  const router = useRouter();
-  const axios = UseAxios();
 
   // 결과 데이터
-  const { result } = useResultStore((state) => state);
+  const { result } = useRepoDetailStore((state) => state);
   const [title, setTitle] = useState<string>(
     result.repoCardDto.repoViewTitle || "",
   );
@@ -89,23 +85,14 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     setStacks((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
     // 폼 제출 로직 구현, 예: API 호출 등
-    await console.log("저장!");
+    console.log("수정 API 구현해라!");
     // 여기에 수정 로직을 추가하세요
 
     // 수정 완료 후 모달 닫기
-    await onClose();
-
-    const analyzeId = useAnalyzingStore.getState().analyzeId;
-    await axios
-      .get(`/api/repos/analysis/done/1234bc19-865d-49e7-8929-2416a920eb6c`)
-      .then((res) => {
-        useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
-        console.log(res);
-      });
-    await await router.push(`/repo/1`);
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -119,7 +106,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
         >
           &#10005;
         </button>
-        <h2 className="text-2xl font-bold mb-2">레포정보 저장하기</h2>
+        <h2 className="text-2xl font-bold mb-2">레포정보 수정하기</h2>
         <hr className="mb-2" />
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -250,7 +237,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
               type="submit"
               className="text-white bg-appBlue1 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-base py-2.5 px-5"
             >
-              저장하기
+              수정하기
             </button>
           </div>
         </form>
