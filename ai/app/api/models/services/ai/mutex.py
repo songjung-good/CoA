@@ -19,7 +19,10 @@ class AiMutex:
             memory=ConversationSummaryMemory(memory_key=conversation_id)
         )
 
-    async def release(self, conversation: ConversationChain):
+    async def release(self, conversation: ConversationChain) -> None:
         """
         conversation을 소멸시키고 해당 conversation에 대한 AI 사용을 종료 처리합니다.
         """
+        # TODO: unlocking mutex
+
+        del conversation

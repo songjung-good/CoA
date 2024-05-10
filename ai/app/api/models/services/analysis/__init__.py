@@ -46,8 +46,8 @@ class AnalysisService:
 
             # total_commit_cnt, personal_commit_cnt 세기
             # TODO
-            dto.result.total_commit_cnt = 123       # TODO
-            dto.result.personal_commit_cnt = 123    # TODO
+            dto.result.total_commit_cnt = 123       # TODO: client에 커밋 개수 세는 로직 추가
+            dto.result.personal_commit_cnt = 123    # TODO: client에 커밋 개수 세는 로직 추가
 
             # AI 서비스 Lock 대기
             self._update_status(dto, AnalysisStatus.WAITING_AI)
