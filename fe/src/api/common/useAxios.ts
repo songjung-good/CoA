@@ -42,6 +42,37 @@ const UseAxios = (): AxiosInstance => {
         return response
       }
       return response;  
+    },
+    async (error) => {
+      const originalRequest = error.config;
+      console.log(error)
+
+      if (error.response.status === 401) { // 여기에 에러 처리 //  && !originalRequest._retry
+
+        window.location.href = `/auth/login`
+        // originalRequest._retry = true;
+
+        // try { // 리프레시 로직 우리는 일단 api 인증토큰 로직을 넣어야 할 듯.
+        //   const response = await axios.get(`${serverUrl}/api/token`, {
+        //     headers: { authorization: localStorage.getItem('refreshToken') },
+        //   });
+
+        //   const newAccessToken = response.headers['authorization'];
+        //   const newRefreshToken = response.headers['authorization-refresh'];
+
+        //   localStorage.setItem('accessToken', newAccessToken);
+        //   localStorage.setItem('refreshToken', newRefreshToken);
+
+        //   originalRequest.headers['authorization'] = newAccessToken;
+
+        //   return axiosInstance(originalRequest);
+        // } catch (error) {
+        //   console.error('Error refreshing token:', error);
+        //   throw error;
+        // }
+      }
+
+      // return Promise.reject(error);
     }
   )
 
