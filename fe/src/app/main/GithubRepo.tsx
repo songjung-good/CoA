@@ -61,7 +61,7 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
     return (
       <Div>
         <Button onClick={() => router.push('/auth/link')}>계정 연동하기</Button>
-        <p>계정을 연동해주세요.</p>
+        <p>연동된 github 계정이 없습니다.</p>
       </Div>
     );
   }
@@ -69,7 +69,7 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
     return (
       <Div>
         <Button onClick={() => router.push('/auth/link')}>계정 연동하기</Button>
-        <p>토큰을 갱신해주세요.</p>
+        <p>엑세스 토큰을 갱신해주세요.</p>
       </Div>
     );
   }
@@ -126,6 +126,7 @@ const Div = tw.div`
   mx-auto
   my-1
   p-4
+  px-[12rem]
   flex
   flex-col
   justify-center
