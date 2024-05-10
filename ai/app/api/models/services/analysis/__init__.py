@@ -51,7 +51,6 @@ class AnalysisService:
             # TODO ...
             conversation = await self.ai_mutex.wait_for_conversation(request.analysisId)
 
-
             # AI에 학습 시키기
             self._update_status(dto, AnalysisStatus.LEARNING_DATA)
             await self.ai_service.train(conversation, repo_data)
