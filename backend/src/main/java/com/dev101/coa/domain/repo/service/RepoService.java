@@ -614,6 +614,7 @@ public class RepoService {
     public RepoDetailResDto readRepoView(Long memberId, Long repoViewId) {
         // 레포 뷰 존재 여부 확인
         RepoView repoView = repoViewRepository.findById(repoViewId).orElseThrow(() -> new BaseException(StatusCode.REPO_VIEW_NOT_FOUND));
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
         // 레포 카드
         List<RepoViewSkill> repoViewSkillList = repoViewSkillRepository.findAllByRepoView(repoView);
@@ -622,7 +623,7 @@ public class RepoService {
             skillList.add(repoViewSkill.getSkillCode().convertToDto());
         }
 
-        RepoCardDto repoCardDto = RepoCardDto.createRepoCardDto(repoView, memberId);
+        RepoCardDto repoCardDto = RepoCardDto.createRepoCardDto(repoView, member.getMemberUuid());
         repoCardDto.updateSkillList(skillList);
 
         // 베이직 디테일

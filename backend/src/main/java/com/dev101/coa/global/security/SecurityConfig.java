@@ -52,11 +52,12 @@ public class SecurityConfig {
                                 .requestMatchers("/api/swagger-ui/**", "/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )
+//                )
+                .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
 
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
 
-                .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
                 // 세션 관리 전략 설정
                 .sessionManagement(session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //

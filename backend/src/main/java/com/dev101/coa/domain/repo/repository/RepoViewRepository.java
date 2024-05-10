@@ -1,5 +1,6 @@
 package com.dev101.coa.domain.repo.repository;
 
+import com.dev101.coa.domain.member.entity.Member;
 import com.dev101.coa.domain.repo.entity.Repo;
 import com.dev101.coa.domain.repo.entity.RepoView;
 import org.springframework.data.domain.Page;
@@ -17,4 +18,6 @@ public interface RepoViewRepository extends JpaRepository<RepoView, Long> {
     List<RepoView> findAllByRepo(Repo repo);
 
     Page<RepoView> findAllByRepo(Repo repo, Pageable pageable);
+
+    List<RepoView> findAllByMember(Member member);
 }

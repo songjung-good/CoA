@@ -3,7 +3,9 @@ package com.dev101.coa.global.security.service;
 import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.code.repository.CodeRepository;
 import com.dev101.coa.domain.member.entity.Member;
+import com.dev101.coa.domain.member.entity.MemberJob;
 import com.dev101.coa.domain.member.repository.AccountLinkRepository;
+import com.dev101.coa.domain.member.repository.MemberJobRepository;
 import com.dev101.coa.domain.member.repository.MemberRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
@@ -28,6 +30,7 @@ public class AuthenticationService {
     private final MemberRepository memberRepository;
     private final CodeRepository codeRepository;
     private final AccountLinkRepository accountLinkRepository;
+    private final MemberJobRepository memberJobRepository;
 
     public Member authenticateOAuth2(OAuth2User oauthUser, String registrationId) {
         // 사용자 데이터베이스 업데이트
@@ -46,6 +49,7 @@ public class AuthenticationService {
         String email = userInfo.getEmail();
         String userName = userInfo.getUsername();
         String img = userInfo.getImageUrl();
+        Code jobCode = codeRepository.findByCodeId(2004L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
 
         Member member = memberRepository.findByMemberEmail(email);
         if (member == null) {
@@ -57,6 +61,8 @@ public class AuthenticationService {
                     .memberUuid(UUID.randomUUID())
                     .memberPlatformCode(resolvePlatformCode(registrationId))
                     .build();
+            MemberJob memberJob = new MemberJob(member, jobCode);
+            memberJobRepository.save(memberJob);
         } else {
             member.updateMemberNickname(userName); // 혹은 다른 업데이트 로직
             member.updateMemberImg(img);
