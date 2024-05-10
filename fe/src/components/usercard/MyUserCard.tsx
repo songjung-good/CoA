@@ -6,7 +6,7 @@ import userStore from "@/store/user";
 import EditIcon from "@/icons/EditIcon";
 import EditIconDark from "@/icons/EditIconDark";
 
-export default function UserCard() {
+export default function MyUserCard() {
   const userName = userStore((state) => state.githubUserName);
   return (
     <section className="card flex flex-col gap-4 ">
