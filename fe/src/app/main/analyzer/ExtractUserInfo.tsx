@@ -3,6 +3,7 @@ interface UserInfo {
   UserName: string | null;
   ProjectName: string | null;
   Platform: string | null;
+  setUserData?: Function;
 }
 
 export const ExtractUserInfo = ( url: string ): UserInfo => {
