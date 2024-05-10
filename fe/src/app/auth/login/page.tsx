@@ -1,22 +1,10 @@
 "use client";
 import Image from "next/image";
+import getServerUrl from "@/api/common/getServerUrl";
+
+const serverUrl = getServerUrl(); // 서버 URL 가져오기
 
 export default function LoginPage() {
-
-  function getDomainAddress() {
-    if (typeof window === "undefined") {
-      // 서버 사이드에서 실행되는 경우
-      return "http://localhost:8080"; // 또는 다른 기본 URL
-    }
-    const hostname = window.location.hostname; // 현재 도메인 이름을 가져옵니다.
-    if (hostname === "localhost") {
-        return "http://localhost:8080";
-    } else {
-        return window.location.protocol + "//" + hostname;
-    }
-  }
-  const serverUrl = getDomainAddress();
-
   // GitHub 로그인 버튼 클릭 시 이벤트 핸들러
   const handleKakaoLogin = () => {
     window.location.href = `${serverUrl}/oauth2/authorization/kakao`;
