@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
+import { useParams } from "next/navigation";
 import useCommonCodeStore from "@/store/commoncode";
 // import useRepoDetailStore from "@/store/result";
 import useRepoDetailStore from "@/store/repodetail";
@@ -22,6 +22,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   const { response } = useCommonCodeStore.getState();
   const [selectedStack, setSelectedStack] = useState("");
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
+  const axios = UseAxios();
+  const params = useParams();
 
   // 결과 데이터
   const { result } = useRepoDetailStore((state) => state);
@@ -85,12 +87,36 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     setStacks((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
     // 폼 제출 로직 구현, 예: API 호출 등
     console.log("수정 API 구현해라!");
     // 여기에 수정 로직을 추가하세요
+    // const data = {
+    //   repoViewTitle: title,
+    //   repoViewSubtitle: subtitle,
+    //   repoStartDate: startDate,
+    //   repoEndDate: endDate,
+    //   repoMemberCnt: memberCount,
+    //   repoViewSkillList: stacks.map((stack) => ({
+    //     skillCode: parseInt(stack),
+    //   })), // 정수 타입으로 변경
+    // };
+    // await axios
+    //   .put(`/api/repos/repoCard/${params.id}`, data)
+    //   .then((res) => {
+    //     console.log("데이터 변경 성공");
+    //     onClose();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     console.log("데이터 변경 실패");
+    //   });
 
+    // 수정 후 데이터 store 변경
+    // await axios.get(`/api/repos/${params.id}`).then((res) => {
+    //   useRepoDetailStore.getState().updateResultState(res.data);
+    // });
     // 수정 완료 후 모달 닫기
     onClose();
   };

@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 import useRepoDetailStore from "@/store/repodetail";
 import UseAxios from "@/api/common/useAxios";
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
@@ -28,20 +29,18 @@ const ReadmeEdit: NextPage = () => {
     useRepoDetailStore.getState().result.basicDetailDto.repoReadme,
   );
   const [editorHeight, setEditorHeight] = useState(calculateHeight(md || "")); // 초기 높이 계산
-  const axiosInstance = UseAxios();
+  const axios = UseAxios();
+  const params = useParams();
 
-  // 수정 요청
-  // const handleSave = async () => {
-  //   const payload = { markdown: md };
-  //   axiosInstance
-  //     .put(`/api/repos/${repo_id}`, { payload })
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
+  // const HandleSave = () => {
+  //   axios.put(`/api/repos/readme/${params.id}`, md).then((res) => {
+  //     console.log(res.data)
+  //     console.log("리드미 변경 성공")
+  //   }).catch((err) => {
+  //     console.log(err)
+  //     console.log("리드미 변경 실패")
+  //   })
+  // }
 
   useEffect(() => {
     setEditorHeight(calculateHeight(md || ""));

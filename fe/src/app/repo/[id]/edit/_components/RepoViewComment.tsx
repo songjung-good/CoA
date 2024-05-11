@@ -2,6 +2,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import useRepoDetailStore from "@/store/repodetail";
 import CommentItem from "./CommentItem";
+import UseAxios from "@/api/common/useAxios";
+import { useParams } from "next/navigation";
 
 interface Comment {
   commentStartIndex: number;
@@ -12,6 +14,9 @@ interface Comment {
 
 export default function RepoViewComment() {
   const result = useRepoDetailStore.getState().result.basicDetailDto;
+
+  const axios = UseAxios();
+  const params = useParams();
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [startIndex, setStartIndex] = useState<number | null>(null);
@@ -72,6 +77,16 @@ export default function RepoViewComment() {
       .commentList as Comment[];
     setComments(Array.isArray(initialComments) ? initialComments : []);
   }, []);
+
+  // const handleSave = async () => {
+  //   axios.put(`/api/repos/comments/${params.id}`, comments).then((res) => {
+  //     console.log(res.data)
+  //     console.log("코멘트 저장 성공")
+  //   }).catch((err) => {
+  //     console.log(err)
+  //     console.log("코멘트 저장 실패")
+  //   })
+  // };
 
   return (
     <div className="w-4/5 flex flex-col items-center">
