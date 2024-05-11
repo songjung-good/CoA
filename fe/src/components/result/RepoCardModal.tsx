@@ -127,7 +127,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
       useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
       console.log(res);
     });
-    await await router.push(`/repo/1`);
+    await await router.push(`/repo/9`);
   };
 
   if (!isOpen) return null;
