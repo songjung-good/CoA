@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import UseAxios from "@/api/common/useAxios";
-import { colorMapping } from "../[id]/_components/colorMap";
+import { colorMapping } from "../../../components/colorMap";
 import IsStar from "@/components/usercard/IsStar";
 import useCommonCodeStore from "@/store/commoncode";
 
