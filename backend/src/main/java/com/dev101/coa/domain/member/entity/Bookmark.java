@@ -19,11 +19,11 @@ public class Bookmark extends BaseEntity {
     @Column(name = "bookmark_id")
     private Long bookmarkId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bookmark_member_id", nullable = false)
     private Member bookmarkMember;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bookmark_target_member_id", nullable = false)
     private Member bookmarkTargetMember;
 }

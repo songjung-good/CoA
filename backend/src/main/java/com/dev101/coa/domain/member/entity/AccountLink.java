@@ -20,11 +20,11 @@ public class AccountLink extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountLinkId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_id", nullable = false)
     private Code code;
 

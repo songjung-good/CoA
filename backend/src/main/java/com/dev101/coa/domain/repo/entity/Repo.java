@@ -24,7 +24,7 @@ public class Repo extends BaseEntity {
     @Column(name = "repo_id")
     private Long repoId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plat_code_id", nullable = false)
     private Code platCode;
 

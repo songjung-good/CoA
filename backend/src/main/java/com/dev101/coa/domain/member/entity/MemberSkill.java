@@ -16,11 +16,11 @@ public class MemberSkill extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberSkillId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_id", nullable = false)
     private Code skillCode;
 }

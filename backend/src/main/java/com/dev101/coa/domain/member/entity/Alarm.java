@@ -22,11 +22,11 @@ public class Alarm extends BaseEntity {
     @Column(name = "alarm_id")
     private Long alarmId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member alarmMember;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "repo_view_id", nullable = true)
     private RepoView alarmRepoView;
 
