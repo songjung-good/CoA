@@ -149,17 +149,21 @@ public class RepoService {
 
         skillIdList.forEach(repoViewSkillRepository::deleteById);
 
-        repoCardEditReqDto.getSkillIdList().forEach((codeId) -> {
-            Code code = codeRepository.findByCodeId(codeId).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
-            RepoViewSkill repoviewSkill = RepoViewSkill.builder()
-                    .repoView(repoView)
-                    .skillCode(code)
-                    .build();
-            repoViewSkillList.add(repoviewSkill);
-            repoViewSkillRepository.save(repoviewSkill);
-        });
+        if (!repoCardEditReqDto.getSkillIdList().isEmpty()) {
 
-        repoView.updateCodeList(repoViewSkillList);
+            repoCardEditReqDto.getSkillIdList().forEach((codeId) -> {
+                Code code = codeRepository.findByCodeId(codeId).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+                RepoViewSkill repoviewSkill = RepoViewSkill.builder()
+                        .repoView(repoView)
+                        .skillCode(code)
+                        .build();
+                repoViewSkillList.add(repoviewSkill);
+                repoViewSkillRepository.save(repoviewSkill);
+            });
+
+
+            repoView.updateCodeList(repoViewSkillList);
+        }
 
         repoRepository.save(repoView.getRepo());
         repoViewRepository.save(repoView);
