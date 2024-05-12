@@ -43,9 +43,11 @@ export async function fetchSearchResults(query: string, type: 'repo' | 'member',
   try {
     if (type === 'repo') {
       const response = await axios.get<{ isSuccess: boolean; message: string; code: number; result: RepoSearchResult[] }>('/api/search/repos', { params });
+      if (!response.data.result) {
+        throw new Error('검색 결과가 없습니다.');
+      }
       return response.data.result.map(repo => ({
         url: repo.repoViewPath,
-        // UUID를 10진수로 변환하여 사용
         memberId: repo.memberUuid,
         memberNickName: repo.memberNickname,
         memberImg: repo.memberImg,
@@ -53,19 +55,21 @@ export async function fetchSearchResults(query: string, type: 'repo' | 'member',
         repoViewTitle: repo.repoViewTitle,
         repoViewSubTitle: repo.repoViewSubtitle,
         repoMemberCnt: repo.repoMemberCnt,
-        skillList: repo.skillList.map(skill => skill.codeName),
+        skillList: repo.skillList ? repo.skillList.map(skill => skill.codeName) : [],
         dateRange: { startDate: repo.repoStartDate, endDate: repo.repoEndDate },
         isMine: repo.isMine
       }));
     } else {
       const response = await axios.get<{ isSuccess: boolean; message: string; code: number; result: MemberSearchResult[] }>('/api/search/members', { params });
-      // 요청 성공 시, 받은 데이터를 적절한 형태로 변환하여 반환
+      if (!response.data.result) {
+        throw new Error('검색 결과가 없습니다.');
+      }
       return response.data.result.map(member => ({
         memberId: member.memberUuid,
         memberNickName: member.memberNickName,
         memberImg: member.memberImg,
         memberIntro: member.memberIntro,
-        skillList: member.skillList.map(skill => skill.codeName),
+        skillList: member.skillList ? member.skillList.map(skill => skill.codeName) : [],
         memberJobCodeId: member.memberJobCodeId,
         isMine: member.isMine,
         isBookmark: member.isBookmark,

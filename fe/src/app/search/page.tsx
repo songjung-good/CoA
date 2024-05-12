@@ -18,10 +18,12 @@ interface RepoSearchResult {
   repoViewSubTitle: string;
   repoMemberCnt: number;
   skillList: string[];
-  dateRange: {};
+  dateRange: {
+    startDate: string;
+    endDate: string;
+  };
   isMine: boolean;
 }
-
 interface MemberSearchResult {
   memberId: string;
   memberNickName: string;
