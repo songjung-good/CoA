@@ -23,17 +23,24 @@ export default function ReadmeEditPage() {
 
   const [title, setTitle] = useState("");
 
-  // useEffect(() => {
-  //   console.log(`현재 선택된 탭: ${tabIndex}`);
-  // }, [tabIndex]);
+  useEffect(() => {
+    // 데이터를 fetch하고, 완료되면 상태를 업데이트
+    const fetchRepoTitle = async () => {
+      const title =
+        await useRepoDetailStore.getState().result.repoCardDto.repoViewTitle;
+      setTitle(title);
+    };
+
+    fetchRepoTitle();
+  }, []);
 
   useEffect(() => {
     setTitle(repoTitle);
   }, []);
 
   const handleTab = (index: number) => {
+    setLastIndex(tabIndex); // 이전 tabIndex 값을 lastIndex로 설정
     setTabIndex(index);
-    setLastIndex(tabIndex);
   };
 
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";
@@ -45,12 +52,12 @@ export default function ReadmeEditPage() {
   return (
     <div className="bg-appGrey1 h-full">
       <div className="flex flex-col items-center pt-4 w-full h-full">
-        {repoTitle ? (
+        {title ? (
           <p className="mb-5 text-xl font-bold sm:text-2xl">
-            {`${repoTitle} 프로젝트 수정`}
+            {`${title} 프로젝트 수정`}
           </p>
         ) : (
-          <p className="mb-5 text-xl font-bold sm:text-2xl">로딩 중...</p>
+          <p className="mb-5 text-xl font-bold sm:text-2xl">로딩 중입니다...</p>
         )}
       </div>
       <div className="flex w-full justify-evenly mb-4">
