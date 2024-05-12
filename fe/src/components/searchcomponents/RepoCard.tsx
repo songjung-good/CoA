@@ -57,7 +57,7 @@ const RepoCard: React.FC<RepoCardProps> = ({ repoInfo }) => {
           />
           <p className="ml-2 font-bold">{repoInfo.memberNickName}</p>
         </div>
-        <div className="flex items-center mb-5">
+        {/* <div className="flex items-center mb-5">
           {repoInfo.url.includes("github") ? (
             <Image
               src="/image/githubSSO.png"
@@ -76,16 +76,16 @@ const RepoCard: React.FC<RepoCardProps> = ({ repoInfo }) => {
           <Link href={repoInfo.url} className="ml-2 font-bold truncate">
             {repoInfo.repoViewTitle}
           </Link>
-        </div>
+        </div> */}
         <p className="text-xl mb-2 truncate">{repoInfo.repoViewSubTitle}</p>
-        <div className="mb-2">
+        {/* <div className="mb-2">
           <p className="font-bold">
             프로젝트 기간: {`${repoInfo.dateRange.startDate} ~ ${repoInfo.dateRange.endDate}`}
           </p>
           <p className="font-bold">
             프로젝트 인원: {repoInfo.repoMemberCnt}명
           </p>
-        </div>
+        </div> */}
         <div className="flex flex-wrap">
           {repoInfo.skillList.map((skill, index) => (
             <span key={index} className="m-1 bg-gray-200 rounded-full px-4 py-1 text-sm">
