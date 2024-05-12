@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+import java.util.UUID;
+
 @Tag(name = "External Controller", description = "외부 관련된 API")
 @RestController
 @RequiredArgsConstructor
@@ -80,6 +83,17 @@ public class ExternalController {
 
         String result = externalApiService.fetchGitlabMembers(projectId, accessToken);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
+
+    @GetMapping("/gitlab/events/{memberUuid}")
+    public ResponseEntity<BaseResponse<Map<String, Object>>> getUserEvents(@PathVariable String memberUuid) throws Exception {
+        Member member = memberRepository.findByMemberUuid(UUID.fromString(memberUuid)).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+
+        String userName = accountLink.getAccountLinkNickname();
+        String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
+        externalApiService.processUserEvents(userName, accessToken);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
 }
