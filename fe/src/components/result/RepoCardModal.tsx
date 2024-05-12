@@ -50,13 +50,17 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   // 결과 데이터
 
   useEffect(() => {
-    setTitle(result.repoCardDto.repoViewTitle);
-    setSubtitle(result.repoCardDto.repoViewSubtitle);
-    setStartDate(result.repoCardDto.repoStartDate);
-    setEndDate(result.repoCardDto.repoEndDate);
-    setMemberCount(result.repoCardDto.repoMemberCnt);
-    setStacks(result.repoCardDto.skillList?.map((skill) => skill.codeId) || []);
-  }, [result]);
+    // 결과 데이터 불러오기 및 초기화
+    const repoData = useResultStore.getState().result.repoCardDto;
+    setTitle(repoData.repoViewTitle || "");
+    setSubtitle(repoData.repoViewSubtitle || "");
+    setStartDate(repoData.repoStartDate || "");
+    setEndDate(repoData.repoEndDate || "");
+    setMemberCount(repoData.repoMemberCnt || 0);
+    setStacks(
+      repoData.skillList ? repoData.skillList.map((skill) => skill.codeId) : [],
+    );
+  }, []);
 
   const handleDateChange = (
     event: React.ChangeEvent<HTMLInputElement>,
