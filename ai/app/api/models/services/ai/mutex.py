@@ -1,5 +1,5 @@
 from langchain.chains.conversation.base import ConversationChain
-from langchain.memory import ConversationSummaryMemory
+from langchain.memory import ConversationSummaryMemory, ConversationBufferMemory
 from langchain_core.language_models import BaseChatModel
 
 
@@ -16,7 +16,7 @@ class AiMutex:
 
         return ConversationChain(
             llm=self.chat_model,
-            memory=ConversationSummaryMemory(memory_key=conversation_id)
+            memory=ConversationBufferMemory()
         )
 
     async def release(self, conversation: ConversationChain) -> None:
