@@ -66,6 +66,6 @@ class Container(DeclarativeContainer):
     )
 
     ai_mutex = providers.Singleton(AiMutex, chat_model)
-    ai_service = providers.Singleton(AiService, chat_model, ai_mutex)
+    ai_service = providers.Singleton(AiService)
 
     analysis_service = providers.Singleton(AnalysisService, redis_client, ai_mutex, ai_service)
