@@ -1,68 +1,69 @@
 'use client'
-
+// 라이브러리
 import React, { useState } from 'react';
 import tw from 'tailwind-styled-components';
-
-// 컴포넌트 import
+// 컴포넌트
 import SearchInput from '@/app/search/SearchInput';
-import SearchResult from '@/components/searchcomponents/SearchResult'; 
-
-// 임시 데이터 import
-import RepoCardDTO from '@/components/searchcomponents/RepoCardDTO';
-import MembercardDTO from '@/components/searchcomponents/MemberInfo';
+import SearchResult from '@/components/searchcomponents/SearchResult';
+import { fetchSearchResults } from '@/api/search/fetchSearchResults';
 
 // 타입 정의
-interface RepoDataType {
-  url: string;
-  memberId: number;
-  memberNickName: string;
+interface RepoSearchResult {
+  memberUuid: string;
+  memberNickname: string;
   memberImg: string;
   repoViewId: number;
+  repoViewPath: string;
   repoViewTitle: string;
-  repoViewSubTitle: string;
-  skillList: string[];
-  dateRange: { startDate: string; endDate: string };
+  repoViewSubtitle: string;
+  repoMemberCnt: number;
+  skillList: Array<{
+    codeId: number;
+    codeName: string;
+  }>;
+  repoStartDate: string;
+  repoEndDate: string;
   isMine: boolean;
-};
+}
 
-interface MemberDataType {
-  memberId: number;
+interface MemberSearchResult {
+  memberUuid: string;
   memberNickName: string;
   memberImg: string;
   memberIntro: string;
-  skillList: string[];
+  skillList: Array<{
+    codeId: number;
+    codeName: string;
+  }>;
+  memberJobCodeId: number;
+  isMine: boolean;
+  isBookmark: boolean;
 }
 
 const SearchPage = () => {
-  const [results, setResults] = useState<RepoDataType[] | MemberDataType[]>([]); 
-  const [searchType, setSearchType] = useState<'repo' | 'user'>('repo');
-
-  // 검색 처리 함수
-  const handleSearch = (query: string, type: 'repo' | 'user') => {
-    setSearchType(type); 
-  
-    if (type === 'repo') {
-      // URL로 레포지토리 데이터 검색
-      const foundData = RepoCardDTO.filter(repo => repo.url === query);
-      setResults(foundData); 
-    } else {
-      // 사용자 이름으로 사용자 데이터 검색 
-      const foundUsers = MembercardDTO.filter(user => 
-        user.memberNickName.toLowerCase().includes(query.toLowerCase())
-      );
-      setResults(foundUsers);
-    }
+  const [results, setResults] = useState<RepoSearchResult[] | MemberSearchResult[]>([]);
+  const [searchQuery, setQuery] = useState<string>(''); // 검색어 상태
+  const [searchType, setSearchType] = useState<'repo' | 'member'>('repo');
+  const [page, setPage] = useState<number>(0);
+  // 검색 실행 함수
+  const handleSearch = async (query: string, type: 'repo' | 'member') => {
+    setQuery(query);
+    setSearchType(type);
+    console.log(searchQuery, searchType, page);
+    const data = await fetchSearchResults(searchQuery, searchType, page);
+    setResults(data); // 검색 결과 상태 업데이트
+    console.log(data);
   };
 
   return (
     <Main>
       <SearchInput onSearch={handleSearch} />
       <ResultComponent>
-        {results.length > 0 && (
-          <SearchResult results={results} type={searchType} /> 
+        {results.length > 0 ? (
+          <SearchResult results={results} type={searchType} />
+        ) : (
+          <p>검색 결과가 없습니다.</p>
         )}
-        {/* 검색 결과가 없을 경우 메시지 표시 */}
-        {results.length === 0 && <p>검색 결과가 없습니다.</p>}
       </ResultComponent>
     </Main>
   );

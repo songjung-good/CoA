@@ -1,11 +1,10 @@
 import React from 'react';
-
-// 컴포넌트 import
+// 컴포넌트
 import RepoCard from './RepoCard';
 
 interface SearchResultProps {
   results: any[];
-  type: 'repo' | 'user';
+  type: string;
 }
 
 const SearchResult: React.FC<SearchResultProps> = ({ results, type }) => {
