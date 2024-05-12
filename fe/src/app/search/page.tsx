@@ -9,32 +9,25 @@ import { fetchSearchResults } from '@/api/search/fetchSearchResults';
 
 // 타입 정의
 interface RepoSearchResult {
-  memberUuid: string;
-  memberNickname: string;
+  url: string,
+  memberId: string;
+  memberNickName: string;
   memberImg: string;
   repoViewId: number;
-  repoViewPath: string;
   repoViewTitle: string;
-  repoViewSubtitle: string;
+  repoViewSubTitle: string;
   repoMemberCnt: number;
-  skillList: Array<{
-    codeId: number;
-    codeName: string;
-  }>;
-  repoStartDate: string;
-  repoEndDate: string;
+  skillList: string[];
+  dateRange: {};
   isMine: boolean;
 }
 
 interface MemberSearchResult {
-  memberUuid: string;
+  memberId: string;
   memberNickName: string;
   memberImg: string;
   memberIntro: string;
-  skillList: Array<{
-    codeId: number;
-    codeName: string;
-  }>;
+  skillList: string[];
   memberJobCodeId: number;
   isMine: boolean;
   isBookmark: boolean;
@@ -49,10 +42,8 @@ const SearchPage = () => {
   const handleSearch = async (query: string, type: 'repo' | 'member') => {
     setQuery(query);
     setSearchType(type);
-    console.log(searchQuery, searchType, page);
     const data = await fetchSearchResults(searchQuery, searchType, page);
     setResults(data); // 검색 결과 상태 업데이트
-    console.log(data);
   };
 
   return (
