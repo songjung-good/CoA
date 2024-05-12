@@ -12,7 +12,11 @@ interface Comment {
   commentTargetString: string;
 }
 
-export default function RepoViewComment() {
+interface RepoViewCommentProps {
+  setShowModal: (show: boolean) => void;
+}
+
+const RepoViewComment: React.FC<RepoViewCommentProps> = ({ setShowModal }) => {
   const result = useRepoDetailStore.getState().result.basicDetailDto;
 
   const axios = UseAxios();
@@ -79,7 +83,7 @@ export default function RepoViewComment() {
   }, []);
 
   const handleSave = async () => {
-    axios
+    await axios
       .put(`/api/repos/comments/${params.id}`, comments)
       .then((res) => {
         console.log(res.data);
@@ -89,6 +93,8 @@ export default function RepoViewComment() {
         console.log(err);
         console.log("코멘트 저장 실패");
       });
+
+    await setShowModal(true);
   };
 
   return (
@@ -140,4 +146,6 @@ export default function RepoViewComment() {
       <button onClick={handleSave}>코멘트 저장하기</button>
     </div>
   );
-}
+};
+
+export default RepoViewComment;

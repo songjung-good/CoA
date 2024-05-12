@@ -7,6 +7,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import useRepoDetailStore from "@/store/repodetail";
 import ReadmeEdit from "./_components/ReadmeEdit";
 import RepoViewComment from "./_components/RepoViewComment";
+import SuccessModal from "@/components/repodetail/SuccessModal";
 
 import "@/app/result/[id]/_components/result.css";
 
@@ -17,6 +18,7 @@ export default function ReadmeEditPage() {
     useRepoDetailStore.getState().result.repoCardDto.repoViewTitle;
   const [tabIndex, setTabIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   const params = useParams();
 
   const [title, setTitle] = useState("");
@@ -35,7 +37,10 @@ export default function ReadmeEditPage() {
   };
 
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";
-  const tabComponents = [<ReadmeEdit />, <RepoViewComment />];
+  const tabComponents = [
+    <ReadmeEdit setShowModal={setShowModal} />,
+    <RepoViewComment setShowModal={setShowModal} />,
+  ];
 
   return (
     <div className="bg-appGrey1 h-full">
@@ -74,6 +79,12 @@ export default function ReadmeEditPage() {
           <button>상세 페이지로 이동</button>
         </Link>
       </div>
+      {showModal && (
+        <SuccessModal
+          title="저장 성공"
+          message="변경사항이 성공적으로 저장되었습니다."
+        />
+      )}
     </div>
   );
 }

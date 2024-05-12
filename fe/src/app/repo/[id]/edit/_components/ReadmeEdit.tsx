@@ -7,11 +7,15 @@ import UseAxios from "@/api/common/useAxios";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
+interface ReadmeEditProps {
+  setShowModal: (show: boolean) => void;
+}
+
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
 });
 
-const ReadmeEdit: NextPage = () => {
+const ReadmeEdit: NextPage<ReadmeEditProps> = ({ setShowModal }) => {
   const [md, setMd] = useState<string | undefined>("");
   const [editorHeight, setEditorHeight] = useState(600); // 기본 높이
   const axios = UseAxios();
@@ -33,9 +37,9 @@ const ReadmeEdit: NextPage = () => {
     return Math.max(calculatedHeight, minEditorHeight);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const data = { readme: md };
-    axios
+    await axios
       .put(`/api/repos/readme/${params.id}`, data)
       .then((res) => {
         console.log("리드미 변경 성공", res);
@@ -43,6 +47,7 @@ const ReadmeEdit: NextPage = () => {
       .catch((err) => {
         console.error("리드미 변경 실패", err);
       });
+    await setShowModal(true);
   };
 
   return (
