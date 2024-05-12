@@ -33,6 +33,10 @@ const ResultReadme: NextPage = () => {
     setEditorHeight(calculateHeight(md || ""));
   }, [md]);
 
+  useEffect(() => {
+    setMd(useRepoDetailStore.getState().result.basicDetailDto.repoReadme);
+  }, []);
+
   // MDEditor props는 노션에 정리해서 올려놨습니다.
   return (
     <div className="flex flex-col justify-center items-center w-full p-4 bg-white shadow-lg rounded-2xl">

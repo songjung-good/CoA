@@ -1,6 +1,8 @@
 "use client";
 
 import tw from "tailwind-styled-components";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import useRepoDetailStore from "@/store/repodetail";
 import ReadmeEdit from "./_components/ReadmeEdit";
@@ -15,6 +17,7 @@ export default function ReadmeEditPage() {
     useRepoDetailStore.getState().result.repoCardDto.repoViewTitle;
   const [tabIndex, setTabIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(0);
+  const params = useParams();
 
   const [title, setTitle] = useState("");
 
@@ -66,6 +69,11 @@ export default function ReadmeEditPage() {
           </div>
         </CSSTransition>
       </TransitionGroup>
+      <div className="flex justify-center">
+        <Link href={`/repo/${params.id}`}>
+          <button>상세 페이지로 이동</button>
+        </Link>
+      </div>
     </div>
   );
 }

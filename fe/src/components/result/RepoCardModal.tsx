@@ -44,8 +44,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   const [memberCount, setMemberCount] = useState<number>(
     result.repoCardDto.repoMemberCnt || 0,
   );
-  const [stacks, setStacks] = useState<string[]>(
-    result.repoCardDto.skillList?.map((skill) => skill.codeName) || [],
+  const [stacks, setStacks] = useState<number[]>(
+    result.repoCardDto.skillList?.map((skill) => skill.codeId) || [],
   );
   // 결과 데이터
 
@@ -55,9 +55,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     setStartDate(result.repoCardDto.repoStartDate);
     setEndDate(result.repoCardDto.repoEndDate);
     setMemberCount(result.repoCardDto.repoMemberCnt);
-    setStacks(
-      result.repoCardDto.skillList?.map((skill) => skill.codeName) || [],
-    );
+    setStacks(result.repoCardDto.skillList?.map((skill) => skill.codeId) || []);
   }, [result]);
 
   const handleDateChange = (
@@ -79,10 +77,15 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   }, [response]);
 
   const handleChangeStack = (value: string) => {
-    if (value && !stacks.includes(value)) {
-      setStacks((prev) => [...prev, value]);
+    // 선택된 value를 기반으로 key를 찾아 stacks 배열에 추가
+    const selectedOption = skillOptions.find(
+      (option) => option.value === value,
+    );
+    const selectedKey = selectedOption ? selectedOption.key : "";
+    if (selectedKey && !stacks.includes(parseInt(selectedKey))) {
+      setStacks((prev) => [...prev, parseInt(selectedKey)]);
     }
-    setSelectedStack(value);
+    setSelectedStack(selectedKey); // selectedStack 상태도 key로 관리
   };
 
   const handleRemoveStack = (index: number) => {
@@ -103,9 +106,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     //   repoStartDate: startDate,
     //   repoEndDate: endDate,
     //   repoMemberCnt: memberCount,
-    //   repoViewSkillList: stacks.map((stack) => ({
-    //     skillCode: parseInt(stack),
-    //   })), // 정수 타입으로 변경
+    //   skillIdList: stacks.map((stack) => stack),
     // };
 
     // await axios.post(`/api/repos/${analyzeId}`, data).then((res) => {
@@ -252,15 +253,15 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
             <div className="mb-2">사용한 기술 스택을 추가해주세요.</div>
           ) : (
             <ul className="flex flex-wrap">
-              {stacks.map((stack, index) => (
+              {stacks.map((key, index) => (
                 <li
                   key={index}
                   className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 hover:cursor-pointer shadow-lg rounded-lg"
                   onClick={() => handleRemoveStack(index)}
                 >
-                  {stack}
-                  {"  "}
-                  <div className=" font-bold ml-2 text-xs text-red-600">
+                  {skillOptions.find((option) => parseInt(option.key) === key)
+                    ?.value || key}
+                  <div className="font-bold ml-2 text-xs text-red-600">
                     &#10005;
                   </div>
                 </li>

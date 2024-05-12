@@ -34,7 +34,7 @@ const ReadmeEdit: NextPage = () => {
   };
 
   const handleSave = () => {
-    const data = { editReadmeReq: md };
+    const data = { readme: md };
     axios
       .put(`/api/repos/readme/${params.id}`, data)
       .then((res) => {

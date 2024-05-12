@@ -78,15 +78,18 @@ export default function RepoViewComment() {
     setComments(Array.isArray(initialComments) ? initialComments : []);
   }, []);
 
-  // const handleSave = async () => {
-  //   axios.put(`/api/repos/comments/${params.id}`, comments).then((res) => {
-  //     console.log(res.data)
-  //     console.log("코멘트 저장 성공")
-  //   }).catch((err) => {
-  //     console.log(err)
-  //     console.log("코멘트 저장 실패")
-  //   })
-  // };
+  const handleSave = async () => {
+    axios
+      .put(`/api/repos/comments/${params.id}`, comments)
+      .then((res) => {
+        console.log(res.data);
+        console.log("코멘트 저장 성공");
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("코멘트 저장 실패");
+      });
+  };
 
   return (
     <div className="w-4/5 flex flex-col items-center">
@@ -134,7 +137,7 @@ export default function RepoViewComment() {
           ))}
         </div>
       )}
-      <button>코멘트 저장하기</button>
+      <button onClick={handleSave}>코멘트 저장하기</button>
     </div>
   );
 }
