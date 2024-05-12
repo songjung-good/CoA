@@ -52,6 +52,9 @@ export default function MyUserCard() {
     }
   }, [UUID]);
 
+  const closeEdit = () => {
+    setIsEdit(false);
+  };
   return (
     <>
       <section className="card flex flex-col gap-4 ">
@@ -99,14 +102,15 @@ export default function MyUserCard() {
             </li>
           ))}
         </div>
+        {isEdit && (
+          <MyInfoEditCard
+            intro={myData?.memberIntro}
+            skills={myData?.skillList}
+            jop={myData?.memberJobCodeId.toString() || ""}
+            closeEdit={closeEdit}
+          />
+        )}
       </section>
-      {isEdit && (
-        <MyInfoEditCard
-          intro={myData?.memberIntro}
-          skills={myData?.skillList}
-          jop={myData?.memberJobCodeId.toString()}
-        />
-      )}
     </>
   );
 }
