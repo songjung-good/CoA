@@ -182,7 +182,9 @@ public class MemberService {
         Code jobCode = codeRepository.findByCodeId(memberCardReq.getJobCodeId())
                 .orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
 
-        MemberJob memberJob = new MemberJob(member, jobCode);
+
+        MemberJob memberJob = memberJobRepository.findByMember(member);
+        memberJob.jobUpdate(jobCode);
         memberJobRepository.save(memberJob);
 
         List<MemberSkill> currentSkillList = memberSkillRepository.findAllByMember(member);

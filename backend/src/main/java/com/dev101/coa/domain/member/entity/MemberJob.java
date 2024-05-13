@@ -20,12 +20,12 @@ public class MemberJob extends BaseEntity {
     private Long memberJobId;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_id", nullable = false)
     private Code jobCode;
 
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -33,5 +33,9 @@ public class MemberJob extends BaseEntity {
     public MemberJob(Member member, Code jobCode) {
         this.member = member;
         this.jobCode = jobCode;
+    }
+
+    public void jobUpdate(Code code) {
+        this.jobCode = code;
     }
 }

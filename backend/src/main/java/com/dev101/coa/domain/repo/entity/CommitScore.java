@@ -19,7 +19,7 @@ public class CommitScore extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commitScoreId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "repo_view_id", nullable = false)
     private RepoView repoView;
 

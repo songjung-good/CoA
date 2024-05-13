@@ -19,11 +19,11 @@ public class LineOfCode extends BaseEntity {
     @Column(name = "loc_id")
     private Long locId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "repo_view_id", nullable = false)
     private RepoView repoView;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skill_code_id")
     private Code skillCode;
 
