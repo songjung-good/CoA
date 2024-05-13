@@ -55,32 +55,6 @@ const UserAvatar = ({ src, alt, isSelected, ...props }: UserAvatarProps) => {
   );
 };
 
-// axios를 이용해 서버로 사용자 데이터를 요청
-const requestAnalysis = async (
-  repoUrl: string,
-  userName: any,
-  projectId: any,
-) => {
-  const axios = UseAxios();
-  try {
-    await axios
-      .post("/api/repos/analysis", {
-        repoUrl,
-        userName,
-        projectId,
-      })
-      .then((res) => {
-        console.log(res);
-        useAnalyzingStore.getState().setAnalyzeId(res.data.result);
-      })
-      .then((res) => {
-        useAnalyzingStore.getState().startAnalysis();
-      });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 // 모달을 구성
 const UserModal: React.FC<UserModalProps> = ({ userData, onClose, url }) => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -92,6 +66,35 @@ const UserModal: React.FC<UserModalProps> = ({ userData, onClose, url }) => {
   const closeModal = () => {
     setSelectedUser(null);
     onClose(); // 부모 컴포넌트로부터 받은 모달 닫기 함수 호출
+  };
+
+  // axios를 이용해 서버로 사용자 데이터를 요청
+  const requestAnalysis = async (
+    repoUrl: string,
+    userName: any,
+    projectId: any,
+  ) => {
+    const axios = UseAxios();
+    try {
+      await axios
+        .post("/api/repos/analysis", {
+          repoUrl,
+          userName,
+          projectId,
+        })
+        .then((res) => {
+          console.log(res);
+          useAnalyzingStore.getState().setAnalyzeId(res.data.result);
+        })
+        .then((res) => {
+          useAnalyzingStore.getState().startAnalysis();
+        })
+        .then((res) => {
+          onClose();
+        });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

@@ -4,6 +4,7 @@ import useRepoDetailStore from "@/store/repodetail";
 import CommentItem from "./CommentItem";
 import UseAxios from "@/api/common/useAxios";
 import { useParams } from "next/navigation";
+import CommonButton from "@/components/result/CommonButton";
 
 interface Comment {
   commentStartIndex: number;
@@ -143,7 +144,9 @@ const RepoViewComment: React.FC<RepoViewCommentProps> = ({ setShowModal }) => {
           ))}
         </div>
       )}
-      <button onClick={handleSave}>코멘트 저장하기</button>
+      <div className="mb-4">
+        <CommonButton onClick={handleSave} text="코멘트 저장" />
+      </div>
     </div>
   );
 };

@@ -101,38 +101,40 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     // 폼 제출 로직 구현, 예: API 호출 등
     await console.log("저장!");
     const analyzeId = useAnalyzingStore.getState().analyzeId;
-    let repoViewId = 0;
+    let repoViewId = "";
     // 여기에 수정 로직을 추가하세요
     // 분석 저장 로직 ------------------------------------------------------------------
-    // const data = {
-    //   repoViewTitle: title,
-    //   repoViewSubtitle: subtitle,
-    //   repoStartDate: startDate,
-    //   repoEndDate: endDate,
-    //   repoMemberCnt: memberCount,
-    //   skillIdList: stacks.map((stack) => stack),
-    // };
+    const data = {
+      repoViewTitle: title,
+      repoViewSubtitle: subtitle,
+      repoStartDate: startDate,
+      repoEndDate: endDate,
+      repoMemberCnt: memberCount,
+      skillIdList: stacks.map((stack) => stack),
+    };
 
-    // await axios.post(`/api/repos/${analyzeId}`, data).then((res) => {
-    //   repoViewId = res.data.result;
-    // });
+    console.log(data);
 
-    // await axios.get(`/api/repos/${repoViewId}`).then((res) => {
-    //   useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
-    //   console.log(res);
-    // });
+    await axios.post(`/api/repos/${analyzeId}`, data).then((res) => {
+      repoViewId = res.data.result;
+    });
 
-    // await router.push(`/repo/${repoViewId}`);
+    await axios.get(`/api/repos/${repoViewId}`).then((res) => {
+      useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
+      console.log(res);
+    });
+
+    await router.push(`/repo/${repoViewId}`);
     // 분석 저장 로직 ------------------------------------------------------------------
 
     // 수정 완료 후 모달 닫기
     await onClose();
 
-    await axios.get(`/api/repos/9`).then((res) => {
-      useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
-      console.log(res);
-    });
-    await await router.push(`/repo/9`);
+    // await axios.get(`/api/repos/9`).then((res) => {
+    //   useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
+    //   console.log(res);
+    // });
+    // await await router.push(`/repo/9`);
   };
 
   if (!isOpen) return null;

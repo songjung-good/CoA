@@ -3,7 +3,7 @@ import SearchBar from "./SearchBar";
 import LoadingAnalyzing from "./LoadingAnalyzing";
 import Link from "next/link";
 import AuthButton from "./AuthButton";
-import Notification from "../notification/Notification";
+import Gauge from "./Gauge";
 import RequestApi from "./RequestApi";
 import { cookies } from "next/headers";
 
@@ -13,7 +13,7 @@ export default function Header() {
   const hasJWT = cookieStore.has("JWT");
 
   return (
-    <header className="p-4 flex flex-row justify-between items-center">
+    <header className="p-4 flex flex-row w-full justify-between items-center">
       <Link href="/main">
         <div className="flex flex-row items-center">
           <Image
@@ -34,8 +34,11 @@ export default function Header() {
           </div>
         </div>
       </Link>
+      <div className="w-1/2">
+        <Gauge />
+      </div>
       <div className="flex gap-2">
-        <Notification hasJWT={hasJWT} />
+        {/* <Notification hasJWT={hasJWT} /> */}
         <LoadingAnalyzing hasJWT={hasJWT} />
         <SearchBar hasJWT={hasJWT} />
         <AuthButton hasJWT={hasJWT} />
