@@ -6,6 +6,8 @@ import com.dev101.coa.domain.repo.entity.RepoView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,7 +19,9 @@ public interface RepoViewRepository extends JpaRepository<RepoView, Long> {
 
     List<RepoView> findAllByRepo(Repo repo);
 
-    Page<RepoView> findAllByRepo(Repo repo, Pageable pageable);
+    // 쿼리 메소드를 사용하여 repoId 리스트에 있는 모든 RepoView 검색
+    @Query("SELECT rv FROM RepoView rv WHERE rv.repo.repoId IN :repoIdList")
+    Page<RepoView> findByRepoIdList(@Param("repoIdList") List<Long> repoIdList, Pageable pageable);
 
     List<RepoView> findAllByMember(Member member);
 }
