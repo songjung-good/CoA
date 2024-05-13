@@ -71,7 +71,7 @@ export default function LoadingAnalyzing({ hasJWT }: { hasJWT: boolean }) {
             {isCompleted ? (
               <div>
                 <button
-                  className="p-1 bg-appBlue1 text-white font-bold rounded-lg"
+                  className="px-4 py-1 bg-appBlue1 text-white font-bold rounded-lg"
                   onClick={handleCompletedButton}
                 >
                   분석 결과 확인
