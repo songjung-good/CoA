@@ -64,7 +64,6 @@ public class AuthenticationService {
 
             memberRepository.save(member);
             MemberJob memberJob = new MemberJob(member, jobCode);
-            System.out.println("memberJob = " + memberJob);
             memberJobRepository.save(memberJob);
         } else {
             member.updateMemberNickname(userName); // 혹은 다른 업데이트 로직
