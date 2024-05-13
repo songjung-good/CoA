@@ -104,8 +104,8 @@ export default function MyUserCard() {
         </div>
         {isEdit && (
           <MyInfoEditCard
-            intro={myData?.memberIntro}
-            skills={myData?.skillList}
+            intro={myData?.memberIntro || ""}
+            skills={myData?.skillList || []}
             jop={myData?.memberJobCodeId.toString() || ""}
             closeEdit={closeEdit}
           />
