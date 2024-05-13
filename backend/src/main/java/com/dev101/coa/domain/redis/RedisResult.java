@@ -27,6 +27,7 @@ public class RedisResult {
     private LocalDate repoEndDate;
     private Integer repoMemberCnt;
     private AiResultDto result;
+    private String status;
     @TimeToLive
     private Long expireSec;
 

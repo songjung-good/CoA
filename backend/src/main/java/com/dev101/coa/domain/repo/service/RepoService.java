@@ -68,7 +68,6 @@ public class RepoService {
     private final EncryptionUtils encryptionUtils;
 
 
-
     public void editReadme(Long memberId, Long repoViewId, String editReadmeReq) {
         Member loginMember = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
@@ -355,19 +354,24 @@ public class RepoService {
         return map;
     }
 
-    private JsonObject getJsonObject(String url, String accessToken) {
-        String jsonStrResponse = webClient.get()
-                .uri(url)
-                .header("Authorization", "Bearer " + accessToken)  // Authorization 헤더 추가
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()  // 응답을 검색
-                .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
-                .block();  // Mono를 블로킹하여 실제 값 가져오기
+    private JsonObject getJsonObject(String url, String accessToken){
+        try {
+            String jsonStrResponse = webClient.get()
+                    .uri(url)
+                    .header("Authorization", "Bearer " + accessToken)  // Authorization 헤더 추가
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()  // 응답을 검색
+                    .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
+                    .block();  // Mono를 블로킹하여 실제 값 가져오기
 
-        if (jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
+            if (jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
 
-        // 문자열 -> json object
-        return JsonParser.parseString(jsonStrResponse).getAsJsonObject();
+            // 문자열 -> json object
+            return JsonParser.parseString(jsonStrResponse).getAsJsonObject();
+        } catch (Exception e) {
+            System.out.println("e = " + e);
+            throw new BaseException(StatusCode.RETRY_AI_ANALYSIS);
+        }
     }
 
     private Integer getRepoMemberCnt(String url, String accessToken) {
@@ -441,6 +445,8 @@ public class RepoService {
             String userName = split[split.length - 2];
 
             JsonObject jsonObject = getJsonObject(gitHubApiUrl + "/repos/" + userName + "/" + repoName, accessToken);
+//            JsonObject jsonObject = getJsonObject(gitHubApiUrl + "/repos/" + "ffjfjfjjfjffjfjffjfjfjfjffjjfjfjfjfjfjfjfjjfjfjf" + "/" + "Spring-Pay-System", accessToken);
+
             projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "pushed_at");
 
             repoMemberCnt = getRepoMemberCnt(gitHubApiUrl + "/repos/" + userName + "/" + repoName + "/" + "contributors", accessToken);
@@ -492,6 +498,7 @@ public class RepoService {
                 .repoStartDate(projectPeriod.get("repoStartDate"))
                 .repoEndDate(projectPeriod.get("repoEndDate"))
                 .repoMemberCnt(repoMemberCnt)
+                .status("000")
                 .expireSec(86400L)
                 .build());
 
@@ -605,6 +612,13 @@ public class RepoService {
         if (!Objects.equals(memberId, redisMemberId)) {
             // 일치하지 않으면 예외 발생
             throw new BaseException(StatusCode.REPO_REQ_MEMBER_NOT_MATCH);
+        }
+
+        // 분석 상태를 체크한다.
+        // PROCESSING 이나 DONE 이 아니면 redis 데이터를 삭제하고 예외를 발생시킨다.
+        if (!redisData.getStatus().equals("100") && !redisData.getStatus().equals("200")) {
+            redisRepoRepository.deleteById(analysisId);
+            throw new BaseException(StatusCode.RETRY_AI_ANALYSIS);
         }
 
         // 일치하면 요소에서 percentage를 가져온다.
@@ -721,6 +735,7 @@ public class RepoService {
                 .repoEndDate(LocalDate.now())
                 .result(resultTest)
                 .repoMemberCnt(6)
+                .status("200")
                 .expireSec(86400L)
                 .build();
 
