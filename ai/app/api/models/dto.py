@@ -114,7 +114,7 @@ class AnalysisDataDto:
             'isOwn': self.is_own,
             'percentage': self.percentage,
             'result': self.result.to_camel_dict() if self.result else None,
-            'status': int(self.status)
+            'status': str(self.status)
         }
 
     @staticmethod
