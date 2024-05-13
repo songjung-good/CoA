@@ -2,7 +2,6 @@
 
 import tw from "tailwind-styled-components";
 import { useState, useEffect, useRef } from "react";
-
 import AnalysisButton from "../components/landing/AnalysisButton.tsx";
 import IntroduceButton from "../components/landing/IntroduceButton.tsx";
 import IntroduceText from "@/components/landing/IntroduceText.tsx";
