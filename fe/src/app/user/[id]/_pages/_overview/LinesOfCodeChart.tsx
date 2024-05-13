@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { useEffect, useRef } from "react";
-import { colorMapping } from "../../_components/colorMap";
+import { colorMapping } from "../../../../../components/colorMap";
 import repositoryStore from "@/store/repos";
 
 const LinesOfCodeChart = () => {

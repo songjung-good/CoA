@@ -23,7 +23,7 @@ interface UserStore {
 
 const userStore = create<UserStore>((set) => ({
   UUID: "",
-  userImage: "/image/chun.png",
+  userImage: "/image/LoadingSpinner.gif",
   AuthUserName: "",
   githubUserName: null,
   isGithubToken: null,

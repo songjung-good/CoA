@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { LanguageStats } from "@/api/userPage/apiLinesOfCode";
-import { colorMapping } from "../../_components/colorMap";
+import { colorMapping } from "../../../../../components/colorMap";
 
 interface DataType {
   language: string;

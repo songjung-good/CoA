@@ -29,7 +29,7 @@ export const getAlarmCountData = async () => {
     const response = await axiosInstance.get<getAlarmCountDataResponse>(
       "/api/member/alarms/count",
     );
-    console.log(response.data.result);
+    // console.log(response.data.result);
     return response.data.result;
   } catch (error) {
     console.error("'/api/common/code'요청 에러", error);

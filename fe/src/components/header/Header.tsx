@@ -34,11 +34,13 @@ export default function Header() {
           </div>
         </div>
       </Link>
-      <SearchBar hasJWT={hasJWT} />
-      <LoadingAnalyzing hasJWT={hasJWT} />
-      <Notification hasJWT={hasJWT} />
-      <AuthButton hasJWT={hasJWT} />
-      <RequestApi />
+      <div className="flex gap-2">
+        <Notification hasJWT={hasJWT} />
+        <LoadingAnalyzing hasJWT={hasJWT} />
+        <SearchBar hasJWT={hasJWT} />
+        <AuthButton hasJWT={hasJWT} />
+        <RequestApi />
+      </div>
     </header>
   );
 }

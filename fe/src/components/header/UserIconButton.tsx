@@ -71,7 +71,7 @@ export default function UserIconButton() {
       >
         <div
           style={{
-            border: "solid",
+            // border: "solid",
             borderRadius: "50%",
             overflow: "hidden",
           }}

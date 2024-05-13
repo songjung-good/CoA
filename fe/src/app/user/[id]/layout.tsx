@@ -1,4 +1,4 @@
-import UserCard from "@/components/usercard/UserCard";
+import MyUserCard from "@/components/usercard/MyUserCard";
 
 export default function UserPageLayout({
   children,
@@ -8,7 +8,7 @@ export default function UserPageLayout({
   return (
     <main className="bg-appGrey1 flex flex-col justify-center items-center">
       <div className="max-w-screen-xl w-full flex flex-col py-4 gap-4">
-        <UserCard />
+        <MyUserCard />
         {children}
       </div>
     </main>
