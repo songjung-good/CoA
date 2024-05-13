@@ -67,7 +67,7 @@ const RepoInfo: React.FC = () => {
             </div>
           </div>
           <div className="flex-col justify-end">
-            <div className="flex flex-row justify-end">
+            <div className="flex flex-row justify-start lg:justify-end">
               {repoInfo.skillList === null ? (
                 <div className="font-bold">
                   프로젝트에 사용한 기술 스택을 추가해주세요

@@ -120,7 +120,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div ref={titleRef} className=" overflow-hidden bg-appGrey1">
+    <div ref={titleRef} className="bg-appGrey1">
       <div className="relative">
         <LandingCarousel />
       </div>
@@ -128,7 +128,7 @@ export default function HomePage() {
         <Slogan>코드만 치세요. 분석은 우리가 할께요.</Slogan>
         <Title>CoA</Title>
         <IntroduceText />
-        <AnalysisButton buttonRef={buttonRef} content="분석 하기" url="/main" />
+        <AnalysisButton buttonRef={buttonRef} content="시작하기" url="/main" />
         <IntroduceButton content="서비스 알아보기" onClick={scrollToService} />
         <IntroBar>
           <h3 className="text-3xl font-bold">CoA = Commit Analyzer</h3>
@@ -210,7 +210,7 @@ my-8
 `;
 
 const Slogan = tw.h2`
-text-center
+text-center font-extrabold
 `;
 
 const IntroBar = tw.div`
@@ -219,4 +219,5 @@ mt-5
 `;
 
 const ServiceComponent = tw.div`
+overflow-y-hidden
 `;
