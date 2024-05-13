@@ -24,4 +24,8 @@ public interface RepoViewRepository extends JpaRepository<RepoView, Long> {
     Page<RepoView> findByRepoIdList(@Param("repoIdList") List<Long> repoIdList, Pageable pageable);
 
     List<RepoView> findAllByMember(Member member);
+
+    // repoViewId가 주어진 리스트에 포함되는 모든 RepoView 검색
+    @Query("SELECT rv FROM RepoView rv WHERE rv.repoViewId IN :repoViewIdList")
+    List<RepoView> findByRepoViewIdList(@Param("repoViewIdList") List<Long> repoViewIdList);
 }
