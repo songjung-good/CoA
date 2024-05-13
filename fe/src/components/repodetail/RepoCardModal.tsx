@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
+import { useParams } from "next/navigation";
 import useCommonCodeStore from "@/store/commoncode";
 // import useRepoDetailStore from "@/store/result";
 import useRepoDetailStore from "@/store/repodetail";
@@ -22,6 +22,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   const { response } = useCommonCodeStore.getState();
   const [selectedStack, setSelectedStack] = useState("");
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
+  const axios = UseAxios();
+  const params = useParams();
 
   // 결과 데이터
   const { result } = useRepoDetailStore((state) => state);
@@ -40,8 +42,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   const [memberCount, setMemberCount] = useState<number>(
     result.repoCardDto.repoMemberCnt || 0,
   );
-  const [stacks, setStacks] = useState<string[]>(
-    result.repoCardDto.skillList?.map((skill) => skill.codeName) || [],
+  const [stacks, setStacks] = useState<number[]>(
+    result.repoCardDto.skillList?.map((skill) => skill.codeId) || [],
   );
   // 결과 데이터
 
@@ -51,9 +53,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     setStartDate(result.repoCardDto.repoStartDate);
     setEndDate(result.repoCardDto.repoEndDate);
     setMemberCount(result.repoCardDto.repoMemberCnt);
-    setStacks(
-      result.repoCardDto.skillList?.map((skill) => skill.codeName) || [],
-    );
+    setStacks(result.repoCardDto.skillList?.map((skill) => skill.codeId) || []);
   }, [result]);
 
   const handleDateChange = (
@@ -75,22 +75,49 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   }, [response]);
 
   const handleChangeStack = (value: string) => {
-    if (value && !stacks.includes(value)) {
-      setStacks((prev) => [...prev, value]);
+    // 선택된 value를 기반으로 key를 찾아 stacks 배열에 추가
+    const selectedOption = skillOptions.find(
+      (option) => option.value === value,
+    );
+    const selectedKey = selectedOption ? selectedOption.key : "";
+    if (selectedKey && !stacks.includes(parseInt(selectedKey))) {
+      setStacks((prev) => [...prev, parseInt(selectedKey)]);
     }
-    setSelectedStack(value);
+    setSelectedStack(selectedKey); // selectedStack 상태도 key로 관리
   };
 
   const handleRemoveStack = (index: number) => {
     setStacks((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
     // 폼 제출 로직 구현, 예: API 호출 등
     console.log("수정 API 구현해라!");
     // 여기에 수정 로직을 추가하세요
+    const data = {
+      repoViewTitle: title,
+      repoViewSubtitle: subtitle,
+      repoStartDate: startDate,
+      repoEndDate: endDate,
+      repoMemberCnt: memberCount,
+      skillIdList: stacks.map((stack) => stack),
+    };
+    await axios
+      .put(`/api/repos/repoCard/${params.id}`, data)
+      .then((res) => {
+        console.log("데이터 변경 성공");
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("데이터 변경 실패");
+      });
 
+    // 수정 후 데이터 store 변경
+    await axios.get(`/api/repos/${params.id}`).then((res) => {
+      useRepoDetailStore.getState().updateResultState(res.data);
+    });
     // 수정 완료 후 모달 닫기
     onClose();
   };
@@ -217,15 +244,15 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
             <div className="mb-2">사용한 기술 스택을 추가해주세요.</div>
           ) : (
             <ul className="flex flex-wrap">
-              {stacks.map((stack, index) => (
+              {stacks.map((key, index) => (
                 <li
                   key={index}
                   className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 hover:cursor-pointer shadow-lg rounded-lg"
                   onClick={() => handleRemoveStack(index)}
                 >
-                  {stack}
-                  {"  "}
-                  <div className=" font-bold ml-2 text-xs text-red-600">
+                  {skillOptions.find((option) => parseInt(option.key) === key)
+                    ?.value || key}
+                  <div className="font-bold ml-2 text-xs text-red-600">
                     &#10005;
                   </div>
                 </li>

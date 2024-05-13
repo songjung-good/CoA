@@ -44,21 +44,23 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   const [memberCount, setMemberCount] = useState<number>(
     result.repoCardDto.repoMemberCnt || 0,
   );
-  const [stacks, setStacks] = useState<string[]>(
-    result.repoCardDto.skillList?.map((skill) => skill.codeName) || [],
+  const [stacks, setStacks] = useState<number[]>(
+    result.repoCardDto.skillList?.map((skill) => skill.codeId) || [],
   );
   // 결과 데이터
 
   useEffect(() => {
-    setTitle(result.repoCardDto.repoViewTitle);
-    setSubtitle(result.repoCardDto.repoViewSubtitle);
-    setStartDate(result.repoCardDto.repoStartDate);
-    setEndDate(result.repoCardDto.repoEndDate);
-    setMemberCount(result.repoCardDto.repoMemberCnt);
+    // 결과 데이터 불러오기 및 초기화
+    const repoData = useResultStore.getState().result.repoCardDto;
+    setTitle(repoData.repoViewTitle || "");
+    setSubtitle(repoData.repoViewSubtitle || "");
+    setStartDate(repoData.repoStartDate || "");
+    setEndDate(repoData.repoEndDate || "");
+    setMemberCount(repoData.repoMemberCnt || 0);
     setStacks(
-      result.repoCardDto.skillList?.map((skill) => skill.codeName) || [],
+      repoData.skillList ? repoData.skillList.map((skill) => skill.codeId) : [],
     );
-  }, [result]);
+  }, []);
 
   const handleDateChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -79,10 +81,15 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   }, [response]);
 
   const handleChangeStack = (value: string) => {
-    if (value && !stacks.includes(value)) {
-      setStacks((prev) => [...prev, value]);
+    // 선택된 value를 기반으로 key를 찾아 stacks 배열에 추가
+    const selectedOption = skillOptions.find(
+      (option) => option.value === value,
+    );
+    const selectedKey = selectedOption ? selectedOption.key : "";
+    if (selectedKey && !stacks.includes(parseInt(selectedKey))) {
+      setStacks((prev) => [...prev, parseInt(selectedKey)]);
     }
-    setSelectedStack(value);
+    setSelectedStack(selectedKey); // selectedStack 상태도 key로 관리
   };
 
   const handleRemoveStack = (index: number) => {
@@ -93,17 +100,39 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
     // 폼 제출 로직 구현, 예: API 호출 등
     await console.log("저장!");
+    const analyzeId = useAnalyzingStore.getState().analyzeId;
+    let repoViewId = 0;
     // 여기에 수정 로직을 추가하세요
+    // 분석 저장 로직 ------------------------------------------------------------------
+    // const data = {
+    //   repoViewTitle: title,
+    //   repoViewSubtitle: subtitle,
+    //   repoStartDate: startDate,
+    //   repoEndDate: endDate,
+    //   repoMemberCnt: memberCount,
+    //   skillIdList: stacks.map((stack) => stack),
+    // };
+
+    // await axios.post(`/api/repos/${analyzeId}`, data).then((res) => {
+    //   repoViewId = res.data.result;
+    // });
+
+    // await axios.get(`/api/repos/${repoViewId}`).then((res) => {
+    //   useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
+    //   console.log(res);
+    // });
+
+    // await router.push(`/repo/${repoViewId}`);
+    // 분석 저장 로직 ------------------------------------------------------------------
 
     // 수정 완료 후 모달 닫기
     await onClose();
 
-    const analyzeId = useAnalyzingStore.getState().analyzeId;
     await axios.get(`/api/repos/9`).then((res) => {
       useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
       console.log(res);
     });
-    await await router.push(`/repo/1`);
+    await await router.push(`/repo/9`);
   };
 
   if (!isOpen) return null;
@@ -228,15 +257,15 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
             <div className="mb-2">사용한 기술 스택을 추가해주세요.</div>
           ) : (
             <ul className="flex flex-wrap">
-              {stacks.map((stack, index) => (
+              {stacks.map((key, index) => (
                 <li
                   key={index}
                   className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 hover:cursor-pointer shadow-lg rounded-lg"
                   onClick={() => handleRemoveStack(index)}
                 >
-                  {stack}
-                  {"  "}
-                  <div className=" font-bold ml-2 text-xs text-red-600">
+                  {skillOptions.find((option) => parseInt(option.key) === key)
+                    ?.value || key}
+                  <div className="font-bold ml-2 text-xs text-red-600">
                     &#10005;
                   </div>
                 </li>

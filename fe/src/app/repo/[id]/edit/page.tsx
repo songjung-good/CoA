@@ -1,10 +1,13 @@
 "use client";
 
 import tw from "tailwind-styled-components";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import useRepoDetailStore from "@/store/repodetail";
 import ReadmeEdit from "./_components/ReadmeEdit";
 import RepoViewComment from "./_components/RepoViewComment";
+import SuccessModal from "@/components/repodetail/SuccessModal";
 
 import "@/app/result/[id]/_components/result.css";
 
@@ -15,34 +18,46 @@ export default function ReadmeEditPage() {
     useRepoDetailStore.getState().result.repoCardDto.repoViewTitle;
   const [tabIndex, setTabIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const params = useParams();
 
   const [title, setTitle] = useState("");
 
-  // useEffect(() => {
-  //   console.log(`현재 선택된 탭: ${tabIndex}`);
-  // }, [tabIndex]);
+  useEffect(() => {
+    // 데이터를 fetch하고, 완료되면 상태를 업데이트
+    const fetchRepoTitle = async () => {
+      const title =
+        await useRepoDetailStore.getState().result.repoCardDto.repoViewTitle;
+      setTitle(title);
+    };
+
+    fetchRepoTitle();
+  }, []);
 
   useEffect(() => {
     setTitle(repoTitle);
   }, []);
 
   const handleTab = (index: number) => {
+    setLastIndex(tabIndex); // 이전 tabIndex 값을 lastIndex로 설정
     setTabIndex(index);
-    setLastIndex(tabIndex);
   };
 
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";
-  const tabComponents = [<ReadmeEdit />, <RepoViewComment />];
+  const tabComponents = [
+    <ReadmeEdit setShowModal={setShowModal} />,
+    <RepoViewComment setShowModal={setShowModal} />,
+  ];
 
   return (
     <div className="bg-appGrey1 h-full">
       <div className="flex flex-col items-center pt-4 w-full h-full">
-        {repoTitle ? (
+        {title ? (
           <p className="mb-5 text-xl font-bold sm:text-2xl">
-            {`${repoTitle} 프로젝트 수정`}
+            {`${title} 프로젝트 수정`}
           </p>
         ) : (
-          <p className="mb-5 text-xl font-bold sm:text-2xl">로딩 중...</p>
+          <p className="mb-5 text-xl font-bold sm:text-2xl">로딩 중입니다...</p>
         )}
       </div>
       <div className="flex w-full justify-evenly mb-4">
@@ -66,6 +81,17 @@ export default function ReadmeEditPage() {
           </div>
         </CSSTransition>
       </TransitionGroup>
+      <div className="flex justify-center">
+        <Link href={`/repo/${params.id}`}>
+          <button>상세 페이지로 이동</button>
+        </Link>
+      </div>
+      {showModal && (
+        <SuccessModal
+          title="저장 성공"
+          message="변경사항이 성공적으로 저장되었습니다."
+        />
+      )}
     </div>
   );
 }

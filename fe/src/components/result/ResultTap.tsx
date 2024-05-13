@@ -97,18 +97,19 @@ const ResultTap: React.FC<ResultTabProps> = ({ openModal }) => {
       <div className="flex justify-evenly mt-10">
         {isMine && (
           <button
-            onClick={async () => {
-              // axios 저장 && return store에 저장  && repoViewId로 route.push
-              // 임시
-              await openModal();
+            onClick={() => {
+              openModal();
             }}
+            className="bg-appBlue1 hover:bg-blue-400 text-white font-extrabold py-2 px-4 border-b-4 border-blue-500 hover:border-blue-400 rounded"
           >
             수정 후 저장
           </button>
         )}
         {/* {isMine && <button onClick={handleEditButton}>수정하기</button>} */}
         <Link href="/main">
-          <button>홈으로</button>
+          <button className="bg-appBlue1 hover:bg-blue-400 text-white font-extrabold py-2 px-4 border-b-4 border-blue-500 hover:border-blue-400 rounded">
+            홈으로
+          </button>
         </Link>
       </div>
     </div>
