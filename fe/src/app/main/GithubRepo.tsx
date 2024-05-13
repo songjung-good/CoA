@@ -43,7 +43,7 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
           console.error("해당 요청에 문제가 생겼습니다. : ", error);
         }
       } else {
-        console.log(`userID가 null입니다. ${userID}`);
+        // console.log(`userID가 null입니다. ${userID}`);
       }
       setLoadingAuth(false);
     };

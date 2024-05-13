@@ -37,9 +37,9 @@ export async function fetchSearchResults(query: string, type: 'repo' | 'member',
   const params = {
     keyword: query,
     page: page, // 기본값 0
-    size: 20, // 기본값 20
+    size: 8, // 기본값 20
   };
-
+  console.log('검색 요청: ', params, page);
   try {
     if (type === 'repo') {
       const response = await axios.get<{ isSuccess: boolean; message: string; code: number; result: RepoSearchResult[] }>('/api/search/repos', { params });

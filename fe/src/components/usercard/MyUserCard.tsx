@@ -88,26 +88,29 @@ export default function MyUserCard() {
           </div>
         </div>
 
-        <div className="skills-container">
+        <div className="skills-container flex items-center">
           <p>기술 스택 : </p>
-          {myData?.skillList.map((skill) => (
-            <li
-              key={skill.codeId}
-              style={{
-                padding: "4px",
-                backgroundColor: `${colorMapping[skill.codeName]}`,
-              }}
-            >
-              <p className="bg-white px-1">{skill.codeName}</p>
-            </li>
-          ))}
+          <ul className="flex flex-wrap gap-2 p-1">
+            {myData?.skillList.map((skill) => (
+              <li
+                key={skill.codeId}
+                style={{
+                  padding: "4px",
+                  backgroundColor: `${colorMapping[skill.codeName]}`,
+                }}
+              >
+                <p className="bg-white px-1">{skill.codeName}</p>
+              </li>
+            ))}
+          </ul>
         </div>
         {isEdit && (
           <MyInfoEditCard
-            intro={myData?.memberIntro}
-            skills={myData?.skillList}
+            intro={myData?.memberIntro || ""}
+            skills={myData?.skillList || []}
             jop={myData?.memberJobCodeId.toString() || ""}
             closeEdit={closeEdit}
+            setMyData={setMyData}
           />
         )}
       </section>
