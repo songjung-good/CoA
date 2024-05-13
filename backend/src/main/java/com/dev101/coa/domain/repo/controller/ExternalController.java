@@ -87,7 +87,7 @@ public class ExternalController {
     }
 
     @GetMapping("/events/{memberUuid}")
-    public ResponseEntity<BaseResponse<Mono<Map<String, Object>>>> getUserEvents(@PathVariable String memberUuid) throws Exception {
+    public ResponseEntity<BaseResponse<Map<String, Object>>> getUserEvents(@PathVariable String memberUuid) throws Exception {
         Member member = memberRepository.findByMemberUuid(UUID.fromString(memberUuid)).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
         AccountLink gitLabAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
         AccountLink githubAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
@@ -97,8 +97,21 @@ public class ExternalController {
         String githubUserName = githubAccountLink.getAccountLinkNickname();
         String githubAccessToken = encryptionUtils.decrypt(githubAccountLink.getAccountLinkReceiveToken());
 
-        Mono<Map<String, Object>> result = externalApiService.processUserEvents(gitLabUserName, gitLabAccessToken, githubUserName, githubAccessToken);
+        Mono<Map<String, Object>> resultMono = externalApiService.processUserEvents(gitLabUserName, gitLabAccessToken, githubUserName, githubAccessToken);
 
+        // 결과를 동기적으로 받아옴
+        Map<String, Object> result = resultMono.block();
+
+        // 결과 확인
+        System.out.println("Result: " + result);
+
+        // 결과의 세부 항목을 검증
+        if (result != null) {
+            System.out.println("Total contributions: " + result.get("total"));
+            System.out.println("Detailed contributions: " + result.get("contributions"));
+        } else {
+            System.out.println("No data received or error occurred.");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 

@@ -9,7 +9,6 @@ import com.dev101.coa.domain.member.repository.MemberJobRepository;
 import com.dev101.coa.domain.member.repository.MemberRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
-import com.dev101.coa.global.security.info.GitHubUserInfo;
 import com.dev101.coa.global.security.info.GoogleUserInfo;
 import com.dev101.coa.global.security.info.KakaoUserInfo;
 import com.dev101.coa.global.security.info.SocialUserInfo;
@@ -51,7 +50,7 @@ public class AuthenticationService {
         String img = userInfo.getImageUrl();
         Code jobCode = codeRepository.findByCodeId(2004L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
 
-        Member member = memberRepository.findByMemberEmail(email);
+        Member member = memberRepository.findByMemberNickname(userName);
         if (member == null) {
             assert registrationId != null;
             member = Member.builder()
@@ -61,13 +60,16 @@ public class AuthenticationService {
                     .memberUuid(UUID.randomUUID())
                     .memberPlatformCode(resolvePlatformCode(registrationId))
                     .build();
+
+            memberRepository.save(member);
             MemberJob memberJob = new MemberJob(member, jobCode);
+            System.out.println("memberJob = " + memberJob);
             memberJobRepository.save(memberJob);
         } else {
             member.updateMemberNickname(userName); // 혹은 다른 업데이트 로직
             member.updateMemberImg(img);
+            memberRepository.save(member);
         }
-        memberRepository.save(member);
         return member;
     }
 
@@ -87,8 +89,6 @@ public class AuthenticationService {
         Map<String, Object> attributes = oauthUser.getAttributes();
         if ("google".equals(registrationId)) {
             return new GoogleUserInfo(attributes);
-        } else if ("github".equals(registrationId)) {
-            return new GitHubUserInfo(attributes);
         } else if ("kakao".equals(registrationId)) {
             return new KakaoUserInfo(attributes);
         }
