@@ -34,4 +34,8 @@ public class MemberJob extends BaseEntity {
         this.member = member;
         this.jobCode = jobCode;
     }
+
+    public void jobUpdate(Code code) {
+        this.jobCode = code;
+    }
 }
