@@ -71,6 +71,8 @@ class AiResultDto:
 
 
 class AnalysisDataDto:
+    REDIS_KEY_PREFIX = "result:"
+
     def __init__(
             self,
             analysis_id: str,
@@ -117,14 +119,14 @@ class AnalysisDataDto:
 
     @staticmethod
     async def from_redis(redis_client: Redis, analysis_id: str) -> Union['AnalysisDataDto', None]:
-        json_str: str | None = redis_client.get(analysis_id)
+        json_str: str | None = redis_client.get(AnalysisDataDto.REDIS_KEY_PREFIX + analysis_id)
         if json_str is None:
             return None
         return AnalysisDataDto.from_dict(analysis_id, json.loads(json_str))
 
     def to_redis(self, redis_client: Redis, **redis_set_args) -> None:
         redis_client.set(
-            name=str(self.analysis_id),
+            name=AnalysisDataDto.REDIS_KEY_PREFIX + str(self.analysis_id),
             value=json.dumps(self, default=lambda obj: obj.to_camel_dict(), separators=(',', ':')),
             **redis_set_args
         )
