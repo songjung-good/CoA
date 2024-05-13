@@ -37,15 +37,15 @@ export async function fetchSearchResults(query: string, type: 'repo' | 'member',
   const params = {
     keyword: query,
     page: page, // 기본값 0
-    size: 8, // 기본값 20
+    size: 5, // 기본값 20
   };
-  console.log('검색 요청: ', params, page);
   try {
     if (type === 'repo') {
       const response = await axios.get<{ isSuccess: boolean; message: string; code: number; result: RepoSearchResult[] }>('/api/search/repos', { params });
       if (!response.data.result) {
         throw new Error('검색 결과가 없습니다.');
       }
+      console.log(response.data);
       return response.data.result.map(repo => ({
         url: repo.repoViewPath,
         memberId: repo.memberUuid,

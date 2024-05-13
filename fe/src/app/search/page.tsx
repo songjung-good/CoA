@@ -46,9 +46,17 @@ const SearchPage = () => {
   const handleSearch = async (query: string, type: 'repo' | 'member') => {
     setQuery(query);
     setSearchType(type);
+    setPage(0);
     setResults([]);
     const data = await fetchSearchResults(query, type, page);
-    await setResults(data); // 검색 결과 상태 업데이트
+    setResults(data); // 검색 결과 상태 업데이트
+  };
+
+  // 페이지 변경 함수
+  const handlePageChange = async (page: number) => { 
+    setPage(page);
+    const data = await fetchSearchResults(searchQuery, searchType, page);
+    await setResults(data);
   };
 
   return (
@@ -71,10 +79,22 @@ const SearchPage = () => {
       ) : (
         <p>검색 결과가 없습니다.</p>
       )}
-      <PageTransition>
-        <Button>이전 페이지로 이동</Button>
-        <Button>다음 페이지로 이동</Button>
-      </PageTransition>
+      {results.length > 0 && (
+        <PageTransition>
+          <Button onClick={() => handlePageChange(page + 1)}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+            </svg>
+          </Button>
+          {page > 0 && 
+            <Button onClick={() => handlePageChange(page - 1)}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+              </svg>
+            </Button>
+          }
+        </PageTransition>
+      )}
     </Main>
   );
 };
@@ -96,11 +116,22 @@ const ResultComponent = tw.div`
 const PageTransition = tw.div`
   mt-3
   flex
+  flex-row-reverse
   justify-between
-`
+`;
 
 const Button = tw.button`
-  
-`
+  bg-appYellow
+  text-black
+  px-3
+  py-1
+  m-2
+  text-xl
+  font-sm
+  rounded-xl
+  transition-all
+  border-2 border-transparent
+  hover:border-appRed
+`;
 
 export default SearchPage;
