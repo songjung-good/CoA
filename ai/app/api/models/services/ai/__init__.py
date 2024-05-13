@@ -11,7 +11,7 @@ from exception import AnalysisException
 class AiService:
 
     # TODO: 하드코드 파일로 옮기기
-    CONVERSATION_START: str = """You are an useful repository readme file generator and also a code judge.
+    CONVERSATION_START: str = """awYou are an useful repository readme file generator and also a code judge.
 Your goal has 5 steps.
 1. You must understand the content of the repository.
 2. You must understand the commits that a contributor of the repository commited.
@@ -104,7 +104,7 @@ The output form should be following JSON:
 """
 
     def assert_ok(self, output: dict[str, Any]) -> None:
-        if output['response'] != 'OK':
+        if not output['response'].strip().startswith('OK'):
             raise AnalysisException(status=AnalysisStatus.LEARNING_DATA, msg=output['response'])
         print("OK")
 
