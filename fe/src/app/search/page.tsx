@@ -37,7 +37,7 @@ interface MemberSearchResult {
 }
 
 const SearchPage = () => {
-  const [searchQuery, setQuery] = useState<string>(''); // 검색어 상태
+  const [searchQuery, setQuery] = useState<string>('');
   const [searchType, setSearchType] = useState<'repo' | 'member'>('repo');
   const [results, setResults] = useState<RepoSearchResult[] | MemberSearchResult[]>([]);
   const [page, setPage] = useState<number>(0);
@@ -47,8 +47,8 @@ const SearchPage = () => {
     setQuery(query);
     setSearchType(type);
     setResults([]);
-    const data = await fetchSearchResults(searchQuery, searchType, page);
-    setResults(data); // 검색 결과 상태 업데이트
+    const data = await fetchSearchResults(query, type, page);
+    await setResults(data); // 검색 결과 상태 업데이트
   };
 
   return (
@@ -56,21 +56,23 @@ const SearchPage = () => {
       <SearchInput onSearch={handleSearch} />
       {results.length > 0 ? (
         searchType === 'repo' ? (
-          <div>
+          <ResultComponent>
             {(results as RepoSearchResult[]).map((result, index) => (
               <RepoCard key={`repo-${result.repoViewId}-${index}`} repoInfo={result} />
               ))}
-          </div>
+          </ResultComponent>
         ) : (
-          <div>
+          <ResultComponent>
             {(results as MemberSearchResult[]).map((result) => (
               <MemberCard key={result.memberId} memberInfo={result} />
             ))}
-          </div>
+          </ResultComponent>
         )
       ) : (
         <p>검색 결과가 없습니다.</p>
       )}
+      <button>다음 페이지로 이동</button>
+      <button></button>
     </Main>
   );
 };
