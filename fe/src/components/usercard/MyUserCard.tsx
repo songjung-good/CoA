@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { colorMapping } from "@/components/colorMap";
 import useCommonCodeStore from "@/store/commoncode";
 import MyInfoEditCard from "./MyInfoEditCard";
+import IsStar from "./IsStar";
 
 interface Skill {
   codeId: number;
@@ -29,7 +30,7 @@ interface ApiResponse {
   result: Member;
 }
 
-export default function MyUserCard() {
+export default function MyUserCard({ uuid }: { uuid: string }) {
   const { UUID, AuthUserName, userImage } = userStore();
   const { response } = useCommonCodeStore.getState();
   const [myData, setMyData] = useState<Member>();
@@ -38,34 +39,40 @@ export default function MyUserCard() {
     try {
       // console.log(UUID);
       const getResponse = await UseAxios().get<ApiResponse>(
-        `/api/member/${UUID}`,
+        `/api/member/${uuid}`,
       );
       // console.log(getResponse.data.result);
       setMyData(getResponse.data.result);
     } catch (error) {
-      console.error(`/api/member/${UUID} 요청 에러`, error);
+      console.error(`/api/member/${uuid} 요청 에러`, error);
     }
   };
   useEffect(() => {
-    if (UUID !== "") {
+    if (uuid !== "") {
       getMyData();
     }
-  }, [UUID]);
+  }, [uuid]);
 
   const closeEdit = () => {
     setIsEdit(false);
   };
+
   return (
     <>
       <section className="card flex flex-col gap-4 ">
         <div className="flex flex-row gap-4">
           {/* <Image src="/image/logo144.png" alt="logo" width={144} height={144} /> */}
           <div className="rounded-full overflow-hidden">
-            <img src={userImage} alt="logo" width={144} height={144} />
+            <img
+              src={myData?.memberImg || userImage}
+              alt="logo"
+              width={144}
+              height={144}
+            />
           </div>
           <div className="grow flex flex-col gap-2">
             <div className="flex justify-between">
-              <p>{AuthUserName}</p>
+              <p>{myData?.memberNickName || AuthUserName}</p>
               <div className="flex gap-2">
                 <p>
                   {response?.result.commonCodeList[2]?.codes &&
@@ -73,13 +80,21 @@ export default function MyUserCard() {
                       `${myData?.memberJobCodeId}`
                     ]}
                 </p>
-                <button
-                  onClick={() => {
-                    setIsEdit(!isEdit);
-                  }}
-                >
-                  <EditIconDark />
-                </button>
+                {myData &&
+                  (myData?.isMine ? (
+                    <button
+                      onClick={() => {
+                        setIsEdit(!isEdit);
+                      }}
+                    >
+                      <EditIconDark />
+                    </button>
+                  ) : (
+                    <IsStar
+                      isBookmark={myData?.isBookmark}
+                      Uuid={myData?.memberUuid}
+                    />
+                  ))}
               </div>
             </div>
             <div className="bg-appGrey1 p-4 rounded-2xl grow">
