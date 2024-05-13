@@ -1,5 +1,5 @@
 from langchain.chains.conversation.base import ConversationChain
-from langchain.memory import ConversationSummaryMemory, ConversationBufferMemory
+from langchain.memory import ConversationBufferMemory
 from langchain_core.language_models import BaseChatModel
 
 

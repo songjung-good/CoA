@@ -1,12 +1,12 @@
 import traceback
 from typing import TypeVar
 
-from pip._internal import req
 from redis import Redis
 
 from api.models.code import AnalysisStatus, analysis_percentages
 from api.models.dto import AnalysisRequest, AnalysisDataDto
-from api.models.services.ai import AiMutex, AiService
+from api.models.services.ai import AiService
+from api.models.services.ai.mutex import AiMutex
 from api.models.services.client import RepoClient
 from exception import AnalysisException
 
@@ -44,6 +44,8 @@ class AnalysisService:
             self._update_status(dto, AnalysisStatus.REQUESTING_TO_REPO)
             repo_data = await repo_client.load(request.userName)
 
+            print(repo_data)
+
             # total_commit_cnt, personal_commit_cnt 세기
             # TODO
             dto.result.total_commit_cnt = 123       # TODO: client에 커밋 개수 세는 로직 추가
@@ -57,6 +59,8 @@ class AnalysisService:
             # AI에 학습 시키기
             self._update_status(dto, AnalysisStatus.LEARNING_DATA)
             await self.ai_service.train(conversation, repo_data)
+
+            print('checkpoint train')
 
             # 대화해서 학습 결과 긁어오기
             self._update_status(dto, AnalysisStatus.GENERATING_README)
