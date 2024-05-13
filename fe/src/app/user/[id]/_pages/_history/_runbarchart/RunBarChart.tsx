@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import repositoryStore from "@/store/repos";
 import { mergeLanguageData } from "./mergeLOC";
-import { colorMapping } from "../../../_components/colorMap";
+import { colorMapping } from "../../../../../../components/colorMap";
 
 type LanguageData = {
   language: string;
