@@ -1,7 +1,7 @@
 "use client";
 
 import UseAxios from "@/api/common/useAxios";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import useCommonCodeStore from "@/store/commoncode";
 import CloseIcon from "@/icons/CloseIcon";
 import { colorMapping } from "../colorMap";
@@ -10,16 +10,30 @@ interface Skill {
   codeId: number;
   codeName: string;
 }
+
+interface Member {
+  memberUuid: string;
+  memberNickName: string;
+  memberImg: string;
+  memberIntro: string;
+  skillList: Skill[];
+  memberJobCodeId: number;
+  isMine: boolean;
+  isBookmark: boolean;
+}
+
 export default function MyInfoEditCard({
   intro,
   skills,
   jop,
   closeEdit,
+  setMyData,
 }: {
   intro: string;
   skills: Skill[];
   jop: string;
   closeEdit: () => void;
+  setMyData: Dispatch<SetStateAction<Member | undefined>>;
 }) {
   const { response } = useCommonCodeStore.getState();
   const [introduce, setIntroduce] = useState(intro);
@@ -38,10 +52,21 @@ export default function MyInfoEditCard({
         skillIdList: skillIds,
         jobCodeId: parseInt(jobCodeId, 10),
       });
+      // putResponse를 받은 후에 데이터 업데이트
+      setMyData((prevData: Member | undefined) => {
+        if (!prevData) return prevData; // 이전 상태가 없으면 그대로 반환
+
+        return {
+          ...prevData,
+          memberIntro: introduce,
+          skillList: skillIdList,
+          memberJobCodeId: parseInt(jobCodeId, 10),
+        };
+      });
       // console.log(introduce);
       // console.log(skillIdList);
-      console.log(skillIds);
-      console.log(putResponse);
+      // console.log(skillIds);
+      // console.log(putResponse);
     } catch (error) {
       console.error("'유저 정보 수정'요청 에러", error);
       // console.log(introduce);
@@ -102,6 +127,7 @@ export default function MyInfoEditCard({
     // 새로운 배열을 skillIdList에 반영합니다.
     setSkillIdList(updatedSkillList);
   };
+  const inputStyle = "bg-appGrey1 border hover:border-appBlue1";
   return (
     <div
       className="card flex flex-col gap-4 absolute w-1/2"
@@ -116,7 +142,7 @@ export default function MyInfoEditCard({
           <select
             value={jobCodeId}
             onChange={(e) => setJobCodeId(e.target.value)}
-            className="border hover:border-appBlue1"
+            className={`${inputStyle} p-2 rounded-2xl`}
           >
             {Object.entries(jobObj).map(([key, value]) => (
               <option key={key} value={key}>
@@ -128,7 +154,7 @@ export default function MyInfoEditCard({
       </label>
       <div>
         <label htmlFor="skillIdList">기술 스택</label>
-        <ul className="flex gap-2">
+        <ul className="flex flex-wrap gap-2 p-1">
           {skillIdList.map((skill) => (
             <li
               key={skill.codeId}
@@ -146,8 +172,9 @@ export default function MyInfoEditCard({
             </li>
           ))}
         </ul>
-        <div>
+        <div className="flex">
           <input
+            className={`${inputStyle} p-2 rounded-l-2xl grow`}
             list="skillIdDataList"
             id="skillIdList"
             name="skillIdList"
@@ -155,7 +182,12 @@ export default function MyInfoEditCard({
             placeholder="기술 스택을 입력하세요"
             onChange={onChangeSkill}
           />
-          <button onClick={addSkill}>추가하기</button>
+          <button
+            className={`${inputStyle} p-2 rounded-r-2xl`}
+            onClick={addSkill}
+          >
+            추가하기
+          </button>
         </div>
         {skillObj && (
           <datalist id="skillIdDataList">
@@ -171,7 +203,7 @@ export default function MyInfoEditCard({
         <p>자기 소개 글</p>
         <textarea
           id="introduce"
-          className="bg-appGrey1 p-4 rounded-2xl grow w-full"
+          className={`${inputStyle} p-4 rounded-2xl w-full`}
           rows={3}
           value={introduce}
           onChange={(e) => setIntroduce(e.target.value)}
