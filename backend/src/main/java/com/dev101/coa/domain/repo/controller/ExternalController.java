@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.Map;
 import java.util.UUID;
@@ -85,15 +86,20 @@ public class ExternalController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
-    @GetMapping("/gitlab/events/{memberUuid}")
-    public ResponseEntity<BaseResponse<Map<String, Object>>> getUserEvents(@PathVariable String memberUuid) throws Exception {
+    @GetMapping("/events/{memberUuid}")
+    public ResponseEntity<BaseResponse<Mono<Map<String, Object>>>> getUserEvents(@PathVariable String memberUuid) throws Exception {
         Member member = memberRepository.findByMemberUuid(UUID.fromString(memberUuid)).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
-        AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+        AccountLink gitLabAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+        AccountLink githubAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
 
-        String userName = accountLink.getAccountLinkNickname();
-        String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
-        externalApiService.processUserEvents(userName, accessToken);
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
+        String gitLabUserName = gitLabAccountLink.getAccountLinkNickname();
+        String gitLabAccessToken = encryptionUtils.decrypt(gitLabAccountLink.getAccountLinkReceiveToken());
+        String githubUserName = githubAccountLink.getAccountLinkNickname();
+        String githubAccessToken = encryptionUtils.decrypt(githubAccountLink.getAccountLinkReceiveToken());
+
+        Mono<Map<String, Object>> result = externalApiService.processUserEvents(gitLabUserName, gitLabAccessToken, githubUserName, githubAccessToken);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
 }

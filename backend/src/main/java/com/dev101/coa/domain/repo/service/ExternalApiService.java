@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -87,7 +88,7 @@ public class ExternalApiService {
 
     public String fetchGitlabMembers(String projectId, String accessToken) {
         return webClient.get()
-                .uri("https://lab.ssafy.com/api/v4/projects/${projectId}/members", projectId)
+                .uri("https://lab.ssafy.com/api/v4/projects/{projectId}/members", projectId)
                 .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
@@ -98,21 +99,28 @@ public class ExternalApiService {
                 .block();
     }
 
+    public Mono<Map<String, Object>> fetchGithubIssue(String userId, String accessToken) {
+        return webClient.get()
+                .uri("https://github-contributions-api.jogruber.de/v4/{userId}", userId)
+                .headers(headers -> headers.setBearerAuth(accessToken))
+                .retrieve()
+                .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
+                .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode(), response.request().getURI() + "Client error during GitHub repos fetching")))
+                .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub repos fetching")))
+                .bodyToMono(new ParameterizedTypeReference<>() {
+                });  // 타입 참조를 사용하여 정확한 제네릭 타입 지정
+    }
 
-    public void processUserEvents(String userId, String accessToken) {
-        Flux<Event> eventsFlux = fetchAllUserCommits(userId, accessToken, 1);
 
-        Mono<Map<String, Object>> aggregatedResults = aggregateContributions(eventsFlux);
+    public Mono<Map<String, Object>> processUserEvents(String gitLabUserName, String gitLabAccessToken, String githubUserName, String githubAccessToken) {
 
-        aggregatedResults.subscribe(result -> {
-            // 결과를 출력하거나 데이터베이스에 저장
-            System.out.println("Aggregated Contributions: " + result.get("total"));
-            System.out.println("Aggregated Contributions: " + result.get("contributions"));
-            // 예: databaseService.save(result);
-        }, error -> {
-            // 오류 처리 로직
-            System.err.println("Error processing events: " + error.getMessage());
-        });
+        Mono<Map<String, Object>> githubMono = fetchGithubIssue(githubUserName, githubAccessToken);
+
+        Flux<Event> eventsFlux = fetchAllUserCommits(gitLabUserName, gitLabAccessToken, 1);
+
+        Mono<Map<String, Object>> gitlabMono = aggregateContributions(eventsFlux);
+
+        return combineContributions(githubMono, gitlabMono);
     }
 
     public Flux<Event> fetchAllUserCommits(String userId, String accessToken, int page) {
@@ -162,11 +170,9 @@ public class ExternalApiService {
                         daily.put("date", date.toString());
                         daily.put("count", count);
                         daily.put("level", determineLevel(count));
-                        System.out.println("daily = " + daily);
                         dailyContributions.add(daily);
                     });
                     result.put("total", yearlyTotals);
-                    System.out.println("dailyContributions = " + dailyContributions);
                     result.put("contributions", dailyContributions);
                     return result;
                 });
@@ -184,5 +190,28 @@ public class ExternalApiService {
         else if (count <= 2) return 1;
         else if (count <= 5) return 2;
         else return 3;
+    }
+
+    public Mono<Map<String, Object>> combineContributions(Mono<Map<String, Object>> githubMono, Mono<Map<String, Object>> gitLabMono) {
+        return Mono.zip(githubMono, gitLabMono, (githubData, gitLabData) -> {
+            Map<String, Object> result = new HashMap<>();
+
+            // 연도별 총계 합치기
+            Map<String, Integer> totalContributions = new HashMap<>();
+            Map<String, Integer> githubTotal = (Map<String, Integer>) githubData.get("total");
+            Map<String, Integer> gitLabTotal = (Map<String, Integer>) gitLabData.get("total");
+            totalContributions.putAll(githubTotal);
+            gitLabTotal.forEach((year, contributions) ->
+                    totalContributions.merge(year, contributions, Integer::sum));
+            result.put("total", totalContributions);
+
+            // 일별 컨트리뷰션 리스트 합치기
+            List<Map<String, Object>> combinedContributions = new ArrayList<>();
+            combinedContributions.addAll((List<Map<String, Object>>) githubData.get("contributions"));
+            combinedContributions.addAll((List<Map<String, Object>>) gitLabData.get("contributions"));
+            result.put("contributions", combinedContributions);
+
+            return result;
+        });
     }
 }
