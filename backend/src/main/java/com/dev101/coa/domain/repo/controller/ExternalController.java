@@ -86,33 +86,70 @@ public class ExternalController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
+//    @GetMapping("/events/{memberUuid}")
+//    public ResponseEntity<BaseResponse<Map<String, Object>>> getUserEvents(@PathVariable String memberUuid) throws Exception {
+//        Member member = memberRepository.findByMemberUuid(UUID.fromString(memberUuid)).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+//        AccountLink gitLabAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+//        AccountLink githubAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+//
+//        String gitLabUserName = gitLabAccountLink.getAccountLinkNickname();
+//        String gitLabAccessToken = encryptionUtils.decrypt(gitLabAccountLink.getAccountLinkReceiveToken());
+//        String githubUserName = githubAccountLink.getAccountLinkNickname();
+//        String githubAccessToken = encryptionUtils.decrypt(githubAccountLink.getAccountLinkReceiveToken());
+//
+//        Mono<Map<String, Object>> resultMono = externalApiService.processUserEvents(gitLabUserName, gitLabAccessToken, githubUserName, githubAccessToken);
+//
+//        // 결과를 동기적으로 받아옴
+//        Map<String, Object> result = resultMono.block();
+//
+//        // 결과의 세부 항목을 검증
+//        if (result != null) {
+//            System.out.println("Total contributions: " + result.get("total"));
+//        } else {
+//            System.out.println("No data received or error occurred.");
+//        }
+//        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+//    }
+
+
     @GetMapping("/events/{memberUuid}")
-    public ResponseEntity<BaseResponse<Map<String, Object>>> getUserEvents(@PathVariable String memberUuid) throws Exception {
-        Member member = memberRepository.findByMemberUuid(UUID.fromString(memberUuid)).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
-        AccountLink gitLabAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
-        AccountLink githubAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+    public Mono<ResponseEntity<BaseResponse<Map<String, Object>>>> getUserEvents(@PathVariable String memberUuid) {
+        return Mono.fromCallable(() -> {
+                    Member member = memberRepository.findByMemberUuid(UUID.fromString(memberUuid)).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+                    AccountLink gitLabAccountLink = null;
+                    AccountLink githubAccountLink = null;
+                    gitLabAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+                    githubAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
 
-        String gitLabUserName = gitLabAccountLink.getAccountLinkNickname();
-        String gitLabAccessToken = encryptionUtils.decrypt(gitLabAccountLink.getAccountLinkReceiveToken());
-        String githubUserName = githubAccountLink.getAccountLinkNickname();
-        String githubAccessToken = encryptionUtils.decrypt(githubAccountLink.getAccountLinkReceiveToken());
+                    return new Object[]{member, gitLabAccountLink, githubAccountLink};
+                })
+                .flatMap(objects -> {
+                    Member member = (Member) objects[0];
+                    AccountLink gitLabAccountLink = (AccountLink) objects[1];
+                    AccountLink githubAccountLink = (AccountLink) objects[2];
 
-        Mono<Map<String, Object>> resultMono = externalApiService.processUserEvents(gitLabUserName, gitLabAccessToken, githubUserName, githubAccessToken);
 
-        // 결과를 동기적으로 받아옴
-        Map<String, Object> result = resultMono.block();
+                    String gitLabUserName = gitLabAccountLink.getAccountLinkNickname();
+                    String githubUserName = githubAccountLink.getAccountLinkNickname();
 
-        // 결과 확인
-        System.out.println("Result: " + result);
+                    String gitLabAccessToken = null;
+                    try {
+                        gitLabAccessToken = encryptionUtils.decrypt(gitLabAccountLink.getAccountLinkReceiveToken());
+                    } catch (Exception e) {
+                        return Mono.error(new RuntimeException(e));
+                    }
+                    String githubAccessToken = null;
+                    try {
+                        githubAccessToken = encryptionUtils.decrypt(githubAccountLink.getAccountLinkReceiveToken());
+                    } catch (Exception e) {
+                        return Mono.error(new RuntimeException(e));
+                    }
 
-        // 결과의 세부 항목을 검증
-        if (result != null) {
-            System.out.println("Total contributions: " + result.get("total"));
-            System.out.println("Detailed contributions: " + result.get("contributions"));
-        } else {
-            System.out.println("No data received or error occurred.");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+                    return externalApiService.processUserEvents(gitLabUserName, gitLabAccessToken, githubUserName, githubAccessToken);
+                })
+                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)))
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.NO_CONTENT).build())
+                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new BaseResponse<>(null))));
     }
 
 }

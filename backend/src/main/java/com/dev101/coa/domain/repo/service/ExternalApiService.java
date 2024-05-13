@@ -105,20 +105,25 @@ public class ExternalApiService {
                 .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
-                .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitHub events fetching")))
-                .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub events fetching")))
+                .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitHub events fetching 잔디")))
+                .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub events fetching 잔디")))
                 .bodyToMono(new ParameterizedTypeReference<>() {
                 });  // 타입 참조를 사용하여 정확한 제네릭 타입 지정
     }
 
 
     public Mono<Map<String, Object>> processUserEvents(String gitLabUserName, String gitLabAccessToken, String githubUserName, String githubAccessToken) {
+        Mono<Map<String, Object>> githubMono = null;
+        Mono<Map<String, Object>> gitlabMono = null;
 
-        Mono<Map<String, Object>> githubMono = fetchGithubIssue(githubUserName, githubAccessToken);
+        if (githubAccessToken != null) {
+            githubMono = fetchGithubIssue(githubUserName, githubAccessToken);
+        }
+        if (gitLabAccessToken != null) {
+            Flux<Event> eventsFlux = fetchAllUserCommits(gitLabUserName, gitLabAccessToken, 1);
 
-        Flux<Event> eventsFlux = fetchAllUserCommits(gitLabUserName, gitLabAccessToken, 1);
-
-        Mono<Map<String, Object>> gitlabMono = aggregateContributions(eventsFlux);
+            gitlabMono = aggregateContributions(eventsFlux);
+        }
 
         return combineContributions(githubMono, gitlabMono);
     }
@@ -141,6 +146,9 @@ public class ExternalApiService {
                 .uri("https://lab.ssafy.com/api/v4/users/" + userId + "/events?action=pushed&per_page=100&page=" + page)
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
+                .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
+                .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitLab events fetching 잔디")))
+                .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitLab events fetching 잔디")))
                 .bodyToFlux(Event.class)
                 .concatMap(Mono::just);
 
@@ -194,27 +202,64 @@ public class ExternalApiService {
             Map<String, Object> result = new HashMap<>();
 
             // 연도별 총계 합치기
-            Map<String, Long> githubTotal = (Map<String, Long>) githubData.get("total");
-            Map<String, Long> gitLabTotal = (Map<String, Long>) gitLabData.get("total");
-            System.out.println("githubTotal = " + githubTotal);
-            System.out.println("gitLabTotal = " + gitLabTotal);
+            Map<String, Object> githubRawTotal = (Map<String, Object>) githubData.get("total");
+            Map<String, Object> gitLabRawTotal = (Map<String, Object>) gitLabData.get("total");
+
+            Map<String, Long> githubTotal = convertToLongMap(githubRawTotal);
+            Map<String, Long> gitLabTotal = convertToLongMap(gitLabRawTotal);
+
             Map<String, Long> totalContributions = new HashMap<>(githubTotal);
-            gitLabTotal.forEach((year, contributions) ->
-                    totalContributions.merge(year, contributions, Long::sum));
+            gitLabTotal.forEach((key, value) -> {
+                totalContributions.computeIfPresent(key, (k, v) -> v + value);
+            });
+
             result.put("total", totalContributions);
-            System.out.println("totalContributions = " + totalContributions);
 
             // 일별 컨트리뷰션 리스트 합치기
-            List<Map<String, Object>> combinedContributions = new ArrayList<>();
-            combinedContributions.addAll((List<Map<String, Object>>) githubData.get("contributions"));
-            combinedContributions.addAll((List<Map<String, Object>>) gitLabData.get("contributions"));
+            List<Map<String, Object>> combinedContributions = mergeContributions(
+                    (List<Map<String, Object>>) githubData.get("contributions"),
+                    (List<Map<String, Object>>) gitLabData.get("contributions")
+            );
 
             result.put("contributions", combinedContributions);
-            System.out.println("result = " + result);
 
             return result;
         });
     }
 
+    private Map<String, Long> convertToLongMap(Map<String, Object> original) {
+        Map<String, Long> converted = new HashMap<>();
+        for (Map.Entry<String, Object> entry : original.entrySet()) {
+            Object value = entry.getValue();
+            Long longValue = (value instanceof Integer) ? Long.valueOf((Integer) value) : (Long) value;
+            converted.put(entry.getKey(), longValue);
+        }
+        return converted;
+    }
+    public List<Map<String, Object>> mergeContributions(List<Map<String, Object>> githubContributions, List<Map<String, Object>> gitLabContributions) {
+        // 두 리스트를 결합
+        List<Map<String, Object>> combined = new ArrayList<>();
+        combined.addAll(githubContributions);
+        combined.addAll(gitLabContributions);
 
+        // 날짜별로 그룹화하고, count와 level을 합산
+        Map<String, Map<String, Object>> groupedByDate = combined.stream()
+                .collect(Collectors.groupingBy(
+                        contribution -> (String) contribution.get("date"),
+                        Collectors.reducing(new HashMap<String, Object>() {{
+                            put("date", "");
+                            put("count", 0);
+                            put("level", 0);
+                        }}, (a, b) -> {
+                            Map<String, Object> merged = new HashMap<>();
+                            merged.put("date", a.get("date"));
+                            merged.put("count", (Integer) a.get("count") + (Integer) b.get("count"));
+                            merged.put("level", (Integer) a.get("level") + (Integer) b.get("level"));
+                            return merged;
+                        })
+                ));
+
+        // 결과를 리스트로 변환
+        return new ArrayList<>(groupedByDate.values());
+    }
 }
