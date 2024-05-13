@@ -31,8 +31,9 @@ public class RepoController {
     public ResponseEntity<BaseResponse<Object>> editReadme (
             @AuthenticationPrincipal Long currentMemberId
             , @PathVariable("repoViewId") Long repoViewId
-            , @RequestBody String editReadmeReq) {
-        repoService.editReadme(currentMemberId, repoViewId, editReadmeReq);
+            , @RequestBody EditReadMeReqDto editReadmeReqDto) {
+
+        repoService.editReadme(currentMemberId, repoViewId, editReadmeReqDto.getReadme());
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
@@ -42,6 +43,7 @@ public class RepoController {
             @AuthenticationPrincipal Long currentMemberId
             , @PathVariable("repoViewId") Long repoViewId
             , @RequestBody List<CommitCommentDto> editCommentListReq){
+
         repoService.editComment(currentMemberId, repoViewId,editCommentListReq);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
@@ -52,6 +54,7 @@ public class RepoController {
             @AuthenticationPrincipal Long currentMemberId
             , @PathVariable("repoViewId") Long repoViewId
             , @RequestBody RepoCardEditReqDto repoCardEditReqDto){
+
         repoService.editRepoCard(currentMemberId, repoViewId, repoCardEditReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
@@ -63,6 +66,7 @@ public class RepoController {
             @AuthenticationPrincipal Long currentMemberId,
             @PathVariable("analysisId") String analysisId,
             @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) {
+
         Long result = repoService.saveAnalysis(currentMemberId, analysisId, saveAnalysisReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
@@ -72,13 +76,8 @@ public class RepoController {
     public ResponseEntity<BaseResponse<String>> startAnalysis(
             @AuthenticationPrincipal Long currentMemberId,
             @RequestBody AnalysisReqDto analysisReqDto) throws Exception {
-        String analysisId = null;
-        try {
-            analysisId = repoService.startAnalysis(currentMemberId, analysisReqDto);
-        } catch (Exception e) {
-            System.out.println("e.getMessage() = " + e.getMessage());
-            throw new BaseException(StatusCode.UNAUTHORIZED_API_ERROR);
-        }
+
+        String analysisId = repoService.startAnalysis(currentMemberId, analysisReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<String>(analysisId));
     }
 
@@ -108,8 +107,8 @@ public class RepoController {
     public ResponseEntity<BaseResponse<RepoDetailResDto>> readRepoView(
             @AuthenticationPrincipal Long currentMemberId,
             @PathVariable("repoViewId") Long repoViewId){
-        RepoDetailResDto result = repoService.readRepoView(currentMemberId, repoViewId);
 
+        RepoDetailResDto result = repoService.readRepoView(currentMemberId, repoViewId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
