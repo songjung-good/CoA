@@ -3,34 +3,38 @@ import Link from 'next/link';
 import tw from 'tailwind-styled-components';
 
 // 타입 정의
-interface RepoSearchResult {
-  url: string,
-  memberId: string;
-  memberNickName: string;
+interface Skill {
+  codeId: number;
+  codeName: string;
+}
+
+interface RepoCardDto {
+  memberUuid: string;
+  memberNickname: string;
   memberImg: string;
   repoViewId: number;
+  repoViewPath: string;
   repoViewTitle: string;
-  repoViewSubTitle: string;
+  repoViewSubtitle: string;
   repoMemberCnt: number;
-  skillList: string[];
-  dateRange: {
-    startDate: string;
-    endDate: string;
-  };
+  skillList: Skill[];
+  repoStartDate: string;
+  repoEndDate: string;
   isMine: boolean;
 }
 
-interface RepoCardProps {
-  repoInfo: RepoSearchResult;
+interface ResultDTO {
+  key: number;
+  data: RepoCardDto[] | undefined;
 }
 
-const RepoCard: React.FC<RepoCardProps> = ({ repoInfo }) => {
+const RepoCard: React.FC<ResultDTO> = ( key, data ) => {
 
   return (
     <RepoInfoDiv>
       <Header>
         <div className="flex items-center">
-          {repoInfo.url.includes("github") ? (
+          {data.repoViewPath.includes("github") ? (
             <ProfileImg
               src="/image/githubSSO.svg"
               alt="github logo"
@@ -41,28 +45,28 @@ const RepoCard: React.FC<RepoCardProps> = ({ repoInfo }) => {
               alt="gitlab logo"
             />
           )}
-          <Link href={repoInfo.url} className="font-bold truncate">
-            <Title>{repoInfo.repoViewTitle}</Title>
+          <Link href={data.repoViewPath.} className="font-bold truncate">
+            <Title>{data.repoViewTitle}</Title>
           </Link>
         </div>
         <div className="flex items-center">
           <ProfileImg
-            src={repoInfo.memberImg}
+            src={data.memberImg}
             alt="member image"
           />
-          <p className="ml-2 font-bold">{repoInfo.memberNickName}</p>
+          <p className="ml-2 font-bold">{data.memberNickName}</p>
         </div>
       </Header>
       <Body>
-        <p className="text-xl mb-2 truncate">{repoInfo.repoViewSubTitle}</p>
+        <p className="text-xl mb-2 truncate">{data.repoViewSubTitle}</p>
         <p className="font-bold">
-          프로젝트 기간: {`${repoInfo.dateRange.startDate} ~ ${repoInfo.dateRange.endDate}`}
+          프로젝트 기간: {`${data.dateRange.startDate} ~ ${data.dateRange.endDate}`}
         </p>
       </Body>
       <div className="flex flex-wrap">
-        {repoInfo.skillList.map((skill, index) => (
+        {data.skillList.map((skill: Skill, index: number) => (
           <span key={index} className="m-1 bg-gray-200 rounded-full px-4 py-1 text-sm">
-            {skill}
+            {skill.codeName}
           </span>
         ))}
       </div>
