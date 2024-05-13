@@ -8,6 +8,7 @@ import useRepoDetailStore from "@/store/repodetail";
 import ReadmeEdit from "./_components/ReadmeEdit";
 import RepoViewComment from "./_components/RepoViewComment";
 import SuccessModal from "@/components/repodetail/SuccessModal";
+import CommonButton from "@/components/result/CommonButton";
 
 import "@/app/result/[id]/_components/result.css";
 
@@ -83,7 +84,7 @@ export default function ReadmeEditPage() {
       </TransitionGroup>
       <div className="flex justify-center">
         <Link href={`/repo/${params.id}`}>
-          <button>상세 페이지로 이동</button>
+          <CommonButton text="상세 페이지로 이동" onClick={() => {}} />
         </Link>
       </div>
       {showModal && (

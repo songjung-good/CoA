@@ -3,7 +3,7 @@ import { persist, createJSONStorage, PersistOptions  } from 'zustand/middleware'
 import UseAxios from "@/api/common/useAxios";
 // 분석 중이 아니면 분석% 및 완료 버튼 안보이게 하기 위해서
 // isAnalyzing을 통해 false 일때는 Header에서 분석결과에 대한 정보 안보이게 하기 위함
-const axios = UseAxios();
+
 
 interface AnalyzingState {
   isAnalyzing: boolean;  // true 일때 Header에 분석 정보 표시
@@ -50,6 +50,7 @@ const useAnalyzingStore = create<AnalyzingState, []>(
       feachApi: () => {
         // 분석 중인지 확인
         if (useAnalyzingStore.getState().isAnalyzing) {
+          const axios = UseAxios();
           const analysisId = useAnalyzingStore.getState().analyzeId;
           // 서버에 현재 분석 상태를 요청
           axios.get(`/api/repos/analysis/${analysisId}`).then((res) => {

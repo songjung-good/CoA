@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import tw from "tailwind-styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import CommonButton from "./CommonButton";
 // store
 import useResultStore from "@/store/result";
 import useAnalyzingStore from "@/store/analyze";
@@ -95,21 +96,10 @@ const ResultTap: React.FC<ResultTabProps> = ({ openModal }) => {
         </CSSTransition>
       </TransitionGroup>
       <div className="flex justify-evenly mt-10">
-        {isMine && (
-          <button
-            onClick={() => {
-              openModal();
-            }}
-            className="bg-appBlue1 hover:bg-blue-400 text-white font-extrabold py-2 px-4 border-b-4 border-blue-500 hover:border-blue-400 rounded"
-          >
-            수정 후 저장
-          </button>
-        )}
+        {isMine && <CommonButton text="수정 후 저장" onClick={openModal} />}
         {/* {isMine && <button onClick={handleEditButton}>수정하기</button>} */}
         <Link href="/main">
-          <button className="bg-appBlue1 hover:bg-blue-400 text-white font-extrabold py-2 px-4 border-b-4 border-blue-500 hover:border-blue-400 rounded">
-            홈으로
-          </button>
+          <CommonButton text="홈으로" onClick={() => {}} />
         </Link>
       </div>
     </div>

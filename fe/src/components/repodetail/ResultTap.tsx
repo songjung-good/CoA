@@ -6,8 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import tw from "tailwind-styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 // store
-import useResultStore from "@/store/result";
-import useAnalyzingStore from "@/store/analyze";
+import CommonButton from "../result/CommonButton";
 import useRepoDetailStore from "@/store/repodetail";
 import UseAxios from "@/api/common/useAxios";
 
@@ -93,9 +92,9 @@ export default function ResultTab() {
         </CSSTransition>
       </TransitionGroup>
       <div className="flex justify-evenly mt-10">
-        {isMine && <button onClick={handleEditButton}>수정하기</button>}
+        {isMine && <CommonButton text="수정하기" onClick={handleEditButton} />}
         <Link href="/main">
-          <button>홈으로</button>
+          <CommonButton text="홈으로" onClick={() => {}} />
         </Link>
       </div>
     </div>
