@@ -62,6 +62,7 @@ class AnalysisService:
             self._update_status(dto, AnalysisStatus.GENERATING_README)
             dto.result.readme = await self.ai_service.generate_readme(conversation)
 
+            # 점수 매기기
             self._update_status(dto, AnalysisStatus.SCORING_COMMITS)
             dto.result.commit_score = await self.ai_service.score_commits(conversation)
 

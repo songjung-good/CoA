@@ -1,3 +1,4 @@
+import json
 from typing import Any
 
 from langchain.chains.conversation.base import ConversationChain
@@ -74,10 +75,10 @@ Each paragraph should be seperated with "##"(Heading level 2).
 ---
 """
 
-    CONVERSATION_JUDGING: str = """^^^
+    CONVERSATION_SCORING: str = """^^^
 Good.
 
-Step 4. You must judge the code of the given commits, following some criteria.
+Step 4. You must judge the code of the given commits, following some criteria, and brief a comment.
 
 The criteria are:
  * Readability: How easy is it to read and understand the code?
@@ -85,8 +86,19 @@ The criteria are:
  * Performance: How quick the code perform its intended function?
  * Testability: Is the code easy to test and debug?
  * Exception Handling: Are there proper exception handling mechanisms implemented in the code?
-  
-Each paragraph should be seperated with "##"(Heading level 2).
+
+The scores must be integers, out of 100.
+
+The output form should be following JSON:
+{
+    "readability": <readability score>
+    "reusability": <reusability score>
+    "performance": <performance score>
+    "testability": <testability score>
+    "exception": <exception handling score>
+    "scoreComment": <brief comment about judgement criterion>
+}
+
 ---
 """
 
@@ -134,10 +146,6 @@ Each paragraph should be seperated with "##"(Heading level 2).
         """
         평가한 커밋의 점수를 매깁니다.
         """
-        pass        # TODO
-
-    async def judge_commits(self, conversation: ConversationChain) -> str:
-        """
-        커밋을 평가하여 세 줄 정도의 리뷰를 얻습니다.
-        """
-        pass        # TODO
+        output = conversation.invoke({'input': AiService.CONVERSATION_SCORING})
+        dct = json.loads(output['response'])
+        return CommitScoreDto.from_dict(dct)

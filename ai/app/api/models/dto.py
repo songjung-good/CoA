@@ -16,18 +16,29 @@ class CommitScoreDto:
             reusability: int,
             testability: int,
             exception: int,
-            scoreComment: str
+            score_comment: str
     ):
         self.readability = readability
         self.performance = performance
         self.reusability = reusability
         self.testability = testability
         self.exception = exception
-        self.scoreComment = scoreComment
+        self.score_comment = score_comment
 
     @property
     def total(self):
         return (self.readability + self.performance + self.reusability + self.testability + self.exception) // 5
+
+    @staticmethod
+    def from_dict(dct: dict) -> 'CommitScoreDto':
+        return CommitScoreDto(
+            readability=dct['readability'],
+            performance=dct['performance'],
+            reusability=dct['reusability'],
+            testability=dct['testability'],
+            exception=dct['exception'],
+            score_comment=dct['scoreComment']
+        )
 
     def to_camel_dict(self):
         return {
@@ -37,7 +48,7 @@ class CommitScoreDto:
             'testability': self.testability,
             'exception': self.exception,
             'total': self.total,
-            'scoreComment': self.scoreComment
+            'scoreComment': self.score_comment
         }
 
 
