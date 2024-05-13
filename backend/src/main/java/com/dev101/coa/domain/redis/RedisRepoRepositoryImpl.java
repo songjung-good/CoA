@@ -3,6 +3,7 @@ package com.dev101.coa.domain.redis;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
+@Primary
 public class RedisRepoRepositoryImpl implements RedisRepoRepository {
 
 	private final RedisTemplate<String, String> redisTemplate;
