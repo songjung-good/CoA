@@ -745,4 +745,17 @@ public class RepoService {
         // =============== testData
     }
 
+    public List<RepoCardDto> getPopularRepoViewList(Long loginMemberId) {
+        Member member = memberRepository.findById(loginMemberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+
+        List<Long> repoViewIdList = Arrays.asList(3L, 4L, 5L, 6L);
+        List<RepoView> repoViewList = repoViewRepository.findByRepoViewIdList(repoViewIdList);
+
+        List<RepoCardDto> repoCardDtoList = new ArrayList<>();
+        for(RepoView repoView : repoViewList){
+            repoCardDtoList.add(RepoCardDto.createRepoCardDto(repoView, member.getMemberUuid()));
+        }
+        return repoCardDtoList;
+
+    }
 }

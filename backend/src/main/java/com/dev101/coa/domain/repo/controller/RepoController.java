@@ -113,6 +113,14 @@ public class RepoController {
     }
 
 
+    @Operation(description = "메인 인기있는 레포 4개 조회")
+    @GetMapping("/main/popular")
+    public ResponseEntity<BaseResponse<List<RepoCardDto>>> getPopularRepoViewList(@AuthenticationPrincipal Long loginMemberId){
+        List<RepoCardDto> result = repoService.getPopularRepoViewList(loginMemberId);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
+
+
     @Operation(description = "더미데이터 주입을 위한 컨트롤러! 무시해도 됩니다!")
     @GetMapping("/test")
     public ResponseEntity<BaseResponse<Object>> test() {
