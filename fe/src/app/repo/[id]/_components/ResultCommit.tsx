@@ -49,11 +49,11 @@ export default function ResultCommit() {
                   currentComment.commentContent ===
                     part.comment.commentContent && (
                     <div
-                      className="absolute -top-32 right-0 h-full bg-white bg-opacity-50 flex justify-center items-center text-wrap"
+                      className="absolute -top-20 right-0 h-full bg-white bg-opacity-50 flex justify-center items-center text-wrap"
                       onClick={() => setCurrentComment(null)}
                     >
-                      <div className="bg-white p-4 shadow-xl rounded text-black text-center max-w-[500px] min-w-[200px] break-words">
-                        <p>코멘트</p>
+                      <div className="bg-white p-4 shadow-xl rounded-lg border-black border-2 text-black text-center max-w-[500px] min-w-[200px] break-words">
+                        <p>{`${currentComment.commentTargetString} 코멘트`}</p>
                         <p>{`${currentComment.commentContent}`}</p>
                       </div>
                     </div>
@@ -112,4 +112,5 @@ interface Comment {
   commentStartIndex: number;
   commentEndIndex: number;
   commentContent: string;
+  commentTargetString: string;
 }
