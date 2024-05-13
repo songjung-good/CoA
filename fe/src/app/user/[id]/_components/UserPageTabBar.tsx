@@ -1,3 +1,5 @@
+import WaveButton from "./WaveButton";
+
 export default function UserPageTabBar({
   onClickTap,
   tabIndex,
@@ -53,11 +55,12 @@ export default function UserPageTabBar({
           심층분석
         </button>
       </div>
-      <button
+      <WaveButton />
+      {/* <button
         className={`${buttonCSS} bg-gradient-to-r from-[#F5E5CA] to-[#41EAE5]`}
       >
         파도타기
-      </button>
+      </button> */}
     </nav>
   );
 }
