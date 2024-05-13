@@ -17,11 +17,11 @@ public class RepoViewSkill extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long skillId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "repo_view_id", nullable = false)
     private RepoView repoView;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skill_code_id")
     private Code skillCode;
 }

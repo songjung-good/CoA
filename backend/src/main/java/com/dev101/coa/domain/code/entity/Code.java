@@ -1,10 +1,11 @@
 package com.dev101.coa.domain.code.entity;
 
-import com.dev101.coa.domain.code.dto.CodeCntDto;
 import com.dev101.coa.domain.code.dto.CodeDto;
 import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ public class Code extends BaseEntity {
     @Column(name = "code_id")
     private Long codeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id", nullable = false)
     private Type type;
 
