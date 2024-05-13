@@ -1,26 +1,31 @@
+// 라이브러리
 import React, { useState } from 'react';
 import tw from 'tailwind-styled-components';
 
 // type 지정
 interface SearchProps {
-  onSearch: (query: string, type: 'repo' | 'user') => void;
+  onSearch: (query: string, type: 'repo' | 'member') => void;
 }
 
 const SearchInput: React.FC<SearchProps> = ({ onSearch }) => {
   const [query, setQuery] = useState('');
-  const [type, setType] = useState('repo'); // 기본값: 레포지토리 검색
+  const [type, setType] = useState<'repo' | 'member'>('repo'); // 기본값: 레포지토리 검색
 
+  // 입력 값
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
   };
 
   const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setType(e.target.value);
+    const newValue = e.target.value;
+    if (newValue === 'repo' || newValue === 'member') {
+      setType(newValue);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSearch(query, type as 'repo' | 'user');
+    onSearch(query, type);
   };
 
   return (
@@ -31,12 +36,15 @@ const SearchInput: React.FC<SearchProps> = ({ onSearch }) => {
         onChange={handleQueryChange} 
         placeholder={type === 'repo' ? '예시) https://github.com/ssafy-mate/ssafy-mate_front-end' : '예시) songjung-good'}
       />
-      <Label>
-        <Radio type="radio" value="repo" checked={type === 'repo'} onChange={handleTypeChange} />
-        레포지토리
-        <Radio type="radio" value="user" checked={type === 'user'} onChange={handleTypeChange} />
-        사용자
-      </Label>
+      <fieldset>
+        <legend>검색 유형</legend>
+        <Label>
+          <Radio type="radio" name="searchType" value="repo" checked={type === 'repo'} onChange={handleTypeChange} />
+          레포지토리
+          <Radio type="radio" name="searchType" value="member" checked={type === 'member'} onChange={handleTypeChange} />
+          사용자
+        </Label>
+      </fieldset>
       <Button type="submit">검색</Button>
     </Form>
   );

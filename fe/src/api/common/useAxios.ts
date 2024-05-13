@@ -1,21 +1,9 @@
 "use client";
 import axios, { AxiosInstance } from "axios";
+import getServerUrl from "./getServerUrl";
+const serverUrl = getServerUrl(); // 서버 URL 가져오기
 
 const UseAxios = (): AxiosInstance => {
-
-  function getDomainAddress() {
-    if (typeof window === "undefined") {
-      // 서버 사이드에서 실행되는 경우
-      return "http://localhost:8080"; // 또는 다른 기본 URL
-    }
-    const hostname = window.location.hostname; // 현재 도메인 이름을 가져옵니다.
-    if (hostname === "localhost") {
-        return "http://localhost:8080";
-    } else {
-        return window.location.protocol + "//" + hostname;
-    }
-  }
-  const serverUrl = getDomainAddress();
 
   const axiosInstance = axios.create({
     baseURL: serverUrl,
@@ -42,6 +30,37 @@ const UseAxios = (): AxiosInstance => {
         return response
       }
       return response;  
+    },
+    async (error) => {
+      const originalRequest = error.config;
+      console.log(error)
+
+      if (error.response.status === 401) { // 여기에 에러 처리 //  && !originalRequest._retry
+
+        window.location.href = `/auth/login`
+        // originalRequest._retry = true;
+
+        // try { // 리프레시 로직 우리는 일단 api 인증토큰 로직을 넣어야 할 듯.
+        //   const response = await axios.get(`${serverUrl}/api/token`, {
+        //     headers: { authorization: localStorage.getItem('refreshToken') },
+        //   });
+
+        //   const newAccessToken = response.headers['authorization'];
+        //   const newRefreshToken = response.headers['authorization-refresh'];
+
+        //   localStorage.setItem('accessToken', newAccessToken);
+        //   localStorage.setItem('refreshToken', newRefreshToken);
+
+        //   originalRequest.headers['authorization'] = newAccessToken;
+
+        //   return axiosInstance(originalRequest);
+        // } catch (error) {
+        //   console.error('Error refreshing token:', error);
+        //   throw error;
+        // }
+      }
+
+      // return Promise.reject(error);
     }
   )
 

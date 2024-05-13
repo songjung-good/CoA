@@ -5,9 +5,11 @@ import { useState, useEffect } from "react";
 import UseAxios from "@/api/common/useAxios";
 import Image from "next/image";
 import CloseIcon from "@/icons/CloseIcon";
+import getServerUrl from "@/api/common/getServerUrl";
+
+const serverUrl = getServerUrl(); // 서버 URL 가져오기
 
 export default function LinkPage() {
-  const serverUrl = process.env.NEXT_PUBLIC_URL_SERVER;
   // 토큰 입력 모달
   const [githubTokenModal, setGithubTokenModal] = useState(false);
   const [gitlabTokenModal, setGitlabTokenModal] = useState(false);
