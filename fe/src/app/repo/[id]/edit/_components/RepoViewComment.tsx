@@ -2,6 +2,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import useRepoDetailStore from "@/store/repodetail";
 import CommentItem from "./CommentItem";
+import UseAxios from "@/api/common/useAxios";
+import { useParams } from "next/navigation";
 
 interface Comment {
   commentStartIndex: number;
@@ -10,8 +12,15 @@ interface Comment {
   commentTargetString: string;
 }
 
-export default function RepoViewComment() {
+interface RepoViewCommentProps {
+  setShowModal: (show: boolean) => void;
+}
+
+const RepoViewComment: React.FC<RepoViewCommentProps> = ({ setShowModal }) => {
   const result = useRepoDetailStore.getState().result.basicDetailDto;
+
+  const axios = UseAxios();
+  const params = useParams();
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [startIndex, setStartIndex] = useState<number | null>(null);
@@ -73,6 +82,21 @@ export default function RepoViewComment() {
     setComments(Array.isArray(initialComments) ? initialComments : []);
   }, []);
 
+  const handleSave = async () => {
+    await axios
+      .put(`/api/repos/comments/${params.id}`, comments)
+      .then((res) => {
+        console.log(res.data);
+        console.log("코멘트 저장 성공");
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("코멘트 저장 실패");
+      });
+
+    await setShowModal(true);
+  };
+
   return (
     <div className="w-4/5 flex flex-col items-center">
       <div className="flex justify-center items-center w-full min-h-20 p-5 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl">
@@ -119,7 +143,9 @@ export default function RepoViewComment() {
           ))}
         </div>
       )}
-      <button>코멘트 저장하기</button>
+      <button onClick={handleSave}>코멘트 저장하기</button>
     </div>
   );
-}
+};
+
+export default RepoViewComment;
