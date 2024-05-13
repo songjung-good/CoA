@@ -116,7 +116,6 @@ public class RepoController {
     @Operation(description = "메인 인기있는 레포 4개 조회")
     @GetMapping("/main/popular")
     public ResponseEntity<BaseResponse<List<RepoCardDto>>> getPopularRepoViewList(@AuthenticationPrincipal Long loginMemberId){
-        loginMemberId = 7L;
         List<RepoCardDto> result = repoService.getPopularRepoViewList(loginMemberId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
