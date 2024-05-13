@@ -62,9 +62,6 @@ class AnalysisService:
             self._update_status(dto, AnalysisStatus.GENERATING_README)
             dto.result.readme = await self.ai_service.generate_readme(conversation)
 
-            self._update_status(dto, AnalysisStatus.JUDGING_COMMITS)
-            dto.result.repo_view_result = await self.ai_service.judge_commits(conversation)
-
             self._update_status(dto, AnalysisStatus.SCORING_COMMITS)
             dto.result.commit_score = await self.ai_service.score_commits(conversation)
 

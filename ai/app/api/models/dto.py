@@ -9,12 +9,21 @@ from api.models.code import AnalysisStatus
 
 
 class CommitScoreDto:
-    def __init__(self, readability: int, performance: int, reusability: int, testability: int, exception: int):
+    def __init__(
+            self,
+            readability: int,
+            performance: int,
+            reusability: int,
+            testability: int,
+            exception: int,
+            scoreComment: str
+    ):
         self.readability = readability
         self.performance = performance
         self.reusability = reusability
         self.testability = testability
         self.exception = exception
+        self.scoreComment = scoreComment
 
     @property
     def total(self):
@@ -28,6 +37,7 @@ class CommitScoreDto:
             'testability': self.testability,
             'exception': self.exception,
             'total': self.total
+            'scoreComment': self.scoreComment
         }
 
 
