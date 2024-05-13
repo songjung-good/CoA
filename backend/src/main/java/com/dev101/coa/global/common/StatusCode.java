@@ -41,9 +41,11 @@ public enum StatusCode {
     CANNOT_GET_CONTRIBUTOR(false, 801, "contributor 수를 가져오는데 실패했습니다."),
 
     // search : 900
-    KEYWORD_EMPTY(false, 900, "검색 키워드가 빈 문자열 입니다.")
+    KEYWORD_EMPTY(false, 900, "검색 키워드가 빈 문자열 입니다."),
 
 
+    // 1000
+    INTERNAL_SERVER_ERROR(false, 1000, "내부 서버 오류입니다.")
 
 //    //게임 : 500
 //    GAME_NOT_FOUND(false, 500,"게임을 찾을 수 없습니다." ),
