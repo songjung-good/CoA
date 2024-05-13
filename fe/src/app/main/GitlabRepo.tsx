@@ -1,3 +1,4 @@
+'use client'
 // 사용자의 Gitlab ID를 받아 Repository 목록을 불러와 보여주는 컴포넌트
 // 라이브러리
 import React, { useState, useEffect } from "react";
@@ -44,7 +45,7 @@ const GitlabRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
           console.error("해당 요청에 문제가 생겼습니다. : ", error);
         }
       } else {
-        console.log(`userID가 null입니다. ${userID}`);
+        // console.log(`gitlab userID가 없습니다.`);
       }
       setLoadingAuth(false);
     };

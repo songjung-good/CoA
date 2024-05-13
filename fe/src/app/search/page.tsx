@@ -52,17 +52,17 @@ const SearchPage = () => {
   };
 
   return (
-    <Main>
+    <Main className="max-w-screen-xl mx-auto">
       <SearchInput onSearch={handleSearch} />
       {results.length > 0 ? (
         searchType === 'repo' ? (
-          <ResultComponent>
+          <ResultComponent className="mt-8 grid gap-8 grid-cols-1 justify-center items-start">
             {(results as RepoSearchResult[]).map((result, index) => (
               <RepoCard key={`repo-${result.repoViewId}-${index}`} repoInfo={result} />
               ))}
           </ResultComponent>
         ) : (
-          <ResultComponent>
+          <ResultComponent className="mt-8 grid gap-8 grid-cols-1 justify-center items-start">
             {(results as MemberSearchResult[]).map((result) => (
               <MemberCard key={result.memberId} memberInfo={result} />
             ))}
@@ -71,8 +71,10 @@ const SearchPage = () => {
       ) : (
         <p>검색 결과가 없습니다.</p>
       )}
-      <button>다음 페이지로 이동</button>
-      <button></button>
+      <PageTransition>
+        <Button>이전 페이지로 이동</Button>
+        <Button>다음 페이지로 이동</Button>
+      </PageTransition>
     </Main>
   );
 };
@@ -90,5 +92,15 @@ const ResultComponent = tw.div`
   justify-center
   items-start
 `;
+
+const PageTransition = tw.div`
+  mt-3
+  flex
+  justify-between
+`
+
+const Button = tw.button`
+  
+`
 
 export default SearchPage;
