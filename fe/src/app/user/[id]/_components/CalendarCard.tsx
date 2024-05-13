@@ -7,7 +7,7 @@ import {
 import userStore from "@/store/user";
 import ChartCalendar from "./CalendarChart";
 
-const CalendarCard: React.FC = () => {
+const CalendarCard = ({ uuid }: { uuid: string }) => {
   const [isLoading, setIsLoading] = useState(true);
   const userName = userStore((state) => state.githubUserName);
 

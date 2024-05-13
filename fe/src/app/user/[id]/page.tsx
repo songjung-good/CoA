@@ -25,7 +25,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
   const renderTabContent = () => {
     switch (tabIndex) {
       case 0:
-        return <UserOverviewPage />;
+        return <UserOverviewPage uuid={params.id} />;
       case 1:
         return <UserHistoryPage />;
       case 2:
@@ -33,7 +33,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
       case 3:
         return <UserAnalysisPage />;
       default:
-        return <UserOverviewPage />;
+        return <UserOverviewPage uuid={params.id} />;
     }
   };
 
