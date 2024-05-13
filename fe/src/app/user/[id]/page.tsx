@@ -17,6 +17,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     if (userName !== null) {
       setRepos(userName);
+      // setRepos(params.id);
     }
   }, [userName, setRepos]);
 

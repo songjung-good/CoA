@@ -9,7 +9,6 @@ import { colorMapping } from "@/components/colorMap";
 import useCommonCodeStore from "@/store/commoncode";
 import MyInfoEditCard from "./MyInfoEditCard";
 import IsStar from "./IsStar";
-import otherUserStore from "@/store/otherUserStore";
 
 interface Skill {
   codeId: number;
@@ -44,16 +43,6 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
       );
       // console.log(getResponse.data.result);
       setMyData(getResponse.data.result);
-      // const memberData = getResponse.data.result;
-      // otherUserStore.setState({
-      //   memberUuid: memberData.memberUuid,
-      //   memberImg: memberData.memberImg,
-      //   memberIntro: memberData.memberIntro,
-      //   skillList: memberData.skillList,
-      //   memberJobCodeId: memberData.memberJobCodeId,
-      //   isMine: memberData.isMine,
-      //   isBookmark: memberData.isBookmark,
-      // });
     } catch (error) {
       console.error(`/api/member/${uuid} 요청 에러`, error);
     }
