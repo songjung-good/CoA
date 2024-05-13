@@ -506,7 +506,7 @@ public class RepoService {
         // platform code에 따라 요청 보낼 url 분기처리
         String response;
         if (projectId == null) {
-            String aiUrl = aiServerUrl + "/github";
+            String aiUrl = aiServerUrl + "/analysis/github";
 
             response = webClient.post()
                     .uri(aiUrl)
@@ -518,7 +518,7 @@ public class RepoService {
                     .bodyToMono(String.class)
                     .block();
         } else {
-            String aiUrl = aiServerUrl + "/gitlab";
+            String aiUrl = aiServerUrl + "/analysis/gitlab";
 
             response = webClient.post()
                     .uri(aiUrl)
