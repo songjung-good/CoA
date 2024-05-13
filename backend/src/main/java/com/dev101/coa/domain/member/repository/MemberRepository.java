@@ -1,5 +1,6 @@
 package com.dev101.coa.domain.member.repository;
 
+import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,5 +22,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByMemberUuid(UUID memberUuid);
 
-    Member findByMemberNickname(String userName);
+    Member findByMemberNicknameAndMemberPlatformCode(String nickName, Code code);
 }

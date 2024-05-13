@@ -49,8 +49,9 @@ public class AuthenticationService {
         String userName = userInfo.getUsername();
         String img = userInfo.getImageUrl();
         Code jobCode = codeRepository.findByCodeId(2004L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+        Code platCode = codeRepository.findByCodeName(registrationId).orElseThrow(()-> new BaseException(StatusCode.CODE_NOT_FOUND));
 
-        Member member = memberRepository.findByMemberNickname(userName);
+        Member member = memberRepository.findByMemberNicknameAndMemberPlatformCode(userName, platCode);
         if (member == null) {
             assert registrationId != null;
             member = Member.builder()
