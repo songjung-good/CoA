@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/header/Header";
 
+import LoadingFloating from "@/components/header/LoadingFloating";
+
 export const metadata: Metadata = {
   title: "COA",
   description: "커밋 기반 기여도 분석 사이트",
@@ -20,6 +22,7 @@ export default function RootLayout({
       <body>
         <Header />
         {children}
+        <LoadingFloating />
       </body>
     </html>
   );
