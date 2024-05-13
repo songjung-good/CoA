@@ -36,7 +36,7 @@ class CommitScoreDto:
             'reusability': self.reusability,
             'testability': self.testability,
             'exception': self.exception,
-            'total': self.total
+            'total': self.total,
             'scoreComment': self.scoreComment
         }
 
