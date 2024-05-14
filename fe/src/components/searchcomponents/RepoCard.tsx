@@ -24,17 +24,19 @@ interface RepoCardDto {
 }
 
 interface ResultDTO {
-  key: number;
-  data: RepoCardDto[] | undefined;
+  data: RepoCardDto;
 }
 
-const RepoCard: React.FC<ResultDTO> = ( key, data ) => {
 
+
+const RepoCard: React.FC<ResultDTO> = ( data ) => {
+  const result = data.data;
+  const skill = data.data.skillList;
   return (
     <RepoInfoDiv>
       <Header>
         <div className="flex items-center">
-          {data.repoViewPath.includes("github") ? (
+          {result.repoViewPath.includes("github") ? (
             <ProfileImg
               src="/image/githubSSO.svg"
               alt="github logo"
@@ -45,26 +47,26 @@ const RepoCard: React.FC<ResultDTO> = ( key, data ) => {
               alt="gitlab logo"
             />
           )}
-          <Link href={data.repoViewPath.} className="font-bold truncate">
-            <Title>{data.repoViewTitle}</Title>
+          <Link href={result.repoViewPath} className="font-bold truncate">
+            <Title>{result.repoViewTitle}</Title>
           </Link>
         </div>
         <div className="flex items-center">
           <ProfileImg
-            src={data.memberImg}
+            src={result.memberImg}
             alt="member image"
           />
-          <p className="ml-2 font-bold">{data.memberNickName}</p>
+          <p className="ml-2 font-bold">{result.memberNickname}</p>
         </div>
       </Header>
       <Body>
-        <p className="text-xl mb-2 truncate">{data.repoViewSubTitle}</p>
+        <p className="text-xl mb-2 truncate">{result.repoViewSubtitle}</p>
         <p className="font-bold">
-          프로젝트 기간: {`${data.dateRange.startDate} ~ ${data.dateRange.endDate}`}
+          프로젝트 기간: {`${result.repoStartDate} ~ ${result.repoEndDate}`}
         </p>
       </Body>
       <div className="flex flex-wrap">
-        {data.skillList.map((skill: Skill, index: number) => (
+        {skill.map((skill: Skill, index: number) => (
           <span key={index} className="m-1 bg-gray-200 rounded-full px-4 py-1 text-sm">
             {skill.codeName}
           </span>
