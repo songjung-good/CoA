@@ -54,7 +54,9 @@ const RepoCard: React.FC<ResultDTO> = ( data ) => {
             src={result.memberImg}
             alt="member image"
           />
-          <p className="ml-2 font-bold">{result.memberNickname}</p>
+          <p className="ml-2 font-bold">
+            {result.memberNickname}
+          </p>
         </div>
       </Header>
       <Body>
@@ -62,6 +64,9 @@ const RepoCard: React.FC<ResultDTO> = ( data ) => {
         <p className="font-bold">
           프로젝트 기간: {`${result.repoStartDate} ~ ${result.repoEndDate}`}
         </p>
+        {/* <p className="font-bold">
+          프로젝트 참여 인원: {result.repoMemberCnt}
+        </p> */}
       </Body>
       <Skill>
         <div className="flex flex-wrap">

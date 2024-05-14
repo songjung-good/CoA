@@ -81,7 +81,6 @@ const SearchPage = () => {
       const response = await fetchSearchResults(searchQuery, searchType, page);
       setResults(response);
       setIsNext(response.result.next);
-      console.log(response.result.next);
     } catch (error) {
       console.error(error);
     }
