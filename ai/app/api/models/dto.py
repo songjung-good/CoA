@@ -98,7 +98,7 @@ class AnalysisDataDto:
         return AnalysisDataDto(
             analysis_id=analysis_id,
             repo_path=dct['repoPath'],
-            project_id=dct['projectId'] if 'projectId' in dct else -1,
+            project_id=dct['projectId'] if 'projectId' in dct else None,
             user_name=dct['userName'],
             is_own=dct['isOwn'],
             percentage=dct['percentage'],
