@@ -22,7 +22,7 @@ export default function RootLayout({
   const hasJWT = cookieStore.has("JWT");
 
   const title = "COA - 커밋 기반 기여도 분석 사이트";
-  const description = "CommIt Analyze는 깃허브 커밋을 분석하여 유용한 통찰을 제공합니다.";
+  const description = "CommIt Analyze는 레포지토리 커밋을 분석하여 유용한 지표를 제공합니다.";
   const image = "https://commitanalyze.com/image/default-thumbnail.jpg";
   const url = "https://commitanalyze.com";
 
