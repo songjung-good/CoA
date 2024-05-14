@@ -65,31 +65,33 @@ const UrlInput = () => {
   };
 
   return (
-    <Container>
-      <StyledInput
-        type="text"
-        placeholder="🔎Repository URL을 입력하세요"
-        value={inputValue}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-      />
-      <StyledButton onClick={fetchGitInfo}>분석하기</StyledButton>
-      {isModalOpen &&
-        userData &&
-        ("projectId" in userData ? (
-          <UserModal
-            userData={userData as GitHubResponse}
-            onClose={closeModal}
-            url={inputValue}
-          />
-        ) : (
-          <UserModal
-            userData={userData as GitLabResponse}
-            onClose={closeModal}
-            url={inputValue}
-          />
-        ))}
-    </Container>
+    <div className="flex justify-center">
+      <Container>
+        <StyledInput
+          type="text"
+          placeholder="🔎Repository URL을 입력하세요"
+          value={inputValue}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+        />
+        <StyledButton onClick={fetchGitInfo}>분석하기</StyledButton>
+        {isModalOpen &&
+          userData &&
+          ("projectId" in userData ? (
+            <UserModal
+              userData={userData as GitHubResponse}
+              onClose={closeModal}
+              url={inputValue}
+            />
+          ) : (
+            <UserModal
+              userData={userData as GitLabResponse}
+              onClose={closeModal}
+              url={inputValue}
+            />
+          ))}
+      </Container>
+    </div>
   );
 };
 
@@ -98,6 +100,7 @@ const Container = tw.div`
   w-4/5
   flex
   justify-evenly
+  p-4
 `;
 
 const StyledInput = tw.input`
@@ -116,6 +119,7 @@ const StyledButton = tw.button`
   border-2
   border-appGrey2
   rounded-full
+  px-2
   transition-colors
   duration-300
   hover:border-blue-400

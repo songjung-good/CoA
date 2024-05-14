@@ -9,7 +9,7 @@ export default function RequestApi() {
 
   useEffect(() => {
     if (isAnalyzing && analyzingPercent < 100) {
-      const interval = setInterval(feachApi, 1000);
+      const interval = setInterval(feachApi, 3000);
       return () => clearInterval(interval);
     }
   }, [isAnalyzing, analyzingPercent, feachApi]);
