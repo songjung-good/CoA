@@ -66,19 +66,13 @@ const axios = UseAxios();
 
 const ExhibitRepo: React.FC = () => {
   const [data, setData] = useState<RepoData[]>([]); // 데이터 상태
-  const repoViewIds = [3, 14, 5, 6]; // 추후 수정
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const results = await Promise.all(
-          repoViewIds.map(async (id) => {
-            const response = await axios.get(`/api/repos/${id}`);
-            return response.data.result;
-          })
-        );
-        setData(results);
-      } catch (error) {
+        const response = await axios.get('/api/repos/main/popular');
+        setData(response.data.result);
+          } catch (error) {
         console.error("API 요청 중 에러 발생:", error);
       }
     };
