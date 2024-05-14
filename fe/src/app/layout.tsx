@@ -20,10 +20,34 @@ export default function RootLayout({
   const cookieStore = cookies();
   // cookie 존재 여부를 boolean으로 return
   const hasJWT = cookieStore.has("JWT");
+
+  const title = "COA - 커밋 기반 기여도 분석 사이트";
+  const description = "CommIt Analyze는 레포지토리 커밋을 분석하여 유용한 지표를 제공합니다.";
+  const image = "https://commitanalyze.com/image/default-thumbnail.jpg";
+  const url = "https://commitanalyze.com";
+
   return (
     <html lang="ko">
       <head>
         <meta name="naver-site-verification" content="91a89f26cf678c7d7c627c42df934e3a18ff9a6d" />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="robots" content="index, follow" />
+        <link rel="icon" href="/image/logo48.png" />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={image} />
+        <meta property="og:url" content={url} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+        <meta name="twitter:domain" content="commitanalyze.com" />
       </head>
       <body>
         <Header />
