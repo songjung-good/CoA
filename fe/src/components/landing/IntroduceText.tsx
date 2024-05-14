@@ -105,6 +105,6 @@ export default function IntroduceText() {
 const Intro = styled.div`
   min-height: 15vh;
   text-align: center;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
 `;
