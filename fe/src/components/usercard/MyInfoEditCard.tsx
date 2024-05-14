@@ -160,10 +160,12 @@ export default function MyInfoEditCard({
               key={skill.codeId}
               style={{
                 padding: "4px",
+                borderWidth: "0.5px",
+                borderRadius: "9999px",
                 backgroundColor: `${colorMapping[skill.codeName]}`,
               }}
             >
-              <p className="bg-white flex gpa-2 items-center">
+              <p className="bg-white rounded-full flex gpa-2 items-center">
                 {skill.codeName}
                 <button onClick={() => removeSkill(skill.codeId)}>
                   <SmallCloseIcon />
