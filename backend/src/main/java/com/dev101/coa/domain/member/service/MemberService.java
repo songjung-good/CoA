@@ -330,6 +330,8 @@ public class MemberService {
                     .build());
         });
 
+        memberCntBySkillDtoList.sort((d1, d2) -> (int) (d2.getCnt() - d1.getCnt()));
+
         return memberCntBySkillDtoList;
     }
 }
