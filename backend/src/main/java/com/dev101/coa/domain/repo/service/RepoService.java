@@ -60,14 +60,14 @@ public class RepoService {
     private final CommitScoreRepository commitScoreRepository;
     private final AlarmRepository alarmRepository;
 
-    private final RedisRepoRepositoryImpl redisRepoRepository;
+    private final RedisRepoRepository redisRepoRepository;
 
     // AI server 통신을 위한 WebClient
     private final WebClient webClient;
 
     // 토큰 복호화를 위한 클래스
     private final EncryptionUtils encryptionUtils;
-    
+
 
     public void editReadme(Long memberId, Long repoViewId, String editReadmeReq) {
         Member loginMember = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
