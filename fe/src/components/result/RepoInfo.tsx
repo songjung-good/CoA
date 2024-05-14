@@ -24,7 +24,7 @@ const RepoInfo: React.FC = () => {
   return (
     <RepoInfoDiv>
       <div className="flex flex-col lg:flex-row items-start justify-between w-full ">
-        <div>
+        <div className="w-2/3">
           <div className="flex items-center mb-5">
             {repoInfo.repoViewPath.includes("github") ? (
               <Image
@@ -55,7 +55,7 @@ const RepoInfo: React.FC = () => {
             부제목을 작성해주세요.
           </p>
         </div>
-        <div className="w-full h-full lg:flex lg:flex-col lg:justify-between">
+        <div className="w-3/5 h-full lg:flex lg:flex-col lg:justify-between">
           <div className="mb-2 flex flex-col justify-between items-start lg:items-end w-full h-full">
             <div>
               <p className="font-extrabold text-start">
