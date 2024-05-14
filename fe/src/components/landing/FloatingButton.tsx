@@ -27,7 +27,7 @@ export default function FloatingButton({
           >
             <Upicon width={30} height={30} />
           </button>
-          <Link href="/main">
+          <Link href="/auth/login">
             <button className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full">
               <AnalysisIcon width={30} height={30} />
             </button>

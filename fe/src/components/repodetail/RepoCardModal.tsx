@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import useCommonCodeStore from "@/store/commoncode";
 // import useRepoDetailStore from "@/store/result";
@@ -22,8 +22,11 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   const { response } = useCommonCodeStore.getState();
   const [selectedStack, setSelectedStack] = useState("");
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
+  const [filteredOptions, setFilteredOptions] = useState<SkillOption[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const axios = UseAxios();
   const params = useParams();
+  const searchRef = useRef<HTMLDivElement>(null);
 
   // 결과 데이터
   const { result } = useRepoDetailStore((state) => state);
@@ -46,6 +49,27 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     result.repoCardDto.skillList?.map((skill) => skill.codeId) || [],
   );
   // 결과 데이터
+
+  const handleSearchFocus = () => {
+    setFilteredOptions(skillOptions);
+  };
+
+  // 모달 외부 클릭 이벤트 핸들러
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setFilteredOptions([]); // 외부 클릭 시 필터링된 옵션 초기화
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [searchRef]);
 
   useEffect(() => {
     setTitle(result.repoCardDto.repoViewTitle);
@@ -71,8 +95,23 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
         ? Object.entries(skillCodes).map(([key, value]) => ({ key, value }))
         : [];
       setSkillOptions(options);
+      setFilteredOptions([]); // 필터링된 옵션 초기화
     }
   }, [response]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    if (term) {
+      setFilteredOptions(
+        skillOptions.filter((option) =>
+          option.value.toLowerCase().includes(term.toLowerCase()),
+        ),
+      );
+    } else {
+      setFilteredOptions(skillOptions);
+    }
+  };
 
   const handleChangeStack = (value: string) => {
     // 선택된 value를 기반으로 key를 찾아 stacks 배열에 추가
@@ -84,6 +123,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
       setStacks((prev) => [...prev, parseInt(selectedKey)]);
     }
     setSelectedStack(selectedKey); // selectedStack 상태도 key로 관리
+    setSearchTerm(""); // 검색어 초기화
+    setFilteredOptions([]); // 필터링된 옵션 초기화
   };
 
   const handleRemoveStack = (index: number) => {
@@ -219,26 +260,35 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
               required
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4" ref={searchRef}>
             <label
               htmlFor="stackDropdown"
               className="block mb-2 text-sm font-medium"
             >
               사용 기술
             </label>
-            <select
+            <input
+              type="text"
               id="stackDropdown"
-              value={selectedStack}
-              onChange={(e) => handleChangeStack(e.target.value)}
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onFocus={handleSearchFocus}
               className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full py-2.5 px-4"
-            >
-              <option value="">기술을 선택하세요</option>
-              {skillOptions.map((option) => (
-                <option key={option.key} value={option.value}>
-                  {option.value}
-                </option>
-              ))}
-            </select>
+              placeholder="기술을 검색하세요"
+            />
+            {filteredOptions.length > 0 && (
+              <ul className="bg-white border border-gray-300 rounded-lg mt-2 absolute z-10 w-[93%] max-h-60 overflow-y-auto">
+                {filteredOptions.map((option) => (
+                  <li
+                    key={option.key}
+                    className="py-2 px-4 hover:bg-gray-100 cursor-pointer w-full"
+                    onClick={() => handleChangeStack(option.value)}
+                  >
+                    {option.value}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           {stacks.length === 0 ? (
             <div className="mb-2">사용한 기술 스택을 추가해주세요.</div>
