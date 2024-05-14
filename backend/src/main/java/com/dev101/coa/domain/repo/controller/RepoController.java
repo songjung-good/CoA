@@ -76,7 +76,6 @@ public class RepoController {
     public ResponseEntity<BaseResponse<String>> startAnalysis(
             @AuthenticationPrincipal Long currentMemberId,
             @RequestBody AnalysisReqDto analysisReqDto) throws Exception {
-
         String analysisId = repoService.startAnalysis(currentMemberId, analysisReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<String>(analysisId));
     }
