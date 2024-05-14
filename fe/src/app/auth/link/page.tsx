@@ -78,6 +78,7 @@ export default function LinkPage() {
         },
       );
       setGithubToken("");
+      setGithubTokenModal(false);
     } catch (error) {
       console.error("GitHub Token 저장 중 오류가 발생했습니다:", error);
     }
@@ -96,6 +97,7 @@ export default function LinkPage() {
         },
       );
       setGitlabToken("");
+      setGitlabTokenModal(false);
     } catch (error) {
       console.error("Gitlab Token 저장 중 오류가 발생했습니다:", error);
     }

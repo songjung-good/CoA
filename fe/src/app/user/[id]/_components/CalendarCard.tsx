@@ -7,7 +7,7 @@ import {
 import userStore from "@/store/user";
 import ChartCalendar from "./CalendarChart";
 
-const CalendarCard: React.FC = () => {
+const CalendarCard = ({ uuid }: { uuid: string }) => {
   const [isLoading, setIsLoading] = useState(true);
   const userName = userStore((state) => state.githubUserName);
 
@@ -21,8 +21,11 @@ const CalendarCard: React.FC = () => {
   const [years, setYears] = useState<string[]>(["2024"]);
   const [data, setData] = useState<Contribution[]>([]);
   const [isActive, setIsActive] = useState("2024");
+
   // github에서 contributions(잔디) 가져오기
   useEffect(() => {
+    console.log("달력 차트 memberUuid");
+    // console.log(memberUuid);
     const fetchData = async () => {
       const res = await getContributions(userName!);
       setTotalContribution(res.total);
