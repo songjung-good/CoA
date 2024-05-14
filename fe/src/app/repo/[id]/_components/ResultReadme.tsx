@@ -46,7 +46,7 @@ const ResultReadme: NextPage = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full p-4 bg-white shadow-lg rounded-2xl">
+    <div className="flex flex-col justify-center items-center w-full p-4 bg-white shadow-lg rounded-2xl border hover:border-appBlue2">
       <MDEditor
         value={md}
         onChange={setMd}
