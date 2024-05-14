@@ -93,6 +93,7 @@ const RepoInfo: React.FC = () => {
 
 const RepoInfoDiv = tw.div`
   w-full min-h-20 flex flex-col lg:flex-row lg:min-w-[800px] flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2
+  border hover:border-appBlue2
 `;
 
 function calculateDaysBetweenDates(startDate: string, endDate: string) {
