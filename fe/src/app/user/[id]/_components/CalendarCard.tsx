@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 
 import {
+  ApiResponse,
   Contribution,
   getContributions,
+  getGithubEventsData,
+  getGitlabEventsData,
 } from "@/api/userPage/apiContributions";
 import userStore from "@/store/user";
 import ChartCalendar from "./CalendarChart";
+import { mergeCalendarData } from "./mergeEvents";
 
 const CalendarCard = ({ uuid }: { uuid: string }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [githubData, setGithubData] = useState<ApiResponse>();
+  const [gitlabData, setGitlabData] = useState<ApiResponse>();
+  const [mergeData, setMergeData] = useState<ApiResponse>();
   const userName = userStore((state) => state.githubUserName);
-
   // github에서 contributions(잔디) 가져오기
   const [totalContribution, setTotalContribution] = useState<
     Record<string, number>
@@ -21,39 +27,62 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
   const [years, setYears] = useState<string[]>(["2024"]);
   const [data, setData] = useState<Contribution[]>([]);
   const [isActive, setIsActive] = useState("2024");
-
+  const [category, setCategory] = useState(0);
   // github에서 contributions(잔디) 가져오기
+  const fetchData = async () => {
+    // const res = await getContributions(userName!);
+    setIsLoading(true);
+    const res1 = await getGithubEventsData(uuid);
+    const res2 = await getGitlabEventsData(uuid);
+    const res3 = mergeCalendarData(res1, res2);
+    setGithubData(res1);
+    setGitlabData(res2);
+    setMergeData(res3);
+    fitData(res1);
+  };
+
+  const fitData = (res: ApiResponse) => {
+    setTotalContribution(res.total);
+    // data를 년도별로 분류
+    const dataByYear = res.contributions.reduce(
+      (acc, contribution) => {
+        const year = new Date(contribution.date).getFullYear();
+        if (!acc[year]) {
+          acc[year] = [];
+        }
+        acc[year].push(contribution);
+        return acc;
+      },
+      {} as Record<string, Contribution[]>,
+    );
+    SetDataByYear(dataByYear);
+    setYears(Object.keys(dataByYear));
+    const firstKey = Object.keys(dataByYear)[0];
+    setData(dataByYear[firstKey]);
+    setIsActive(firstKey);
+
+    setIsLoading(false);
+  };
+
   useEffect(() => {
-    console.log("달력 차트 memberUuid");
-    // console.log(memberUuid);
-    const fetchData = async () => {
-      const res = await getContributions(userName!);
-      setTotalContribution(res.total);
-
-      // data를 년도별로 분류
-      const dataByYear = res.contributions.reduce(
-        (acc, contribution) => {
-          const year = new Date(contribution.date).getFullYear();
-          if (!acc[year]) {
-            acc[year] = [];
-          }
-          acc[year].push(contribution);
-          return acc;
-        },
-        {} as Record<string, Contribution[]>,
-      );
-      SetDataByYear(dataByYear);
-      setYears(Object.keys(dataByYear));
-      const firstKey = Object.keys(dataByYear)[0];
-      setData(dataByYear[firstKey]);
-      setIsActive(firstKey);
-
-      setIsLoading(false);
-    };
-    if (userName !== null) {
-      fetchData();
-    }
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    if (category === 0) {
+      if (githubData !== undefined) {
+        fitData(githubData);
+      }
+    } else if (category === 1) {
+      if (gitlabData !== undefined) {
+        fitData(gitlabData);
+      }
+    } else if (category === 2) {
+      if (mergeData !== undefined) {
+        fitData(mergeData);
+      }
+    }
+  }, [category]);
 
   const handleYear = (year: string) => {
     setData(dataByYear[year]);
@@ -67,6 +96,32 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
     </section>
   ) : (
     <section className="card">
+      <ul className="flex gap-2 items-center pb-2">
+        <li>
+          <button
+            className={`px-4 py-1 rounded-md hover:bg-appBlue1 ${category === 0 ? `bg-appBlue2` : `bg-appGrey2`}`}
+            onClick={() => setCategory(0)}
+          >
+            깃허브
+          </button>
+        </li>
+        <li>
+          <button
+            className={`px-4 py-1 rounded-md hover:bg-appBlue1 ${category === 1 ? `bg-appBlue2` : `bg-appGrey2`}`}
+            onClick={() => setCategory(1)}
+          >
+            깃랩
+          </button>
+        </li>
+        <li onClick={() => setCategory(2)}>
+          <button
+            className={`px-4 py-1 rounded-md hover:bg-appBlue1 ${category === 2 ? `bg-appBlue2` : `bg-appGrey2`}`}
+            onClick={() => setCategory(2)}
+          >
+            Total
+          </button>
+        </li>
+      </ul>
       <div className="flex gap-2 items-center">
         <p className="text-lg">
           total: {Object.values(totalContribution).reduce((a, b) => a + b)}
@@ -83,7 +138,7 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
           ))}
         </ul>
       </div>
-      <ChartCalendar data={data} />
+      <ChartCalendar data={data} category={category} />
     </section>
   );
 };

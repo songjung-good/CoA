@@ -4,9 +4,10 @@ import { Contribution } from "@/api/userPage/apiContributions";
 
 interface CalendarChartProps {
   data: Contribution[];
+  category: number;
 }
 
-const CalendarChart: React.FC<CalendarChartProps> = ({ data }) => {
+const CalendarChart: React.FC<CalendarChartProps> = ({ data, category }) => {
   // Chart svg 만들기
   const svgRef = useRef<SVGSVGElement>(null);
   useEffect(() => {
@@ -24,7 +25,25 @@ const CalendarChart: React.FC<CalendarChartProps> = ({ data }) => {
       "#30a14e",
       "#216e39",
     ];
-    const color = d3.scaleQuantize([0, 4], colorRange);
+    const colorRange2: string[] = ["#ebedf0", "#D2DCFF", "#7992F5", "#3F51AE"];
+    const colorRange3: string[] = [
+      "#ebedf0",
+      "#B5E48C",
+      "#99D98C",
+      "#76C893",
+      "#52B69A",
+      "#34A0A4",
+      "#168AAD",
+      "#1A759F",
+    ];
+    let color: any;
+    if (category === 0) {
+      color = d3.scaleQuantize([0, 4], colorRange);
+    } else if (category === 1) {
+      color = d3.scaleQuantize([0, 3], colorRange2);
+    } else if (category === 2) {
+      color = d3.scaleQuantize([0, 7], colorRange3);
+    }
     const monthColorRange = [
       "#66CCCC", // 1월: 청록색
       "#CC6699", // 2월: 분홍색
@@ -63,8 +82,8 @@ const CalendarChart: React.FC<CalendarChartProps> = ({ data }) => {
       .attr("height", cellSize - 1)
       .attr("x", (_, i) => Math.floor(i / 7) * cellSize)
       .attr("y", (_, i) => (i % 7) * cellSize)
-      .attr("fill", (d) => color(d.level))
-      .attr("stroke", (d) => monthColors(new Date(d.date).getMonth()));
+      .attr("fill", (d) => color(d.level));
+    // .attr("stroke", (d) => monthColors(new Date(d.date).getMonth()));
   }, [data]);
 
   return <svg className="w-full" ref={svgRef}></svg>;
