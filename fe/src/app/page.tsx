@@ -219,4 +219,5 @@ mt-5
 
 const ServiceComponent = tw.div`
 overflow-y-hidden
+overflow-x-hidden
 `;

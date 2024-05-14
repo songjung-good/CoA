@@ -101,7 +101,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     // 폼 제출 로직 구현, 예: API 호출 등
     await console.log("저장!");
     const analyzeId = useAnalyzingStore.getState().analyzeId;
-    let repoViewId = "";
+    let repoViewId = 0;
     // 여기에 수정 로직을 추가하세요
     // 분석 저장 로직 ------------------------------------------------------------------
     const data = {
@@ -116,6 +116,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     console.log(data);
 
     await axios.post(`/api/repos/${analyzeId}`, data).then((res) => {
+      console.log(res);
       repoViewId = res.data.result;
     });
 
