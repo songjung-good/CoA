@@ -1,0 +1,13 @@
+# Allow Googlebot to crawl the main page
+User-agent: Googlebot
+Allow: /
+Disallow: /
+
+# Allow Naverbot to crawl the main page
+User-agent: Yeti
+Allow: /
+Disallow: /
+
+# Disallow all other bots from crawling the entire site
+User-agent: *
+Disallow: /
