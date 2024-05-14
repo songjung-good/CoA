@@ -615,6 +615,7 @@ public class RepoService {
         RedisResult redisData = redisRepoRepository.findById(analysisId).orElseThrow(() -> new BaseException(StatusCode.ANALYSIS_RESULT_NOT_EXIST));
         String redisRepoPath = redisData.getRepoPath();
 
+        System.out.println("redisData = " + redisData.getMemberId());
 
         // memberId와 요소의 memberId의 일치여부를 확인한다.(로그인한 유저와 분석요청 유저의 일치 여부)
         Long redisMemberId = redisData.getMemberId();
