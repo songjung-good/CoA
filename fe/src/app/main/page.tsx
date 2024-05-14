@@ -4,6 +4,7 @@
 
 // 라이브러리
 import React from "react";
+import Image from "next/image";
 import tw from "tailwind-styled-components";
 import { useStore } from "zustand";
 
@@ -48,11 +49,29 @@ const MainPage: React.FC = () => {
       </Div1>
       <RepoDiv>
         <RepoLeft>
-          <Heading>GitHub</Heading>
+          <Heading>
+            <Image
+              src="/image/oauth/github-mark.svg"
+              alt="github logo"
+              width={30}
+              height={30}
+              className="mr-2"
+            />
+            GitHub
+          </Heading>
           <GithubRepo userID={githubUserName} isToken={isGithubToken} />
         </RepoLeft>
         <RepoRight>
-          <Heading>GitLab</Heading>
+          <Heading>
+            <Image
+              src="/image/oauth/gitlab-mark.svg"
+              alt="github"
+              width={30}
+              height={30}
+              className="mr-2"
+            />
+            GitLab
+          </Heading>
           <GitlabRepo userID={gitlabUserName} isToken={isGitlabToken} />
         </RepoRight>
       </RepoDiv>
@@ -183,7 +202,10 @@ const Div = tw.div`
 
 const Heading = tw.h2`
   font-bold
-  text-xl
+  text-xl sm:text-2xl md:text-4xl
+  flex
+  items-center
+  mb-2
 `;
 
 export default MainPage;
