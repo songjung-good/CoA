@@ -25,6 +25,7 @@ class MockAnalysisService(AnalysisService):
 
         Mock에서는 각 단계를 3초간 진행 후 'DONE' 상태일 때 고정된 값만을 반환합니다.
         """
+        print(request)
 
         # DTO 가져오기
         dto: AnalysisDataDto = await AnalysisDataDto.from_redis(self.redis_client, request.analysisId)
@@ -46,29 +47,23 @@ class MockAnalysisService(AnalysisService):
             await asyncio.sleep(3)
             self._update_status(dto, step)
 
-        new_dto = AnalysisDataDto(
-            analysis_id=dto.analysis_id,
-            repo_path='DoubleDeltas/MineCollector',
-            user_name='DoubleDeltas',
-            result=AiResultDto(
-                total_commit_cnt=100,
-                personal_commit_cnt=10,
-                readme='안녕하세요',
-                repo_view_result='짱입니다',
-                commit_score=CommitScoreDto(
-                    readability=10,
-                    performance=20,
-                    reusability=30,
-                    testability=40,
-                    exception=50
-                ),
-                lines_of_code={
-                    3001: 100,
-                    3002: 200
-                }
+        dto.result = AiResultDto(
+            total_commit_cnt=100,
+            personal_commit_cnt=10,
+            readme='안녕하세요',
+            repo_view_result='짱입니다',
+            commit_score=CommitScoreDto(
+                readability=10,
+                performance=20,
+                reusability=30,
+                testability=40,
+                exception=50,
+                score_comment='점수 코멘트입니다'
             ),
-            percentage=100,
-            status=AnalysisStatus.DONE
+            lines_of_code={
+                3001: 100,
+                3002: 200
+            }
         )
 
-        new_dto.to_redis(self.redis_client)
+        dto.to_redis(self.redis_client)
