@@ -65,8 +65,8 @@ const RunBarChart: React.FC = () => {
 
     //월 단위로 데이터 합치기
     const mergeData = mergeLanguageData(transformedData);
-    console.log("mergeData");
-    console.log(mergeData);
+    // console.log("mergeData");
+    // console.log(mergeData);
     setData(mergeData);
   }, [repos]);
 

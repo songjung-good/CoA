@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/header/Header";
+import { cookies } from "next/headers";
+import LoadingFloating from "@/components/header/LoadingFloating";
 
 export const metadata: Metadata = {
   title: "COA",
@@ -15,11 +17,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies();
+  // cookie 존재 여부를 boolean으로 return
+  const hasJWT = cookieStore.has("JWT");
   return (
     <html lang="ko">
       <body>
         <Header />
         {children}
+        <LoadingFloating hasJWT={hasJWT} />
       </body>
     </html>
   );

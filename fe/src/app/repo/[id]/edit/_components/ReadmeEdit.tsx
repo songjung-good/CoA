@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import useRepoDetailStore from "@/store/repodetail";
 import UseAxios from "@/api/common/useAxios";
+import CommonButton from "@/components/result/CommonButton";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
@@ -61,8 +62,8 @@ const ReadmeEdit: NextPage<ReadmeEditProps> = ({ setShowModal }) => {
           style={{ width: "100%" }}
         />
       </div>
-      <div className="flex justify-center">
-        <button onClick={handleSave}>리드미 저장</button>
+      <div className="flex justify-center mb-4">
+        <CommonButton text="리드미 저장" onClick={handleSave} />
       </div>
     </div>
   );

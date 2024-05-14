@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import tw from "tailwind-styled-components";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import CommonButton from "@/components/result/CommonButton";
 // 컴포넌트
 import ResultCommit from "@/app/repo/[id]/_components/ResultCommit";
 import ResultReadme from "@/app/repo/[id]/_components/ResultReadme";
@@ -29,7 +30,9 @@ export default function ResultTab() {
     const { id } = params;
 
     router.push(`/result/${id}/edit`);
-    console.log(useRepoDetailStore.getState().result.repoCardDto.memberNickname);
+    console.log(
+      useRepoDetailStore.getState().result.repoCardDto.memberNickname,
+    );
   };
 
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";
@@ -79,9 +82,9 @@ export default function ResultTab() {
         </CSSTransition>
       </TransitionGroup>
       <div className="flex justify-evenly mt-10">
-        {isMine && <button onClick={handleEditButton}>저장 후 수정</button>}
+        {isMine && <CommonButton text="수정하기" onClick={handleEditButton} />}
         <Link href="/main">
-          <button>홈으로</button>
+          <CommonButton text="홈으로" onClick={() => {}} />
         </Link>
       </div>
     </div>

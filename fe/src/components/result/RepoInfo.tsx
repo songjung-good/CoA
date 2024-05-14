@@ -23,7 +23,7 @@ const RepoInfo: React.FC = () => {
 
   return (
     <RepoInfoDiv>
-      <div className="flex flex-col lg:flex-row items-start justify-between w-full lg:min-w-[800px]">
+      <div className="flex flex-col lg:flex-row items-start justify-between w-full ">
         <div>
           <div className="flex items-center mb-5">
             {repoInfo.repoViewPath.includes("github") ? (
@@ -34,7 +34,12 @@ const RepoInfo: React.FC = () => {
                 height={30}
               />
             ) : (
-              <Image src="" alt="gitlab logo" width={30} height={30} />
+              <Image
+                src="/image/oauth/gitlab-mark.svg"
+                alt="github"
+                width={30}
+                height={30}
+              />
             )}
             <Link
               href={`${repoInfo.repoViewPath}`}
@@ -47,11 +52,7 @@ const RepoInfo: React.FC = () => {
             {repoInfo.repoViewTitle}
           </p>
           <p className="text-xl font-bold lg:text-2xl mb-2 truncate">
-            {repoInfo.repoViewSubtitle ? (
-              <span>{repoInfo.repoViewSubtitle}</span>
-            ) : (
-              <span>부제목을 작성해주세요.</span>
-            )}
+            부제목을 작성해주세요.
           </p>
         </div>
         <div className="w-full h-full lg:flex lg:flex-col lg:justify-between">
@@ -66,22 +67,25 @@ const RepoInfo: React.FC = () => {
               </p>
             </div>
           </div>
-          <div className="flex-col justify-end">
-            <div className="flex flex-row justify-start lg:justify-end">
-              {repoInfo.skillList === null ? (
-                <div className="font-bold">
-                  프로젝트에 사용한 기술 스택을 추가해주세요
-                </div>
-              ) : (
-                <div>
-                  {repoInfo.skillList.map((e) => (
-                    <div>{e.codeName}</div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
+      </div>
+      <div className="flex flex-col sm:flex-row justify-between sm:items-end w-full h-full">
+        {repoInfo.skillList === null ? (
+          <div className="flex-grow font-bold">
+            프로젝트에 사용한 기술 스택을 추가해주세요
+          </div>
+        ) : (
+          <ul className="flex flex-wrap w-4/5">
+            {repoInfo.skillList.map((skill, index) => (
+              <li
+                key={index}
+                className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold"
+              >
+                {skill.codeName}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </RepoInfoDiv>
   );

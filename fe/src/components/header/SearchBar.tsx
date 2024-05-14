@@ -1,6 +1,7 @@
-'use client'
-import { useRouter } from 'next/navigation';
+"use client";
+
 import SearchIcon from "@/icons/SearchIcon";
+import { useRouter } from "next/navigation";
 
 export default function SearchBar({ hasJWT }: { hasJWT: boolean }) {
   const router = useRouter();
