@@ -4,6 +4,7 @@ import com.dev101.coa.domain.repo.dto.AiResultDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Getter
+@ToString
 public class RedisResult {
     @Id
     private String analysisId;
