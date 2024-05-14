@@ -91,6 +91,7 @@ export default function ReadmeEditPage() {
         <SuccessModal
           title="저장 성공"
           message="변경사항이 성공적으로 저장되었습니다."
+          setShowModal={setShowModal}
         />
       )}
     </div>
