@@ -21,6 +21,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> applicationHandler(RuntimeException e) {
+        System.out.println("e = " + e);
         log.error("Error occurs {}", e.toString());
         return ResponseEntity.status(200)
                 .body(new BaseResponse<>(StatusCode.INTERNAL_SERVER_ERROR));
