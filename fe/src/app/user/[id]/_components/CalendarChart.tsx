@@ -18,6 +18,7 @@ const CalendarChart: React.FC<CalendarChartProps> = ({ data, category }) => {
     const cellSize = svgWidth / 53;
     const width = svgWidth;
     const height = cellSize * 7;
+    const bottomMargin = 20;
     const colorRange: string[] = [
       "#ebedf0",
       "#9be9a8",
@@ -68,12 +69,15 @@ const CalendarChart: React.FC<CalendarChartProps> = ({ data, category }) => {
       .scaleTime()
       .domain([startDate, d3.timeDay.offset(endDate, 1)])
       .range([0, width]);
-
+    const xAxis = d3.axisBottom(xScale).ticks(d3.timeMonth.every(1));
+    // .tickFormat(d3.timeFormat("%b"));
+    svg.selectAll("g").remove();
+    svg.append("g").attr("transform", `translate(0,${height})`).call(xAxis);
     // 년도 변경시 차트가 변경되게 요소 삭제
     svg.selectAll("rect").remove();
     svg
       .attr("width", width)
-      .attr("height", height)
+      .attr("height", height + bottomMargin)
       .selectAll("rect")
       .data(data)
       .enter()
@@ -82,7 +86,9 @@ const CalendarChart: React.FC<CalendarChartProps> = ({ data, category }) => {
       .attr("height", cellSize - 1)
       .attr("x", (_, i) => Math.floor(i / 7) * cellSize)
       .attr("y", (_, i) => (i % 7) * cellSize)
-      .attr("fill", (d) => color(d.level));
+      .attr("fill", (d) => color(d.level))
+      .attr("rx", 10)
+      .attr("ry", 10);
     // .attr("stroke", (d) => monthColors(new Date(d.date).getMonth()));
   }, [data]);
 
