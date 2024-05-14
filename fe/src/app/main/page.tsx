@@ -16,6 +16,8 @@ import GitlabRepo from "@/app/main/GitlabRepo";
 import GithubRepo from "@/app/main/GithubRepo";
 // 레포 카드
 import ExhibitRepo from "@/app/main/ExhibitRepo";
+// 유저 정보
+import UserProfile from "@/components/maincomponents/UserProfile";
 
 // 전역변수
 import userStore from "@/store/user";
@@ -31,16 +33,14 @@ const MainPage: React.FC = () => {
       <Header>
         <Description>
           <TextWrapper>
-            <Title>
-              당신의 프로젝트 <br />
-              COA에서 분석해보세요
-            </Title>
+            <Title>당신의 프로젝트 COA에서 분석해보세요</Title>
+            <UrlInput />
             <SubTitle>
               분석하고 싶은 프로젝트의 URL만 입력하면
               <br /> 해당 레포지토리 분석을 시작합니다.
             </SubTitle>
           </TextWrapper>
-          <Img src="https://www.lgcns.com/wp-content/uploads/2021/11/9981C0435CB8247727.png"></Img>
+          <UserProfile />
         </Description>
       </Header>
       <Div1>
@@ -108,24 +108,27 @@ const Header = tw.div`
 
 const Description = tw.h3`
   flex
-  flex-row
-  items-center
-  justify-between
+  flex-col
+  w-full
+  sm:items-center
+  sm:justify-between
   max-w-screen-xl
+  sm:flex-row
 `;
 
 const TextWrapper = tw.div`
-  mx-auto
-  p-[2rem]
+  w-full
+  sm:w-2/3
+  pl-5 pr-2 py-10
 `;
 
 const Title = tw.h2`
   font-bold
   text-left
   mb-4
-  lg:text-5xl
-  md:text-3xl
-  sm:text-xl
+  lg:text-3xl
+  md:text-xl
+  sm:text-md
 `;
 
 const SubTitle = tw.p`
