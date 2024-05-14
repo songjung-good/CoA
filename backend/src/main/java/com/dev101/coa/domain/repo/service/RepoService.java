@@ -632,6 +632,7 @@ public class RepoService {
             throw new BaseException(StatusCode.RETRY_AI_ANALYSIS);
         }
 
+        System.out.println("redisData.getPercentage() = " + redisData.getPercentage());
         // 일치하면 요소에서 percentage를 가져온다.
         return AnalysisCheckResDto.builder()
                 .analysisId(analysisId)
