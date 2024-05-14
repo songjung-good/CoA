@@ -48,7 +48,7 @@ export async function fetchSearchResults(query: string, type: 'repo' | 'member',
   const params = {
     keyword: query,
     page: page,
-    size: 20,
+    size: 10,
   };
   try {
     if (type === 'repo') {
