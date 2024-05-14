@@ -22,6 +22,9 @@ export default function RootLayout({
   const hasJWT = cookieStore.has("JWT");
   return (
     <html lang="ko">
+      <head>
+        <meta name="naver-site-verification" content="91a89f26cf678c7d7c627c42df934e3a18ff9a6d" />
+      </head>
       <body>
         <Header />
         {children}

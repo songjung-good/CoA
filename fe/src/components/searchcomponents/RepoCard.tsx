@@ -1,6 +1,11 @@
-import React from 'react';
+// 라이브러리
+import React, { useState } from 'react';
 import Link from 'next/link';
 import tw from 'tailwind-styled-components';
+import { useRouter } from "next/navigation";
+// 컴포넌트
+import UseAxios from "@/api/common/useAxios";
+import useRepoDetailStore from '@/store/repodetail';
 
 // 타입 정의
 interface Skill {
@@ -24,17 +29,35 @@ interface RepoCardDto {
 }
 
 interface ResultDTO {
-  key: number;
-  data: RepoCardDto[] | undefined;
+  data: RepoCardDto;
 }
 
-const RepoCard: React.FC<ResultDTO> = ( key, data ) => {
+const axios = UseAxios();
+
+const RepoCard: React.FC<ResultDTO> = ( data ) => {
+  const result = data.data;
+  const skill = data.data.skillList;
+  const repoViewId = result.repoViewId;
+
+  const [hovered, setHovered] = useState(false);
+  const router = useRouter();
+  const setRepoDetail = useRepoDetailStore((state) => state.updateResultState);
+
+  const handleDetailClick = async (repoViewId: number) => { 
+    try {
+      const response = await axios.get(`/api/repos/${repoViewId}`);
+      setRepoDetail(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+    router.push(`/repo/${repoViewId}`);
+  };
 
   return (
     <RepoInfoDiv>
       <Header>
         <div className="flex items-center">
-          {data.repoViewPath.includes("github") ? (
+          {result.repoViewPath.includes("github") ? (
             <ProfileImg
               src="/image/githubSSO.svg"
               alt="github logo"
@@ -45,31 +68,39 @@ const RepoCard: React.FC<ResultDTO> = ( key, data ) => {
               alt="gitlab logo"
             />
           )}
-          <Link href={data.repoViewPath.} className="font-bold truncate">
-            <Title>{data.repoViewTitle}</Title>
+          <Link href={result.repoViewPath} className="font-bold truncate">
+            <Title>{result.repoViewTitle}</Title>
           </Link>
         </div>
         <div className="flex items-center">
           <ProfileImg
-            src={data.memberImg}
+            src={result.memberImg}
             alt="member image"
           />
-          <p className="ml-2 font-bold">{data.memberNickName}</p>
+          <p className="ml-2 font-bold">
+            {result.memberNickname}
+          </p>
         </div>
       </Header>
       <Body>
-        <p className="text-xl mb-2 truncate">{data.repoViewSubTitle}</p>
+        <p className="text-xl mb-2 truncate">{result.repoViewSubtitle}</p>
         <p className="font-bold">
-          프로젝트 기간: {`${data.dateRange.startDate} ~ ${data.dateRange.endDate}`}
+          프로젝트 기간: {`${result.repoStartDate} ~ ${result.repoEndDate}`}
         </p>
+        {/* <p className="font-bold">
+          프로젝트 참여 인원: {result.repoMemberCnt}
+        </p> */}
       </Body>
-      <div className="flex flex-wrap">
-        {data.skillList.map((skill: Skill, index: number) => (
-          <span key={index} className="m-1 bg-gray-200 rounded-full px-4 py-1 text-sm">
-            {skill.codeName}
-          </span>
-        ))}
-      </div>
+      <Skill>
+        <div className="flex flex-wrap">
+          {skill.map((skill: Skill, index: number) => (
+            <span key={index} className="m-1 bg-gray-200 rounded-full px-4 py-1 text-sm">
+              {skill.codeName}
+            </span>
+          ))}
+        </div>
+        <button onClick={() => handleDetailClick(repoViewId)}>상세 정보 보기</button>
+      </Skill>
     </RepoInfoDiv>
   );
 };
@@ -86,6 +117,9 @@ const RepoInfoDiv = tw.div`
   rounded-2xl
   p-5
   space-y-2
+  transition-all
+  border-2 border-transparent
+  hover:border-appBlue3
 `;
 
 const Header = tw.div`
@@ -111,6 +145,12 @@ const Title = tw.p`
 
 const Body = tw.div`
   mb-5
+`;
+
+const Skill = tw.div`
+  flex
+  justify-between
+  mt-2
 `;
 
 export default RepoCard;
