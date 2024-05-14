@@ -157,12 +157,14 @@ public class ExternalApiService {
                 .collectList()
                 .map(list -> {
                     // 날짜 범위 결정
-                    LocalDate startDate = list.stream()
+                    LocalDate startDay = list.stream()
                             .map(Event::getCreatedAt)
                             .filter(Objects::nonNull)
                             .map(date -> LocalDate.parse(date.substring(0, 10)))
                             .min(LocalDate::compareTo)
                             .orElse(LocalDate.now());
+
+                    LocalDate startDate = startDay.with(TemporalAdjusters.firstDayOfYear());
 
                     // 오늘 날짜 기준
                     LocalDate today = LocalDate.now();
