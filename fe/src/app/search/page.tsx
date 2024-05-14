@@ -161,7 +161,6 @@ const Button = tw.button`
   transition-all
   border-2 border-transparent
   hover:border-appRed
-  fixed
   bottom-0
 `;
 

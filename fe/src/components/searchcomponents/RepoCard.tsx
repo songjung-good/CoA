@@ -1,6 +1,11 @@
-import React from 'react';
+// 라이브러리
+import React, { useState } from 'react';
 import Link from 'next/link';
 import tw from 'tailwind-styled-components';
+import { useRouter } from "next/navigation";
+// 컴포넌트
+import UseAxios from "@/api/common/useAxios";
+import useRepoDetailStore from '@/store/repodetail';
 
 // 타입 정의
 interface Skill {
@@ -27,9 +32,27 @@ interface ResultDTO {
   data: RepoCardDto;
 }
 
+const axios = UseAxios();
+
 const RepoCard: React.FC<ResultDTO> = ( data ) => {
   const result = data.data;
   const skill = data.data.skillList;
+  const repoViewId = result.repoViewId;
+
+  const [hovered, setHovered] = useState(false);
+  const router = useRouter();
+  const setRepoDetail = useRepoDetailStore((state) => state.updateResultState);
+
+  const handleDetailClick = async (repoViewId: number) => { 
+    try {
+      const response = await axios.get(`/api/repos/${repoViewId}`);
+      setRepoDetail(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+    router.push(`/repo/${repoViewId}`);
+  };
+
   return (
     <RepoInfoDiv>
       <Header>
@@ -76,6 +99,7 @@ const RepoCard: React.FC<ResultDTO> = ( data ) => {
             </span>
           ))}
         </div>
+        <button onClick={() => handleDetailClick(repoViewId)}>상세 정보 보기</button>
       </Skill>
     </RepoInfoDiv>
   );
@@ -124,6 +148,8 @@ const Body = tw.div`
 `;
 
 const Skill = tw.div`
+  flex
+  justify-between
   mt-2
 `;
 
