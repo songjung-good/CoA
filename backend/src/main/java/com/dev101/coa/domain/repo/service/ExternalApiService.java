@@ -83,7 +83,7 @@ public class ExternalApiService {
 
     public String fetchGitlabProjects(String userName, String accessToken) {
         return webClient.get()
-                .uri("https://lab.ssafy.com/api/v4/projects/{userName}/users", userName)
+                .uri("https://lab.ssafy.com/api/v4/users/{userName}/projects", userName)
                 .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
