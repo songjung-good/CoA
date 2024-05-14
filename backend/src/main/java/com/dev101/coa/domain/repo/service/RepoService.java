@@ -3,7 +3,10 @@ package com.dev101.coa.domain.repo.service;
 import com.dev101.coa.domain.code.dto.CodeCntDto;
 import com.dev101.coa.domain.code.dto.CodeDto;
 import com.dev101.coa.domain.code.entity.Code;
+import com.dev101.coa.domain.code.entity.Type;
 import com.dev101.coa.domain.code.repository.CodeRepository;
+import com.dev101.coa.domain.code.repository.TypeRepository;
+import com.dev101.coa.domain.member.dto.CntBySkillDto;
 import com.dev101.coa.domain.member.entity.AccountLink;
 import com.dev101.coa.domain.member.entity.Alarm;
 import com.dev101.coa.domain.member.entity.Member;
@@ -11,7 +14,6 @@ import com.dev101.coa.domain.member.repository.AccountLinkRepository;
 import com.dev101.coa.domain.member.repository.AlarmRepository;
 import com.dev101.coa.domain.member.repository.MemberRepository;
 import com.dev101.coa.domain.redis.RedisRepoRepository;
-import com.dev101.coa.domain.redis.RedisRepoRepositoryImpl;
 import com.dev101.coa.domain.redis.RedisResult;
 import com.dev101.coa.domain.repo.dto.*;
 import com.dev101.coa.domain.repo.entity.*;
@@ -59,6 +61,7 @@ public class RepoService {
     private final LineOfCodeRepository lineOfCodeRepository;
     private final CommitScoreRepository commitScoreRepository;
     private final AlarmRepository alarmRepository;
+    private final TypeRepository typeRepository;
 
     private final RedisRepoRepository redisRepoRepository;
 
@@ -355,7 +358,7 @@ public class RepoService {
         return map;
     }
 
-    private JsonObject getJsonObject(String url, String accessToken){
+    private JsonObject getJsonObject(String url, String accessToken) {
         try {
             String jsonStrResponse = webClient.get()
                     .uri(url)
@@ -573,6 +576,7 @@ public class RepoService {
 
         // RepoCardDto(repoPath, repoTitle,repoStartDate, repoEndDate, isMine)
         RepoCardDto repoCardDto = RepoCardDto.builder()
+                .memberNickname(redisData.getUserName())
                 .repoViewPath(redisRepoPath)
                 .repoViewTitle(title)
                 .repoMemberCnt(redisData.getRepoMemberCnt())
@@ -767,7 +771,7 @@ public class RepoService {
         List<RepoView> repoViewList = repoViewRepository.findByRepoViewIdList(repoViewIdList);
 
         List<RepoCardDto> repoCardDtoList = new ArrayList<>();
-        for(RepoView repoView : repoViewList){
+        for (RepoView repoView : repoViewList) {
             List<RepoViewSkill> repoViewSkillList = repoViewSkillRepository.findAllByRepoView(repoView);
             List<CodeDto> codeDtoList = repoViewSkillList.stream()
                     .map(sk -> sk.getSkillCode().convertToDto())
@@ -779,5 +783,23 @@ public class RepoService {
         }
         return repoCardDtoList;
 
+    }
+
+    public List<CntBySkillDto> getRepoViewCntBySkillCode() {
+        // 타입이 기술인 코드들 가져오기
+        Type type = typeRepository.findById("3").orElseThrow(() -> new BaseException(StatusCode.TYPE_NOT_FOUND));
+        List<Code> codeList = codeRepository.findByType(type);
+
+        List<CntBySkillDto> repoViewCntBySkillDtoList = new ArrayList<>();
+
+        codeList.stream().forEach(code -> {
+            Long cnt = repoViewSkillRepository.countBySkillCode(code).orElse(0L);
+            repoViewCntBySkillDtoList.add(CntBySkillDto.builder()
+                    .codeName(code.getCodeName())
+                    .cnt(cnt)
+                    .build());
+        });
+
+        return repoViewCntBySkillDtoList;
     }
 }

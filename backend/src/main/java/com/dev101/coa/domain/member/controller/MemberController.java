@@ -133,4 +133,11 @@ public class MemberController {
         UUID result = memberService.getMemberRandom(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
+
+    @GetMapping("/skill-count")
+    @Operation(description = "언어 별 사용자 수")
+    public ResponseEntity<BaseResponse<List<CntBySkillDto>>> getMemberCntBySkill(){
+       List<CntBySkillDto> result = memberService.getMemberCntBySkill();
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+    }
 }
