@@ -11,19 +11,8 @@ interface Skill {
   codeName: string;
 }
 
-interface RepoLineCnt {
-  codeName: string;
-  lineCnt: number;
-}
-
-interface Comment {
-  commentStartIndex: number;
-  commentEndIndex: number;
-  commentContent: string;
-}
-
 interface RepoCardDto {
-  memberId: number;
+  memberUuid: string;
   memberNickname: string;
   memberImg: string;
   repoViewId: number;
@@ -31,45 +20,20 @@ interface RepoCardDto {
   repoViewTitle: string;
   repoViewSubtitle: string;
   repoMemberCnt: number;
-  skillList: Skill[];
+  skillList: Skill[]|null;
   repoStartDate: string;
   repoEndDate: string;
   isMine: boolean;
 }
 
-interface BasicDetailDto {
-  repoReadme: string;
-  repoViewResult: string;
-  commentList: Comment[];
-  repoViewTotalCommitCnt: number;
-  repoViewCommitCnt: number;
-  repoViewMemberCnt: number;
-  repoLineCntList: RepoLineCnt[];
-}
-
-interface CommitScoreDto {
-  readability: number;
-  performance: number;
-  reusability: number;
-  testability: number;
-  exception: number;
-  total: number;
-  scoreComment: string;
-}
-
 interface RepoData {
-  repoCardDto: RepoCardDto;
-  basicDetailDto: BasicDetailDto;
-  commitScoreDto: CommitScoreDto;
+  key: number;
+  data: RepoCardDto;
 }
 
-interface RepoCardProps {
-  data: RepoData;
-}
-
-const MainRepoCard: React.FC<RepoCardProps> = ({ data }) => {
+const MainRepoCard: React.FC<RepoData> = ({ data }) => {
   const [hovered, setHovered] = useState(false);
-  const result = data.repoCardDto
+  const result = data;
   return (
     <div
       className="relative"
@@ -93,7 +57,7 @@ const MainRepoCard: React.FC<RepoCardProps> = ({ data }) => {
         <div>
           <SkillLabel>프로젝트 스킬</SkillLabel>
           <SkillWrapper>
-            {result.skillList.map((skill, index) => (
+            {result.skillList && result.skillList.length > 0 && result.skillList.map((skill, index) => (
               <Skill key={index}>{skill.codeName}</Skill>
             ))}
           </SkillWrapper>
