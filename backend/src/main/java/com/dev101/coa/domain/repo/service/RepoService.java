@@ -766,7 +766,14 @@ public class RepoService {
 
         List<RepoCardDto> repoCardDtoList = new ArrayList<>();
         for(RepoView repoView : repoViewList){
-            repoCardDtoList.add(RepoCardDto.createRepoCardDto(repoView, member.getMemberUuid()));
+            List<RepoViewSkill> repoViewSkillList = repoViewSkillRepository.findAllByRepoView(repoView);
+            List<CodeDto> codeDtoList = repoViewSkillList.stream()
+                    .map(sk -> sk.getSkillCode().convertToDto())
+                    .toList();
+
+            RepoCardDto repoCardDto = RepoCardDto.createRepoCardDto(repoView, member.getMemberUuid());
+            repoCardDto.updateSkillList(codeDtoList);
+            repoCardDtoList.add(repoCardDto);
         }
         return repoCardDtoList;
 
