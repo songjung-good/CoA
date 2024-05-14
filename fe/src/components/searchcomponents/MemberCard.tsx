@@ -2,22 +2,28 @@ import React from 'react';
 import tw from 'tailwind-styled-components';
 
 // 타입 정의
-interface MemberSearchResult {
-  memberId: string;
+interface Skill {
+  codeId: number;
+  codeName: string;
+}
+
+interface MemberCardDto {
+  memberUuid: string;
   memberNickName: string;
   memberImg: string;
   memberIntro: string;
-  skillList: string[];
+  skillList: Skill[];
   memberJobCodeId: number;
   isMine: boolean;
   isBookmark: boolean;
 }
 
 interface MemberCardProps {
-  memberInfo: MemberSearchResult;
+  memberInfo: MemberCardDto;
 }
 
 const MemberCard: React.FC<MemberCardProps> = ({ memberInfo }) => {
+  const skill = memberInfo.skillList;
   return (
     <MemberInfoDiv>
       <div className="flex flex-col items-start">
@@ -33,9 +39,9 @@ const MemberCard: React.FC<MemberCardProps> = ({ memberInfo }) => {
         </div>
         <p className="text-sm mb-2 truncate">{memberInfo.memberIntro}</p>
         <div className="flex flex-wrap">
-          {memberInfo.skillList.map((skill, index) => (
+          {skill.map((skill, index) => (
             <span key={index} className="m-1 bg-gray-200 rounded-full px-4 py-1 text-sm">
-              {skill}
+              {skill.codeName}
             </span>
           ))}
         </div>
