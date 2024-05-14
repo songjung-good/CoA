@@ -315,24 +315,18 @@ public class MemberService {
 
     }
 
-    public List<MemberCntBySkillDto> getMemberCntBySkill() {
+    public List<CntBySkillDto> getMemberCntBySkill() {
         // 타입이 기술인 코드들 가져오기
         Type type = typeRepository.findById("3").orElseThrow(() -> new BaseException(StatusCode.TYPE_NOT_FOUND));
         List<Code> codeList = codeRepository.findByType(type);
 
-        StringBuilder sb = new StringBuilder();
-        for (Code code : codeList) {
-            sb.append(code.getCodeName() + " ");
-        }
-        System.out.println("sb.toString() = " + sb.toString());
-
-        List<MemberCntBySkillDto> memberCntBySkillDtoList = new ArrayList<>();
+        List<CntBySkillDto> memberCntBySkillDtoList = new ArrayList<>();
 
         codeList.stream().forEach(code -> {
             Long cnt = memberSkillRepository.countAllBySkillCode(code).orElse(0L);
-            memberCntBySkillDtoList.add(MemberCntBySkillDto.builder()
+            memberCntBySkillDtoList.add(CntBySkillDto.builder()
                     .codeName(code.getCodeName())
-                    .memberCnt(cnt)
+                    .cnt(cnt)
                     .build());
         });
 

@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class MemberCntBySkillDto {
+public class CntBySkillDto {
     private String codeName;
-    private Long memberCnt;
+    private Long cnt;
 }

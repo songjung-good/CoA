@@ -136,8 +136,8 @@ public class MemberController {
 
     @GetMapping("/skill-count")
     @Operation(description = "언어 별 사용자 수")
-    public ResponseEntity<BaseResponse<List<MemberCntBySkillDto>>> getMemberCntBySkill(){
-       List<MemberCntBySkillDto> result = memberService.getMemberCntBySkill();
+    public ResponseEntity<BaseResponse<List<CntBySkillDto>>> getMemberCntBySkill(){
+       List<CntBySkillDto> result = memberService.getMemberCntBySkill();
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 }
