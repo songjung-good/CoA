@@ -34,34 +34,43 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
     setIsLoading(true);
     const res1 = await getGithubEventsData(uuid);
     const res2 = await getGitlabEventsData(uuid);
-    const res3 = mergeCalendarData(res1, res2);
+    const res3 = await mergeCalendarData(res1, res2);
     setGithubData(res1);
     setGitlabData(res2);
     setMergeData(res3);
     fitData(res1);
+    console.log("res1");
+    console.log(res1);
+    console.log("res2");
+    console.log(res2);
+    console.log("res3");
+    console.log(res3);
   };
 
   const fitData = (res: ApiResponse) => {
-    setTotalContribution(res.total);
-    // data를 년도별로 분류
-    const dataByYear = res.contributions.reduce(
-      (acc, contribution) => {
-        const year = new Date(contribution.date).getFullYear();
-        if (!acc[year]) {
-          acc[year] = [];
-        }
-        acc[year].push(contribution);
-        return acc;
-      },
-      {} as Record<string, Contribution[]>,
-    );
-    SetDataByYear(dataByYear);
-    setYears(Object.keys(dataByYear));
-    const firstKey = Object.keys(dataByYear)[0];
-    setData(dataByYear[firstKey]);
-    setIsActive(firstKey);
+    // res와 res.total이 존재하는지 확인
+    if (res && res.total) {
+      setTotalContribution(res.total);
+      // data를 년도별로 분류
+      const dataByYear = res.contributions.reduce(
+        (acc, contribution) => {
+          const year = new Date(contribution.date).getFullYear();
+          if (!acc[year]) {
+            acc[year] = [];
+          }
+          acc[year].push(contribution);
+          return acc;
+        },
+        {} as Record<string, Contribution[]>,
+      );
+      SetDataByYear(dataByYear);
+      setYears(Object.keys(dataByYear));
+      const firstKey = Object.keys(dataByYear)[0];
+      setData(dataByYear[firstKey]);
+      setIsActive(firstKey);
 
-    setIsLoading(false);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -89,14 +98,9 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
     setIsActive(year);
   };
 
-  return isLoading ? (
+  return (
     <section className="card">
-      <p className="text-lg h-10">Loading...</p>
-      <div className="w-full aspect-[53/7] bg-appGrey1">Loading Chart...</div>
-    </section>
-  ) : (
-    <section className="card">
-      <ul className="flex gap-2 items-center pb-2">
+      <ul className="flex gap-2 items-center">
         <li>
           <button
             className={`px-4 py-1 rounded-md hover:bg-appBlue1 ${category === 0 ? `bg-appBlue2` : `bg-appGrey2`}`}
@@ -122,23 +126,34 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
           </button>
         </li>
       </ul>
-      <div className="flex gap-2 items-center">
-        <p className="text-lg">
-          total: {Object.values(totalContribution).reduce((a, b) => a + b)}
-        </p>
-        <ul className="flex gap-2">
-          {Object.entries(totalContribution).map(([key, value]) => (
-            <li
-              key={key}
-              className={`px-4 py-2 rounded-md hover:bg-appBlue1 ${isActive === key ? "bg-appBlue2" : "bg-appGrey2"}`}
-              onClick={() => handleYear(key)}
-            >
-              {key}: {value}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <ChartCalendar data={data} category={category} />
+      {isLoading ? (
+        <section className="">
+          <p className="text-lg h-10 py-2">Loading...</p>
+          <div className="w-full aspect-[53/7] bg-appGrey1">
+            Loading Chart...
+          </div>
+        </section>
+      ) : (
+        <>
+          <div className="flex gap-2 items-center py-2">
+            <p className="text-lg">
+              total: {Object.values(totalContribution).reduce((a, b) => a + b)}
+            </p>
+            <ul className="flex gap-2">
+              {Object.entries(totalContribution).map(([key, value]) => (
+                <li
+                  key={key}
+                  className={`px-4 py-2 rounded-md hover:bg-appBlue1 ${isActive === key ? "bg-appBlue2" : "bg-appGrey2"}`}
+                  onClick={() => handleYear(key)}
+                >
+                  {key}: {value}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <ChartCalendar data={data} category={category} />
+        </>
+      )}
     </section>
   );
 };
