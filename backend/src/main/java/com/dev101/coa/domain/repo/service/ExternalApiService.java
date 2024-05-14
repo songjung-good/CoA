@@ -166,6 +166,7 @@ public class ExternalApiService {
                             .min(LocalDate::compareTo)
                             .orElse(LocalDate.now());
 
+                    // 시작 해의 첫 날
                     LocalDate startDate = startDay.with(TemporalAdjusters.firstDayOfYear());
 
                     // 오늘 날짜 기준
@@ -198,6 +199,11 @@ public class ExternalApiService {
                         daily.put("level", determineLevel(count));
                         dailyContributions.add(daily);
                     });
+                    // dailyContributions 정렬 (year 내림차순, month-day 오름차순)
+                    dailyContributions.sort(Comparator.comparing((Map<String, Object> map) -> LocalDate.parse((String) map.get("date")).getYear())
+                            .reversed()
+                            .thenComparing(map -> LocalDate.parse((String) map.get("date")).getMonthValue())
+                            .thenComparing(map -> LocalDate.parse((String) map.get("date")).getDayOfMonth()));
 
                     result.put("total", yearlyTotals);
                     result.put("contributions", dailyContributions);
