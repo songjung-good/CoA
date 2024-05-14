@@ -4,7 +4,7 @@ from typing import TypeVar
 from dependency_injector import providers
 from dependency_injector.containers import DeclarativeContainer
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_openai import OpenAI
 from redis import Redis
 
@@ -40,20 +40,6 @@ class Container(DeclarativeContainer):
         GitLabAnalysisRequest: providers.Factory(GitLabClient)
     }
 
-    # llm = providers.Resource(
-    #     provides=LlamaCpp,
-    #     model_path=config.ai.model_path,
-    #     n_gpu_layers=-1,
-    #     temperature=0.3,
-    #     f16_kv=True,
-    #     verbose=False
-    # )
-    # chat_model = providers.Resource(
-    #     provides=Llama2Chat,
-    #     llm=llm,
-    #     temparature=0.3
-    # )
-
     llm = providers.Resource(
         provides=OpenAI,
         openai_api_key=config.ai.openai_api_key,
@@ -62,7 +48,12 @@ class Container(DeclarativeContainer):
     )
     chat_model = providers.Resource(
         provides=ChatOpenAI,
-        openai_api_key=config.ai.openai_api_key
+        openai_api_key=config.ai.openai_api_key,
+        temperature=0.3,
+    )
+    embeddings = providers.Resource(
+        provides=OpenAIEmbeddings,
+        openapi_api_key=config.ai.openai_api_key
     )
 
     ai_mutex = providers.Singleton(AiMutex, chat_model)
