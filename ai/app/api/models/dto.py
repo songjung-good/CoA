@@ -98,11 +98,11 @@ class AnalysisDataDto:
         return AnalysisDataDto(
             analysis_id=analysis_id,
             repo_path=dct['repoPath'],
-            project_id=dct['projectId'],
+            project_id=dct['projectId'] if 'projectId' in dct else -1,
             user_name=dct['userName'],
             is_own=dct['isOwn'],
             percentage=dct['percentage'],
-            result=AiResultDto.from_dict(dct['result']) if dct['result'] else None,
+            result=AiResultDto.from_dict(dct['result']) if 'result' in dct else None,
             status=AnalysisStatus(int(dct['status']))
         )
 
