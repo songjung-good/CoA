@@ -65,8 +65,10 @@ const SearchPage = () => {
       setSearchType(type);
       setResults(undefined);
       setPage(0);
+      setIsNext(false);
       const response = await fetchSearchResults(query, type, page);
       setResults(response);
+      setIsNext(response.result.next);
     } catch (error) {
       console.error(error);
     }
@@ -78,6 +80,8 @@ const SearchPage = () => {
       setPage(page);
       const response = await fetchSearchResults(searchQuery, searchType, page);
       setResults(response);
+      setIsNext(response.result.next);
+      console.log(response.result.next);
     } catch (error) {
       console.error(error);
     }
@@ -105,17 +109,19 @@ const SearchPage = () => {
       )}
       {results && (
         <PageTransition>
-          <Button onClick={() => handlePageChange(page + 1)}>
+          {!isNext || (
+          <RightButton onClick={() => handlePageChange(page + 1)}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
             </svg>
-          </Button>
+          </RightButton>
+          )}
           {page > 0 && 
-            <Button onClick={() => handlePageChange(page - 1)}>
+            <LeftButton onClick={() => handlePageChange(page - 1)}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
               </svg>
-            </Button>
+            </LeftButton>
           }
         </PageTransition>
       )}
@@ -156,6 +162,16 @@ const Button = tw.button`
   transition-all
   border-2 border-transparent
   hover:border-appRed
+  fixed
+  bottom-0
+`;
+
+const LeftButton = tw(Button)`
+  left-0
+`;
+
+const RightButton = tw(Button)`
+  right-0
 `;
 
 export default SearchPage;

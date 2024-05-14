@@ -1,5 +1,6 @@
 import React from 'react';
 import tw from 'tailwind-styled-components';
+import useCommonCodeStore from '@/store/commoncode';
 
 // 타입 정의
 interface Skill {
@@ -24,35 +25,46 @@ interface MemberCardProps {
 
 const MemberCard: React.FC<MemberCardProps> = ({ memberInfo }) => {
   const skill = memberInfo.skillList;
+  const jobcode = useCommonCodeStore.getState().response.result.commonCodeList[2].codes;
+  const jobName = jobcode ? [memberInfo.memberJobCodeId] : null;
+  
+  const bookmarkDisplay = memberInfo.isBookmark ? 'a' : 'b';
+  const mineDisplay = memberInfo.isMine ? 
+  ( 
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+    </svg>
+  ) : (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+    </svg>
+  )
+
+
   return (
     <MemberInfoDiv>
-      <div className="flex flex-col items-start">
-        <div className="flex items-center mb-5">
-          <Image
-            src={memberInfo.memberImg}
-            alt="member image"
-            width={50}
-            height={50}
-            className="rounded-full"
-          />
-          <p className="ml-2 font-bold">{memberInfo.memberNickName}</p>
+      <Header>
+        <ProfileImg
+          src={memberInfo.memberImg}
+          alt="member image"
+        />
+        <div className='flex flex-col'>
+          <Info>{bookmarkDisplay} | {mineDisplay}</Info>
+          <Info>{memberInfo.memberNickName} | {jobName}</Info>
         </div>
-        <p className="text-sm mb-2 truncate">{memberInfo.memberIntro}</p>
+      </Header>
+      <Body>
+        <p className="text-xl mb-2">{memberInfo.memberIntro}</p>
+      </Body>
+      <Skill>
         <div className="flex flex-wrap">
-          {skill.map((skill, index) => (
+          {skill.map((skill: Skill, index: number) => (
             <span key={index} className="m-1 bg-gray-200 rounded-full px-4 py-1 text-sm">
               {skill.codeName}
             </span>
           ))}
         </div>
-        <div className="mt-2">
-          {memberInfo.isBookmark ? (
-            <p className="text-blue-500 font-bold">북마크됨</p>
-          ) : (
-            <p className="text-gray-500 font-bold">북마크하기</p>
-          )}
-        </div>
-      </div>
+      </Skill>
     </MemberInfoDiv>
   );
 };
@@ -61,8 +73,6 @@ const MemberInfoDiv = tw.div`
   relative
   w-full
   min-h-20
-  flex
-  flex-col
   lg:flex-row
   flex-wrap
   justify-between
@@ -71,13 +81,39 @@ const MemberInfoDiv = tw.div`
   rounded-2xl
   p-5
   space-y-2
+  transition-all
+  border-2 border-transparent
+  hover:border-appBlue3
 `;
 
-const Image = tw.img`
-  w-20
-  h-20
-  object-cover
+const Header = tw.div`
+  flex
+  justify-between
+  items-center
+  mb-5
+`;
+
+const ProfileImg = tw.img`
   rounded-full
-`
+  mr-2
+  h-[5rem]
+  w-[5rem]
+`;
+
+const Info = tw.p`
+  ml-2
+  font-bold
+  flex
+  justify-end
+`;
+
+const Body = tw.div`
+  mb-5
+`;
+
+const Skill = tw.div`
+  mt-2
+`;
+
 
 export default MemberCard;

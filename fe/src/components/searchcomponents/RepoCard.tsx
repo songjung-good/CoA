@@ -27,8 +27,6 @@ interface ResultDTO {
   data: RepoCardDto;
 }
 
-
-
 const RepoCard: React.FC<ResultDTO> = ( data ) => {
   const result = data.data;
   const skill = data.data.skillList;
@@ -65,13 +63,15 @@ const RepoCard: React.FC<ResultDTO> = ( data ) => {
           프로젝트 기간: {`${result.repoStartDate} ~ ${result.repoEndDate}`}
         </p>
       </Body>
-      <div className="flex flex-wrap">
-        {skill.map((skill: Skill, index: number) => (
-          <span key={index} className="m-1 bg-gray-200 rounded-full px-4 py-1 text-sm">
-            {skill.codeName}
-          </span>
-        ))}
-      </div>
+      <Skill>
+        <div className="flex flex-wrap">
+          {skill.map((skill: Skill, index: number) => (
+            <span key={index} className="m-1 bg-gray-200 rounded-full px-4 py-1 text-sm">
+              {skill.codeName}
+            </span>
+          ))}
+        </div>
+      </Skill>
     </RepoInfoDiv>
   );
 };
@@ -88,6 +88,9 @@ const RepoInfoDiv = tw.div`
   rounded-2xl
   p-5
   space-y-2
+  transition-all
+  border-2 border-transparent
+  hover:border-appBlue3
 `;
 
 const Header = tw.div`
@@ -113,6 +116,10 @@ const Title = tw.p`
 
 const Body = tw.div`
   mb-5
+`;
+
+const Skill = tw.div`
+  mt-2
 `;
 
 export default RepoCard;
