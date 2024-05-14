@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -129,4 +130,26 @@ public class ExternalController {
                 .onErrorResume(e -> Mono.just(ResponseEntity.internalServerError().body(new BaseResponse<>(null))));
     }
 
+    @GetMapping("/github/{memberUuid}/lines-of-code")
+    public Mono<ResponseEntity<BaseResponse<List<Map<String, Object>>>>> getGitHubUserProjects(@PathVariable String memberUuid) {
+        return Mono.fromCallable(() -> memberRepository.findByMemberUuid(UUID.fromString(memberUuid))
+                        .orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST)))
+                .flatMap(member -> {
+                    AccountLink githubAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L)
+                            .orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+                    String githubUserName = githubAccountLink.getAccountLinkNickname();
+                    String githubAccessToken;
+                    try {
+                        githubAccessToken = encryptionUtils.decrypt(githubAccountLink.getAccountLinkReceiveToken());
+                    } catch (Exception e) {
+                        return Mono.error(new RuntimeException(e));
+                    }
+                    return externalApiService.fetchGitHubContributions(githubUserName, githubAccessToken);
+                })
+                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)))
+                .onErrorResume(e -> {
+                    e.printStackTrace();
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new BaseResponse<>(null)));
+                });
+    }
 }

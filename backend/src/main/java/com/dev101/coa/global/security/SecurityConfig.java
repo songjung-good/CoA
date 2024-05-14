@@ -51,8 +51,8 @@ public class SecurityConfig {
 //                                .anyRequest().permitAll()
                                 .requestMatchers("/api/swagger-ui/**", "/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
-                )
 //                )
+                )
                 .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
 
 //                .exceptionHandling(exceptionHandling -> exceptionHandling
