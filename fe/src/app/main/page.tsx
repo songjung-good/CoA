@@ -142,7 +142,8 @@ const Div1 = tw.div`
 
 const RepoDiv = tw.div`
   flex 
-  justify-around 
+  justify-between 
+  w-full
   max-w-screen-xl
 `;
 
