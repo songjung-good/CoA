@@ -488,7 +488,7 @@ public class RepoService {
 
 
         // Redis에 저장하기 전에 객체의 모든 데이터를 JSON 형식으로 저장하도록 설정
-        redisRepoRepository.save(RedisResult.builder()
+        RedisResult save = redisRepoRepository.save(RedisResult.builder()
                 .analysisId(analysisId)
                 .repoPath(analysisReqDto.getRepoUrl())
                 .projectId(projectId)
@@ -541,6 +541,7 @@ public class RepoService {
         }
 
         System.out.println("반환할 analysisId = " + analysisId);
+        System.out.println("save.getAnalysisId() = " + save.getAnalysisId());
         System.out.println("분석 시작 함수 끝. 이제 부터 확인 로직을 돌립니다.");
         return analysisId;
     }
@@ -626,7 +627,7 @@ public class RepoService {
         // PROCESSING 이나 DONE 이 아니면 redis 데이터를 삭제하고 예외를 발생시킨다.
         System.out.println("확인 로직 redisData.getAnalysisId() = " + redisData.getAnalysisId());
         System.out.println("확인 로직 redisData.getStatus() = " + redisData.getStatus());
-        if (!redisData.getStatus().equals("100") && !redisData.getStatus().equals("200")) {
+        if (Integer.parseInt(redisData.getStatus()) > 200) {
             redisRepoRepository.deleteById(analysisId);
             throw new BaseException(StatusCode.RETRY_AI_ANALYSIS);
         }
