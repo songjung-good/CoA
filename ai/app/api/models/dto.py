@@ -96,46 +96,67 @@ class AnalysisDataDto:
 
     def __init__(
             self,
-            analysis_id: str,
-            user_name: str,
-            result: AiResultDto | None,
+            analysis_id: str | None,
             repo_path: str | None = None,
             project_id: str | None = None,
-            is_own: bool = False,
-            percentage: int = 0,
-            status: AnalysisStatus = AnalysisStatus.BEFORE_RECEIVING
+            user_name: str | None = None,
+            member_id: int | None = None,
+            is_own: bool | None = None,
+            percentage: int | None = None,
+            repo_start_date: str | None = None,
+            repo_end_date: str | None = None,
+            repo_member_cnt: int | None = None,
+            result: AiResultDto | None = None,
+            status: AnalysisStatus | None = None,
+            expire_sec: int | None = None
     ):
         self.analysis_id = analysis_id
         self.repo_path = repo_path
         self.project_id = project_id
         self.user_name = user_name
+        self.member_id = member_id
         self.is_own = is_own
         self.percentage = percentage
+        self.repo_start_date = repo_start_date
+        self.repo_end_date = repo_end_date
+        self.repo_member_cnt = repo_member_cnt
         self.result = result
         self.status = status
+        self.expire_sec = expire_sec
 
     @staticmethod
     def from_dict(analysis_id: str, dct: dict) -> 'AnalysisDataDto':
         return AnalysisDataDto(
             analysis_id=analysis_id,
-            repo_path=dct['repoPath'],
-            project_id=dct['projectId'],
-            user_name=dct['userName'],
-            is_own=dct['isOwn'],
-            percentage=dct['percentage'],
-            result=AiResultDto.from_dict(dct['result']) if dct['result'] else None,
-            status=AnalysisStatus(int(dct['status']))
+            repo_path=dct.get('repoPath', None),
+            project_id=dct.get('projectId', None),
+            user_name=dct.get('userName', None),
+            member_id=dct.get('memberId', None),
+            is_own=dct.get('isOwn', None),
+            percentage=dct.get('percentage', None),
+            repo_start_date=dct.get('repoStartDate', None),
+            repo_end_date=dct.get('repoEndDate', None),
+            repo_member_cnt=dct.get('repoMemberCnt', None),
+            result=AiResultDto.from_dict(dct['result']) if 'result' in dct else None,
+            status=AnalysisStatus(int(dct.get('status', 000))),
+            expire_sec=dct.get('expiredSec', None)
         )
 
     def to_camel_dict(self) -> dict:
         return {
+            'analysisId': self.analysis_id,
             'repoPath': self.repo_path,
             'projectId': self.project_id,
             'userName': self.user_name,
+            'memberId': self.member_id,
             'isOwn': self.is_own,
             'percentage': self.percentage,
+            'repoStartDate': self.repo_start_date,
+            'repoEndDate': self.repo_end_date,
+            'repoMemberCnt': self.repo_member_cnt,
             'result': self.result.to_camel_dict() if self.result else None,
-            'status': str(self.status)
+            'status': str(self.status),
+            'expireSec': self.expire_sec
         }
 
     @staticmethod
