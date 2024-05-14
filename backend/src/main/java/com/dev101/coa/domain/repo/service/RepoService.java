@@ -573,6 +573,7 @@ public class RepoService {
 
         // RepoCardDto(repoPath, repoTitle,repoStartDate, repoEndDate, isMine)
         RepoCardDto repoCardDto = RepoCardDto.builder()
+                .memberNickname(redisData.getUserName())
                 .repoViewPath(redisRepoPath)
                 .repoViewTitle(title)
                 .repoMemberCnt(redisData.getRepoMemberCnt())

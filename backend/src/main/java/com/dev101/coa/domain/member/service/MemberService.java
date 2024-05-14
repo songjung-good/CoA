@@ -1,7 +1,9 @@
 package com.dev101.coa.domain.member.service;
 
 import com.dev101.coa.domain.code.entity.Code;
+import com.dev101.coa.domain.code.entity.Type;
 import com.dev101.coa.domain.code.repository.CodeRepository;
+import com.dev101.coa.domain.code.repository.TypeRepository;
 import com.dev101.coa.domain.member.dto.*;
 import com.dev101.coa.domain.member.entity.*;
 import com.dev101.coa.domain.member.repository.*;
@@ -38,6 +40,7 @@ public class MemberService {
     private final CommitScoreRepository commitScoreRepository;
     private final MemberJobRepository memberJobRepository;
     private final RepoViewRepository repoViewRepository;
+    private final TypeRepository typeRepository;
 
 
     public MemberInfoDto getMemberInfo(Long memberId) {
@@ -70,7 +73,7 @@ public class MemberService {
         List<AlarmDto> alarmDtoList = new ArrayList<>();
         for (Alarm alarm : alarmList) {
             AlarmDto alarmDto = alarm.convertToDto();
-            if(alarm.getAlarmRepoView() != null){
+            if (alarm.getAlarmRepoView() != null) {
                 alarmDto.updateRepoViewInfo(alarm.getAlarmRepoView().getRepoViewId(), alarm.getAlarmRepoView().getRepoViewTitle());
             }
             alarmDtoList.add(alarmDto);
@@ -151,14 +154,14 @@ public class MemberService {
 
     public List<MemberCardDto> getBookmarkList(Long loginMemberId) {
         // 로그인 멤버 찾기
-        Member loginMember = memberRepository.findById(loginMemberId).orElseThrow(()->new BaseException(StatusCode.MEMBER_NOT_EXIST));
+        Member loginMember = memberRepository.findById(loginMemberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
         // 북마크 목록 가져오기
         List<Bookmark> bookmarkList = bookmarkRepository.findByBookmarkMember(loginMember);
 
         // MemberCardDto로 바꾸기
         List<MemberCardDto> memberCardDtoList = new ArrayList<>();
-        for(Bookmark bookmark : bookmarkList){
+        for (Bookmark bookmark : bookmarkList) {
             Member targetMember = bookmark.getBookmarkTargetMember();
             List<MemberSkill> targetMemberSkillList = memberSkillRepository.findByMember(targetMember);
             memberCardDtoList.add(getMemberCardDto(loginMember, targetMember, targetMemberSkillList));
@@ -300,15 +303,39 @@ public class MemberService {
         UUID randomUuid = loginMemberUuid;
 
         List<UUID> memberUuidList = new ArrayList<>();
-        memberRepository.findAll().forEach((m)->memberUuidList.add(m.getMemberUuid()));
+        memberRepository.findAll().forEach((m) -> memberUuidList.add(m.getMemberUuid()));
 
         Random random = new Random();
-        while(loginMemberUuid.equals(randomUuid)){
+        while (loginMemberUuid.equals(randomUuid)) {
             int randomIdx = random.nextInt(memberUuidList.size());
             randomUuid = memberUuidList.get(randomIdx);
         }
 
         return randomUuid;
 
+    }
+
+    public List<MemberCntBySkillDto> getMemberCntBySkill() {
+        // 타입이 기술인 코드들 가져오기
+        Type type = typeRepository.findById("3").orElseThrow(() -> new BaseException(StatusCode.TYPE_NOT_FOUND));
+        List<Code> codeList = codeRepository.findByType(type);
+
+        StringBuilder sb = new StringBuilder();
+        for (Code code : codeList) {
+            sb.append(code.getCodeName() + " ");
+        }
+        System.out.println("sb.toString() = " + sb.toString());
+
+        List<MemberCntBySkillDto> memberCntBySkillDtoList = new ArrayList<>();
+
+        codeList.stream().forEach(code -> {
+            Long cnt = memberSkillRepository.countAllBySkillCode(code).orElse(0L);
+            memberCntBySkillDtoList.add(MemberCntBySkillDto.builder()
+                    .codeName(code.getCodeName())
+                    .memberCnt(cnt)
+                    .build());
+        });
+
+        return memberCntBySkillDtoList;
     }
 }
