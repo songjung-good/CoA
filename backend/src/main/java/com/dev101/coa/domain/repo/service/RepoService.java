@@ -616,6 +616,7 @@ public class RepoService {
 
         // 분석 상태를 체크한다.
         // PROCESSING 이나 DONE 이 아니면 redis 데이터를 삭제하고 예외를 발생시킨다.
+        System.out.println("redisData.getStatus() = " + redisData.getStatus());
         if (!redisData.getStatus().equals("100") && !redisData.getStatus().equals("200")) {
             redisRepoRepository.deleteById(analysisId);
             throw new BaseException(StatusCode.RETRY_AI_ANALYSIS);
