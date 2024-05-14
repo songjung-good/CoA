@@ -10,19 +10,8 @@ interface Skill {
   codeName: string;
 }
 
-interface RepoLineCnt {
-  codeName: string;
-  lineCnt: number;
-}
-
-interface Comment {
-  commentStartIndex: number;
-  commentEndIndex: number;
-  commentContent: string;
-}
-
 interface RepoCardDto {
-  memberId: number;
+  memberUuid: string;
   memberNickname: string;
   memberImg: string;
   repoViewId: number;
@@ -36,36 +25,10 @@ interface RepoCardDto {
   isMine: boolean;
 }
 
-interface BasicDetailDto {
-  repoReadme: string;
-  repoViewResult: string;
-  commentList: Comment[];
-  repoViewTotalCommitCnt: number;
-  repoViewCommitCnt: number;
-  repoViewMemberCnt: number;
-  repoLineCntList: RepoLineCnt[];
-}
-
-interface CommitScoreDto {
-  readability: number;
-  performance: number;
-  reusability: number;
-  testability: number;
-  exception: number;
-  total: number;
-  scoreComment: string;
-}
-
-interface RepoData {
-  repoCardDto: RepoCardDto;
-  basicDetailDto: BasicDetailDto;
-  commitScoreDto: CommitScoreDto;
-}
-
 const axios = UseAxios();
 
 const ExhibitRepo: React.FC = () => {
-  const [data, setData] = useState<RepoData[]>([]); // 데이터 상태
+  const [data, setData] = useState<RepoCardDto[]>([]); // 데이터 상태
 
   useEffect(() => {
     const fetchData = async () => {
