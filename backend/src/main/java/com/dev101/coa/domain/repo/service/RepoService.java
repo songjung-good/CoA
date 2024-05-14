@@ -363,22 +363,32 @@ public class RepoService {
 
     private JsonObject getJsonObject(String url, String accessToken) {
 //        try {
-            String jsonStrResponse = webClient.get()
-                    .uri(url)
-                    .header("Authorization", "Bearer " + accessToken)  // Authorization 헤더 추가
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()  // 응답을 검색
-                    .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
-                    .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.NOT_FOUND)))
-                    .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Client error. Please retry: 외부 api 요청 시 클라이언트 에러 발생")))
-                    .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error. Please retry: 외부 api 요청 시 서버 에러 발생")))
-                    .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
-                    .block();  // Mono를 블로킹하여 실제 값 가져오기
+        String jsonStrResponse = webClient.get()
+                .uri(url)
+                .header("Authorization", "Bearer " + accessToken)  // Authorization 헤더 추가
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()  // 응답을 검색
+                .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
+                .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.NOT_FOUND)))
+                .onStatus(HttpStatusCode::is4xxClientError, response ->
+                        response.bodyToMono(String.class).flatMap(errorBody -> {
+                            System.out.println("Client error: " + errorBody);
+                            return Mono.error(new ResponseStatusException(response.statusCode(), "Client error. Please retry: 외부 api 요청 시 클라이언트 에러 발생"));
+                        })
+                )
+                .onStatus(HttpStatusCode::is5xxServerError, response ->
+                        response.bodyToMono(String.class).flatMap(errorBody -> {
+                            System.out.println("Server error: " + errorBody);
+                            return Mono.error(new ResponseStatusException(response.statusCode(), "Server error. Please retry: 외부 api 요청 시 서버 에러 발생"));
+                        })
+                )
+                .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
+                .block();  // Mono를 블로킹하여 실제 값 가져오기
 
-            if (jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
+        if (jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
 
-            // 문자열 -> json object
-            return JsonParser.parseString(jsonStrResponse).getAsJsonObject();
+        // 문자열 -> json object
+        return JsonParser.parseString(jsonStrResponse).getAsJsonObject();
 //        } catch (Exception e) {
 //            System.out.println("e = " + e);
 //            throw new BaseException(StatusCode.RETRY_AI_ANALYSIS);
@@ -807,7 +817,7 @@ public class RepoService {
                     .build());
         });
 
-        repoViewCntBySkillDtoList.sort((d1, d2) -> (int)(d2.getCnt() - d1.getCnt()));
+        repoViewCntBySkillDtoList.sort((d1, d2) -> (int) (d2.getCnt() - d1.getCnt()));
 
         return repoViewCntBySkillDtoList;
     }
