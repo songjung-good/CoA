@@ -127,7 +127,11 @@ export default function HomePage() {
         <Slogan>코드만 치세요. 분석은 우리가 할께요.</Slogan>
         <Title>CoA</Title>
         <IntroduceText />
-        <AnalysisButton buttonRef={buttonRef} content="시작하기" url="/main" />
+        <AnalysisButton
+          buttonRef={buttonRef}
+          content="시작하기"
+          url="/auth/login"
+        />
         <IntroduceButton content="서비스 알아보기" onClick={scrollToService} />
         <IntroBar>
           <h3 className="text-3xl font-bold">CoA = Commit Analyzer</h3>
