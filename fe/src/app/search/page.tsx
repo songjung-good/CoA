@@ -60,26 +60,33 @@ const SearchPage = () => {
 
   // 검색 실행 함수
   const handleSearch = async (query: string, type: 'repo' | 'member') => {
-    setQuery(query);
-    setSearchType(type);
-    setResults(undefined);
-    setPage(0);
-    const response = await fetchSearchResults(query, type, page);
-    setResults(response);
-    console.log(response);
+    try {
+      setQuery(query);
+      setSearchType(type);
+      setResults(undefined);
+      setPage(0);
+      const response = await fetchSearchResults(query, type, page);
+      setResults(response);
+    } catch (error) {
+      console.error(error);
+    }
   };
-
+  
   // 페이지 변경 함수
   const handlePageChange = async (page: number) => { 
-    setPage(page);
-    const response = await fetchSearchResults(searchQuery, searchType, page);
-    setResults(response);
+    try {
+      setPage(page);
+      const response = await fetchSearchResults(searchQuery, searchType, page);
+      setResults(response);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <Main className="max-w-screen-xl mx-auto">
       <SearchInput onSearch={handleSearch} />
-      {results && (
+        {results ? (
         searchType === 'repo' ? (
           <ResultComponent className="mt-8 grid gap-8 grid-cols-1 justify-center items-start">
             {(results.result.repoCardDtoList as RepoCardDto[]).map((result, index) => (
@@ -93,9 +100,9 @@ const SearchPage = () => {
             ))}
           </ResultComponent>
         )
-      )} : (
+      ) : (
         <p>검색 결과가 없습니다.</p>
-      )
+      )}
       {results && (
         <PageTransition>
           <Button onClick={() => handlePageChange(page + 1)}>
