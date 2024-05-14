@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -163,7 +164,11 @@ public class ExternalApiService {
                             .min(LocalDate::compareTo)
                             .orElse(LocalDate.now());
 
-                    LocalDate endDate = LocalDate.now();
+                    // 오늘 날짜 기준
+                    LocalDate today = LocalDate.now();
+
+                    // 오늘 날짜 기준으로 해당 연도의 마지막 날짜 계산
+                    LocalDate endDate = today.with(TemporalAdjusters.lastDayOfYear());
 
                     // 모든 날짜에 대한 초기 맵 생성
                     Map<LocalDate, Long> allDates = Stream.iterate(startDate, date -> date.plusDays(1))
