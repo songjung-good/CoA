@@ -1,5 +1,6 @@
 package com.dev101.coa.domain.repo.controller;
 
+import com.dev101.coa.domain.member.dto.CntBySkillDto;
 import com.dev101.coa.domain.repo.dto.*;
 import com.dev101.coa.domain.repo.service.RepoService;
 import com.dev101.coa.global.common.BaseResponse;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -125,5 +127,13 @@ public class RepoController {
     public ResponseEntity<BaseResponse<Object>> test() {
         repoService.test();
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(StatusCode.SUCCESS));
+    }
+
+
+    @Operation(description = "언어 별 레포 수")
+    @GetMapping("/skill-count")
+    public ResponseEntity<BaseResponse<List<CntBySkillDto>>> getRepoViewCntBySkillCode(){
+        List<CntBySkillDto> result = repoService.getRepoViewCntBySkillCode();
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 }

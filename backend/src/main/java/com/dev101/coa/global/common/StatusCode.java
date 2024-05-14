@@ -17,6 +17,7 @@ public enum StatusCode {
     CODE_NOT_FOUND(false, 400, "코드를 찾을 수 없습니다."),
     NOT_FOUND_PLAT(false, 401, "플랫폼을 찾을 수 없습니다."),
     REPO_PLAT_NOT_EXIST(false, 402, "해당하는 저장소 플랫폼이 존재하지 않습니다."),
+    TYPE_NOT_FOUND(false, 403, "타입을 찾을 수 없습니다."),
 
     NOT_FOUND(false, 404, "주소를 찾을 수 없습니다. ( 유저명 변경 체크 필요. )"),
 
