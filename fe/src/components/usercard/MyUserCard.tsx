@@ -116,7 +116,7 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
                   backgroundColor: `${colorMapping[skill.codeName]}`,
                 }}
               >
-                <p className="bg-white rounded-full px-1">{skill.codeName}</p>
+                <p className="rounded-full px-1 text-white">{skill.codeName}</p>
               </li>
             ))}
           </ul>
