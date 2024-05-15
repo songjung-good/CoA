@@ -19,7 +19,7 @@ const nextConfig = removeImportsFun({
     return [
       {
         source: "/robots.txt",
-        destination: "/api/robots",
+        destination: "/robots",
       },
     ];
   },
