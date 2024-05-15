@@ -1,22 +1,31 @@
 // next.config.js
-import path from 'path';
+import path from "path";
+
+// mdEidtor 설정1
+import removeImports from "next-remove-imports";
+
+// mdEidtor 설정2
+const removeImportsFun = removeImports({
+  options: {},
+});
+
 /** @type {import('next').NextConfig} */
-
-import removeImports from 'next-remove-imports'; // mdEidtor 설정1
-
-const removeImportsFun = removeImports({ 
-  options: { }, 
-}) // mdEidtor 설정2
-
-export default removeImportsFun({ 
+const nextConfig = removeImportsFun({
   webpack: (config, options) => {
-    config.resolve.extensions.push('.ts', '.tsx');
+    config.resolve.extensions.push(".ts", ".tsx");
     return config;
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/robots.txt",
+        destination: "/api/robots",
+      },
+    ];
   },
 });
 
-
-
+export default nextConfig;
 
 // /** @type {import('next').NextConfig} */
 // const nextConfig = {
