@@ -111,10 +111,12 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
                 key={skill.codeId}
                 style={{
                   padding: "4px",
+                  borderWidth: "0.5px",
+                  borderRadius: "9999px",
                   backgroundColor: `${colorMapping[skill.codeName]}`,
                 }}
               >
-                <p className="bg-white px-1">{skill.codeName}</p>
+                <p className="rounded-full px-1 text-white">{skill.codeName}</p>
               </li>
             ))}
           </ul>
