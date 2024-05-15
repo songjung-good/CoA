@@ -21,9 +21,9 @@ export default function RootLayout({
   // cookie 존재 여부를 boolean으로 return
   const hasJWT = cookieStore.has("JWT");
 
-  const title = "COA - 커밋 기반 기여도 분석 사이트";
-  const description = "CommIt Analyze는 레포지토리 커밋을 분석하여 유용한 지표를 제공합니다.";
-  const image = "https://commitanalyze.com/image/default-thumbnail.jpg";
+  const title = "CoA - 커밋 기반 프로젝트 기여도 분석 사이트";
+  const description = "Commit Analyze는 프로젝트 레포지토리의 커밋을 분석하여 유용한 지표를 제공합니다.";
+  const image = "https://commitanalyze.com/image/textLogo48.png";
   const url = "https://commitanalyze.com";
 
   return (

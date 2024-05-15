@@ -21,6 +21,10 @@ const nextConfig = removeImportsFun({
         source: "/robots.txt",
         destination: "/robots",
       },
+      {
+        source: "/sitemap.xml",
+        destination: "/api/sitemap",
+      },
     ];
   },
 });
