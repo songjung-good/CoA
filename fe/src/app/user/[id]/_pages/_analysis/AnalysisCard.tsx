@@ -3,26 +3,39 @@ import RadarChart from "./RadarChart";
 import { useState } from "react";
 
 export default function AnalysisCard({ data }: { data: RepoAnalysisResponse }) {
-  const [selectedJob, setSelectedJob] = useState("ALL");
+  const [selectedJob, setSelectedJob] = useState("2000");
   return (
     <article className="card flex justify-center gap-4">
       <section>
-        {Object.entries(data.myScore).map(([user, scores]) => (
-          <div key={user} className="flex gap-4">
-            <RadarChart
-              scoreData={scores}
-              scoreData2={data.jobs[selectedJob]}
-            />
+        {data.myScoreAverage ? (
+          <>
+            <div className="flex gap-4">
+              <RadarChart
+                scoreData={data.myScoreAverage!}
+                scoreData2={data.jobs[selectedJob]}
+              />
+              <ul className="card">
+                <h2>나의 분석 결과</h2>
+                {Object.entries(data.myScoreAverage).map(([key, value]) => (
+                  <li
+                    key={key}
+                    className={key === "total" ? "text-lg pt-1" : ""}
+                  >
+                    {key}: {value}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        ) : (
+          <div className="flex gap-4">
+            <RadarChart scoreData={data.jobs[selectedJob]} />
             <ul className="card">
               <h2>나의 분석 결과</h2>
-              {Object.entries(scores).map(([key, value]) => (
-                <li key={key} className={key === "total" ? "text-lg pt-1" : ""}>
-                  {key}: {value}
-                </li>
-              ))}
+              <li>분석을 진행한 적이 없어요</li>
             </ul>
           </div>
-        ))}
+        )}
       </section>
       <section className="card">
         <div className="flex gap-2">
@@ -38,7 +51,7 @@ export default function AnalysisCard({ data }: { data: RepoAnalysisResponse }) {
           </select>
           <h2>평균 분석 결과</h2>
         </div>
-        {selectedJob && (
+        {selectedJob && data.jobs[selectedJob] && (
           <ul>
             {Object.entries(data.jobs[selectedJob]).map(([key, value]) => (
               <li key={key} className={key === "total" ? "text-lg pt-1" : ""}>
