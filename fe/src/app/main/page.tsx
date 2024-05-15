@@ -33,7 +33,7 @@ const MainPage: React.FC = () => {
       <Header>
         <Description>
           <TextWrapper>
-            <Title>당신의 프로젝트 COA에서 분석해보세요</Title>
+            <Title>당신의 프로젝트 "CoA"에서 분석해보세요</Title>
             <UrlInput />
             <SubTitle>
               분석하고 싶은 프로젝트의 URL만 입력하면
@@ -83,7 +83,8 @@ const MainPage: React.FC = () => {
 };
 
 const Main = tw.main`
-  bg-appGrey1
+  sm:mx-20
+  mx-5
   flex
   flex-col
   items-center
@@ -93,7 +94,6 @@ const Main = tw.main`
 const Header = tw.div`
   max-w-screen-xl
   w-full
-  
   mx-auto
   mt-10
   flex flex-col
@@ -101,44 +101,52 @@ const Header = tw.div`
   items-center
 `;
 
-const Description = tw.h3`
+const Description = tw.div`
+  relative
   flex
   flex-row
   w-full
   min-h-[300px]
   sm:w-2/3
   items-center
-  bg-white
   sm:items-center
   sm:justify-between
   max-w-screen-xl
   sm:flex-row
-  border
-  shadow-lg
-  rounded-2xl
-  hover:border-appBlue1
+  bg-cover bg-analyze
+
 `;
 
 const TextWrapper = tw.div`
+  relative
   w-full
   pl-5 pr-2 py-10
+  items-center
+  flex flex-col
 `;
 
 const Title = tw.h2`
   font-bold
   text-left
   mb-4
-  lg:text-3xl
-  md:text-xl
-  sm:text-md
+  lg:text-4xl
+  md:text-2xl
+  sm:text-xl
+  flex
+`;
+
+const BlueText = tw.p`
+  text-appBlue1
+  ml-2
 `;
 
 const SubTitle = tw.p`
   font-light
-  text-left
+  text-center
   lg:text-lg
   md:text-sm
   sm:text-xs
+  
 `;
 
 const Img = tw.img`
@@ -195,7 +203,6 @@ const RepoRight = tw.div`
 
 const Div = tw.div`
   max-w-screen-xl
-  mx-auto
   bg-white
   mt-10
   p-4

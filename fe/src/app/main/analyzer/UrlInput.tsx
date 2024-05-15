@@ -97,11 +97,11 @@ const Container = tw.div`
   max-w-screen-xl
   w-full
   py-4 sm:py-8
-  flex
+  flex justify-center
 `;
 
 const StyledInput = tw.input`
-  w-4/5
+  w-3/5
   px-4
   py-2
   border-2
