@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import useRepoDetailStore from "@/store/repodetail";
 
 export default function ResultCommit() {
@@ -6,23 +6,53 @@ export default function ResultCommit() {
   const result = useRepoDetailStore.getState().result.basicDetailDto;
   const commentList = result.commentList;
   const [currentComment, setCurrentComment] = useState<Comment | null>(null);
+  const [modalPosition, setModalPosition] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
 
   const parts = splitTextByComments(
     result.repoViewResult,
     commentList as Comment[],
   );
 
-  const handleCommentClick = (comment: Comment) => {
+  const handleCommentClick = (comment: Comment, event: React.MouseEvent) => {
     // 클릭된 코멘트가 이미 표시 중인 코멘트와 같다면 해제
     if (
       currentComment &&
       currentComment.commentContent === comment.commentContent
     ) {
       setCurrentComment(null);
+      setModalPosition(null);
     } else {
       setCurrentComment(comment);
+      // 클릭된 텍스트의 위치를 기준으로 모달 위치 설정
+      const rect = (event.target as HTMLElement).getBoundingClientRect();
+      setModalPosition({
+        top: rect.top - 10,
+        left: rect.left + rect.width / 2,
+      });
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        currentComment &&
+        !document
+          .querySelector(".modal-content")
+          ?.contains(event.target as Node)
+      ) {
+        setCurrentComment(null);
+        setModalPosition(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [currentComment]);
 
   return (
     <div className="flex flex-col w-full justify-between">
@@ -34,33 +64,37 @@ export default function ResultCommit() {
         <span className="text-appBlue1">{repo.repoViewTitle}</span> 프로젝트
         분석결과
       </p>
-      <div className="flex justify-center items-center w-full min-h-20 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl">
-        <div>
+      <div className="flex justify-center items-center w-full min-h-20 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl border hover:border-appBlue2">
+        <div className="w-full flex justify-center">
           {parts.map((part, index) =>
             part.isComment ? (
               <span
                 key={index}
                 className="text-appBlue1 relative cursor-pointer"
-                onClick={() => part.comment && handleCommentClick(part.comment)}
+                onClick={(event) =>
+                  part.comment && handleCommentClick(part.comment, event)
+                }
+                style={{ whiteSpace: "pre-wrap" }} // 공백을 유지하기 위한 스타일 추가
               >
                 {part.text}
                 {currentComment &&
                   part.comment &&
                   currentComment.commentContent ===
-                    part.comment.commentContent && (
+                    part.comment.commentContent &&
+                  modalPosition && (
                     <div
-                      className="absolute -top-20 right-0 h-full bg-white bg-opacity-50 flex justify-center items-center text-wrap"
+                      className="absolute bg-white p-4 shadow-lg rounded-lg border border-gray-300 text-gray-800 text-left min-w-[350px] w-fit break-words cursor-pointer modal-content"
                       onClick={() => setCurrentComment(null)}
                     >
-                      <div className="bg-white p-4 shadow-xl rounded-lg border-black border-2 text-black text-center max-w-[500px] min-w-[200px] break-words">
-                        <p>{`${currentComment.commentTargetString} 코멘트`}</p>
-                        <p>{`${currentComment.commentContent}`}</p>
-                      </div>
+                      <p className="font-semibold w-full">{`${currentComment.commentTargetString} 코멘트`}</p>
+                      <p className="mt-2 text-sm">{`${currentComment.commentContent}`}</p>
                     </div>
                   )}
               </span>
             ) : (
-              <span key={index}>{part.text}</span>
+              <span key={index} style={{ whiteSpace: "pre-wrap" }}>
+                {part.text}
+              </span>
             ),
           )}
         </div>

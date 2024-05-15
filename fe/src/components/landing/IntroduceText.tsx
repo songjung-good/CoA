@@ -93,12 +93,19 @@ export default function IntroduceText() {
   // const { animeFinishFlag: fifthFlag, TypingTextDiv: FifthText } =
   //   useTypingAnime("CoA에서 한눈에 확인하세요!", 50, fourthFlag);
   return (
-    <Intro>
+    <div
+      style={{
+        minHeight: "15vh",
+        textAlign: "center",
+        fontSize: "22px",
+        fontWeight: "bold",
+      }}
+    >
       <FirstText />
       <SecondText />
       <ThirdText />
       <FourthText />
-    </Intro>
+    </div>
   );
 }
 

@@ -1,23 +1,24 @@
 // mainpage > UrlInput > FetchGithubInfo(ExtractUserInfo) > UserModal
 
-'use client'
+"use client";
 
 // 라이브러리
-import React from 'react';
-import tw from 'tailwind-styled-components';
-import { useStore } from 'zustand';
+import React from "react";
+import Image from "next/image";
+import tw from "tailwind-styled-components";
+import { useStore } from "zustand";
 
 // 컴포넌트
 // URL 입력(레포지토리 분석을 위한)
-import UrlInput from '@/app/main/analyzer/UrlInput';
+import UrlInput from "@/app/main/analyzer/UrlInput";
 // 나의 레포
-import GitlabRepo from '@/app/main/GitlabRepo';
-import GithubRepo from '@/app/main/GithubRepo';
+import GitlabRepo from "@/app/main/GitlabRepo";
+import GithubRepo from "@/app/main/GithubRepo";
 // 레포 카드
-import ExhibitRepo from '@/app/main/ExhibitRepo';
+import ExhibitRepo from "@/app/main/ExhibitRepo";
 
 // 전역변수
-import userStore from '@/store/user';
+import userStore from "@/store/user";
 
 const MainPage: React.FC = () => {
   const githubUserName = useStore(userStore).githubUserName;
@@ -30,10 +31,16 @@ const MainPage: React.FC = () => {
       <Header>
         <Description>
           <TextWrapper>
-            <Title>당신의 프로젝트 <br />COA에서 분석해보세요</Title>
-            <SubTitle>분석하고 싶은 프로젝트의 URL만 입력하면<br /> 해당 레포지토리 분석을 시작합니다.</SubTitle>
+            <Title>
+              당신의 프로젝트 <br />
+              COA에서 분석해보세요
+            </Title>
+            <SubTitle>
+              분석하고 싶은 프로젝트의 URL만 입력하면
+              <br /> 해당 레포지토리 분석을 시작합니다.
+            </SubTitle>
           </TextWrapper>
-          <Img src='https://www.lgcns.com/wp-content/uploads/2021/11/9981C0435CB8247727.png'></Img>
+          <Img src="https://www.lgcns.com/wp-content/uploads/2021/11/9981C0435CB8247727.png"></Img>
         </Description>
       </Header>
       <Div1>
@@ -42,12 +49,30 @@ const MainPage: React.FC = () => {
       </Div1>
       <RepoDiv>
         <RepoLeft>
-          <Heading>GitHub</Heading>
-          <GithubRepo userID={githubUserName} isToken={isGithubToken}/>
+          <Heading>
+            <Image
+              src="/image/oauth/github-mark.svg"
+              alt="github logo"
+              width={30}
+              height={30}
+              className="mr-2"
+            />
+            GitHub
+          </Heading>
+          <GithubRepo userID={githubUserName} isToken={isGithubToken} />
         </RepoLeft>
         <RepoRight>
-          <Heading>GitLab</Heading>
-          <GitlabRepo userID={gitlabUserName} isToken={isGitlabToken}/>
+          <Heading>
+            <Image
+              src="/image/oauth/gitlab-mark.svg"
+              alt="github"
+              width={30}
+              height={30}
+              className="mr-2"
+            />
+            GitLab
+          </Heading>
+          <GitlabRepo userID={gitlabUserName} isToken={isGitlabToken} />
         </RepoRight>
       </RepoDiv>
       <Div>
@@ -126,7 +151,8 @@ const Div1 = tw.div`
   w-full
   bg-white
   mt-10
-  p-4
+  px-6
+  py-4
   border
   shadow-lg
   rounded-2xl
@@ -135,7 +161,8 @@ const Div1 = tw.div`
 
 const RepoDiv = tw.div`
   flex 
-  justify-around 
+  justify-between 
+  w-full
   max-w-screen-xl
 `;
 
@@ -175,7 +202,10 @@ const Div = tw.div`
 
 const Heading = tw.h2`
   font-bold
-  text-xl
+  text-xl sm:text-2xl md:text-4xl
+  flex
+  items-center
+  mb-2
 `;
 
 export default MainPage;

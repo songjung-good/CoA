@@ -13,7 +13,6 @@ type StyledRangeProps = React.HTMLProps<HTMLDivElement> & {
 // StyledBase 컴포넌트 정의
 const StyledBase = styled.div`
   height: 30px; // 게이지 부분의 높이에 border 높이의 2배를 더해준다.
-  justify-content: center;
   border-radius: 25px;
   margin-right: 10%;
   margin-left: 10%;
@@ -21,21 +20,29 @@ const StyledBase = styled.div`
   transition: width 0.5s ease-in-out;
   display: flex;
   align-items: center;
+  position: relative; // 자식 요소의 절대 위치를 위한 relative 설정
 `;
 
 // StyledRange 컴포넌트 정의
 const StyledRange = styled.div<StyledRangeProps>`
   width: ${({ width }) => `${width}%`};
-  height: 30px;
+  height: 100%; // 부모 요소의 높이를 그대로 사용
   border-radius: 25px;
   background: linear-gradient(to right, #c8effd, #48caf8);
+  position: absolute; // 위치를 절대 위치로 설정
+  top: 0; // 부모 요소의 맨 위에 위치
+  left: 0; // 부모 요소의 왼쪽에 위치
 `;
 
 // StyledPercentage 컴포넌트 정의
 const StyledPercentage = styled.span`
+  position: absolute;
+  width: 100%; // 부모 요소의 너비를 가득 채움
+  text-align: center; // 텍스트를 가운데 정렬
   font-size: 14px;
   color: #333;
   font-weight: bold;
+  z-index: 1; // 게이지 뒤에 표시되도록 z-index 설정
 
   @media (max-width: 600px) {
     font-size: 12px;
