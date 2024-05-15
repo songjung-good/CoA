@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import userStore from "@/store/user";
 import EditIconDark from "@/icons/EditIconDark";
 import UseAxios from "@/api/common/useAxios";
@@ -24,6 +25,22 @@ interface Member {
   isBookmark: boolean;
 }
 
+interface AccountLinkInfoDto {
+  githubNickName: string;
+  isGithubToken: boolean;
+  gitlabNickName: string;
+  isGitlabToken: boolean;
+  solvedacNickName: string;
+  codeforcesNickName: string;
+}
+
+interface UserInfo {
+  memberUuid: string;
+  memberImg: string;
+  memberNickName: string;
+  accountLinkInfoDto: AccountLinkInfoDto;
+}
+
 interface ApiResponse {
   result: Member;
 }
@@ -31,7 +48,20 @@ interface ApiResponse {
 export default function UserProfile() {
   const axios = UseAxios();
   const { response } = useCommonCodeStore.getState();
-  const [userUuid, setUserUuid] = useState("");
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    memberUuid: "",
+    memberImg: "",
+    memberNickName: "",
+    accountLinkInfoDto: {
+      githubNickName: "",
+      isGithubToken: false,
+      gitlabNickName: "",
+      isGitlabToken: false,
+      solvedacNickName: "",
+      codeforcesNickName: "",
+    },
+  });
+
   const [userCard, setUserCard] = useState<Member>({
     memberUuid: "",
     memberNickName: "",
@@ -48,7 +78,8 @@ export default function UserProfile() {
     axios
       .get(`/api/member`)
       .then((res) => {
-        setUserUuid(res.data.result.memberUuid);
+        console.log(res.data.result);
+        setUserInfo(res.data.result);
       })
       .catch((error) => {
         console.error("Failed to fetch user info:", error);
@@ -57,9 +88,9 @@ export default function UserProfile() {
 
   // 두 번째 useEffect: userInfo.memberUuid가 변경될 때 userCard를 가져오는 요청
   useEffect(() => {
-    if (userUuid) {
+    if (userInfo.memberUuid) {
       axios
-        .get(`/api/member/${userUuid}`)
+        .get(`/api/member/${userInfo.memberUuid}`)
         .then((res) => {
           console.log(res.data.result);
           setUserCard(res.data.result);
@@ -68,23 +99,100 @@ export default function UserProfile() {
           console.error("Failed to fetch user card:", error);
         });
     }
-  }, [userUuid]);
+  }, [userInfo.memberUuid]);
 
   return (
-    <div className="w-full sm:w-1/3 h-full border border-black flex flex-col">
-      <div className="flex justify-between w-full h-1/3">
+    <div className="w-full max-w-[400px] sm:w-1/3 flex flex-col px-2 sm:ml-4 bg-white shadow-lg rounded-lg border hover:border-appBlue2 py-6 min-h-[300px]">
+      <div className="flex justify-end">
+        <Link href={`/user/${userInfo.memberUuid}`}>
+          <span className="text-xs text-end mr-4 text-gray-400">
+            마이페이지&#10097;{" "}
+          </span>
+        </Link>
+      </div>
+      <div className="flex justify-around items-center w-full h-1/3 min-h-[60px]">
         <img
           src={userCard?.memberImg || `/image/LoadingSpinner.gif`}
           alt="member image"
-          className="rounded-full w-1/6 h-1/6"
+          className="rounded-full w-1/6"
         />
-        <div className="flex w-full justify-center items-center">
+        <div className="flex justify-center items-center">
           <p className="text-base sm:text-base">{userCard.memberNickName}</p>
         </div>
       </div>
       <div className="h-full">
-        <div className="flex">
-          <p></p>
+        <div className="flex justify-around">
+          <div className="flex flex-col mt-2">
+            <div className="flex justify-center items-center">
+              <img
+                src="/image/oauth/github-mark.svg"
+                alt="github logo"
+                width={20}
+                height={20}
+                className="mr-2"
+              />
+              {userInfo.accountLinkInfoDto.githubNickName ? (
+                <p className=" font-medium">
+                  {userInfo.accountLinkInfoDto.githubNickName}
+                </p>
+              ) : (
+                <Link href={"/auth/link"}>
+                  <button className=" font-medium">연동하기</button>
+                </Link>
+              )}
+            </div>
+            <div className="flex justify-center items-center">
+              <img
+                src="/image/oauth/gitlab-mark.svg"
+                alt="gitlab logo"
+                width={20}
+                height={20}
+                className="mr-2"
+              />
+              {userInfo.accountLinkInfoDto.gitlabNickName ? (
+                <p className=" font-medium">
+                  {userInfo.accountLinkInfoDto.gitlabNickName}
+                </p>
+              ) : (
+                <Link href={"/auth/link"}>
+                  <button className=" font-medium">연동하기</button>
+                </Link>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col justify-center items-center ">
+            <p className="text-nowrap">포지션</p>
+            <p>
+              {response?.result.commonCodeList[2]?.codes &&
+                response.result.commonCodeList[2].codes[
+                  `${userCard?.memberJobCodeId}`
+                ]}
+            </p>
+          </div>
+        </div>
+        <div className="skills-container flex justify-center items-center">
+          <ul className="flex flex-wrap gap-2 p-1">
+            {userCard?.skillList.slice(0, 3).map((skill) => (
+              <li
+                key={skill.codeId}
+                style={{
+                  padding: "3px",
+                  backgroundColor: `${colorMapping[skill.codeName]}`,
+                  borderRadius: "4px",
+                }}
+              >
+                <p className="bg-white px-1">{skill.codeName}</p>
+              </li>
+            ))}
+            {userCard.skillList.length > 3 && (
+              <li>
+                <p className="bg-white px-1">...</p>
+              </li>
+            )}
+          </ul>
+        </div>
+        <div className="bg-appGrey1 p-4 rounded-2xl grow truncate">
+          <p className="truncate">{userCard?.memberIntro}</p>
         </div>
       </div>
     </div>

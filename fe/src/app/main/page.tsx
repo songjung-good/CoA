@@ -40,13 +40,9 @@ const MainPage: React.FC = () => {
               <br /> 해당 레포지토리 분석을 시작합니다.
             </SubTitle>
           </TextWrapper>
-          <UserProfile />
         </Description>
+        <UserProfile />
       </Header>
-      <Div1>
-        <Heading>프로젝트 분석</Heading>
-        <UrlInput />
-      </Div1>
       <RepoDiv>
         <RepoLeft>
           <Heading>
@@ -97,28 +93,34 @@ const Main = tw.main`
 const Header = tw.div`
   max-w-screen-xl
   w-full
+  
   mx-auto
-  bg-white
   mt-10
+  flex flex-col
+  sm:flex-row
+  items-center
+`;
+
+const Description = tw.h3`
+  flex
+  flex-row
+  w-full
+  min-h-[300px]
+  sm:w-2/3
+  items-center
+  bg-white
+  sm:items-center
+  sm:justify-between
+  max-w-screen-xl
+  sm:flex-row
   border
   shadow-lg
   rounded-2xl
   hover:border-appBlue1
 `;
 
-const Description = tw.h3`
-  flex
-  flex-col
-  w-full
-  sm:items-center
-  sm:justify-between
-  max-w-screen-xl
-  sm:flex-row
-`;
-
 const TextWrapper = tw.div`
   w-full
-  sm:w-2/3
   pl-5 pr-2 py-10
 `;
 
