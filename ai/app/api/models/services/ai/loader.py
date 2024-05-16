@@ -17,7 +17,6 @@ class RepoContentLoader(BaseLoader):
             yield Document(
                 page_content=file['file_content'],
                 metadata={
-                    'type': 'content',
                     'file_path': file['path']
                 }
             )
@@ -35,9 +34,5 @@ class RepoCommitLoader(BaseLoader):
         for commit in self.repo_commits:
             for patch in commit['patches']:
                 yield Document(
-                    page_content=patch,
-                    metadata={
-                        'type': 'commit',
-                        'commit_id': commit['id']
-                    }
+                    page_content=patch
                 )
