@@ -57,7 +57,9 @@ export default function RootLayout({
         <Header />
         {children}
         <LoadingFloating hasJWT={hasJWT} />
-        <footer className="my-10 w-full text-center">SSAFY 10th E101</footer>
+        <footer className="my-10 w-full text-center">
+          &copy; SSAFY 10th E101
+        </footer>
       </body>
     </html>
   );

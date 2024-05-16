@@ -1,4 +1,4 @@
-// 사용자의 GitHub ID를 받아 Repository 목록을 불러와 보여주는 컴포넌트
+"use client";
 // 라이브러리
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,10 @@ interface Repo {
   id: number;
   name: string;
   html_url: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+  stargazers_count: number;
   isAnalyzed: boolean;
 }
 
@@ -19,6 +23,8 @@ interface MyRepoProps {
 
 const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
   const [repos, setRepos] = useState<Repo[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [reposPerPage] = useState<number>(5);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
   const [notLink, setNotLink] = useState<number>(0);
@@ -55,6 +61,29 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
     };
   }, [userID]);
 
+  const indexOfLastRepo = currentPage * reposPerPage;
+  const indexOfFirstRepo = indexOfLastRepo - reposPerPage;
+  const currentRepos = repos.slice(indexOfFirstRepo, indexOfLastRepo);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const getPageNumbers = () => {
+    const totalPages = Math.ceil(repos.length / reposPerPage);
+    const maxPages = 5;
+    let startPage = Math.max(currentPage - Math.floor(maxPages / 2), 1);
+    let endPage = startPage + maxPages - 1;
+
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(endPage - maxPages + 1, 1);
+    }
+
+    return Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i,
+    );
+  };
+
   if (loadingAuth) {
     return <Loading>인증 상태를 확인하는 중입니다.</Loading>;
   }
@@ -80,17 +109,44 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
   }
   return (
     <RepoList>
-      {repos.map((repo) => (
-        <RepoItem
-          key={repo.id}
-          // onMouseEnter={() => console.log("Mouse Enter")}
-          // onMouseLeave={() => console.log("Mouse Leave")}
+      {currentRepos.map((repo, key) => (
+        <a
+          href={repo.html_url}
+          key={key}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex justify-center border rounded-lg mb-4 py-1 px-2 hover:border-appBlue2"
         >
-          <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
-            {repo.name}
-          </a>
-        </RepoItem>
+          <div className="flex flex-col justify-center w-full">
+            <div className="flex flex-row sm:flex-col lg:flex-row justify-between items-center w-full">
+              <p className="text-xl text-extrabold">{repo.name}</p>
+
+              <p className="text-sm text-gray-400">
+                {repo.created_at.slice(0, 10)}
+              </p>
+            </div>
+            <p className="text-sm truncate">
+              {repo.description ? repo.description : "설명을 추가해주세요."}
+            </p>
+            <div className="flex justify-between text-sm flex-row sm:flex-col lg:flex-row">
+              <p>최종 커밋 : {repo.updated_at.slice(0, 10)}</p>
+              <p>{`⭐(${repo.stargazers_count})`}</p>
+            </div>
+            <p></p>
+          </div>
+        </a>
       ))}
+      <Pagination>
+        {getPageNumbers().map((pageNumber) => (
+          <PageButton
+            key={pageNumber}
+            isActive={pageNumber === currentPage}
+            onClick={() => paginate(pageNumber)}
+          >
+            {pageNumber}
+          </PageButton>
+        ))}
+      </Pagination>
     </RepoList>
   );
 };
@@ -101,27 +157,11 @@ const Loading = tw.div`
 `;
 
 const RepoList = tw.ul`
-  flex
-  justify-center
-  flex-wrap
-  list-none
-  p-30
-`;
-
-const RepoItem = tw.li`
-  border
-  border-appGrey2
-  rounded-md
-  m-1
-  p-2
-  relative
-  flex
-  justify-center
-  items-center
   flex-col
-  transition
-  duration-300
-  hover:shadow-md
+  w-full
+  justify-between
+  items-center
+  px-4
 `;
 
 const Div = tw.div`
@@ -136,14 +176,34 @@ const Div = tw.div`
 `;
 
 const Button = tw.button`
-  bg-appYellow
+  bg-blue-200
+  hover:bg-blue-400
   text-black
   font-bold
-  py-[0.75rem]
-  px-[1.25rem]
-  my-[1rem]
+  py-[0.25rem]
+  px-[0.75rem]
+  mt-[1rem]
   text-md
   rounded
+  m-2
+`;
+
+const Pagination = tw.div`
+  flex
+  justify-center
+  mt-4
+`;
+
+const PageButton = tw.button<{ isActive: boolean }>`
+  ${(p) => (p.isActive ? "bg-blue-500 text-white" : "bg-blue-200 text-black")}
+  hover:bg-blue-400
+  font-bold
+  py-[0.25rem]
+  px-[0.75rem]
+  mt-[1rem]
+  text-md
+  rounded
+  m-2
 `;
 
 export default GithubRepo;
