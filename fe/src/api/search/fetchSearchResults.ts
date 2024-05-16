@@ -43,6 +43,8 @@ interface ResultDTO {
   };
 }
 
+type ResultType = { repoCardDtoList: any[] } | { memberCardDtoList: any[] };
+
 export async function fetchSearchResults(query: string, type: 'repo' | 'member', page: number) {
   const axios = UseAxios();
   const params = {

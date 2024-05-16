@@ -7,6 +7,7 @@ import SearchInput from '@/app/search/SearchInput';
 import { fetchSearchResults } from '@/api/search/fetchSearchResults';
 import RepoCard from '@/components/searchcomponents/RepoCard';
 import MemberCard from '@/components/searchcomponents/MemberCard';
+import repocardDTO from '@/components/maincomponents/repocardDTO';
 
 // 타입 정의
 interface Skill {
@@ -51,12 +52,18 @@ interface ResultDTO {
   };
 }
 
+type RepoType = RepoCardDto[] | undefined;
+type MemberType = MemberCardDto[] | undefined;
+
 const SearchPage = () => {
   const [searchQuery, setQuery] = useState<string>('');
   const [searchType, setSearchType] = useState<'repo' | 'member'>('repo');
   const [results, setResults] = useState<ResultDTO>();
+  const [searchRepoData, setSearchRepoData] = useState<RepoType>(undefined);
+  const [searchMemberData, setSearchMemberData] = useState<MemberType>(undefined);
   const [page, setPage] = useState<number>(0);
   const [isNext, setIsNext] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   // 검색 실행 함수
   const handleSearch = async (query: string, type: 'repo' | 'member') => {
@@ -69,8 +76,11 @@ const SearchPage = () => {
       const response = await fetchSearchResults(query, type, page);
       setResults(response);
       setIsNext(response.result.next);
+      setSearchRepoData(response.result.repoCardDtoList);
+      setSearchMemberData(response.result.memberCardDtoList);
     } catch (error) {
       console.error(error);
+      setError('검색 중 오류가 발생했습니다.');
     }
   };
   
@@ -83,12 +93,19 @@ const SearchPage = () => {
       setIsNext(response.result.next);
     } catch (error) {
       console.error(error);
+      setError('페이지 변경 중 오류가 발생했습니다.');
     }
   };
+
+  console.log(searchRepoData);
+  console.log(searchMemberData);
 
   return (
     <Main className="max-w-screen-xl mx-auto">
       <SearchInput onSearch={handleSearch} />
+        {error && <p>{error}</p>}
+        {searchRepoData?.length === 0 && <p>검색 결과가 없습니다.</p>}
+        {searchMemberData?.length === 0  && <p>검색 결과가 없습니다.</p>}
         {results ? (
         searchType === 'repo' ? (
           <ResultComponent className="mt-8 grid gap-8 grid-cols-1 justify-center items-start">
