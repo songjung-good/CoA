@@ -272,19 +272,28 @@ public class ExternalApiService {
                 .retrieve()
                 .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
                 .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.NOT_FOUND)))
+                .onStatus(status -> status.equals(HttpStatus.CONFLICT), response -> Mono.error(new ResponseStatusException(HttpStatus.CONFLICT, "Conflict error during GitHub commits fetching")))
+                .onStatus(status -> status.equals(HttpStatus.FORBIDDEN), response -> Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Conflict error during GitHub commits fetching")))
                 .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitHub events fetching 잔디")))
                 .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub events fetching 잔디")))
                 .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
                 .timeout(Duration.ofSeconds(10))
                 .flatMap(commits -> {
-                    if (commits == null || commits.isEmpty()) {
+                    if (commits == null || commits.isEmpty()) { // 커밋이 없는 경우 고려
                         return Mono.just(accumulatedCommits);
                     } else {
                         accumulatedCommits.addAll(commits);
                         return fetchCommits(repoName, username, accessToken, page + 1, accumulatedCommits);
                     }
                 })
-                .onErrorResume(WebClientResponseException.class, e -> Mono.just(accumulatedCommits));
+                .onErrorResume(WebClientResponseException.class, e -> Mono.just(accumulatedCommits))
+                .onErrorResume(ResponseStatusException.class, e -> {
+                    if (e.getStatusCode() == HttpStatus.CONFLICT) {
+                        return Mono.just(accumulatedCommits);
+                    } else {
+                        return Mono.error(e);
+                    }
+                });
     }
 
     private Mono<List<Map<String, Object>>> fetchCommitFiles(String repoName, String commitSha, String username, String accessToken) {

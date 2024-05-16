@@ -20,6 +20,7 @@ public enum StatusCode {
     TYPE_NOT_FOUND(false, 403, "타입을 찾을 수 없습니다."),
 
     NOT_FOUND(false, 404, "주소를 찾을 수 없습니다. ( 유저명 변경 체크 필요. )"),
+    CONFLICT(false, 405, "409에러 반환"),
 
     // AI Server : 500,
     AI_SERVER_ERROR(false, 500, "AI 서버로부터 응답을 받지 못했습니다."),

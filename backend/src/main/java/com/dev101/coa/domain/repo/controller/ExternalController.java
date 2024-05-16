@@ -101,8 +101,7 @@ public class ExternalController {
                     return decryptToken(gitHubAccountLink.getAccountLinkReceiveToken())
                             .flatMap(githubAccessToken -> externalApiService.fetchGithubIssue(githubUserName, githubAccessToken));
                 })
-                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)))
-                .onErrorResume(e -> Mono.just(ResponseEntity.internalServerError().body(new BaseResponse<>(StatusCode.INTERNAL_SERVER_ERROR))));
+                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)));
     }
 
     @Operation(description = "깃랩 잔디 602 -> 링크 X , 303 -> 토큰 확인(외부 에러)")
@@ -115,8 +114,7 @@ public class ExternalController {
                     return decryptToken(gitLabAccountLink.getAccountLinkReceiveToken())
                             .flatMap(gitLabAccessToken -> externalApiService.fetchGitLabIssue(gitLabUserName, gitLabAccessToken));
                 })
-                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)))
-                .onErrorResume(e -> Mono.just(ResponseEntity.internalServerError().body(new BaseResponse<>(StatusCode.INTERNAL_SERVER_ERROR))));
+                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)));
     }
 
     @GetMapping("/github/{memberUuid}/lines-of-code")
@@ -128,8 +126,7 @@ public class ExternalController {
                     return decryptToken(gitHubAccountLink.getAccountLinkReceiveToken())
                             .flatMap(githubAccessToken -> externalApiService.fetchGitHubContributions(githubUserName, githubAccessToken));
                 })
-                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)))
-                .onErrorResume(e -> Mono.just(ResponseEntity.internalServerError().body(new BaseResponse<>(StatusCode.INTERNAL_SERVER_ERROR))));
+                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)));
     }
 
 
