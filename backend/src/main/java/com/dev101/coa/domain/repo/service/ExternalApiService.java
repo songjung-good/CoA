@@ -338,7 +338,7 @@ public class ExternalApiService {
         return projectData;
     }
 
-    private String getLanguageFromFilePath(String filePath) {
+    public String getLanguageFromFilePath(String filePath) {
         if (filePath == null || !filePath.contains(".")) {
             return null;
         }
