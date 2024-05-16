@@ -10,6 +10,7 @@ from redis import Redis
 
 from api.models.dto import GithubAnalysisRequest, GitLabAnalysisRequest, AnalysisRequest
 from api.models.services.ai import AiService
+from api.models.services.ai.chains import AiChains
 from api.models.services.ai.mutex import AiMutex
 from api.models.services.analysis import AnalysisService
 from api.models.services.client import RepoClient
@@ -44,10 +45,17 @@ class Container(DeclarativeContainer):
         provides=OpenAI,
         openai_api_key=config.ai.openai_api_key,
         temperature=0.3,
+        verbose=True,
         max_token=1000
     )
+    embeddings = providers.Resource(
+        provides=OpenAIEmbeddings,
+        openapi_api_key=config.ai.openai_api_key
+    )
 
-    ai_mutex = providers.Singleton(AiMutex, llm)
-    ai_service = providers.Singleton(AiService)
+    ai_chains = providers.Singleton(AiChains, llm)
+
+    ai_mutex = providers.Singleton(AiMutex, ai_chains)
+    ai_service = providers.Singleton(AiService, embeddings)
 
     analysis_service = providers.Singleton(AnalysisService, redis_client, ai_mutex, ai_service)

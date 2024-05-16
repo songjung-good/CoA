@@ -44,35 +44,35 @@ class AnalysisService:
             self._update_status(dto, AnalysisStatus.REQUESTING_TO_REPO)
             repo_data = await repo_client.load(request.userName)
 
-            print(repo_data)
-
             # total_commit_cnt, personal_commit_cnt 세기
             # TODO
-            dto.result.total_commit_cnt = 123       # TODO: client에 커밋 개수 세는 로직 추가
-            dto.result.personal_commit_cnt = 123    # TODO: client에 커밋 개수 세는 로직 추가
+            # dto.result.total_commit_cnt = 123       # TODO: client에 커밋 개수 세는 로직 추가
+            # dto.result.personal_commit_cnt = 123    # TODO: client에 커밋 개수 세는 로직 추가
 
-            # AI 서비스 Lock 대기
-            self._update_status(dto, AnalysisStatus.WAITING_AI)
+            preprocessed_content_doc = await self.ai_service.preprocess_content(repo_data['content'])
+            preprocessed_commits_doc = await self.ai_service.preprocess_commits(repo_data['commits'])
+
+            # AI 서비스 Readme Lock 대기
             # TODO ...
-            conversation = await self.ai_mutex.wait_for_conversation(request.analysisId)
+            chain = await self.ai_mutex.wait_for_readme_chain(request.analysisId)
 
-            # AI에 학습 시키기
-            self._update_status(dto, AnalysisStatus.LEARNING_DATA)
-            await self.ai_service.train(conversation, repo_data)
-
-            print('checkpoint train')
-
-            # 대화해서 학습 결과 긁어오기
+            # 리드미 생성
             self._update_status(dto, AnalysisStatus.GENERATING_README)
-            dto.result.readme = await self.ai_service.generate_readme(conversation)
+            dto.result.readme = await self.ai_service.generate_readme(chain, preprocessed_content_doc)
 
-            # 점수 매기기
+            # Mutex chain 되돌리기
+            await self.ai_mutex.release(chain)
+
+            # AI 서비스 Commit Lock 대기
+            # TODO ...
+            chain = await self.ai_mutex.wait_for_commit_chain(request.analysisId)
+
+            # 커밋 점수 매기기
             self._update_status(dto, AnalysisStatus.SCORING_COMMITS)
-            dto.result.commit_score = await self.ai_service.score_commits(conversation)
+            dto.result.commit_score = await self.ai_service.score_commits(chain, preprocessed_commits_doc)
 
-            # 학습 되돌리기
-            self._update_status(dto, AnalysisStatus.RESETTING_LEARNED_DATA)
-            await self.ai_mutex.release(conversation)
+            # Mutex chain 되돌리기
+            await self.ai_mutex.release(chain)
 
             # 완료 처리
             self._update_status(dto, AnalysisStatus.DONE)
