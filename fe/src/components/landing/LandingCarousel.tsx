@@ -11,7 +11,7 @@ export default function LandingCarousel() {
     height: "calc(100vh - 96px)",
     objectFit: "cover" as "cover", // 'cover'를 ObjectFit 타입으로 간주합니다.
     width: "100%",
-    // opacity: 0.5,
+    opacity: 0.5,
   };
 
   return (
