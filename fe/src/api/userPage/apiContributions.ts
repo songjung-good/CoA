@@ -31,8 +31,13 @@ export const getGithubEventsData = async (
     const response = await customAxios.get(
       `/api/external/events/github/${memberUuid}`,
     );
-    // console.log(response);
-    return response.data.result;
+    console.log(response);
+    if (response.data.code === 200) {
+      return response.data.result;
+    } else {
+      console.log(response.data.result)
+      return { total: {}, contributions: [] };
+    }
   } catch (error) {
     // console.error("getGithubEventsData 요청 에러", error);
     // return { total: {}, contributions: [] };
@@ -48,8 +53,13 @@ export const getGitlabEventsData = async (
     const response = await customAxios.get(
       `/api/external/events/gitlab/${memberUuid}`,
     );
-    // console.log(response);
-    return response.data.result;
+    console.log(response);
+    if (response.data.code === 200) {
+      return response.data.result;
+    } else {
+      console.log(response.data.result)
+      return { total: {}, contributions: [] };
+    }
   } catch (error) {
     // console.error("getGitlabEventsData 요청 에러", error);
     // return { total: {}, contributions: [] };
