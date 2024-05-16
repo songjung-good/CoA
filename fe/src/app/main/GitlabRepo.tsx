@@ -44,7 +44,6 @@ const GitlabRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
           }
           if (response.data.code === 200) {
             setRepos(JSON.parse(response.data.result));
-            console.log(JSON.parse(response.data.result));
           }
           setLoading(false);
         } catch (error) {
