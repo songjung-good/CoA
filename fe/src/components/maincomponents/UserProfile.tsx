@@ -105,7 +105,7 @@ export default function UserProfile() {
     <div className="w-full sm:w-1/3 flex flex-col mt-10 sm:mt-0 px-2 sm:ml-4 bg-white shadow-lg rounded-lg border hover:border-appBlue2 py-6 min-h-[300px]">
       <div className="flex justify-end">
         <Link href={`/user/${userInfo.memberUuid}`}>
-          <span className="text-xs text-end mr-4 text-gray-400">
+          <span className="text-xs text-end mr-4 text-gray-400 hover:text-appBlue1">
             마이페이지&#10097;{" "}
           </span>
         </Link>
