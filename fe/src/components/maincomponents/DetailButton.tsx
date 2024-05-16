@@ -47,7 +47,7 @@ const CardOverlay = tw.div`
   absolute
   w-[20rem] 
   h-[15rem]
-  mb-[3rem] sm:m-[3rem]
+  mb-5 sm:m-5
   border
   border-appYellow
   rounded-lg 
