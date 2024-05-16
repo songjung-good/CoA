@@ -21,9 +21,9 @@ export default function UserPage({ params }: { params: { id: string } }) {
   //     setRepos(userName);
   //   }
   // }, [userName, setRepos]);
-  // useEffect(() => {
-  //   setRepos1(params.id);
-  // }, []);
+  useEffect(() => {
+    setRepos1(params.id);
+  }, []);
   //탭에 따른 랜더링될 페이지
   const renderTabContent = () => {
     switch (tabIndex) {

@@ -15,6 +15,10 @@ type TransformedData = {
 };
 
 const RunBarChart: React.FC = () => {
+  const errMsg = repositoryStore((state) => state.errMsg);
+  if (errMsg !== "") {
+    return <div>{errMsg}</div>;
+  }
   const { repos } = repositoryStore((state) => state);
   //차트
   const svgRef = useRef<SVGSVGElement | null>(null);

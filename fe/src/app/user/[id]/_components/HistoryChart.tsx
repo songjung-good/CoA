@@ -4,6 +4,10 @@ import repositoryStore from "@/store/repos";
 import { Repository } from "@/api/userPage/apiLinesOfCode";
 
 export default function HistoryChart() {
+  const errMsg = repositoryStore((state) => state.errMsg);
+  if (errMsg !== "") {
+    return <div>{errMsg}</div>;
+  }
   const repos = repositoryStore((state) => state.repos);
   const svgRef = useRef<SVGSVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
