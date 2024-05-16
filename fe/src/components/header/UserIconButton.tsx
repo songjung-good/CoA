@@ -63,10 +63,7 @@ export default function UserIconButton() {
   }, []);
 
   return (
-    <div
-      className="relative flex justify-center items-center w-12 h-12"
-      ref={modalRef}
-    >
+    <div className="relative flex justify-center items-center" ref={modalRef}>
       <button
         onClick={() => {
           setIsOpen(!isOpen);
