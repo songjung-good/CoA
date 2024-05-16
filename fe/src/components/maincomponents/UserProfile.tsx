@@ -172,7 +172,7 @@ export default function UserProfile() {
         </div>
         <div className="skills-container flex justify-center items-center">
           <ul className="flex flex-wrap gap-2 p-1">
-            {userCard?.skillList.slice(0, 3).map((skill) => (
+            {userCard?.skillList.slice(0, 4).map((skill) => (
               <li
                 key={skill.codeId}
                 style={{
@@ -184,7 +184,7 @@ export default function UserProfile() {
                 <p className="bg-white px-1">{skill.codeName}</p>
               </li>
             ))}
-            {userCard.skillList.length > 3 && (
+            {userCard.skillList.length > 4 && (
               <li>
                 <p className="bg-white px-1">...</p>
               </li>

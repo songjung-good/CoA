@@ -12,8 +12,7 @@ import { useStore } from "zustand";
 // URL 입력(레포지토리 분석을 위한)
 import UrlInput from "@/app/main/analyzer/UrlInput";
 // 나의 레포
-import GitlabRepo from "@/app/main/GitlabRepo";
-import GithubRepo from "@/app/main/GithubRepo";
+import GitRepoList from "./GitRepoList";
 // 레포 카드
 import ExhibitRepo from "@/app/main/ExhibitRepo";
 // 유저 정보
@@ -44,40 +43,16 @@ const MainPage: React.FC = () => {
         <UserProfile />
       </Header>
       <RepoDiv>
-        <RepoLeft>
-          <Heading>
-            <Image
-              src="/image/oauth/github-mark.svg"
-              alt="github logo"
-              width={30}
-              height={30}
-              className="mr-2"
-            />
-            GitHub
-          </Heading>
-          <GithubRepo userID={githubUserName} isToken={isGithubToken} />
-        </RepoLeft>
-        <RepoRight>
-          <Heading>
-            <Image
-              src="/image/oauth/gitlab-mark.svg"
-              alt="github"
-              width={30}
-              height={30}
-              className="mr-2"
-            />
-            GitLab
-          </Heading>
-          <GitlabRepo userID={gitlabUserName} isToken={isGitlabToken} />
-        </RepoRight>
+        <Div>
+          <Heading>유명 프로젝트 분석 결과</Heading>
+          <ExhibitRepo />
+        </Div>
+        <GitRepoList />
       </RepoDiv>
-      <Div>
-        <Heading>여기는 자주찾는 레포</Heading>
-        <ExhibitRepo />
-      </Div>
-      <Div>
+
+      {/* <Div>
         <Heading>여기는 통계 컴포넌트</Heading>
-      </Div>
+      </Div> */}
     </Main>
   );
 };
@@ -174,6 +149,7 @@ const Div1 = tw.div`
 
 const RepoDiv = tw.div`
   flex 
+  flex-col sm:flex-row
   justify-between 
   w-full
   max-w-screen-xl
@@ -202,7 +178,8 @@ const RepoRight = tw.div`
 `;
 
 const Div = tw.div`
-  max-w-screen-xl
+  w-full
+  sm:w-2/3
   bg-white
   mt-10
   p-4

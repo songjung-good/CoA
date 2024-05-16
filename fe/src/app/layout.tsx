@@ -22,14 +22,18 @@ export default function RootLayout({
   const hasJWT = cookieStore.has("JWT");
 
   const title = "CoA - 커밋 기반 프로젝트 기여도 분석 사이트";
-  const description = "Commit Analyze는 프로젝트 레포지토리의 커밋을 분석하여 유용한 지표를 제공합니다.";
+  const description =
+    "Commit Analyze는 프로젝트 레포지토리의 커밋을 분석하여 유용한 지표를 제공합니다.";
   const image = "https://commitanalyze.com/image/textLogo48.png";
   const url = "https://commitanalyze.com";
 
   return (
     <html lang="ko">
       <head>
-        <meta name="naver-site-verification" content="91a89f26cf678c7d7c627c42df934e3a18ff9a6d" />
+        <meta
+          name="naver-site-verification"
+          content="91a89f26cf678c7d7c627c42df934e3a18ff9a6d"
+        />
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="robots" content="index, follow" />
@@ -53,6 +57,7 @@ export default function RootLayout({
         <Header />
         {children}
         <LoadingFloating hasJWT={hasJWT} />
+        <footer className="my-10 w-full text-center">SSAFY 10th E101</footer>
       </body>
     </html>
   );
