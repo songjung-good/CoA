@@ -118,7 +118,7 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
           className="flex justify-center border rounded-lg mb-4 py-1 px-2 hover:border-appBlue2"
         >
           <div className="flex flex-col justify-center w-full">
-            <div className="flex flex-row sm:flex-col lg:flex-row justify-between items-center w-full">
+            <div className="flex flex-row sm:flex-col sm:items-start lg:flex-row justify-between items-center w-full">
               <p className="text-xl text-extrabold">{repo.name}</p>
 
               <p className="text-sm text-gray-400">
