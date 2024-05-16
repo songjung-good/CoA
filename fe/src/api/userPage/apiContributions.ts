@@ -25,7 +25,7 @@ export const getContributions = async (
 const customAxios = UseAxios();
 export const getGithubEventsData = async (
   memberUuid: string,
-): Promise<ApiResponse> => {
+): Promise<ApiResponse | null> => {
   // console.log("깃허브");
   try {
     const response = await customAxios.get(
@@ -35,13 +35,14 @@ export const getGithubEventsData = async (
     return response.data.result;
   } catch (error) {
     console.error("getGithubEventsData 요청 에러", error);
-    return { total: {}, contributions: [] };
+    // return { total: {}, contributions: [] };
+    return null;
   }
 };
 
 export const getGitlabEventsData = async (
   memberUuid: string,
-): Promise<ApiResponse> => {
+): Promise<ApiResponse | null> => {
   // console.log("깃랩");
   try {
     const response = await customAxios.get(
@@ -51,6 +52,7 @@ export const getGitlabEventsData = async (
     return response.data.result;
   } catch (error) {
     console.error("getGitlabEventsData 요청 에러", error);
-    return { total: {}, contributions: [] };
+    // return { total: {}, contributions: [] };
+    return null;
   }
 };
