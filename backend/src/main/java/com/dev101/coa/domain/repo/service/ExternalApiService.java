@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -30,7 +28,6 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class ExternalApiService {
-    private static final Logger logger = LoggerFactory.getLogger(ExternalApiService.class);
 
     private final WebClient webClient;
     private final ObjectMapper objectMapper;
@@ -224,94 +221,6 @@ public class ExternalApiService {
         else if (count <= 10) return 2;
         else return 3;
     }
-
-//    public Mono<List<Map<String, Object>>> fetchGitHubContributions(String username, String accessToken) {
-//        String queryTemplate = "{ \"query\": \"query { user(login: \\\"%s\\\") { contributionsCollection { pullRequestContributionsByRepository { repository { name createdAt pushedAt updatedAt isPrivate } contributions(first: 100) { nodes { pullRequest { additions deletions files(first: 100) { edges { node { path additions deletions } } } } } } } } } }\" }";
-//
-//        return webClient.post()
-//                .uri("https://api.github.com/graphql")
-//                .header("Authorization", "Bearer " + accessToken)
-//                .header("Content-Type", "application/json")
-//                .bodyValue(String.format(queryTemplate, username))
-//                .retrieve()
-//                .bodyToMono(Map.class)
-//                .map(response -> {
-//                    System.out.println("response = " + response);
-//                    List<Map<String, Object>> projectList = new ArrayList<>();
-//
-//                    if (response == null || response.isEmpty()) return projectList;
-//
-//                    Map<String, Object> data = (Map<String, Object>) response.get("data");
-//                    if (data == null) return projectList;
-//
-//                    Map<String, Object> user = (Map<String, Object>) data.get("user");
-//                    if (user == null) return projectList;
-//
-//                    Map<String, Object> contributionsCollection = (Map<String, Object>) user.get("contributionsCollection");
-//                    if (contributionsCollection == null) return projectList;
-//
-//                    List<Map<String, Object>> repos = (List<Map<String, Object>>) contributionsCollection.get("pullRequestContributionsByRepository");
-//                    if (repos == null) return projectList;
-//
-//                    for (Map<String, Object> repo : repos) {
-//                        Map<String, Object> repository = (Map<String, Object>) repo.get("repository");
-//                        if (repository == null || (Boolean) repository.get("isPrivate")) continue; // 비공개 저장소 필터링
-//
-//                        Map<String, Object> contributions = (Map<String, Object>) repo.get("contributions");
-//                        if (contributions == null) continue;
-//
-//                        List<Map<String, Object>> nodes = (List<Map<String, Object>>) contributions.get("nodes");
-//                        if (nodes == null) continue;
-//
-//                        Map<String, Integer> languageLineCounts = new HashMap<>();
-//                        int totalLinesOfCode = 0;
-//
-//                        for (Map<String, Object> node : nodes) {
-//                            if (node == null) continue;
-//
-//                            Map<String, Object> pullRequest = (Map<String, Object>) node.get("pullRequest");
-//                            if (pullRequest == null) continue;
-//
-//                            Map<String, Object> files = (Map<String, Object>) pullRequest.get("files");
-//                            if (files == null) continue;
-//
-//                            List<Map<String, Object>> edges = (List<Map<String, Object>>) files.get("edges");
-//                            if (edges == null) continue;
-//
-//                            for (Map<String, Object> edge : edges) {
-//                                if (edge == null) continue;
-//
-//                                Map<String, Object> fileNode = (Map<String, Object>) edge.get("node");
-//                                if (fileNode == null) continue;
-//
-//                                String filePath = (String) fileNode.get("path");
-//                                String language = getLanguageFromFilePath(filePath);
-//
-//                                Integer additions = (Integer) fileNode.get("additions");
-//                                Integer deletions = (Integer) fileNode.get("deletions");
-//
-//                                if (language != null) {
-//                                    languageLineCounts.put(language, languageLineCounts.getOrDefault(language, 0) + (additions != null ? additions : 0) + (deletions != null ? deletions : 0));
-//                                    totalLinesOfCode += (additions != null ? additions : 0) + (deletions != null ? deletions : 0);
-//                                }
-//                            }
-//                        }
-//
-//                        Map<String, Object> projectData = new HashMap<>();
-//                        projectData.put("name", repository.get("name"));
-//                        projectData.put("createdAt", repository.get("createdAt"));
-//                        projectData.put("pushedAt", repository.get("pushedAt"));
-//                        projectData.put("updatedAt", repository.get("updatedAt"));
-//                        projectData.put("languages", languageLineCounts);
-//                        projectData.put("totalLinesOfCode", totalLinesOfCode);
-//
-//                        projectList.add(projectData);
-//                    }
-//
-//                    return projectList;
-//                });
-//    }
-
 
 
     public Mono<List<Map<String, Object>>> fetchGitHubContributions(String username, String accessToken) {

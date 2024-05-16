@@ -24,7 +24,6 @@ public class CodeController {
     @GetMapping("/common/code")
     public ResponseEntity<BaseResponse<CommonCodeResDto>> getCommonCodes() {
         CommonCodeResDto commonCodeResDto = codeService.getAllCommonCodes();
-        System.out.println(commonCodeResDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(commonCodeResDto));
     }
 }

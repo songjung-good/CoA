@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,7 @@ public class ExternalController {
     private final MemberRepository memberRepository;
     private final AccountLinkRepository accountLinkRepository;
     private final EncryptionUtils encryptionUtils;
+    private final Scheduler dbScheduler = Schedulers.boundedElastic();
 
     @GetMapping("/github/repos/{userName}")
     public ResponseEntity<BaseResponse<String>> getGithubRepos(@AuthenticationPrincipal Long currentId, @PathVariable("userName") String userName) throws Exception {
@@ -91,59 +94,70 @@ public class ExternalController {
     @Operation(description = "깃헙 잔디 602 -> 링크 X , 303 -> 토큰 확인(외부 에러)")
     @GetMapping("/events/github/{memberUuid}")
     public Mono<ResponseEntity<BaseResponse<Map<String, Object>>>> getGitHubUserEvents(@PathVariable String memberUuid) {
-        return Mono.fromCallable(() -> memberRepository.findByMemberUuid(UUID.fromString(memberUuid))
-                        .orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST)))
-                .flatMap(member -> {
-                    AccountLink githubAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L)
-                            .orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
-                    String githubUserName = githubAccountLink.getAccountLinkNickname();
-                    String githubAccessToken = null;
-                    try {
-                        githubAccessToken = encryptionUtils.decrypt(githubAccountLink.getAccountLinkReceiveToken());
-                    } catch (Exception e) {
-                        return Mono.error(new RuntimeException(e));
-                    }
-                    return externalApiService.fetchGithubIssue(githubUserName, githubAccessToken);
+        return findMemberByUuid(memberUuid)
+                .flatMap(this::findGithubAccountLink)
+                .flatMap(gitHubAccountLink -> {
+                    String githubUserName = gitHubAccountLink.getAccountLinkNickname();
+                    return decryptToken(gitHubAccountLink.getAccountLinkReceiveToken())
+                            .flatMap(githubAccessToken -> externalApiService.fetchGithubIssue(githubUserName, githubAccessToken));
                 })
-                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)));
+                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)))
+                .onErrorResume(e -> Mono.just(ResponseEntity.internalServerError().body(new BaseResponse<>(StatusCode.INTERNAL_SERVER_ERROR))));
     }
 
     @Operation(description = "깃랩 잔디 602 -> 링크 X , 303 -> 토큰 확인(외부 에러)")
     @GetMapping("/events/gitlab/{memberUuid}")
     public Mono<ResponseEntity<BaseResponse<Map<String, Object>>>> getGitLabUserEvents(@PathVariable String memberUuid) {
-        return Mono.fromCallable(() -> memberRepository.findByMemberUuid(UUID.fromString(memberUuid))
-                        .orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST)))
-                .flatMap(member -> {
-                    AccountLink gitLabAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L)
-                            .orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+        return findMemberByUuid(memberUuid)
+                .flatMap(this::findGitLabAccountLink)
+                .flatMap(gitLabAccountLink -> {
                     String gitLabUserName = gitLabAccountLink.getAccountLinkNickname();
-                    String gitLabAccessToken = null;
-                    try {
-                        gitLabAccessToken = encryptionUtils.decrypt(gitLabAccountLink.getAccountLinkReceiveToken());
-                    } catch (Exception e) {
-                        return Mono.error(new RuntimeException(e));
-                    }
-                    return externalApiService.fetchGitLabIssue(gitLabUserName, gitLabAccessToken);
+                    return decryptToken(gitLabAccountLink.getAccountLinkReceiveToken())
+                            .flatMap(gitLabAccessToken -> externalApiService.fetchGitLabIssue(gitLabUserName, gitLabAccessToken));
                 })
-                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)));
+                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)))
+                .onErrorResume(e -> Mono.just(ResponseEntity.internalServerError().body(new BaseResponse<>(StatusCode.INTERNAL_SERVER_ERROR))));
     }
 
     @GetMapping("/github/{memberUuid}/lines-of-code")
     public Mono<ResponseEntity<BaseResponse<List<Map<String, Object>>>>> getGitHubUserProjects(@PathVariable String memberUuid) {
+        return findMemberByUuid(memberUuid)
+                .flatMap(this::findGithubAccountLink)
+                .flatMap(gitHubAccountLink -> {
+                    String githubUserName = gitHubAccountLink.getAccountLinkNickname();
+                    return decryptToken(gitHubAccountLink.getAccountLinkReceiveToken())
+                            .flatMap(githubAccessToken -> externalApiService.fetchGitHubContributions(githubUserName, githubAccessToken));
+                })
+                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)))
+                .onErrorResume(e -> Mono.just(ResponseEntity.internalServerError().body(new BaseResponse<>(StatusCode.INTERNAL_SERVER_ERROR))));
+    }
+
+
+    private Mono<Member> findMemberByUuid(String memberUuid) {
         return Mono.fromCallable(() -> memberRepository.findByMemberUuid(UUID.fromString(memberUuid))
                         .orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST)))
-                .flatMap(member -> {
-                    AccountLink githubAccountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L)
-                            .orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
-                    String githubUserName = githubAccountLink.getAccountLinkNickname();
-                    String githubAccessToken;
-                    try {
-                        githubAccessToken = encryptionUtils.decrypt(githubAccountLink.getAccountLinkReceiveToken());
-                    } catch (Exception e) {
-                        return Mono.error(new RuntimeException(e));
-                    }
-                    return externalApiService.fetchGitHubContributions(githubUserName, githubAccessToken);
-                })
-                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)));
+                .subscribeOn(dbScheduler);
+    }
+
+    private Mono<AccountLink> findGithubAccountLink(Member member) {
+        return Mono.fromCallable(() -> accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L)
+                        .orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST)))
+                .subscribeOn(dbScheduler);
+    }
+
+    private Mono<AccountLink> findGitLabAccountLink(Member member) {
+        return Mono.fromCallable(() -> accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L)
+                        .orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST)))
+                .subscribeOn(dbScheduler);
+    }
+
+    private Mono<String> decryptToken(String encryptedToken) {
+        return Mono.fromCallable(() -> {
+            try {
+                return encryptionUtils.decrypt(encryptedToken);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).subscribeOn(Schedulers.boundedElastic());
     }
 }
