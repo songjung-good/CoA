@@ -1,9 +1,13 @@
 import { RepoAnalysisResponse } from "@/api/userPage/apiAnalysis";
 import RadarChart from "./RadarChart";
 import { useState } from "react";
+import useCommonCodeStore from "@/store/commoncode";
 
 export default function AnalysisCard({ data }: { data: RepoAnalysisResponse }) {
-  const [selectedJob, setSelectedJob] = useState("2000");
+  const { response } = useCommonCodeStore.getState();
+  const jobObj = response.result.commonCodeList[2].codes;
+  const [selectedJob, setSelectedJob] = useState("2004");
+  console.log(jobObj);
   return (
     <article className="card flex justify-center gap-4">
       <section>
@@ -16,14 +20,16 @@ export default function AnalysisCard({ data }: { data: RepoAnalysisResponse }) {
               />
               <ul className="card">
                 <h2>나의 분석 결과</h2>
-                {Object.entries(data.myScoreAverage).map(([key, value]) => (
-                  <li
-                    key={key}
-                    className={key === "total" ? "text-lg pt-1" : ""}
-                  >
-                    {key}: {value}
-                  </li>
-                ))}
+                {Object.entries(data.myScoreAverage)
+                  .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+                  .map(([key, value]) => (
+                    <li
+                      key={key}
+                      className={key === "total" ? "text-lg pt-1" : ""}
+                    >
+                      {key}: {Number(value).toFixed(1)}
+                    </li>
+                  ))}
               </ul>
             </div>
           </>
@@ -38,26 +44,34 @@ export default function AnalysisCard({ data }: { data: RepoAnalysisResponse }) {
         )}
       </section>
       <section className="card">
-        <div className="flex gap-2">
-          <select
-            onChange={(e) => setSelectedJob(e.target.value)}
-            className="border hover:border-appBlue1"
-          >
-            {Object.keys(data.jobs).map((job) => (
-              <option key={job} value={job}>
-                {job}
-              </option>
-            ))}
-          </select>
+        <div className="gap-2">
+          {jobObj && (
+            <select
+              onChange={(e) => {
+                setSelectedJob(e.target.value);
+                console.log(selectedJob);
+              }}
+              className="border hover:border-appBlue1"
+              value={selectedJob}
+            >
+              {Object.keys(data.jobs).map((job) => (
+                <option key={job} value={job}>
+                  {jobObj[job]}
+                </option>
+              ))}
+            </select>
+          )}
           <h2>평균 분석 결과</h2>
         </div>
         {selectedJob && data.jobs[selectedJob] && (
           <ul>
-            {Object.entries(data.jobs[selectedJob]).map(([key, value]) => (
-              <li key={key} className={key === "total" ? "text-lg pt-1" : ""}>
-                {key}: {value}
-              </li>
-            ))}
+            {Object.entries(data.jobs[selectedJob])
+              .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+              .map(([key, value]) => (
+                <li key={key} className={key === "total" ? "text-lg pt-1" : ""}>
+                  {key}: {Number(value).toFixed(1)}
+                </li>
+              ))}
           </ul>
         )}
       </section>

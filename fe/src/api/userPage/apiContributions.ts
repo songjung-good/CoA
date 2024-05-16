@@ -22,19 +22,19 @@ export const getContributions = async (
   );
   return response.data;
 };
-
+const customAxios = UseAxios();
 export const getGithubEventsData = async (
   memberUuid: string,
 ): Promise<ApiResponse> => {
   // console.log("깃허브");
   try {
-    const response = await UseAxios().get(
+    const response = await customAxios.get(
       `/api/external/events/github/${memberUuid}`,
     );
     // console.log(response);
     return response.data.result;
   } catch (error) {
-    console.error("'/api/external/events/github/'요청 에러", error);
+    console.error("getGithubEventsData 요청 에러", error);
     return { total: {}, contributions: [] };
   }
 };
@@ -44,13 +44,13 @@ export const getGitlabEventsData = async (
 ): Promise<ApiResponse> => {
   // console.log("깃랩");
   try {
-    const response = await UseAxios().get(
+    const response = await customAxios.get(
       `/api/external/events/gitlab/${memberUuid}`,
     );
     // console.log(response);
     return response.data.result;
   } catch (error) {
-    console.error("'/api/external/events/gitlab/'요청 에러", error);
+    console.error("getGitlabEventsData 요청 에러", error);
     return { total: {}, contributions: [] };
   }
 };

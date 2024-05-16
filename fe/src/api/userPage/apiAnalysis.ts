@@ -15,7 +15,7 @@ interface RepoAnalysisDto {
   commitScore: CommitScoreDto;
 }
 
-interface Jobs {
+export interface Jobs {
   [key: string]: CommitScoreDto;
 }
 
