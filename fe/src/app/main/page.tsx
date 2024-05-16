@@ -16,6 +16,8 @@ import GitlabRepo from "@/app/main/GitlabRepo";
 import GithubRepo from "@/app/main/GithubRepo";
 // 레포 카드
 import ExhibitRepo from "@/app/main/ExhibitRepo";
+// 유저 정보
+import UserProfile from "@/components/maincomponents/UserProfile";
 
 // 전역변수
 import userStore from "@/store/user";
@@ -31,22 +33,16 @@ const MainPage: React.FC = () => {
       <Header>
         <Description>
           <TextWrapper>
-            <Title>
-              당신의 프로젝트 <br />
-              COA에서 분석해보세요
-            </Title>
+            <Title>당신의 프로젝트 "CoA"에서 분석해보세요</Title>
+            <UrlInput />
             <SubTitle>
               분석하고 싶은 프로젝트의 URL만 입력하면
               <br /> 해당 레포지토리 분석을 시작합니다.
             </SubTitle>
           </TextWrapper>
-          <Img src="https://www.lgcns.com/wp-content/uploads/2021/11/9981C0435CB8247727.png"></Img>
         </Description>
+        <UserProfile />
       </Header>
-      <Div1>
-        <Heading>프로젝트 분석</Heading>
-        <UrlInput />
-      </Div1>
       <RepoDiv>
         <RepoLeft>
           <Heading>
@@ -76,18 +72,19 @@ const MainPage: React.FC = () => {
         </RepoRight>
       </RepoDiv>
       <Div>
-        <Heading>여기는 자주찾는 레포</Heading>
+        <Heading>유명한 프로젝트 분석 결과</Heading>
         <ExhibitRepo />
       </Div>
-      <Div>
+      {/* <Div>
         <Heading>여기는 통계 컴포넌트</Heading>
-      </Div>
+      </Div> */}
     </Main>
   );
 };
 
 const Main = tw.main`
-  bg-appGrey1
+  sm:mx-20
+  mx-5
   flex
   flex-col
   items-center
@@ -98,42 +95,58 @@ const Header = tw.div`
   max-w-screen-xl
   w-full
   mx-auto
-  bg-white
   mt-10
-  border
-  shadow-lg
-  rounded-2xl
-  hover:border-appBlue1
+  flex flex-col
+  sm:flex-row
+  items-center
 `;
 
-const Description = tw.h3`
+const Description = tw.div`
+  relative
   flex
   flex-row
+  w-full
+  min-h-[300px]
+  sm:w-2/3
   items-center
-  justify-between
+  sm:items-center
+  sm:justify-between
   max-w-screen-xl
+  sm:flex-row
+  bg-cover bg-analyze
+
 `;
 
 const TextWrapper = tw.div`
-  mx-auto
-  p-[2rem]
+  relative
+  w-full
+  pl-5 pr-2 py-10
+  items-center
+  flex flex-col
 `;
 
 const Title = tw.h2`
   font-bold
   text-left
   mb-4
-  lg:text-5xl
-  md:text-3xl
+  lg:text-4xl
+  md:text-2xl
   sm:text-xl
+  flex
+`;
+
+const BlueText = tw.p`
+  text-appBlue1
+  ml-2
 `;
 
 const SubTitle = tw.p`
   font-light
-  text-left
+  text-center
   lg:text-lg
   md:text-sm
   sm:text-xs
+  
 `;
 
 const Img = tw.img`
@@ -190,7 +203,6 @@ const RepoRight = tw.div`
 
 const Div = tw.div`
   max-w-screen-xl
-  mx-auto
   bg-white
   mt-10
   p-4
