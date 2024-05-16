@@ -19,10 +19,11 @@ export default function UserPage({ params }: { params: { id: string } }) {
     // console.log(userName);
     if (userName !== null) {
       setRepos(userName);
-      // setRepos(params.id);
     }
   }, [userName, setRepos]);
-
+  // useEffect(()=>{
+  //   setRepos(params.id);
+  // },[])
   //탭에 따른 랜더링될 페이지
   const renderTabContent = () => {
     switch (tabIndex) {
