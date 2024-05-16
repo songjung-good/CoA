@@ -7,7 +7,7 @@ from api.models.code import AnalysisStatus
 from api.models.dto import AnalysisDataDto, AiResultDto, CommitScoreDto
 
 original_dto = AnalysisDataDto(
-    analysis_id='result:0',
+    analysis_id='0',
     repo_path='DoubleDeltas/MineCollector',
     project_id='0',
     user_name='DoubleDeltas',
