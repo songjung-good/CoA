@@ -42,12 +42,12 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
     setGitlabData(res2);
     setMergeData(res3);
     fitData(res1);
-    console.log("res1");
-    console.log(res1);
-    console.log("res2");
-    console.log(res2);
-    console.log("res3");
-    console.log(res3);
+    // console.log("res1");
+    // console.log(res1);
+    // console.log("res2");
+    // console.log(res2);
+    // console.log("res3");
+    // console.log(res3);
   };
 
   const fitData = (res: ApiResponse) => {
