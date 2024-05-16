@@ -23,7 +23,7 @@ export default function Header() {
             height={48}
             className="mr-4"
           />
-          <div>
+          <div className="invisible md:visible">
             <Image
               src="/image/textLogo48.png"
               alt="logoText"
