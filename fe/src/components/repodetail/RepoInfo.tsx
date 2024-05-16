@@ -43,7 +43,12 @@ const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
                 height={30}
               />
             ) : (
-              <Image src="" alt="gitlab logo" width={30} height={30} />
+              <Image
+                src="/image/oauth/gitlab-mark.svg"
+                alt="gitlab logo"
+                width={30}
+                height={30}
+              />
             )}
             <Link
               href={`${repoInfo.repoViewPath}`}
@@ -112,7 +117,7 @@ const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
 };
 
 const RepoInfoDiv = tw.div`
-  w-full min-h-20 flex flex-col lg:flex-row flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2
+  w-full min-h-20 flex flex-col lg:flex-row lg:min-w-[800px] flex-wrap justify-between shadow-lg bg-white rounded-2xl p-5 space-y-2
   border hover:border-appBlue2
 `;
 
