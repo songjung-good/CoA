@@ -54,7 +54,6 @@ const UrlInput = () => {
     } else {
       FetchGitInfo(inputValue, setUserData);
       setIsModalOpen(true);
-      console.log(userData);
     }
   };
 

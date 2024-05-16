@@ -52,6 +52,7 @@ const fetchGitHubData = async (gitInfo: any, setUserData: Function) => {
 
 // GitLab 프로젝트의 기여자 정보와 프로젝트 ID
 const fetchGitLabData = async (gitInfo: any, setUserData: Function) => {
+
   try {
     const members = await fetchGitlabMembers(gitInfo.ProjectName, gitInfo.UserName);
 
@@ -70,7 +71,7 @@ const fetchGitlabMembers = async (projectname: string, username: string): Promis
   const axios = UseAxios();
   try {
     const projectsResponse = await axios.get(`/api/external/gitlab/projects/${username}`)
-
+    
     if (projectsResponse.data.code === 602) {
       throw alert("GitLab 계정을 연동해주세요.")
     }
@@ -78,7 +79,6 @@ const fetchGitlabMembers = async (projectname: string, username: string): Promis
       throw alert("본인 여부(접근 권한) 및 토큰을 확인해주세요.")
     }
     let projectId = '';
-
     
     JSON.parse(projectsResponse.data.result).forEach((project: any) => {
       if (project.name === projectname) {
