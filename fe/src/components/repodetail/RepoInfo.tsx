@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import tw from "tailwind-styled-components";
+import { colorMapping } from "@/components/colorMap";
 import { useState, useEffect } from "react";
 
 // import file
@@ -82,7 +83,10 @@ const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
             {repoInfo.skillList.map((skill, index) => (
               <li
                 key={index}
-                className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold"
+                className={`flex justify-between items-center px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold border-2`}
+                style={{
+                  borderColor: `${colorMapping[skill.codeName]}`,
+                }}
               >
                 {skill.codeName}
               </li>

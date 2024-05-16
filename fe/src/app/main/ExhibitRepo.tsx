@@ -1,9 +1,9 @@
 "use client";
 // 라이브러리
-import React, { useEffect, useState } from 'react';
-import UseAxios from '@/api/common/useAxios';
+import React, { useEffect, useState } from "react";
+import UseAxios from "@/api/common/useAxios";
 // 컴포넌트
-import MainRepoCard from '@/components/maincomponents/MainRepoCard'
+import MainRepoCard from "@/components/maincomponents/MainRepoCard";
 // 인터페이스
 interface Skill {
   codeId: number;
@@ -33,18 +33,18 @@ const ExhibitRepo: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/repos/main/popular');
+        const response = await axios.get("/api/repos/main/popular");
         setData(response.data.result);
-          } catch (error) {
+      } catch (error) {
         console.error("API 요청 중 에러 발생:", error);
       }
     };
-  
+
     fetchData();
   }, []);
 
   return (
-    <div className='flex flex-wrap justify-center align-center mt-5'>
+    <div className="flex flex-wrap justify-center align-center mt-5">
       {data.map((item, index) => (
         <MainRepoCard key={index} data={item} />
       ))}

@@ -125,7 +125,7 @@ export default function HomePage() {
       </div>
       <LadingComponent>
         <Slogan>코드만 치세요. 분석은 우리가 할께요.</Slogan>
-        <Title>CoA</Title>
+        <Logo>CoA</Logo>
         <IntroduceText />
         <AnalysisButton
           buttonRef={buttonRef}
@@ -205,7 +205,7 @@ z-10 w-full
 
 `;
 
-const Title = tw.h1`
+const Logo = tw.h1`
 text-7xl 
 font-bold
 text-center
