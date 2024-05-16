@@ -116,7 +116,9 @@ public class ExternalController {
                     return decryptToken(gitLabAccountLink.getAccountLinkReceiveToken())
                             .flatMap(gitLabAccessToken -> externalApiService.fetchGitLabIssue(gitLabUserName, gitLabAccessToken));
                 })
-                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)));
+                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)))
+                .onErrorResume(e -> Mono.just(ResponseEntity.internalServerError().body(new BaseResponse<>(StatusCode.INTERNAL_SERVER_ERROR))))
+                ;
     }
 
     @GetMapping("/github/{memberUuid}/lines-of-code")
