@@ -22,7 +22,7 @@ interface GithubLOC {
 export const getGithubLOCData = async (memberUuid: string) => {
   // console.log("깃허브");
   try {
-    const response = await UseAxios().get(
+    const response = await UseAxios().get<GithubLOC>(
       `/api/external/github/${memberUuid}/lines-of-code`,
     );
     console.log("getGithubLOCData");
@@ -34,5 +34,15 @@ export const getGithubLOCData = async (memberUuid: string) => {
       `getGithubLOCData 요청 에러 / memberUuid :${memberUuid}`,
       error,
     );
+    return [
+      {
+        name: "서버 에러",
+        createdAt: "1111-11-11",
+        pushedAt: "1111-11-11",
+        updatedAt: "1111-11-11",
+        languages: { error: 500 },
+        totalLinesOfCode: 500,
+      },
+    ];
   }
 };
