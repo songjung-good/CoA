@@ -20,4 +20,10 @@ if __name__ == '__main__':
     container.wire([sys.modules[__name__]])
     container.init_resources()
 
-    uvicorn.run(app, host=os.getenv('HOST'), port=int(os.getenv('PORT')), env_file=os.getenv('ENV_FILE_PATH'))
+    uvicorn.run(
+        'main:app',
+        host=os.getenv('HOST'),
+        port=int(os.getenv('PORT')),
+        env_file=os.getenv('ENV_FILE_PATH'),
+        workers=int(os.getenv('WORKERS_CNT'))
+    )
