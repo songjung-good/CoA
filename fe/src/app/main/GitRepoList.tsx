@@ -42,16 +42,16 @@ export default function GitRepoList() {
           onClick={() => {
             setTabIndex(0);
           }}
-          className={tabIndex === 0 ? "font-bold" : ""}
+          className={tabIndex === 0 ? "font-bold text-base lg:text-lg" : ""}
         >
           &#9664;Github
         </button>
-        <p className="text-2xl font-bold">내 레포 목록</p>
+        <p className="text-lg lg:text-2xl font-bold">내 레포 목록</p>
         <button
           onClick={() => {
             setTabIndex(1);
           }}
-          className={tabIndex === 1 ? "font-bold" : ""}
+          className={tabIndex === 1 ? "font-bold text-base lg:text-lg" : ""}
         >
           GitLab&#9654;
         </button>
