@@ -139,7 +139,7 @@ class AnalysisDataDto:
             repo_member_cnt=dct.get('repoMemberCnt', None),
             result=AiResultDto.from_dict(dct['result']) if 'result' in dct else None,
             status=AnalysisStatus(int(dct.get('status', 000))),
-            expire_sec=dct.get('expiredSec', None)
+            expire_sec=dct.get('expireSec', None)
         )
 
     def to_camel_dict(self) -> dict:

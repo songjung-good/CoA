@@ -17,7 +17,7 @@ class RepoContentLoader(BaseLoader):
             yield Document(
                 page_content=file['file_content'],
                 metadata={
-                    'file_path': file['path']
+                    'file_path': file['file_path']
                 }
             )
 
