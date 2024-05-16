@@ -44,19 +44,10 @@ class Container(DeclarativeContainer):
         provides=OpenAI,
         openai_api_key=config.ai.openai_api_key,
         temperature=0.3,
-        verbose=True
-    )
-    chat_model = providers.Resource(
-        provides=ChatOpenAI,
-        openai_api_key=config.ai.openai_api_key,
-        temperature=0.3,
-    )
-    embeddings = providers.Resource(
-        provides=OpenAIEmbeddings,
-        openapi_api_key=config.ai.openai_api_key
+        max_token=1000
     )
 
-    ai_mutex = providers.Singleton(AiMutex, chat_model)
+    ai_mutex = providers.Singleton(AiMutex, llm)
     ai_service = providers.Singleton(AiService)
 
     analysis_service = providers.Singleton(AnalysisService, redis_client, ai_mutex, ai_service)
