@@ -315,7 +315,9 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
                   key={index}
                   className={`flex justify-between items-center px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold border-2 hover:cursor-pointer`}
                   style={{
-                    borderColor: `${
+                    padding: "4px",
+                    borderRadius: "9999px",
+                    backgroundColor: `${
                       colorMapping[
                         `${
                           skillOptions.find(
@@ -327,10 +329,13 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
                   }}
                   onClick={() => handleRemoveStack(index)}
                 >
-                  {skillOptions.find((option) => parseInt(option.key) === key)
-                    ?.value || key}
-                  <div className="font-bold ml-2 text-xs text-red-600">
-                    &#10005;
+                  <div className="flex justify-center items-center">
+                    <span className="text-white px-1">
+                      {skillOptions.find(
+                        (option) => parseInt(option.key) === key,
+                      )?.value || key}
+                    </span>
+                    <div className="px-1 text-xs text-white">&#10005;</div>
                   </div>
                 </li>
               ))}

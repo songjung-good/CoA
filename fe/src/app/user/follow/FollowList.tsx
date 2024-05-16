@@ -147,10 +147,11 @@ export default function FollowList() {
                       key={skill.codeId}
                       style={{
                         padding: "4px",
+                        borderRadius: "9999px",
                         backgroundColor: `${colorMapping[skill.codeName]}`,
                       }}
                     >
-                      <p className="bg-white px-1">{skill.codeName}</p>
+                      <p className="text-white px-1">{skill.codeName}</p>
                     </li>
                   ))}
                 </ul>
