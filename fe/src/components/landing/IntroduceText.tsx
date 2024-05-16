@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import styled from "styled-components";
+import tw from "tailwind-styled-components";
 
 interface TypingTextProps {
   text: string;
@@ -93,25 +93,23 @@ export default function IntroduceText() {
   // const { animeFinishFlag: fifthFlag, TypingTextDiv: FifthText } =
   //   useTypingAnime("CoA에서 한눈에 확인하세요!", 50, fourthFlag);
   return (
-    <div
-      style={{
-        minHeight: "15vh",
-        textAlign: "center",
-        fontSize: "22px",
-        fontWeight: "bold",
-      }}
-    >
+    <TextDiv>
       <FirstText />
       <SecondText />
       <ThirdText />
       <FourthText />
-    </div>
+    </TextDiv>
   );
 }
 
-const Intro = styled.div`
-  min-height: 15vh;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
+const TextDiv = tw.div`
+  min-h-[15vh]
+  text-center
+  font-medium
+  text-black
+  underline
+  border-b-2
+  lg:text-3xl
+  md:text-2xl
+  sm:text-lg
 `;
