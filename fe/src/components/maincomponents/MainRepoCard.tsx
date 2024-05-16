@@ -78,7 +78,7 @@ const Card = tw.div`
   border
   border-appGrey2
   rounded-lg 
-  mb-[3rem] sm:m-[3rem]
+  mb-5 sm:m-5
   flex
   flex-col
   p-4

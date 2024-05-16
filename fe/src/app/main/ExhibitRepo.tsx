@@ -44,7 +44,7 @@ const ExhibitRepo: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-wrap justify-center align-center mt-5">
+    <div className="flex flex-wrap justify-center mt-5">
       {data.map((item, index) => (
         <MainRepoCard key={index} data={item} />
       ))}
