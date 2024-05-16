@@ -29,12 +29,10 @@ const StyledLink = tw(Link)`
   flex
   bg-appOrange
   p-2
-  px-4
-  rounded-2xl
-  shadow-black
-  shadow-inner
-  transition
-  hover:bg-appRed
+  rounded-lg
+  mb-20
+  mt-10
+  shadow-2xl
 `;
 
 export default AnalysisButton;

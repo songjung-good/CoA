@@ -1,13 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import userStore from "@/store/user";
-import EditIconDark from "@/icons/EditIconDark";
 import UseAxios from "@/api/common/useAxios";
 import { useEffect, useState } from "react";
 import { colorMapping } from "@/components/colorMap";
 import useCommonCodeStore from "@/store/commoncode";
+import tw from "tailwind-styled-components"
 
 interface Skill {
   codeId: number;
@@ -44,6 +42,14 @@ interface UserInfo {
 interface ApiResponse {
   result: Member;
 }
+
+const ProfileHead = tw.div`
+  flex
+  justify-between
+  mx-[5%]
+  items-center
+  border-b-2
+`;
 
 export default function UserProfile() {
   const axios = UseAxios();
@@ -103,26 +109,24 @@ export default function UserProfile() {
 
   return (
     <div className="w-full sm:w-1/3 flex flex-col mt-10 sm:mt-0 px-2 sm:ml-4 bg-white shadow-lg rounded-lg border hover:border-appBlue2 py-6 min-h-[300px]">
-      <div className="flex justify-end">
+      <ProfileHead>
+        <div className="flex justify-start items-center h-1/3 min-h-[60px]">
+          <img
+            src={userCard?.memberImg || `/image/LoadingSpinner.gif`}
+            alt="member image"
+            className="rounded-full w-1/6"
+          />
+          <p className="m-[5%] text-base sm:text-base">{userCard.memberNickName}</p>
+        </div>
         <Link href={`/user/${userInfo.memberUuid}`}>
-          <span className="text-xs text-end mr-4 text-gray-400 hover:text-appBlue1">
+          <span className="text-md font-bold text-end mr-4 text-gray-400 hover:text-appRed">
             마이페이지&#10097;{" "}
           </span>
         </Link>
-      </div>
-      <div className="flex justify-around items-center w-full h-1/3 min-h-[60px]">
-        <img
-          src={userCard?.memberImg || `/image/LoadingSpinner.gif`}
-          alt="member image"
-          className="rounded-full w-1/6"
-        />
-        <div className="flex justify-center items-center">
-          <p className="text-base sm:text-base">{userCard.memberNickName}</p>
-        </div>
-      </div>
+      </ProfileHead>
       <div className="h-full">
-        <div className="flex justify-around">
-          <div className="flex flex-col mt-2">
+        <div className="flex justify-between mx-[5%] my-[2%] ">
+          <div className="flex flex-col items-start mt-2">
             <div className="flex justify-center items-center">
               <img
                 src="/image/oauth/github-mark.svg"
@@ -170,7 +174,10 @@ export default function UserProfile() {
             </p>
           </div>
         </div>
-        <div className="skills-container flex justify-center items-center">
+        <div className="skills-container flex justify-between items-center mx-[3%] my-[3%]">
+          <p>
+            기술스택:
+          </p>
           <ul className="flex flex-wrap gap-2 p-1">
             {userCard?.skillList.slice(0, 4).map((skill) => (
               <li
