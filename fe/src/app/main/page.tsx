@@ -72,12 +72,12 @@ const MainPage: React.FC = () => {
         </RepoRight>
       </RepoDiv>
       <Div>
-        <Heading>여기는 자주찾는 레포</Heading>
+        <Heading>유명한 프로젝트 분석 결과</Heading>
         <ExhibitRepo />
       </Div>
-      <Div>
+      {/* <Div>
         <Heading>여기는 통계 컴포넌트</Heading>
-      </Div>
+      </Div> */}
     </Main>
   );
 };

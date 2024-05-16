@@ -114,7 +114,7 @@ const StyledInput = tw.input`
 
 const StyledButton = tw.button`
   border-2
-  border-appGrey2
+  border-appPink
   rounded-full
   px-2
   ml-4
