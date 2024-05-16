@@ -10,6 +10,7 @@ interface LanguageStats {
 interface repositoryStore {
   repos: Repository[];
   languageTotals: LanguageStats;
+  errMsg: string;
   setRepos: (userName: string) => void;
   setRepos1: (uuid: string) => void;
 }
@@ -17,11 +18,12 @@ interface repositoryStore {
 const repositoryStore = create<repositoryStore>((set) => ({
   repos: [],
   languageTotals: {},
+  errMsg: "",
   setRepos1: async (uuid: string) => {
     try {
       const repos = await getGithubLOCData(uuid);
       let languageTotals: LanguageStats = {};
-      if (repos !== undefined) {
+      if (typeof repos !== "string") {
         repos.forEach((repo) => {
           Object.entries(repo.languages).forEach(([language, lines]) => {
             if (languageTotals[language]) {
@@ -33,6 +35,9 @@ const repositoryStore = create<repositoryStore>((set) => ({
         });
 
         set({ repos, languageTotals });
+      } else {
+        const errMsg = repos;
+        set({ errMsg });
       }
     } catch (error) {
       console.error("Error fetching repositories:", error);

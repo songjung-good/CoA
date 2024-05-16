@@ -4,6 +4,7 @@ import { colorMapping } from "../../../../../components/colorMap";
 import repositoryStore from "@/store/repos";
 
 const LinesOfCodeChart = () => {
+  const errMsg = repositoryStore((state) => state.errMsg);
   // data 양식
   // const data1 = [
   //   { language: "JavaScript", lines: 298655 },
@@ -86,7 +87,11 @@ const LinesOfCodeChart = () => {
       .attr("transform", `translate(${marginLeft},0)`)
       .call(d3.axisLeft(y).tickSizeOuter(0));
   }, [data1]);
-  return <svg className="w-full" ref={svgRef}></svg>;
+  return errMsg === "" ? (
+    <svg className="w-full" ref={svgRef}></svg>
+  ) : (
+    <div>{errMsg}</div>
+  );
 };
 
 export default LinesOfCodeChart;

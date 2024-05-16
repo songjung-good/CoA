@@ -44,12 +44,12 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
       setMergeData(res3);
       fitData(res3);
     }
-    console.log("res1");
-    console.log(res1);
-    console.log("res2");
-    console.log(res2);
-    console.log("res3");
-    console.log(res3);
+    // console.log("res1");
+    // console.log(res1);
+    // console.log("res2");
+    // console.log(res2);
+    // console.log("res3");
+    // console.log(res3);
   };
 
   const fitData = (res: ApiResponse) => {

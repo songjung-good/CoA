@@ -27,22 +27,17 @@ export const getGithubLOCData = async (memberUuid: string) => {
     );
     console.log("getGithubLOCData");
     console.log(response);
-    const data: Repository[] = response.data.result;
-    return data;
+    if (response.data.isSuccess) {
+      const data: Repository[] = response.data.result;
+      return data;
+    } else {
+      return response.data.message;
+    }
   } catch (error) {
     console.error(
       `getGithubLOCData 요청 에러 / memberUuid :${memberUuid}`,
       error,
     );
-    return [
-      {
-        name: "서버 에러",
-        createdAt: "1111-11-11",
-        pushedAt: "1111-11-11",
-        updatedAt: "1111-11-11",
-        languages: { error: 500 },
-        totalLinesOfCode: 500,
-      },
-    ];
+    return "서버 에러";
   }
 };

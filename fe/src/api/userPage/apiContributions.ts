@@ -34,7 +34,7 @@ export const getGithubEventsData = async (
     // console.log(response);
     return response.data.result;
   } catch (error) {
-    console.error("getGithubEventsData 요청 에러", error);
+    // console.error("getGithubEventsData 요청 에러", error);
     // return { total: {}, contributions: [] };
     return null;
   }
@@ -51,7 +51,7 @@ export const getGitlabEventsData = async (
     // console.log(response);
     return response.data.result;
   } catch (error) {
-    console.error("getGitlabEventsData 요청 에러", error);
+    // console.error("getGitlabEventsData 요청 에러", error);
     // return { total: {}, contributions: [] };
     return null;
   }
