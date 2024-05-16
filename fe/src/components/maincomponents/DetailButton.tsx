@@ -1,12 +1,12 @@
 // 데이터를 불러오는 버튼 컴포넌트
 
 // 라이브러리
-import React from 'react';
-import tw from 'tailwind-styled-components';
+import React from "react";
+import tw from "tailwind-styled-components";
 import { useRouter } from "next/navigation";
-import UseAxios from '@/api/common/useAxios';
+import UseAxios from "@/api/common/useAxios";
 // 데이터
-import useRepoDetailStore from '@/store/repodetail';
+import useRepoDetailStore from "@/store/repodetail";
 
 interface DetailButtonProps {
   hovered: boolean;
@@ -37,11 +37,7 @@ const DetailButton: React.FC<DetailButtonProps> = ({ hovered, repoViewId }) => {
   return (
     hovered && (
       <CardOverlay>
-        <Button
-          onClick={() => handleDetailClick(repoViewId)}
-        >
-          상세보기
-        </Button>
+        <Button onClick={() => handleDetailClick(repoViewId)}>상세보기</Button>
       </CardOverlay>
     )
   );
@@ -49,9 +45,9 @@ const DetailButton: React.FC<DetailButtonProps> = ({ hovered, repoViewId }) => {
 
 const CardOverlay = tw.div`
   absolute
-  w-[25rem] 
+  w-[20rem] 
   h-[15rem]
-  m-[3rem] 
+  mb-[3rem] sm:m-[3rem]
   border
   border-appYellow
   rounded-lg 

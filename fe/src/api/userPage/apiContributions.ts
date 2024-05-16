@@ -1,4 +1,5 @@
 import axios from "axios";
+import UseAxios from "../common/useAxios";
 
 // Contributions 타입 정의
 export type Contribution = {
@@ -20,4 +21,36 @@ export const getContributions = async (
     `https://github-contributions-api.jogruber.de/v4/${userId}`,
   );
   return response.data;
+};
+
+export const getGithubEventsData = async (
+  memberUuid: string,
+): Promise<ApiResponse> => {
+  // console.log("깃허브");
+  try {
+    const response = await UseAxios().get(
+      `/api/external/events/github/${memberUuid}`,
+    );
+    // console.log(response);
+    return response.data.result;
+  } catch (error) {
+    console.error("'/api/external/events/github/'요청 에러", error);
+    return { total: {}, contributions: [] };
+  }
+};
+
+export const getGitlabEventsData = async (
+  memberUuid: string,
+): Promise<ApiResponse> => {
+  // console.log("깃랩");
+  try {
+    const response = await UseAxios().get(
+      `/api/external/events/gitlab/${memberUuid}`,
+    );
+    // console.log(response);
+    return response.data.result;
+  } catch (error) {
+    console.error("'/api/external/events/gitlab/'요청 에러", error);
+    return { total: {}, contributions: [] };
+  }
 };

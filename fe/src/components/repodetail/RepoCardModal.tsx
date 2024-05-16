@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import useCommonCodeStore from "@/store/commoncode";
+import { colorMapping } from "@/components/colorMap";
 // import useRepoDetailStore from "@/store/result";
 import useRepoDetailStore from "@/store/repodetail";
 import UseAxios from "@/api/common/useAxios";
@@ -297,7 +298,18 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
               {stacks.map((key, index) => (
                 <li
                   key={index}
-                  className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 hover:cursor-pointer shadow-lg rounded-lg"
+                  className={`flex justify-between items-center px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold border-2 hover:cursor-pointer`}
+                  style={{
+                    borderColor: `${
+                      colorMapping[
+                        `${
+                          skillOptions.find(
+                            (option) => parseInt(option.key) === key,
+                          )?.value || key
+                        }`
+                      ]
+                    }`,
+                  }}
                   onClick={() => handleRemoveStack(index)}
                 >
                   {skillOptions.find((option) => parseInt(option.key) === key)

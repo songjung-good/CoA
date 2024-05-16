@@ -125,10 +125,10 @@ export default function HomePage() {
       </div>
       <LadingComponent>
         <Header>
-          <Title>
+          <Logo>
             <ShiftedText>당신의 프로젝트</ShiftedText> <br />
             <Highlight>CoA</Highlight>에서 <Highlight>분석</Highlight>해보세요
-          </Title>
+          </Logo>
           <IntroduceText /> 
         </Header>
         <Buttonbackground>
@@ -229,7 +229,7 @@ const Header = tw.div`
   hover:bg-appGrey1 
 `;
 
-const Title = tw.h2`
+const Logo = tw.h2`
   font-bold
   text-center
   mt-10

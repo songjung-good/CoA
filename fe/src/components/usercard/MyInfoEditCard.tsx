@@ -160,10 +160,12 @@ export default function MyInfoEditCard({
               key={skill.codeId}
               style={{
                 padding: "4px",
+                borderWidth: "0.5px",
+                borderRadius: "9999px",
                 backgroundColor: `${colorMapping[skill.codeName]}`,
               }}
             >
-              <p className="bg-white flex gpa-2 items-center">
+              <p className=" rounded-full flex text-white gpa-2 items-center">
                 {skill.codeName}
                 <button onClick={() => removeSkill(skill.codeId)}>
                   <SmallCloseIcon />
@@ -172,9 +174,9 @@ export default function MyInfoEditCard({
             </li>
           ))}
         </ul>
-        <div className="flex">
+        <div className="flex flex-col">
           <input
-            className={`${inputStyle} p-2 rounded-l-2xl grow`}
+            className={`${inputStyle} p-2 rounded-t-2xl grow`}
             list="skillIdDataList"
             id="skillIdList"
             name="skillIdList"
@@ -183,7 +185,7 @@ export default function MyInfoEditCard({
             onChange={onChangeSkill}
           />
           <button
-            className={`${inputStyle} p-2 rounded-r-2xl`}
+            className="bg-appGrey2 p-2 rounded-b-2xl hover:bg-appBlue1"
             onClick={addSkill}
           >
             추가하기
@@ -210,7 +212,12 @@ export default function MyInfoEditCard({
         />
       </label>
       <div className="grid">
-        <button onClick={onSubmit}>수정하기</button>
+        <button
+          onClick={onSubmit}
+          className="bg-appBlue2 p-2 rounded-full hover:bg-appBlue1"
+        >
+          수정하기
+        </button>
       </div>
     </div>
   );

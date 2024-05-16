@@ -15,6 +15,8 @@ export default function UserPage({ params }: { params: { id: string } }) {
   const setRepos = repositoryStore((state) => state.setRepos);
 
   useEffect(() => {
+    // console.log("userName");
+    // console.log(userName);
     if (userName !== null) {
       setRepos(userName);
       // setRepos(params.id);
@@ -31,7 +33,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
       case 2:
         return <UserRepositoryPage />;
       case 3:
-        return <UserAnalysisPage />;
+        return <UserAnalysisPage uuid={params.id} />;
       default:
         return <UserOverviewPage uuid={params.id} />;
     }

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-
+import { colorMapping } from "@/components/colorMap";
 import useCommonCodeStore from "@/store/commoncode";
 import useResultStore from "@/store/result";
 import useAnalyzingStore from "@/store/analyze";
@@ -313,7 +313,18 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
               {stacks.map((key, index) => (
                 <li
                   key={index}
-                  className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 hover:cursor-pointer shadow-lg rounded-lg"
+                  className={`flex justify-between items-center px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold border-2 hover:cursor-pointer`}
+                  style={{
+                    borderColor: `${
+                      colorMapping[
+                        `${
+                          skillOptions.find(
+                            (option) => parseInt(option.key) === key,
+                          )?.value || key
+                        }`
+                      ]
+                    }`,
+                  }}
                   onClick={() => handleRemoveStack(index)}
                 >
                   {skillOptions.find((option) => parseInt(option.key) === key)

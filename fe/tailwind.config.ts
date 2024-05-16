@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        analyze: "url('/image/urlAnalyze.png')",
+      },
       colors: {
         appBlue1: "#48CAF8",
         appBlue2: "#88DDFB",
