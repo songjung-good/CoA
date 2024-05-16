@@ -46,11 +46,11 @@ class Container(DeclarativeContainer):
         openai_api_key=config.ai.openai_api_key,
         temperature=0.3,
         verbose=True,
-        max_token=1000
+        max_tokens=1000
     )
     embeddings = providers.Resource(
         provides=OpenAIEmbeddings,
-        openapi_api_key=config.ai.openai_api_key
+        openai_api_key=config.ai.openai_api_key
     )
 
     ai_chains = providers.Singleton(AiChains, llm)
