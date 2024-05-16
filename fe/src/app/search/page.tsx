@@ -96,12 +96,12 @@ const SearchPage = () => {
       setError('페이지 변경 중 오류가 발생했습니다.');
     }
   };
-
-  console.log(searchRepoData);
-  console.log(searchMemberData);
-
+  
   return (
     <Main className="max-w-screen-xl mx-auto">
+      <H2>
+        검색페이지
+      </H2>
       <SearchInput onSearch={handleSearch} />
         {error && <p>{error}</p>}
         {searchRepoData?.length === 0 && <p>검색 결과가 없습니다.</p>}
@@ -150,6 +150,15 @@ const Main = tw.div`
   mx-auto
 `;
 
+const H2 = tw.h2`
+  text-4xl
+  font-bold
+  mt-8
+  mb-4
+  text-center
+  text-black
+`;
+
 const ResultComponent = tw.div`
   mt-8
   grid
@@ -163,7 +172,7 @@ const PageTransition = tw.div`
   mt-3
   flex
   flex-row-reverse
-  justify-between
+  justify-right
 `;
 
 const Button = tw.button`

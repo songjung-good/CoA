@@ -69,6 +69,11 @@ const Form = tw.form`
   items-start
   max-width-screen-xl
   justify-around
+  border
+  rounded-lg
+  shadow-lg
+  p-4
+  hover:bg-appGrey1
 `;
 
 const Fieldset = tw.fieldset`
