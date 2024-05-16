@@ -1,10 +1,10 @@
 // 메인페이지의 프로젝트 카드를 나타내는 컴포넌트
 
 // 라이브러리
-import React, { useState } from 'react';
-import tw from 'tailwind-styled-components';
+import React, { useState } from "react";
+import tw from "tailwind-styled-components";
 // 컴포넌트
-import DetailButton from './DetailButton'; // DetailButton 컴포넌트 가져오기
+import DetailButton from "./DetailButton"; // DetailButton 컴포넌트 가져오기
 // 인터페이스
 interface Skill {
   codeId: number;
@@ -20,7 +20,7 @@ interface RepoCardDto {
   repoViewTitle: string;
   repoViewSubtitle: string;
   repoMemberCnt: number;
-  skillList: Skill[]|null;
+  skillList: Skill[] | null;
   repoStartDate: string;
   repoEndDate: string;
   isMine: boolean;
@@ -40,7 +40,10 @@ const MainRepoCard: React.FC<RepoData> = ({ data }) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <DetailButton hovered={hovered} repoViewId={result.repoViewId.toString()} />
+      <DetailButton
+        hovered={hovered}
+        repoViewId={result.repoViewId.toString()}
+      />
       <Card>
         <AvatarWrapper>
           <Avatar src={result.memberImg} alt={result.memberNickname} />
@@ -57,9 +60,11 @@ const MainRepoCard: React.FC<RepoData> = ({ data }) => {
         <div>
           <SkillLabel>프로젝트 스킬</SkillLabel>
           <SkillWrapper>
-            {result.skillList && result.skillList.length > 0 && result.skillList.map((skill, index) => (
-              <Skill key={index}>{skill.codeName}</Skill>
-            ))}
+            {result.skillList &&
+              result.skillList.length > 0 &&
+              result.skillList.map((skill, index) => (
+                <Skill key={index}>{skill.codeName}</Skill>
+              ))}
           </SkillWrapper>
         </div>
       </Card>
@@ -68,12 +73,12 @@ const MainRepoCard: React.FC<RepoData> = ({ data }) => {
 };
 
 const Card = tw.div`
-  w-[25rem] 
+  w-[20rem] 
   h-[15rem]
   border
   border-appGrey2
   rounded-lg 
-  m-[3rem] 
+  mb-[3rem] sm:m-[3rem]
   flex
   flex-col
   p-4
@@ -82,12 +87,12 @@ const Card = tw.div`
 `;
 
 // const Card = tw.div`
-//   w-[25rem] 
+//   w-[25rem]
 //   h-[15rem]
 //   border
 //   border-appGrey2
-//   rounded-lg 
-//   m-[2rem] 
+//   rounded-lg
+//   m-[2rem]
 //   flex
 //   flex-col
 //   p-4
