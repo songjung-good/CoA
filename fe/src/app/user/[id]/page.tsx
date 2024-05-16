@@ -13,17 +13,17 @@ export default function UserPage({ params }: { params: { id: string } }) {
   const [tabIndex, setTabIndex] = useState(0);
   const userName = userStore((state) => state.githubUserName);
   const setRepos = repositoryStore((state) => state.setRepos);
-
+  const setRepos1 = repositoryStore((state) => state.setRepos1);
+  // useEffect(() => {
+  //   // console.log("userName");
+  //   // console.log(userName);
+  //   if (userName !== null) {
+  //     setRepos(userName);
+  //   }
+  // }, [userName, setRepos]);
   useEffect(() => {
-    // console.log("userName");
-    // console.log(userName);
-    if (userName !== null) {
-      setRepos(userName);
-    }
-  }, [userName, setRepos]);
-  // useEffect(()=>{
-  //   setRepos(params.id);
-  // },[])
+    setRepos1(params.id);
+  }, []);
   //탭에 따른 랜더링될 페이지
   const renderTabContent = () => {
     switch (tabIndex) {

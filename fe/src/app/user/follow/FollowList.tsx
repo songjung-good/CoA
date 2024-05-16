@@ -23,39 +23,18 @@ interface Member {
 }
 
 interface ApiResponse {
+  isSuccess: boolean;
+  message: string;
+  code: number;
   result: Member[];
 }
 
-const dummyData: Member[] = [
-  {
-    memberUuid: "노마드 코더",
-    memberNickName: "노마드 코더",
-    memberImg:
-      "https://yt3.googleusercontent.com/ytc/AIdro_kZGbEvWmB_2CZMcZVcCpjFsiQNVQZEehF8jinP6zlFJ7s=s176-c-k-c0x00ffffff-no-rj",
-    memberIntro: `한국인 린과 콜롬비아인 니꼴라스의 프로젝트 "노마드 코더" 입니다.`,
-    skillList: [
-      { codeId: 1, codeName: "JavaScript" },
-      { codeId: 2, codeName: "React.js" },
-    ],
-    memberJobCodeId: 0,
-    isMine: false,
-    isBookmark: true,
-  },
-  {
-    memberUuid: "개발바닥",
-    memberNickName: "개발바닥",
-    memberImg:
-      "https://yt3.googleusercontent.com/ytc/AIdro_mDWXwLF9kj8Hzm_nh3ZDVo0LAzH-DzXyaFa8odzPeBTw=s176-c-k-c0x00ffffff-no-rj",
-    memberIntro: `본격 세계최초 DEV 엔터테인먼트 토크쇼`,
-    skillList: [
-      { codeId: 3, codeName: "Python" },
-      { codeId: 4, codeName: "Django" },
-    ],
-    memberJobCodeId: 0,
-    isMine: false,
-    isBookmark: true,
-  },
-];
+// interface api {
+//   isSuccess: boolean;
+//   message: string;
+//   code: number;
+//   result: Member[];
+// }
 const noFollowData = [
   {
     memberUuid: "no-follow-user",
@@ -72,17 +51,25 @@ export default function FollowList() {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<Member[]>([]);
   const { response } = useCommonCodeStore.getState();
-
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("서버 오류입니다.");
   const fetchFollowData = async () => {
     try {
       const bookmarksResponse = await UseAxios().get<ApiResponse>(
         "/api/member/bookmarks",
       );
-      // console.log(response.data);
-      if (bookmarksResponse.data.result.length === 0) {
-        setData(noFollowData);
+      console.log(bookmarksResponse);
+      console.log(bookmarksResponse.data.isSuccess);
+      if (bookmarksResponse.data.isSuccess === true) {
+        if (bookmarksResponse?.data.result.length === 0) {
+          setData(noFollowData);
+        } else {
+          setData(bookmarksResponse.data.result);
+        }
+        setIsSuccess(true);
       } else {
-        setData(bookmarksResponse.data.result);
+        setIsSuccess(false);
+        setErrorMsg(bookmarksResponse.data.message);
       }
       //더미데이터 사용 임시
       // setData(dummyData);
@@ -104,6 +91,8 @@ export default function FollowList() {
         <div className="w-full h-48 flex justify-center items-center text-4xl">
           Loading...
         </div>
+      ) : !isSuccess ? (
+        <div className="text-center">{errorMsg}</div>
       ) : (
         <ul className="flex flex-col gap-4">
           {data.map((member) => (
