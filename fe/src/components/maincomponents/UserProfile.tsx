@@ -176,12 +176,12 @@ export default function UserProfile() {
               <li
                 key={skill.codeId}
                 style={{
-                  padding: "3px",
+                  padding: "4px",
+                  borderRadius: "9999px",
                   backgroundColor: `${colorMapping[skill.codeName]}`,
-                  borderRadius: "4px",
                 }}
               >
-                <p className="bg-white px-1">{skill.codeName}</p>
+                <p className="text-white px-1">{skill.codeName}</p>
               </li>
             ))}
             {userCard.skillList.length > 4 && (
