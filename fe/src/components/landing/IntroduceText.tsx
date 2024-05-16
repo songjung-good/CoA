@@ -107,8 +107,6 @@ const TextDiv = tw.div`
   text-center
   font-medium
   text-black
-  underline
-  border-b-2
   lg:text-3xl
   md:text-2xl
   sm:text-lg

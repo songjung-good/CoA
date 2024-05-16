@@ -31,11 +31,11 @@ const MainPage: React.FC = () => {
         <Description>
           <TextWrapper>
             <Title>당신의 프로젝트 "CoA"에서 분석해보세요</Title>
-            <UrlInput />
             <SubTitle>
               분석하고 싶은 프로젝트의 URL만 입력하면
               <br /> 해당 레포지토리 분석을 시작합니다.
             </SubTitle>
+            <UrlInput />
           </TextWrapper>
         </Description>
         <UserProfile />
@@ -79,6 +79,7 @@ const Description = tw.div`
   flex-row
   w-full
   min-h-[300px]
+  rounded-lg
   sm:w-2/3
   items-center
   sm:items-center
@@ -99,7 +100,6 @@ const TextWrapper = tw.div`
 
 const Title = tw.h2`
   font-bold
-  text-left
   mb-4
   lg:text-4xl
   md:text-2xl
@@ -107,41 +107,12 @@ const Title = tw.h2`
   flex
 `;
 
-const BlueText = tw.p`
-  text-appBlue1
-  ml-2
-`;
-
 const SubTitle = tw.p`
-  font-light
+  font-md
   text-center
   lg:text-lg
   md:text-sm
   sm:text-xs
-  
-`;
-
-const Img = tw.img`
-  ml-10
-  w-auto
-  opacity-60
-  blur-l-xl
-  rounded-r-2xl
-  shadow-md
-`;
-
-const Div1 = tw.div`
-  max-w-screen-xl
-  justify-center
-  w-full
-  bg-white
-  mt-10
-  px-6
-  py-4
-  border
-  shadow-lg
-  rounded-2xl
-  hover:border-appBlue1
 `;
 
 const RepoDiv = tw.div`

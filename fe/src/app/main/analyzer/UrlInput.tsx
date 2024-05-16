@@ -101,12 +101,12 @@ const Container = tw.div`
 `;
 
 const StyledInput = tw.input`
-  w-3/5
+  w-4/5
   px-4
   py-2
   border-2
   border-appGrey2
-  rounded-full
+  rounded-xl
   transition-colors
   duration-300
   hover:border-blue-400
@@ -114,7 +114,8 @@ const StyledInput = tw.input`
 
 const StyledButton = tw.button`
   border-2
-  border-appPink
+  border-appGrey2
+  bg-appBlue1
   rounded-full
   px-2
   ml-4
@@ -122,7 +123,7 @@ const StyledButton = tw.button`
   text-sm sm:text-base lg:text-md
   transition-colors
   duration-300
-  hover:border-blue-400
+  hover:bg-appYellow
 `;
 
 export default UrlInput;
