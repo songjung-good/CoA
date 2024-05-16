@@ -100,22 +100,14 @@ const UserModal: React.FC<UserModalProps> = ({ userData, onClose, url }) => {
   return (
     <ModalOverlay>
       <ModalContent>
-        <ModalCloseButton onClick={closeModal}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-            />
-          </svg>
-        </ModalCloseButton>
+        <div className="flex justify-between item-center mx-1 my-1">
+          <text className="font-bold text-xl mb-1">분석 대상</text>
+          <div className="flex ">
+            <ModalCloseButton onClick={closeModal}>
+              닫기
+            </ModalCloseButton>
+          </div>          
+        </div>
         {userData.data && (
           <ModalUserGrid>
             {userData.data.map((user, index) => (
@@ -132,26 +124,30 @@ const UserModal: React.FC<UserModalProps> = ({ userData, onClose, url }) => {
           </ModalUserGrid>
         )}
         {!userData.data && <p>사용자 데이터를 가져올 수 없습니다.</p>}
-        <div>
-          <p>프로젝트 URL : {url}</p>
-          <p>
-            분석대상 : {selectedUser?.login} {selectedUser?.username}
+        <div className="mb-2 border-t-2 ">
+          <p className="flex mt-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+            </svg>{url}
+          </p>
+          <p className="flex">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+            <p className="font-bold text-appBlue1 ">{selectedUser?.login} {selectedUser?.username}</p>
           </p>
         </div>
-        <div>
-          <button
-            className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-            onClick={() =>
-              requestAnalysis(
-                url,
-                selectedUser!.login || selectedUser!.username,
-                userData.projectId,
-              )
-            }
-          >
+        <AnalyzerButton
+          onClick={() =>
+            requestAnalysis(
+              url,
+              selectedUser!.login || selectedUser!.username,
+              userData.projectId,
+            )
+          }
+        >
             분석하기
-          </button>
-        </div>
+          </AnalyzerButton>
       </ModalContent>
     </ModalOverlay>
   );
@@ -172,16 +168,17 @@ const ModalOverlay = tw.div`
 `;
 
 const ModalCloseButton = tw.button`
-  text-black 
-  top-2.5 
-  right-2.5
-  rounded-full 
-  w-7 
-  h-7 
-  flex 
-  justify-center
-  items-center 
-  cursor-pointer
+  bg-white
+  hover:bg-appRed
+  hover:text-white
+  text-gray-800
+  font-semibold
+  py-1
+  px-4
+  border
+  border-gray-400
+  rounded
+  shadow
 `;
 
 const ModalContent = tw.div`
@@ -211,6 +208,22 @@ const UserId = tw.p`
   whitespace-nowrap 
   overflow-hidden 
   overflow-ellipsis
+`;
+
+const AnalyzerButton = tw.button`
+  bg-white 
+  hover:bg-appBlue1 
+  hover:text-white 
+  text-gray-800 
+  font-semibold 
+  py-1 
+  px-4 
+  border 
+  border-gray-400 
+  rounded 
+  shadow
+  justify-center
+  w-full
 `;
 
 export default UserModal;
