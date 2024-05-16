@@ -31,10 +31,6 @@ export default function RootLayout({
     <html lang="ko">
       <head>
         <meta
-          http-equiv="Content-Security-Policy"
-          content="upgrade-insecure-requests"
-        />
-        <meta
           name="naver-site-verification"
           content="91a89f26cf678c7d7c627c42df934e3a18ff9a6d"
         />
