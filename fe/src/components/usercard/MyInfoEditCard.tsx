@@ -174,9 +174,9 @@ export default function MyInfoEditCard({
             </li>
           ))}
         </ul>
-        <div className="flex">
+        <div className="flex flex-col">
           <input
-            className={`${inputStyle} p-2 rounded-l-2xl grow`}
+            className={`${inputStyle} p-2 rounded-t-2xl grow`}
             list="skillIdDataList"
             id="skillIdList"
             name="skillIdList"
@@ -185,7 +185,7 @@ export default function MyInfoEditCard({
             onChange={onChangeSkill}
           />
           <button
-            className={`${inputStyle} p-2 rounded-r-2xl`}
+            className="bg-appGrey2 p-2 rounded-b-2xl hover:bg-appBlue1"
             onClick={addSkill}
           >
             추가하기

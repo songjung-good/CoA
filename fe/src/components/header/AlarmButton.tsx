@@ -4,12 +4,13 @@ import BellIcon from "@/icons/BellIcon";
 import { useEffect, useRef, useState } from "react";
 import { getAlarmCountData } from "@/api/alarm/apiAlarm";
 import AlarmModal from "./AlarmModal";
+import { useRouter } from "next/navigation";
 
 export default function AlarmButton() {
   const [alarmModal, setAlarmModal] = useState(false);
   const [alarmCount, setAlarmCount] = useState(0);
   const modalRef = useRef<HTMLDivElement>(null);
-
+  const router = useRouter();
   useEffect(() => {
     getAlarmCountData().then((count) => {
       setAlarmCount(count);
@@ -35,7 +36,8 @@ export default function AlarmButton() {
   }, []);
 
   const handleAlarmButton = () => {
-    setAlarmModal(!alarmModal);
+    // setAlarmModal(!alarmModal);
+    router.push("/alarm");
   };
 
   return (
@@ -46,11 +48,11 @@ export default function AlarmButton() {
           <div className="absolute top-0 right-0 bg-red-500 rounded-full w-4 h-4"></div>
         ) : null}
       </button>
-      {alarmModal ? (
+      {/* {alarmModal ? (
         <div className="absolute top-10 right-0 card z-50">
           <AlarmModal />
         </div>
-      ) : null}
+      ) : null} */}
     </div>
   );
 }

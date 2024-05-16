@@ -124,19 +124,27 @@ export default function HomePage() {
         <LandingCarousel />
       </div>
       <LadingComponent>
-        <Slogan>코드만 치세요. 분석은 우리가 할께요.</Slogan>
-        <Logo>CoA</Logo>
-        <IntroduceText />
-        <AnalysisButton
-          buttonRef={buttonRef}
-          content="시작하기"
-          url="/auth/login"
-        />
-        <IntroduceButton content="서비스 알아보기" onClick={scrollToService} />
-        <IntroBar>
-          <h3 className="text-3xl font-bold">CoA = Commit Analyzer</h3>
-        </IntroBar>
+        <Header>
+          <Logo>
+            <ShiftedText>당신의 프로젝트</ShiftedText> <br />
+            <Highlight>CoA</Highlight>에서 <Highlight>분석</Highlight>해보세요
+          </Logo>
+          <IntroduceText /> 
+        </Header>
+        <Buttonbackground>
+          <ButtonGroup>
+            <AnalysisButton
+              buttonRef={buttonRef}
+              content="시작하기"
+              url="/auth/login"
+            />
+            <IntroduceButton content="서비스 알아보기" onClick={scrollToService} />
+          </ButtonGroup>
+        </Buttonbackground>
       </LadingComponent>
+        {/* <IntroBar>
+          <h3 className="text-3xl font-bold">CoA = Commit Analyzer</h3>
+        </IntroBar> */}
       <FloatingButton
         showFloatingButton={showFloatingButton}
         isButtonsVisible={isButtonsVisible}
@@ -200,25 +208,68 @@ export default function HomePage() {
 }
 
 const LadingComponent = tw.main`
-absolute top-32 flex flex-col items-center 
-z-10 w-full 
-
+  absolute 
+  top-[20vh]
+  flex 
+  flex-col 
+  items-center 
+  z-10 
+  w-full 
 `;
 
-const Logo = tw.h1`
-text-7xl 
-font-bold
-text-center
-my-8
+const Header = tw.div`
+  w-full
+  mx-auto
+  bg-white
+  opacity-90
+  mt-10
+  border
+  shadow-lg
+  transition
+  hover:bg-appGrey1 
 `;
 
-const Slogan = tw.h2`
-text-center font-extrabold
+const Logo = tw.h2`
+  font-bold
+  text-center
+  mt-10
+  mb-10
+  tracking-wider
+  lg:text-5xl
+  md:text-4xl
+  sm:text-2xl
+`;
+
+const Highlight = tw.span`
+  text-decoration-color: #ff6347
+  text-decoration-line: underline
+  text-decoration-thickness: 2px
+  letter-spacing: widest
+`;
+
+const ShiftedText = tw.span`
+  ml-2
+`;
+
+const Buttonbackground = tw.div`
+  mt-10
+  mb-10
+  rounded-2xl
+  w-[50%]
+`;
+
+const ButtonGroup = tw.div`
+  max-w-screen-xl
+  w-full
+  mx-auto
+  flex
+  justify-evenly
+  p-4
 `;
 
 const IntroBar = tw.div`
-bg-white py-10 rounded-t-3xl w-full text-center shadow-sm
-mt-5
+  bg-white py-10 rounded-t-3xl w-full text-center shadow-sm
+  mt-5
 `;
 
 const ServiceComponent = tw.div`

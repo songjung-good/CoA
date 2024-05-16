@@ -18,10 +18,13 @@ export default function IntroduceButton({
 const IntroduceBtn = tw.button`
   text-xl
   font-bold
-  bg-white
+  bg-appBlue3
   py-4
   px-16
+  z-20  
   rounded-2xl
-  mb-32
-  shadow-2xl
+  shadow-black
+  shadow-inner
+  transition
+  hover:bg-appBlue2
 `;

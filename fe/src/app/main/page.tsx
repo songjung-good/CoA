@@ -1,5 +1,3 @@
-// mainpage > UrlInput > FetchGithubInfo(ExtractUserInfo) > UserModal
-
 "use client";
 
 // 라이브러리
@@ -49,7 +47,6 @@ const MainPage: React.FC = () => {
         </Div>
         <GitRepoList />
       </RepoDiv>
-
       {/* <Div>
         <Heading>여기는 통계 컴포넌트</Heading>
       </Div> */}
