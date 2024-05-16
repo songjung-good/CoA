@@ -64,13 +64,17 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
             file_json = await self._request_json(
                 f"https://lab.ssafy.com/api/v4/projects/{self.project_id}/repository/blobs/{entry['id']}"
             )
-            encoded_content = file_json['content']
-            decoded_content = base64.b64decode(encoded_content).decode('utf-8')
 
-            result.append({
-                'file_path': entry['path'],
-                'file_content': decoded_content
-            })
+            try:
+                encoded_content = file_json['content']
+                decoded_content = base64.b64decode(encoded_content).decode('utf-8')
+
+                result.append({
+                    'file_path': entry['path'],
+                    'file_content': decoded_content
+                })
+            except UnicodeDecodeError:      # binary file?
+                continue
 
         return result
 
