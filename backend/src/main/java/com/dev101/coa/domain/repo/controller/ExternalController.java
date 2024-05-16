@@ -101,7 +101,9 @@ public class ExternalController {
                     return decryptToken(gitHubAccountLink.getAccountLinkReceiveToken())
                             .flatMap(githubAccessToken -> externalApiService.fetchGithubIssue(githubUserName, githubAccessToken));
                 })
-                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)));
+                .map(result -> ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result)))
+                .onErrorResume(e -> Mono.just(ResponseEntity.internalServerError().body(new BaseResponse<>(StatusCode.INTERNAL_SERVER_ERROR))))
+                ;
     }
 
     @Operation(description = "깃랩 잔디 602 -> 링크 X , 303 -> 토큰 확인(외부 에러)")
