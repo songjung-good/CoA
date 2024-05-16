@@ -67,13 +67,18 @@ class GithubRestClient(RestRepoClient[GithubAnalysisRequest]):
 
             # 내부 내용을 가져오자
             file_json = await self._request_json(entry['url'])
-            encoded_content = file_json['content']
-            decoded_content = base64.b64decode(encoded_content).decode('utf-8')
 
-            result.append({
-                'file_path': entry['path'],
-                'file_content': decoded_content
-            })
+            try:
+                encoded_content = file_json['content']
+                decoded_content = base64.b64decode(encoded_content).decode('utf-8')
+
+                result.append({
+                    'file_path': entry['path'],
+                    'file_content': decoded_content
+                })
+
+            except UnicodeDecodeError:  # binary file?
+                continue
 
         return result
 

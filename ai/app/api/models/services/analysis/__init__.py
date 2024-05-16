@@ -5,6 +5,8 @@ from redis import Redis
 
 from api.models.code import AnalysisStatus, analysis_percentages
 from api.models.dto import AnalysisRequest, AnalysisDataDto
+from api.models.services.ai import AiService
+from api.models.services.ai.mutex import AiMutex
 from api.models.services.client import RepoClient
 from exception import AnalysisException
 
@@ -14,8 +16,10 @@ R = TypeVar('R', bound=AnalysisRequest, covariant=True)
 class AnalysisService:
     """분석 서비스"""
 
-    def __init__(self, redis_client: Redis):
+    def __init__(self, redis_client: Redis, ai_mutex: AiMutex, ai_service: AiService):
         self.redis_client = redis_client
+        self.ai_mutex = ai_mutex
+        self.ai_service = ai_service
 
     async def analyze(self, request: R) -> None:
         """
@@ -41,35 +45,34 @@ class AnalysisService:
             repo_data = await repo_client.load(request.userName)
 
             # total_commit_cnt, personal_commit_cnt 세기
+            # TODO
+            # dto.result.total_commit_cnt = 123       # TODO: client에 커밋 개수 세는 로직 추가
+            # dto.result.personal_commit_cnt = 123    # TODO: client에 커밋 개수 세는 로직 추가
 
-            # AI 서비스 Lock 대기
-            self._update_status(dto, AnalysisStatus.WAITING_AI)
+            preprocessed_content_doc = await self.ai_service.preprocess_content(repo_data['content'])
+            preprocessed_commits_doc = await self.ai_service.preprocess_commits(repo_data['commits'])
+
+            # AI 서비스 Readme Lock 대기
             # TODO ...
-            # ai_service = await ai_mutex.wait_for_ai_service()
+            chain = await self.ai_mutex.wait_for_readme_chain(request.analysisId)
 
-            # AI에 학습 시키기
-            self._update_status(dto, AnalysisStatus.LEARNING_DATA)
-            # TODO ...
-            # ai_service.learn(repo_data)
-
-            # 대화해서 학습 결과 긁어오기
+            # 리드미 생성
             self._update_status(dto, AnalysisStatus.GENERATING_README)
-            # TODO ...
-            # dto.result.readme = await ai_service.generate_readme()
+            dto.result.readme = await self.ai_service.generate_readme(chain, preprocessed_content_doc)
 
-            self._update_status(dto, AnalysisStatus.JUDGING_COMMITS)
-            # TODO ...
-            # dto.result.repo_view_result = await ai_service.judge_commits()
+            # Mutex chain 되돌리기
+            await self.ai_mutex.release(chain)
 
+            # AI 서비스 Commit Lock 대기
+            # TODO ...
+            chain = await self.ai_mutex.wait_for_commit_chain(request.analysisId)
+
+            # 커밋 점수 매기기
             self._update_status(dto, AnalysisStatus.SCORING_COMMITS)
-            # TODO ...
-            # dto.result.commit_score = ai_service.score_commits()
+            dto.result.commit_score = await self.ai_service.score_commits(chain, preprocessed_commits_doc)
 
-            # 학습 되돌리기
-            self._update_status(dto, AnalysisStatus.RESETTING_LEARNED_DATA)
-            # TODO ...
-            # ai_service.reset_learning()
-            # ai_mutex.unlock()
+            # Mutex chain 되돌리기
+            await self.ai_mutex.release(chain)
 
             # 완료 처리
             self._update_status(dto, AnalysisStatus.DONE)

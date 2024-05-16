@@ -29,6 +29,17 @@ class CommitScoreDto:
     def total(self):
         return (self.readability + self.performance + self.reusability + self.testability + self.exception) // 5
 
+    @staticmethod
+    def from_dict(dct: dict) -> 'CommitScoreDto':
+        return CommitScoreDto(
+            readability=dct['readability'],
+            performance=dct['performance'],
+            reusability=dct['reusability'],
+            testability=dct['testability'],
+            exception=dct['exception'],
+            score_comment=dct['scoreComment']
+        )
+
     def to_camel_dict(self):
         return {
             'readability': self.readability,
@@ -128,7 +139,7 @@ class AnalysisDataDto:
             repo_member_cnt=dct.get('repoMemberCnt', None),
             result=AiResultDto.from_dict(dct['result']) if 'result' in dct else None,
             status=AnalysisStatus(int(dct.get('status', 000))),
-            expire_sec=dct.get('expiredSec', None)
+            expire_sec=dct.get('expireSec', None)
         )
 
     def to_camel_dict(self) -> dict:
@@ -157,7 +168,7 @@ class AnalysisDataDto:
 
     def to_redis(self, redis_client: Redis, **redis_set_args) -> None:
         redis_client.set(
-            name=AnalysisDataDto.REDIS_KEY_PREFIX + str(self.analysis_id),
+            name=AnalysisDataDto.REDIS_KEY_PREFIX + self.analysis_id,
             value=json.dumps(self, default=lambda obj: obj.to_camel_dict(), separators=(',', ':')),
             **redis_set_args
         )
