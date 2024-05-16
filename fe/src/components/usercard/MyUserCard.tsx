@@ -75,7 +75,7 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
               <p>{myData?.memberNickName || AuthUserName}</p>
               <div className="flex gap-2">
                 <p>
-                  {response?.result.commonCodeList[2]?.codes &&
+                  {response?.result?.commonCodeList[2]?.codes &&
                     response.result.commonCodeList[2].codes[
                       `${myData?.memberJobCodeId}`
                     ]}

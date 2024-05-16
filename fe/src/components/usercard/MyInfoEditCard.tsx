@@ -4,8 +4,7 @@ import UseAxios from "@/api/common/useAxios";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import useCommonCodeStore from "@/store/commoncode";
 import CloseIcon from "@/icons/CloseIcon";
-import { colorMapping } from "../colorMap";
-import SmallCloseIcon from "@/icons/SmallCloseIcon";
+import SkillListEdit from "./SkillListEdit";
 interface Skill {
   codeId: number;
   codeName: string;
@@ -119,14 +118,6 @@ export default function MyInfoEditCard({
     }
   };
 
-  const removeSkill = (skillIdToRemove: number) => {
-    // skillIdToRemove와 일치하지 않는 스킬만 필터링하여 새로운 배열을 만듭니다.
-    const updatedSkillList = skillIdList.filter(
-      (skill) => skill.codeId !== skillIdToRemove,
-    );
-    // 새로운 배열을 skillIdList에 반영합니다.
-    setSkillIdList(updatedSkillList);
-  };
   const inputStyle = "bg-appGrey1 border hover:border-appBlue1";
   return (
     <div
@@ -154,25 +145,10 @@ export default function MyInfoEditCard({
       </label>
       <div>
         <label htmlFor="skillIdList">기술 스택</label>
-        <ul className="flex flex-wrap gap-2 p-1">
-          {skillIdList.map((skill) => (
-            <li
-              key={skill.codeId}
-              style={{
-                padding: "4px",
-                borderRadius: "9999px",
-                backgroundColor: `${colorMapping[skill.codeName]}`,
-              }}
-            >
-              <p className="flex text-white px-1 gap-1 items-center">
-                {skill.codeName}
-                <button onClick={() => removeSkill(skill.codeId)}>
-                  <SmallCloseIcon />
-                </button>
-              </p>
-            </li>
-          ))}
-        </ul>
+        <SkillListEdit
+          skillIdList={skillIdList}
+          setSkillIdList={setSkillIdList}
+        />
         <div className="flex flex-col">
           <input
             className={`${inputStyle} p-2 rounded-t-2xl grow`}
