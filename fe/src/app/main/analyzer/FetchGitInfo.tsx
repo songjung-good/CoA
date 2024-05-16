@@ -71,7 +71,6 @@ const fetchGitlabMembers = async (projectname: string, username: string): Promis
   const axios = UseAxios();
   try {
     const projectsResponse = await axios.get(`/api/external/gitlab/projects/${username}`)
-    
     if (projectsResponse.data.code === 602) {
       throw alert("GitLab 계정을 연동해주세요.")
     }

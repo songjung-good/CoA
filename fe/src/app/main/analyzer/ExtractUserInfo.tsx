@@ -16,7 +16,7 @@ export const ExtractUserInfo = ( url: string ): UserInfo => {
   // GitLab URL 패턴
   const gitLabRegex = /https:\/\/([^\/]+)\/([^\/]+)\/([^\/]+)/;
   const gitLabMatch = url.match(gitLabRegex);
-  const gitlabname = userStore.getState().gitlabUserName;
+  // const gitlabname = userStore.getState().gitlabUserName;
 
   let UserName: string | null = null;
   let ProjectName: string | null = null;
@@ -27,7 +27,7 @@ export const ExtractUserInfo = ( url: string ): UserInfo => {
     ProjectName = gitHubMatch[2];
     Platform = '1';
   } else if (gitLabMatch) {
-    UserName = gitlabname;
+    // UserName = gitlabname;
     ProjectName = gitLabMatch[3];
     Platform = '2'
   } else {
