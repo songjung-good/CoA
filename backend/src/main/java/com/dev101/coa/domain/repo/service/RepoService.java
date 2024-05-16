@@ -27,9 +27,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
@@ -117,7 +120,6 @@ public class RepoService {
                     .commentTargetString(cd.getCommentTargetString())
                     .commentContent(cd.getCommentContent())
                     .build();
-            System.out.println("comment = " + comment);
             commentList.add(comment);
             commentRepository.save(comment);
         }));
@@ -359,23 +361,37 @@ public class RepoService {
     }
 
     private JsonObject getJsonObject(String url, String accessToken) {
-        try {
-            String jsonStrResponse = webClient.get()
-                    .uri(url)
-                    .header("Authorization", "Bearer " + accessToken)  // Authorization 헤더 추가
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()  // 응답을 검색
-                    .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
-                    .block();  // Mono를 블로킹하여 실제 값 가져오기
+//        try {
+        String jsonStrResponse = webClient.get()
+                .uri(url)
+                .header("Authorization", "Bearer " + accessToken)  // Authorization 헤더 추가
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()  // 응답을 검색
+                .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
+                .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.NOT_FOUND)))
+                .onStatus(HttpStatusCode::is4xxClientError, response ->
+                        response.bodyToMono(String.class).flatMap(errorBody -> {
+                            System.out.println("Client error: " + errorBody);
+                            return Mono.error(new ResponseStatusException(response.statusCode(), "Client error. Please retry: 외부 api 요청 시 클라이언트 에러 발생"));
+                        })
+                )
+                .onStatus(HttpStatusCode::is5xxServerError, response ->
+                        response.bodyToMono(String.class).flatMap(errorBody -> {
+                            System.out.println("Server error: " + errorBody);
+                            return Mono.error(new ResponseStatusException(response.statusCode(), "Server error. Please retry: 외부 api 요청 시 서버 에러 발생"));
+                        })
+                )
+                .bodyToMono(String.class)  // 응답 본문을 String의 Mono로 변환
+                .block();  // Mono를 블로킹하여 실제 값 가져오기
 
-            if (jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
+        if (jsonStrResponse == null) throw new BaseException(StatusCode.DATA_NOT_EXIST);
 
-            // 문자열 -> json object
-            return JsonParser.parseString(jsonStrResponse).getAsJsonObject();
-        } catch (Exception e) {
-            System.out.println("e = " + e);
-            throw new BaseException(StatusCode.RETRY_AI_ANALYSIS);
-        }
+        // 문자열 -> json object
+        return JsonParser.parseString(jsonStrResponse).getAsJsonObject();
+//        } catch (Exception e) {
+//            System.out.println("e = " + e);
+//            throw new BaseException(StatusCode.RETRY_AI_ANALYSIS);
+//        }
     }
 
     private Integer getRepoMemberCnt(String url, String accessToken) {
@@ -506,14 +522,12 @@ public class RepoService {
                 .expireSec(86400L)
                 .build());
 
-        System.out.println("start 분석 저장 완료 이제 ai로 분석 요청을 보냅니다.");
         // AI 서버로 요청 보내기 (body: repoUrl, userName, memberId, isOwn)
         // platform code에 따라 요청 보낼 url 분기처리
         String response;
         if (projectId == null) {
             String aiUrl = aiServerUrl + "/analysis/github";
 
-            System.out.println("레디스에 기본 정보 저장 완료했구요. ai 서버로 요청을 보냅니다.");
             response = webClient.post()
                     .uri(aiUrl)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -537,15 +551,11 @@ public class RepoService {
                     .block();
         }
 
-        System.out.println("ai서버로부터 응답을 받았습니다. response = " + response);
 
         if (response.equals("false")) {
             throw new BaseException(StatusCode.AI_SERVER_ERROR);
         }
 
-        System.out.println("반환할 analysisId = " + analysisId);
-        System.out.println("save.getAnalysisId() = " + save.getAnalysisId());
-        System.out.println("분석 시작 함수 끝. 이제 부터 확인 로직을 돌립니다.");
         return analysisId;
     }
 
@@ -613,15 +623,12 @@ public class RepoService {
 
 
     public AnalysisCheckResDto checkAnalysis(Long memberId, String analysisId) {
-        System.out.println("확인 로직의 시작입니다.");
 
         // redis에서 analysisId에 해당하는 요소를 가져온다.
         RedisResult redisData = redisRepoRepository.findById(analysisId).orElseThrow(() -> new BaseException(StatusCode.ANALYSIS_RESULT_NOT_EXIST));
         String redisRepoPath = redisData.getRepoPath();
 
-        System.out.println("redisData memberId= " + redisData.getMemberId());
 
-        System.out.println("redisData = " + redisData);
 
         // memberId와 요소의 memberId의 일치여부를 확인한다.(로그인한 유저와 분석요청 유저의 일치 여부)
         Long redisMemberId = redisData.getMemberId();
@@ -632,14 +639,11 @@ public class RepoService {
 
         // 분석 상태를 체크한다.
         // PROCESSING 이나 DONE 이 아니면 redis 데이터를 삭제하고 예외를 발생시킨다.
-        System.out.println("확인 로직 redisData.getAnalysisId() = " + redisData.getAnalysisId());
-        System.out.println("확인 로직 redisData.getStatus() = " + redisData.getStatus());
         if (Integer.parseInt(redisData.getStatus()) > 200) {
             redisRepoRepository.deleteById(analysisId);
             throw new BaseException(StatusCode.RETRY_AI_ANALYSIS);
         }
 
-        System.out.println("redisData.getPercentage() = " + redisData.getPercentage());
         // 일치하면 요소에서 percentage를 가져온다.
         return AnalysisCheckResDto.builder()
                 .analysisId(analysisId)
@@ -800,7 +804,7 @@ public class RepoService {
                     .build());
         });
 
-        repoViewCntBySkillDtoList.sort((d1, d2) -> (int)(d2.getCnt() - d1.getCnt()));
+        repoViewCntBySkillDtoList.sort((d1, d2) -> (int) (d2.getCnt() - d1.getCnt()));
 
         return repoViewCntBySkillDtoList;
     }
