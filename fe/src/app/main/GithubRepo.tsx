@@ -37,6 +37,7 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
           }
           if (response.data.code === 200) {
             setRepos(JSON.parse(response.data.result));
+            console.log(JSON.parse(response.data.result));
           }
           setLoading(false);
         } catch (error) {
@@ -60,15 +61,16 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
   if (notLink === 602 || isToken === null) {
     return (
       <Div>
-        <Button onClick={() => router.push('/auth/link')}>계정 연동하기</Button>
+        <Button onClick={() => router.push("/auth/link")}>계정 연동하기</Button>
         <p>연동된 github 계정이 없습니다.</p>
       </Div>
     );
   }
-  if (notLink === 303 || notLink === 606) { // 303 만료 606 미입력
+  if (notLink === 303 || notLink === 606) {
+    // 303 만료 606 미입력
     return (
       <Div>
-        <Button onClick={() => router.push('/auth/link')}>계정 연동하기</Button>
+        <Button onClick={() => router.push("/auth/link")}>계정 연동하기</Button>
         <p>엑세스 토큰을 갱신해주세요.</p>
       </Div>
     );
