@@ -168,7 +168,7 @@ class AnalysisDataDto:
 
     def to_redis(self, redis_client: Redis, **redis_set_args) -> None:
         redis_client.set(
-            name=self.analysis_id,
+            name=AnalysisDataDto.REDIS_KEY_PREFIX + str(self.analysis_id),
             value=json.dumps(self, default=lambda obj: obj.to_camel_dict(), separators=(',', ':')),
             **redis_set_args
         )
