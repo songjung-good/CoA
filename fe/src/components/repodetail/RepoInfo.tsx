@@ -83,12 +83,14 @@ const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
             {repoInfo.skillList.map((skill, index) => (
               <li
                 key={index}
-                className={`flex justify-between items-center px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold border-2`}
+                className={`flex text-white justify-between items-center px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold border-2`}
                 style={{
-                  borderColor: `${colorMapping[skill.codeName]}`,
+                  padding: "6px 8px",
+                  borderRadius: "9999px",
+                  backgroundColor: `${colorMapping[skill.codeName]}`,
                 }}
               >
-                {skill.codeName}
+                <p className="px-2 ">{skill.codeName}</p>
               </li>
             ))}
           </ul>

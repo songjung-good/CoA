@@ -73,7 +73,11 @@ function Gauge({ initialExp = 0 }) {
         <StyledBase>
           <StyledRange width={width} />
           <StyledPercentage>
-            {isCompleted ? "분석이 완료되었습니다." : `${width}%`}
+            {analyzingPercent === undefined
+              ? "분석에 실패했습니다. 다시 요청해주세요."
+              : isCompleted
+                ? "분석이 완료되었습니다."
+                : `${width}%`}
           </StyledPercentage>
         </StyledBase>
       )}
