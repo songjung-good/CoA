@@ -27,6 +27,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -35,6 +36,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -70,9 +72,11 @@ public class RepoService {
 
     // AI server 통신을 위한 WebClient
     private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     // 토큰 복호화를 위한 클래스
     private final EncryptionUtils encryptionUtils;
+    private final ExternalApiService externalApiService;
 
 
     public void editReadme(Long memberId, Long repoViewId, String editReadmeReq) {
@@ -181,6 +185,7 @@ public class RepoService {
 
         // 로그인 사용자와 분석 요구자 일치 여부 확인
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+
         Long redisMemberId = redisData.getMemberId();
 //        Long redisMemberId = ((Integer) redisData.get("memberId")).longValue();
         if (!memberId.equals(redisMemberId)) {
@@ -252,17 +257,19 @@ public class RepoService {
         }
 
         // lines of code 저장
-        Map<Long, Integer> linesOfCodeMap = aiResult.getLinesOfCode();
-        List<Map.Entry<Long, Integer>> linesOfCodeList = linesOfCodeMap.entrySet().stream().toList();
-        for (Map.Entry<Long, Integer> entry : linesOfCodeList) {
-            Code code = codeRepository.findByCodeId(entry.getKey()).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
-            LineOfCode lineOfCode = LineOfCode.builder()
-                    .repoView(repoView)
-                    .skillCode(code)
-                    .lineCount(entry.getValue())
-                    .build();
-            lineOfCodeRepository.save(lineOfCode);
-        }
+//        Map<Long, Integer> linesOfCodeMap = aiResult.getLinesOfCode();
+//        List<Map.Entry<Long, Integer>> linesOfCodeList = linesOfCodeMap.entrySet().stream().toList();
+//        for (Map.Entry<Long, Integer> entry : linesOfCodeList) {
+//            Code code = codeRepository.findByCodeId(entry.getKey()).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+//            LineOfCode lineOfCode = LineOfCode.builder()
+//                    .repoView(repoView)
+//                    .skillCode(code)
+//                    .lineCount(entry.getValue())
+//                    .build();
+//            lineOfCodeRepository.save(lineOfCode);
+//        }
+
+        processLinesOfCode(repoView, repoInfo, member);
 
         // commitScore 저장
         CommitScoreDto commitScoreDto = redisData.getResult().getCommitScore();
@@ -796,7 +803,7 @@ public class RepoService {
 
         List<CntBySkillDto> repoViewCntBySkillDtoList = new ArrayList<>();
 
-        codeList.stream().forEach(code -> {
+        codeList.forEach(code -> {
             Long cnt = repoViewSkillRepository.countBySkillCode(code).orElse(0L);
             repoViewCntBySkillDtoList.add(CntBySkillDto.builder()
                     .codeName(code.getCodeName())
@@ -808,4 +815,191 @@ public class RepoService {
 
         return repoViewCntBySkillDtoList;
     }
+
+    public void processLinesOfCode(RepoView repoView, RepoInfo repoInfo, Member member) {
+        List<Map<String, Object>> commits;
+        String userName = null;
+        String repoName = null;
+        String accessToken;
+        if (repoInfo.getRepoGitLabProjectId() != null) {
+
+            accessToken = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST)).getAccountLinkReceiveToken();
+            commits = fetchGitLabCommits(repoInfo.getRepoGitLabProjectId(), accessToken);
+ 
+        } else {
+            AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
+            accessToken = accountLink.getAccountLinkReceiveToken();
+
+            String[] split = repoInfo.getRepoPath().split("/");
+            repoName = split[split.length - 1];
+            userName = split[split.length - 2];
+
+            commits = fetchGitHubCommits(repoName, userName, accessToken);
+        }
+
+        Map<String, Integer> linesOfCodeMap = calculateLinesOfCode(commits, repoName, userName, accessToken, repoInfo.getRepoGitLabProjectId() != null);
+
+        List<Map.Entry<String, Integer>> linesOfCodeList = new ArrayList<>(linesOfCodeMap.entrySet());
+
+        for (Map.Entry<String, Integer> entry : linesOfCodeList) {
+            Code code = codeRepository.findByCodeName(entry.getKey())
+                    .orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+            LineOfCode lineOfCode = LineOfCode.builder()
+                    .repoView(repoView)
+                    .skillCode(code)
+                    .lineCount(entry.getValue())
+                    .build();
+            lineOfCodeRepository.save(lineOfCode);
+        }
+    }
+
+    private List<Map<String, Object>> fetchGitHubCommits(String repoName, String username, String accessToken) {
+        WebClient webClient = webClientBuilder.build();
+        List<Map<String, Object>> allCommits = new ArrayList<>();
+        int page = 1;
+
+        while (true) {
+            String url = String.format("https://api.github.com/repos/%s/%s/commits?page=%d&per_page=100", username, repoName, page);
+
+            List<Map<String, Object>> commits = webClient.get()
+                    .uri(url)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, response -> {
+                        if (response.statusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                            return Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR));
+                        } else if (response.statusCode().equals(HttpStatus.NOT_FOUND)) {
+                            return Mono.error(new BaseException(StatusCode.NOT_FOUND));
+                        } else if (response.statusCode().equals(HttpStatus.CONFLICT)) {
+                            return Mono.error(new ResponseStatusException(HttpStatus.CONFLICT, "Conflict error during GitHub commits fetching"));
+                        } else if (response.statusCode().equals(HttpStatus.FORBIDDEN)) {
+                            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden error during GitHub commits fetching"));
+                        } else {
+                            return Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitHub commits fetching"));
+                        }
+                    })
+                    .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
+                    .block(Duration.ofSeconds(10)); // Synchronously wait for the result
+
+            if (commits == null || commits.isEmpty()) {
+                break;
+            }
+
+            allCommits.addAll(commits);
+            page++;
+        }
+
+        return allCommits;
+    }
+
+    private List<Map<String, Object>> fetchGitLabCommits(Integer projectId, String accessToken) {
+        WebClient webClient = webClientBuilder.build();
+        List<Map<String, Object>> allCommits = new ArrayList<>();
+        int page = 1;
+
+        while (true) {
+            String url = String.format("https://gitlab.com/api/v4/projects/%s/repository/commits?page=%d&per_page=100", projectId, page);
+
+            List<Map<String, Object>> commits = webClient.get()
+                    .uri(url)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, response -> {
+                        if (response.statusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                            return Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR));
+                        } else if (response.statusCode().equals(HttpStatus.NOT_FOUND)) {
+                            return Mono.error(new BaseException(StatusCode.NOT_FOUND));
+                        } else if (response.statusCode().equals(HttpStatus.CONFLICT)) {
+                            return Mono.error(new ResponseStatusException(HttpStatus.CONFLICT, "Conflict error during GitLab commits fetching"));
+                        } else if (response.statusCode().equals(HttpStatus.FORBIDDEN)) {
+                            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden error during GitLab commits fetching"));
+                        } else {
+                            return Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitLab commits fetching"));
+                        }
+                    })
+                    .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
+                    .block(Duration.ofSeconds(10)); // Synchronously wait for the result
+
+            if (commits == null || commits.isEmpty()) {
+                break;
+            }
+
+            allCommits.addAll(commits);
+            page++;
+        }
+
+        return allCommits;
+    }
+    private Map<String, Integer> calculateLinesOfCode(List<Map<String, Object>> commits, String repoName, String username, String accessToken, boolean isGitLab) {
+        // Line of code map to hold the skillCodeId and their respective line counts
+        Map<String, Integer> linesOfCodeMap = new HashMap<>();
+
+        for (Map<String, Object> commit : commits) {
+            String commitSha = (String) commit.get("id");
+
+            List<Map<String, Object>> files = isGitLab ? fetchGitLabCommitFiles(commitSha, (Long) commit.get("project_id"), accessToken) : fetchGitHubCommitFiles(repoName, commitSha, username, accessToken);
+
+            for (Map<String, Object> file : files) {
+                String filename = (String) file.get("filename");
+                Integer linesAdded = (Integer) file.get("additions");
+                String skillCodeName = externalApiService.getLanguageFromFilePath(filename); // You need to implement this method to map filename to skillCodeId
+
+                linesOfCodeMap.put(skillCodeName, linesOfCodeMap.getOrDefault(skillCodeName, 0) + linesAdded);
+            }
+        }
+
+        return linesOfCodeMap;
+    }
+
+    private List<Map<String, Object>> fetchGitHubCommitFiles(String repoName, String commitSha, String username, String accessToken) {
+        WebClient webClient = webClientBuilder.build();
+        String url = String.format("https://api.github.com/repos/%s/%s/commits/%s", username, repoName, commitSha);
+
+        return webClient.get()
+                .uri(url)
+                .header("Authorization", "Bearer " + accessToken)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, response -> {
+                    if (response.statusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                        return Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR));
+                    } else if (response.statusCode().equals(HttpStatus.NOT_FOUND)) {
+                        return Mono.error(new BaseException(StatusCode.NOT_FOUND));
+                    } else if (response.statusCode().equals(HttpStatus.CONFLICT)) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.CONFLICT, "Conflict error during GitHub commit files fetching"));
+                    } else if (response.statusCode().equals(HttpStatus.FORBIDDEN)) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden error during GitHub commit files fetching"));
+                    } else {
+                        return Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitHub commit files fetching"));
+                    }
+                })
+                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                .map(response -> (List<Map<String, Object>>) response.get("files"))
+                .block(Duration.ofSeconds(10)); // Synchronously wait for the result
+    }
+
+    private List<Map<String, Object>> fetchGitLabCommitFiles(String commitSha, Long projectId, String accessToken) {
+        WebClient webClient = webClientBuilder.build();
+        String url = String.format("https://gitlab.com/api/v4/projects/%s/repository/commits/%s/diff", projectId, commitSha);
+
+        return webClient.get()
+                .uri(url)
+                .header("Authorization", "Bearer " + accessToken)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, response -> {
+                    if (response.statusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                        return Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR));
+                    } else if (response.statusCode().equals(HttpStatus.NOT_FOUND)) {
+                        return Mono.error(new BaseException(StatusCode.NOT_FOUND));
+                    } else if (response.statusCode().equals(HttpStatus.CONFLICT)) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.CONFLICT, "Conflict error during GitLab commit files fetching"));
+                    } else if (response.statusCode().equals(HttpStatus.FORBIDDEN)) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden error during GitLab commit files fetching"));
+                    } else {
+                        return Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitLab commit files fetching"));
+                    }
+                })
+                .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
+                .block(Duration.ofSeconds(10)); // Synchronously wait for the result
+    }
+
 }
