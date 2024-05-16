@@ -5,7 +5,7 @@ import UseAxios from "@/api/common/useAxios";
 import { useEffect, useState } from "react";
 import { colorMapping } from "@/components/colorMap";
 import useCommonCodeStore from "@/store/commoncode";
-import tw from "tailwind-styled-components"
+import tw from "tailwind-styled-components";
 
 interface Skill {
   codeId: number;
@@ -107,6 +107,16 @@ export default function UserProfile() {
     }
   }, [userInfo.memberUuid]);
 
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const handleMouseEnter = () => {
+    setShowTooltip(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
+
   return (
     <div className="w-full sm:w-1/3 flex flex-col mt-10 sm:mt-0 px-2 sm:ml-4 bg-white shadow-lg rounded-lg border hover:border-appBlue2 py-6 min-h-[300px]">
       <ProfileHead>
@@ -116,7 +126,9 @@ export default function UserProfile() {
             alt="member image"
             className="rounded-full w-1/6"
           />
-          <p className="m-[5%] text-base sm:text-base">{userCard.memberNickName}</p>
+          <p className="m-[5%] text-base sm:text-base">
+            {userCard.memberNickName}
+          </p>
         </div>
         <Link href={`/user/${userInfo.memberUuid}`}>
           <span className="text-md font-bold text-end mr-4 text-gray-400 hover:text-appRed">
@@ -174,12 +186,10 @@ export default function UserProfile() {
             </p>
           </div>
         </div>
-        <div className="skills-container flex justify-between items-center mx-[3%] my-[3%]">
-          <p>
-            기술스택:
-          </p>
-          <ul className="flex flex-wrap gap-2 p-1">
-            {userCard?.skillList.slice(0, 4).map((skill) => (
+        <div className="skills-container flex flex-col justify-between  mx-[3%] my-[3%]">
+          <p>기술스택</p>
+          <ul className="flex flex-wrap items-center gap-2 p-1">
+            {userCard?.skillList.slice(0, 3).map((skill) => (
               <li
                 key={skill.codeId}
                 style={{
@@ -191,9 +201,22 @@ export default function UserProfile() {
                 <p className="text-white px-1">{skill.codeName}</p>
               </li>
             ))}
-            {userCard.skillList.length > 4 && (
-              <li>
-                <p className="bg-white px-1">...</p>
+            {userCard.skillList.length > 3 && (
+              <li
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                className="relative"
+              >
+                <p className="bg-white px-1">
+                  +{userCard.skillList.length - 3}개
+                </p>
+                {showTooltip && (
+                  <div className="absolute left-0 top-full mt-2 min-w-[30%] p-2 bg-gray-700 text-white text-sm rounded-lg shadow-lg">
+                    {userCard.skillList.slice(3).map((skill) => (
+                      <p key={skill.codeId}>{skill.codeName}</p>
+                    ))}
+                  </div>
+                )}
               </li>
             )}
           </ul>
