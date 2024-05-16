@@ -1,4 +1,6 @@
 import {
+  CommitScoreDto,
+  Jobs,
   RepoAnalysisResponse,
   getUserAnalysisData,
   getUserAnalysisDummyData,
@@ -34,11 +36,13 @@ export default function UserAnalysisPage({ uuid }: { uuid: string }) {
                 </div>
                 <RadarChart scoreData={repo.commitScore} />
                 <ul className="card">
-                  {Object.entries(repo.commitScore).map(([key, value]) => (
-                    <li key={key}>
-                      {key}: {value}
-                    </li>
-                  ))}
+                  {Object.entries(repo.commitScore)
+                    .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+                    .map(([key, value]) => (
+                      <li key={key}>
+                        {key}: {Number(value).toFixed(1)}
+                      </li>
+                    ))}
                 </ul>
                 <div className="card">Comment: {repo.comment}</div>
               </div>
