@@ -43,7 +43,6 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
           }
           if (response.data.code === 200) {
             setRepos(JSON.parse(response.data.result));
-            console.log(JSON.parse(response.data.result));
           }
           setLoading(false);
         } catch (error) {
@@ -140,7 +139,7 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
         {getPageNumbers().map((pageNumber) => (
           <PageButton
             key={pageNumber}
-            isActive={pageNumber === currentPage}
+            isactive={pageNumber === currentPage ? 1 : 0}
             onClick={() => paginate(pageNumber)}
           >
             {pageNumber}
@@ -194,8 +193,8 @@ const Pagination = tw.div`
   mt-4
 `;
 
-const PageButton = tw.button<{ isActive: boolean }>`
-  ${(p) => (p.isActive ? "bg-blue-500 text-white" : "bg-blue-200 text-black")}
+const PageButton = tw.button<{ isactive: number }>`
+  ${(p) => (p.isactive === 1 ? "bg-blue-500 text-white" : "bg-blue-200 text-black")}
   hover:bg-blue-400
   font-bold
   py-[0.25rem]
