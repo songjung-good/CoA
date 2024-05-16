@@ -4,11 +4,13 @@ import com.dev101.coa.global.security.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
@@ -22,8 +24,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtTokenProvider jwtTokenProvider;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-
-
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -62,7 +63,15 @@ public class SecurityConfig {
 ////                                .failureHandler(new CustomAuthenticationFailureHandler()) // 실패 핸들러 추가
 //                                .permitAll()
 //                )
-
+                .httpBasic(AbstractHttpConfigurer::disable) // HTTP Basic 인증 비활성화
+                .formLogin(AbstractHttpConfigurer::disable) // Form Login 비활성화
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // 인증되지 않은 요청에 대한 예외 처리
+                        .accessDeniedHandler((request, response, accessDeniedException) -> { // 접근이 거부된 요청에 대한 예외 처리
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.getWriter().write("Access Denied!");
+                        })
+                )
                 // 세션 관리 전략 설정
                 .sessionManagement(session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //
@@ -82,5 +91,6 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
 
