@@ -40,14 +40,16 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
     const res3 = mergeCalendarData(res1, res2);
     setGithubData(res1);
     setGitlabData(res2);
-    setMergeData(res3);
-    fitData(res1);
-    console.log("res1");
-    console.log(res1);
-    console.log("res2");
-    console.log(res2);
-    console.log("res3");
-    console.log(res3);
+    if (res3 !== null) {
+      setMergeData(res3);
+      fitData(res3);
+    }
+    // console.log("res1");
+    // console.log(res1);
+    // console.log("res2");
+    // console.log(res2);
+    // console.log("res3");
+    // console.log(res3);
   };
 
   const fitData = (res: ApiResponse) => {

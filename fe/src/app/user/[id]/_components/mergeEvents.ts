@@ -3,10 +3,12 @@ import { ApiResponse, Contribution } from "@/api/userPage/apiContributions";
 export const mergeCalendarData = (
   res1: ApiResponse,
   res2: ApiResponse,
-): ApiResponse => {
+): ApiResponse | null => {
   // res1과 res2를 합치기 위한 작업
   const mergedContributions: Contribution[] = [];
-
+  if (res1 === undefined && res2 === undefined) {
+    return null;
+  }
   // res1의 contributions가 존재하는지 확인
   if (res1 && res1.contributions) {
     // res1의 contributions를 먼저 병합

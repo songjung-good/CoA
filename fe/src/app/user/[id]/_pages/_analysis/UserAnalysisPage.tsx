@@ -22,7 +22,7 @@ export default function UserAnalysisPage({ uuid }: { uuid: string }) {
   const [selectedJob, setSelectedJob] = useState("ALL");
   return (
     <>
-      {data && (
+      {data !== undefined ? (
         <>
           <AnalysisCard data={data} />
           {/* repos */}
@@ -45,6 +45,8 @@ export default function UserAnalysisPage({ uuid }: { uuid: string }) {
             ))}
           </section>
         </>
+      ) : (
+        <section className="text-center">분석을 진행한 적이 없습니다</section>
       )}
     </>
   );
