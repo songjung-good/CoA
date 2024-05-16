@@ -6,6 +6,7 @@ from dependency_injector.containers import DeclarativeContainer
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_openai import OpenAI
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from redis import Redis
 
 from api.models.dto import GithubAnalysisRequest, GitLabAnalysisRequest, AnalysisRequest
@@ -48,14 +49,17 @@ class Container(DeclarativeContainer):
         verbose=True,
         max_tokens=1000
     )
-    embeddings = providers.Resource(
-        provides=OpenAIEmbeddings,
-        openai_api_key=config.ai.openai_api_key
+    text_splitter = providers.Singleton(
+        provides=RecursiveCharacterTextSplitter,
+        chunk_size=1000,
+        chunk_overlap=200,
+        length_function=len,
+        is_separator_regex=False
     )
 
     ai_chains = providers.Singleton(AiChains, llm)
 
     ai_mutex = providers.Singleton(AiMutex, ai_chains)
-    ai_service = providers.Singleton(AiService, embeddings)
+    ai_service = providers.Singleton(AiService, text_splitter)
 
     analysis_service = providers.Singleton(AnalysisService, redis_client, ai_mutex, ai_service)

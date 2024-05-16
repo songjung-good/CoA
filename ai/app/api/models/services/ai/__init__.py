@@ -3,11 +3,18 @@ from typing import Any
 
 from langchain.chains.base import Chain
 from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings
+from langchain_text_splitters import TextSplitter
 
 from api.models.dto import CommitScoreDto
+from api.models.services.ai.loader import RepoContentLoader, RepoCommitLoader
 
 
 class AiService:
+    def __init__(self, text_splitter: TextSplitter, content_loader: RepoContentLoader, commit_loader: RepoCommitLoader):
+        self.text_splitter = text_splitter
+        self.content_loader = content_loader
+        self.commit_loader = commit_loader
 
     async def preprocess_content(self, file_data: list[dict[Any, Any]]) -> list[Document]:
         pass # TODO
