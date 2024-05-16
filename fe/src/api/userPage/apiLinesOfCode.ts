@@ -58,14 +58,6 @@ query {
       },
     },
   );
-  // console.log("요청결과");
-  // console.log(response);
-  // console.log("forked 제외");
-  // console.log(
-  //   response.data.data.user.repositories.nodes.filter(
-  //     (repo: any) => !repo.isFork,
-  //   ),
-  // );
   return response.data.data.user.repositories.nodes.filter(
     (repo: any) => !repo.isFork,
   );
