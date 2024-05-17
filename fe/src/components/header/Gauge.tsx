@@ -58,7 +58,13 @@ const StyledPercentage = styled.span`
   }
 `;
 
-function Gauge({ initialExp = 0 }) {
+// GaugeProps 타입 정의
+type GaugeProps = {
+  initialExp?: number;
+  hasJWT: boolean;
+};
+
+function Gauge({ initialExp = 0, hasJWT }: GaugeProps) {
   const [width, setWidth] = useState(initialExp % 100);
   const analyzingPercent = useAnalyzingStore((state) => state.analyzingPercent);
   const isAnalyzing = useAnalyzingStore((state) => state.isAnalyzing);
@@ -70,19 +76,23 @@ function Gauge({ initialExp = 0 }) {
 
   return (
     <div>
-      {isAnalyzing ? (
-        <StyledBase>
-          <StyledRange width={width} />
-          <StyledPercentage>
-            {analyzingPercent === undefined
-              ? "분석에 실패했습니다. 다시 요청해주세요."
-              : isCompleted
-                ? "분석이 완료되었습니다."
-                : `${width}%`}
-          </StyledPercentage>
-        </StyledBase>
-      ) : (
-        <UrlInput />
+      {hasJWT && (
+        <div>
+          {isAnalyzing ? (
+            <StyledBase>
+              <StyledRange width={width} />
+              <StyledPercentage>
+                {analyzingPercent === undefined
+                  ? "분석에 실패했습니다. 다시 요청해주세요."
+                  : isCompleted
+                    ? "분석이 완료되었습니다."
+                    : `${width}%`}
+              </StyledPercentage>
+            </StyledBase>
+          ) : (
+            <UrlInput />
+          )}
+        </div>
       )}
     </div>
   );
