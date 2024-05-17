@@ -73,6 +73,7 @@ const SearchPage = () => {
       setResults(undefined);
       setPage(0);
       setIsNext(false);
+      setError(null);
       const response = await fetchSearchResults(query, type, page);
       setResults(response);
       setIsNext(response.result.next);
@@ -103,7 +104,6 @@ const SearchPage = () => {
         검색페이지
       </H2>
       <SearchInput onSearch={handleSearch} />
-        {error && <p>{error}</p>}
         {searchRepoData?.length === 0 && <p>검색 결과가 없습니다.</p>}
         {searchMemberData?.length === 0  && <p>검색 결과가 없습니다.</p>}
         {results ? (
