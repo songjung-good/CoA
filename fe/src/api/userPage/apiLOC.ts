@@ -86,7 +86,7 @@ const examData = [
   {
     name: "분석한 레포지토리가 없습니다.",
     createdAt: "2000-01-11",
-    pushedAt: "2000-12-11",
+    pushedAt: "2000-11-11",
     updatedAt: "2000-11-11",
     languages: { HTML: 300, JavaScript: 1200, CSS: 900 },
     totalLinesOfCode: 2400,
@@ -109,7 +109,7 @@ const examData = [
   {
     name: "분석을 진행해 주세요",
     createdAt: "2000-06-11",
-    pushedAt: "2000-12-12",
+    pushedAt: "2000-11-20",
     updatedAt: "2000-11-11",
     languages: { Java: 1600 },
     totalLinesOfCode: 1600,

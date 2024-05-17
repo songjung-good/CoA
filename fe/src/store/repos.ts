@@ -5,7 +5,10 @@ import { getGithubLOCData } from "@/api/userPage/apiLOC";
 interface LanguageStats {
   [language: string]: number;
 }
-
+interface Skill {
+  codeId: number;
+  codeName: string;
+}
 interface RepoInfo {
   memberUuid: string;
   memberNickname: string;
@@ -15,13 +18,13 @@ interface RepoInfo {
   repoViewTitle: string;
   repoViewSubtitle: string | null;
   repoMemberCnt: number;
-  skillList: number[] | null;
+  skillList: Skill[] | null;
   repoStartDate: string;
   repoEndDate: string;
   isMine: boolean;
 }
 
-interface Repository {
+export interface Repository {
   name: string;
   createdAt: string;
   pushedAt: string;
