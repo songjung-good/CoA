@@ -106,9 +106,9 @@ const SearchPage = () => {
   
   return (
     <Main className="max-w-screen-xl mx-auto">
-      <H2>
+      {/* <H2>
         검색페이지
-      </H2>
+      </H2> */}
       <SearchInput onSearch={handleSearch} onKeyPress={handleKeyPress}/>
         {searchRepoData?.length === 0 && <p>검색 결과가 없습니다.</p>}
         {searchMemberData?.length === 0  && <p>검색 결과가 없습니다.</p>}
@@ -127,7 +127,7 @@ const SearchPage = () => {
           </ResultComponent>
         )
       ) : (
-        <p>검색 결과가 없습니다.</p>
+        <p>CoA의 레포지토리 및 사용자를 검색을 통해 알아보세요!</p>
       )}
       {results && (
         <PageTransition>
@@ -157,7 +157,7 @@ const Main = tw.div`
 `;
 
 const H2 = tw.h2`
-  text-4xl
+  text-3xl
   font-bold
   mt-8
   mb-4

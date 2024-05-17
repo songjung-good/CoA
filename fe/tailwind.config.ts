@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       backgroundImage: {
         analyze: "url('/image/urlAnalyze.png')",
+        'header-bg': "url('/image/tailwindbg.png')",
       },
       colors: {
         appBlue1: "#48CAF8",

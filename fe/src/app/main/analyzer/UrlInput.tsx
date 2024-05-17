@@ -68,7 +68,7 @@ const UrlInput = () => {
     <Container>
       <StyledInput
         type="text"
-        placeholder="Repository URL을 입력하세요"
+        placeholder="분석할 Repository URL을 입력하세요"
         value={inputValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
@@ -96,7 +96,6 @@ const UrlInput = () => {
 const Container = tw.div`
   max-w-screen-xl
   w-full
-  py-4 sm:py-8
   flex justify-center
 `;
 
