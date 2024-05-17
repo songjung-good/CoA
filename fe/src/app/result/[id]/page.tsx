@@ -29,13 +29,18 @@ export default function ResultPage({ params }: { params: { id: string } }) {
   return (
     <div className="flex flex-col items-center bg-appGrey1 pt-5 p-10 w-full h-full">
       <div className="w-full sm:w-4/5 lg:w-3/5 lg:min-w-[850px]">
-        <p className="mb-5 text-xl font-bold sm:text-2xl text-center">
-          {`${userNickName}님의 레포지토리 분석 결과입니다.`}
-        </p>
+        <div className="w-full text-center mb-5 whitespace-pre-wrap break-words">
+          <span className="text-appBlue1 text-lg font-bold sm:text-2xl text-center">
+            {userNickName}
+          </span>
+          <span className="text-lg font-bold sm:text-2xl text-center ">
+            {` 님의 레포지토리 분석 결과입니다.`}
+          </span>
+        </div>
         <RepoInfo />
         <ResultTap openModal={openModal} />
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-9999 flex justify-center items-center">
             <RepoCardModal isOpen={isModalOpen} onClose={closeModal} />
           </div>
         )}

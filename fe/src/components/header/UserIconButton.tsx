@@ -69,27 +69,13 @@ export default function UserIconButton() {
           setIsOpen(!isOpen);
         }}
       >
-        <div
-          style={{
-            // border: "solid",
-            borderRadius: "50%",
-            overflow: "hidden",
-          }}
-        >
-          {/* 추후 Image tag로 최적화 하기 
-          https://nextjs.org/docs/app/building-your-application/optimizing/images#remote-images
-          Image의 링크 config에 등록해야함
-          */}
+        <div className="rounded-full overflow-hidden w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10">
           <img
-            // loader={() => userImage}
             src={userImage}
-            alt="logo"
+            alt="user Image"
             width={48}
             height={48}
-            style={{
-              width: "48px",
-              height: "48px",
-            }}
+            className="object-cover"
           />
         </div>
       </button>
