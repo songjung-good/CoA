@@ -1,3 +1,4 @@
+import traceback
 from abc import *
 from abc import abstractmethod
 from typing import Any, TypeVar, Generic
@@ -39,11 +40,12 @@ class RepoClient(Generic[R], metaclass=ABCMeta):
         try:
             return await self._load_repo_data(author_name)
         except HTTPError as err:
-            analysis_status = RepoClient.HTTP_STATUS_TO_ANALYSIS_STATUS.get(
-                err.response.status_code,
-                AnalysisStatus.REPO_REQUEST_FAILED
-            )
-            raise AnalysisException(analysis_status)
+            if err.response.status_code not in RepoClient.HTTP_STATUS_TO_ANALYSIS_STATUS:
+                traceback.print_exc()
+                raise AnalysisException(AnalysisStatus.REPO_REQUEST_FAILED)
+            else:
+                analysis_status = RepoClient.HTTP_STATUS_TO_ANALYSIS_STATUS[err.response.status_code]
+                raise AnalysisException(analysis_status)
         except Timeout:
             raise AnalysisException(AnalysisStatus.REPO_REQUEST_TIMEOUT)
 
