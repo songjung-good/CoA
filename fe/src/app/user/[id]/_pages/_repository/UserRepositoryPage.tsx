@@ -1,6 +1,7 @@
 import repositoryStore from "@/store/repos";
 import MyPageRepositoryCard from "./MyPageRepositoryCard";
 import HistoryCard from "../../_components/HistoryCard";
+import MyRepoCard from "./MyRepo";
 
 export default function UserRepositoryPage() {
   const repos = repositoryStore((state) => state.repos);
@@ -10,7 +11,8 @@ export default function UserRepositoryPage() {
       <ul className="grid gap-3">
         {repos.map((repo, index) => (
           <li key={index}>
-            <MyPageRepositoryCard repo={repo} />
+            <MyRepoCard data={repo} />
+            {/* <MyPageRepositoryCard repo={repo} /> */}
           </li>
         ))}
       </ul>
