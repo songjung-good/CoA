@@ -4,9 +4,10 @@ from typing import TypeVar
 from dependency_injector import providers
 from dependency_injector.containers import DeclarativeContainer
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_openai import OpenAI
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from pathspec import PathSpec
+from pathspec.patterns import GitWildMatchPattern
 from redis import Redis
 
 from api.models.dto import GithubAnalysisRequest, GitLabAnalysisRequest, AnalysisRequest
@@ -17,6 +18,12 @@ from api.models.services.analysis import AnalysisService
 from api.models.services.client import RepoClient
 from api.models.services.client.github_rest import GithubRestClient
 from api.models.services.client.gitlab import GitLabClient
+
+
+def load_analysisignore() -> PathSpec:
+    with open('resources/.analysisignore', 'r') as f:
+        return PathSpec.from_lines(GitWildMatchPattern, f)
+
 
 R = TypeVar('R', bound=AnalysisRequest, covariant=True)
 
@@ -37,9 +44,11 @@ class Container(DeclarativeContainer):
         port=config.redis.port
     )
 
+    ignore_spec = providers.Resource(load_analysisignore)
+
     repo_client: dict[R, providers.Factory[RepoClient[R]]] = {
-        GithubAnalysisRequest: providers.Factory(GithubRestClient),
-        GitLabAnalysisRequest: providers.Factory(GitLabClient)
+        GithubAnalysisRequest: providers.Factory(GithubRestClient, ignore_spec=ignore_spec),
+        GitLabAnalysisRequest: providers.Factory(GitLabClient, ignore_spec=ignore_spec)
     }
 
     llm = providers.Resource(
@@ -63,3 +72,4 @@ class Container(DeclarativeContainer):
     ai_service = providers.Singleton(AiService, text_splitter)
 
     analysis_service = providers.Singleton(AnalysisService, redis_client, ai_mutex, ai_service)
+
