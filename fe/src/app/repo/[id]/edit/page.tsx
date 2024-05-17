@@ -82,7 +82,7 @@ export default function ReadmeEditPage() {
           </div>
         </CSSTransition>
       </TransitionGroup>
-      <div className="flex justify-center">
+      <div className="flex justify-center pb-12">
         <Link href={`/repo/${params.id}`}>
           <CommonButton text="상세 페이지로 이동" onClick={() => {}} />
         </Link>

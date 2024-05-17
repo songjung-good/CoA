@@ -22,7 +22,7 @@ bg-white
 py-4
 px-16
 rounded-2xl
-mb-32
+mb-[2%]
 shadow-2xl
 hover:bg-gray-200
 transition-colors
