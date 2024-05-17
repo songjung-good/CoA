@@ -1,39 +1,37 @@
 "use client";
 
+import React, { useState, useEffect, useRef } from "react";
 import tw from "tailwind-styled-components";
-import { useState, useEffect, useRef } from "react";
-import AnalysisButton from "../components/landing/AnalysisButton.tsx";
-import IntroduceButton from "../components/landing/IntroduceButton.tsx";
-import IntroduceText from "@/components/landing/IntroduceText.tsx";
-import ServiceIntroduceVertical from "@/components/landing/ServiceIntroduceVertical.tsx";
-import ServiceIntroduceLeft from "@/components/landing/ServiceIntroduceLeft.tsx";
-import ServiceIntroduceRight from "@/components/landing/ServiceIntroduceRight.tsx";
-import FloatingButton from "@/components/landing/FloatingButton.tsx";
-import LandingCarousel from "@/components/landing/LandingCarousel.tsx";
+import AnalysisButton from "../components/landing/AnalysisButton";
+import IntroduceButton from "../components/landing/IntroduceButton";
+import IntroduceText from "@/components/landing/IntroduceText";
+import ServiceIntroduceVertical from "@/components/landing/ServiceIntroduceVertical";
+import ServiceIntroduceLeft from "@/components/landing/ServiceIntroduceLeft";
+import ServiceIntroduceRight from "@/components/landing/ServiceIntroduceRight";
+import FloatingButton from "@/components/landing/FloatingButton";
+import LandingCarousel from "@/components/landing/LandingCarousel";
 
 // introText data
 import IntroText from "@/components/landing/introText.json";
 
 // Intersection Observer 커스텀 훅
-import { useObserver } from "@/components/landing/ObserverOption.tsx";
+import { useObserver } from "@/components/landing/ObserverOption";
 
 export default function HomePage() {
   const [windowWidth, setWindowWidth] = useState(0);
   const [showFloatingButton, setShowFloatingButton] = useState(false);
   const [isButtonsVisible, setIsButtonsVisible] = useState(false);
 
-  // fadein 설정 ------------------------------------------------
-  const introRef1 = useRef(null);
-  const introRef2 = useRef(null);
-  const introRef3 = useRef(null);
-  const introRef4 = useRef(null);
-  // ref 1~4 작은화면 (1024px 이하) ref5~8 큰화면(1024px 이상)
-  const introRef5 = useRef(null);
-  const introRef6 = useRef(null);
-  const introRef7 = useRef(null);
-  const introRef8 = useRef(null);
+  const introRef1 = useRef<HTMLDivElement | null>(null);
+  const introRef2 = useRef<HTMLDivElement | null>(null);
+  const introRef3 = useRef<HTMLDivElement | null>(null);
+  const introRef4 = useRef<HTMLDivElement | null>(null);
 
-  // 가시성 상태 기록을 위한 상태 변수
+  const introRef5 = useRef<HTMLDivElement | null>(null);
+  const introRef6 = useRef<HTMLDivElement | null>(null);
+  const introRef7 = useRef<HTMLDivElement | null>(null);
+  const introRef8 = useRef<HTMLDivElement | null>(null);
+
   const [active1, setActive1] = useState(false);
   const [active2, setActive2] = useState(false);
   const [active3, setActive3] = useState(false);
@@ -41,19 +39,19 @@ export default function HomePage() {
 
   const { isVisible: isVisible1 } = useObserver({
     target: introRef1,
-    option: { threshold: 0.5 },
+    option: { threshold: 0.3 },
   });
   const { isVisible: isVisible2 } = useObserver({
     target: introRef2,
-    option: { threshold: 0.5 },
+    option: { threshold: 0.3 },
   });
   const { isVisible: isVisible3 } = useObserver({
     target: introRef3,
-    option: { threshold: 0.5 },
+    option: { threshold: 0.3 },
   });
   const { isVisible: isVisible4 } = useObserver({
     target: introRef4,
-    option: { threshold: 0.5 },
+    option: { threshold: 0.3 },
   });
 
   useEffect(() => {
@@ -68,21 +66,17 @@ export default function HomePage() {
     transform: `translateY(${active ? 0 : 300}px)`,
     transition: "opacity 1s ease-out, transform 0.5s ease-out",
   });
-  // fadein 설정 ------------------------------------
 
-  // 위로가기 버튼
   const titleRef = useRef<HTMLDivElement | null>(null);
   const scrollToTitle = () => {
     titleRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // 서비스 알아보기 버튼 (누르면 밑으로 자동 스크롤)
   const serviceRef = useRef<HTMLDivElement | null>(null);
   const scrollToService = () => {
     serviceRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // 분석하기 플로팅 버튼(해당 버튼 아래로 내려가면 플로팅 버튼 생김)
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     const handleButtonVisibility = () => {
@@ -116,7 +110,7 @@ export default function HomePage() {
     };
 
     window.addEventListener("resize", updateWindowWidth);
-    updateWindowWidth(); // 초기 값 설정
+    updateWindowWidth();
 
     return () => window.removeEventListener("resize", updateWindowWidth);
   }, []);
@@ -125,21 +119,30 @@ export default function HomePage() {
     <div ref={titleRef} className="bg-appGrey1">
       <div className="relative">
         <LandingCarousel />
+        <LadingComponent
+          style={{
+            height: "calc(90vh)",
+          }}
+        >
+          <Slogan>코드만 치세요. 분석은 우리가 할게요.</Slogan>
+          <Title>CoA</Title>
+          <IntroduceText />
+          <AnalysisButton
+            buttonRef={buttonRef}
+            content="시작하기"
+            url="/auth/login"
+          />
+          <IntroduceButton
+            content="서비스 알아보기"
+            onClick={scrollToService}
+          />
+          <IntroBar>
+            <h3 className="text-xl sm:text-3xl font-bold">
+              CoA = Commit Analyzer
+            </h3>
+          </IntroBar>
+        </LadingComponent>
       </div>
-      <LadingComponent>
-        <Slogan>코드만 치세요. 분석은 우리가 할게요.</Slogan>
-        <Title>CoA</Title>
-        <IntroduceText />
-        <AnalysisButton
-          buttonRef={buttonRef}
-          content="시작하기"
-          url="/auth/login"
-        />
-        <IntroduceButton content="서비스 알아보기" onClick={scrollToService} />
-        <IntroBar>
-          <h3 className="text-3xl font-bold">CoA = Commit Analyzer</h3>
-        </IntroBar>
-      </LadingComponent>
       <FloatingButton
         showFloatingButton={showFloatingButton}
         isButtonsVisible={isButtonsVisible}
@@ -203,9 +206,8 @@ export default function HomePage() {
 }
 
 const LadingComponent = tw.main`
-absolute top-32 flex flex-col items-center 
-z-10 w-full 
-
+absolute top-1 flex flex-col items-center justify-between
+z-10 w-full
 `;
 
 const Title = tw.h1`
@@ -216,15 +218,17 @@ my-8
 `;
 
 const Slogan = tw.h2`
-text-center font-extrabold
+text-center font-extrabold mt-16
 `;
 
 const IntroBar = tw.div`
-bg-white py-10 rounded-t-3xl w-full text-center shadow-sm
-mt-5
+bg-white py-5 rounded-t-3xl w-full text-center shadow-sm 
 `;
 
 const ServiceComponent = tw.div`
 overflow-y-hidden
 overflow-x-hidden
+relative
 `;
+
+// 기존 스타일 컴포넌트에 position: relative를 추가하여 자식 요소의 위치 이동을 방지합니다.

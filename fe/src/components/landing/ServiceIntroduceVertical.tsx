@@ -41,7 +41,7 @@ const ServiceIntroduceVertical = forwardRef<
 
   return (
     <Service ref={ref} style={style}>
-      <div className="w-full max-w-2xl flex flex-col justify-center items-center rounded-2xl border shadow-lg bg-white hover:border-appBlue1 py-5 px-4">
+      <div className="w-full max-w-2xl flex flex-col justify-center items-center rounded-2xl shadow-lg bg-white py-5 px-4">
         <div className="w-full h-72 relative flex justify-center items-center">
           <Image
             src={image}
@@ -50,7 +50,7 @@ const ServiceIntroduceVertical = forwardRef<
             alt="analysis"
           />
         </div>
-        <div className="w-full flex flex-col justify-center items-center py-5 px-4 text-center">
+        <div className="w-full flex flex-col justify-evenly items-center py-5 px-4 text-center">
           <p className="text-3xl mb-2 text-appBlue1 font-bold">
             {content.title}
           </p>
@@ -64,7 +64,7 @@ const ServiceIntroduceVertical = forwardRef<
             {content.hashtags.map((tag, key) => (
               <p
                 key={key}
-                className="border-2 mr-2 mb-2 px-2 py-1 rounded-lg text-sm hover:bg-appGrey1"
+                className="border-2 mr-2 mb-2 px-2 py-1 rounded-lg text-sm hover:bg-appGrey1 text-gray-400"
               >
                 {tag}
               </p>
