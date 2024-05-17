@@ -119,7 +119,7 @@ export default function HistoryChart() {
   return (
     <div className="relative">
       <svg className="w-full" ref={svgRef} />
-      <div ref={tooltipRef}></div>
+      <div className="bg-white p-4 rounded-2xl border" ref={tooltipRef}></div>
     </div>
   );
 }

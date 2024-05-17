@@ -121,7 +121,7 @@ export default function MyInfoEditCard({
   const inputStyle = "bg-appGrey1 border hover:border-appBlue1";
   return (
     <div
-      className="card flex flex-col gap-4 absolute w-4/5"
+      className="card flex flex-col gap-4 absolute w-4/5 z-50"
       // onSubmit={onSubmit}
     >
       <button className="absolute right-4" onClick={closeEdit}>
