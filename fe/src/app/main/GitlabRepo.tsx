@@ -92,6 +92,7 @@ const GitlabRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
   return (
     <RepoList>
       {currentRepos.map((repo, key) => (
+        <li key={key}>
         <a
           href={repo.web_url}
           key={key}
@@ -117,6 +118,7 @@ const GitlabRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
             <p></p>
           </div>
         </a>
+        </li>
       ))}
       <Pagination>
         {Array.from(
@@ -124,7 +126,7 @@ const GitlabRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
           (_, i) => (
             <PageButton
               key={i + 1}
-              isActive={i + 1 === currentPage}
+              isactive={i + 1 === currentPage ? 1 : 0}
               onClick={() => paginate(i + 1)}
             >
               {i + 1}
@@ -193,8 +195,8 @@ const Pagination = tw.div`
   mt-4
 `;
 
-const PageButton = tw.button<{ isActive: boolean }>`
-  ${(p) => (p.isActive ? "bg-blue-500 text-white" : "bg-blue-200 text-black")}
+const PageButton = tw.button<{ isactive: number }>`
+  ${(p) => (p.isactive ? "bg-blue-500 text-white" : "bg-blue-200 text-black")}
   hover:bg-blue-400
   font-bold
   py-[0.25rem]

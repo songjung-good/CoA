@@ -51,7 +51,7 @@ export default function UserPageTabBar({
         >
           레포
         </button>
-        {UUID === uuid ? (
+        {/* {UUID === uuid ? (
           <button
             key={3}
             className={getButtonColor(3)}
@@ -59,7 +59,7 @@ export default function UserPageTabBar({
           >
             심층분석
           </button>
-        ) : null}
+        ) : null} */}
       </div>
       <WaveButton />
       {/* <button

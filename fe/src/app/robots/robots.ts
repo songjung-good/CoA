@@ -5,17 +5,18 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: 'Googlebot',
-        allow: '/',
+        allow: ['/', '/main', '/search', '/main', '/robots.txt', '/sitemap.xml'],
         disallow: ['/private/'],
       },
       {
         userAgent: 'Yeti',
-        allow: '/',
+        allow: ['/', '/main', '/search', '/main', '/robots.txt', '/sitemap.xml'],
         disallow: ['/private/'],
       },
       {
         userAgent: ['Applebot', 'Bingbot'],
-        disallow: ['/'],
+        allow: ['/', '/main', '/search', '/main', '/robots.txt', '/sitemap.xml'],
+        disallow: ['/private/'],
       },
       {
         userAgent: '*',
