@@ -83,7 +83,6 @@ const Card = tw.div`
   flex-col
   p-4
   justify-between
-  hover:border-appBlue1
 `;
 
 // const Card = tw.div`

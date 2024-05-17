@@ -5,9 +5,10 @@ import tw from 'tailwind-styled-components';
 // type 지정
 interface SearchProps {
   onSearch: (query: string, type: 'repo' | 'member') => void;
+  onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-const SearchInput: React.FC<SearchProps> = ({ onSearch }) => {
+const SearchInput: React.FC<SearchProps> = ({ onSearch, onKeyPress }) => {
   const [query, setQuery] = useState('');
   const [type, setType] = useState<'repo' | 'member'>('repo');
   const [focus, setFocus] = useState<'repo' | 'member'>('repo');
@@ -27,6 +28,7 @@ const SearchInput: React.FC<SearchProps> = ({ onSearch }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSearch(query, type);
+    onKeyPress && onKeyPress(e as any);
   };
 
   const handleButtonClick = (value: 'repo' | 'member') => {

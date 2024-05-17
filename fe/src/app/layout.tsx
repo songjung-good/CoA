@@ -53,11 +53,11 @@ export default function RootLayout({
         <meta name="twitter:image" content={image} />
         <meta name="twitter:domain" content="commitanalyze.com" />
       </head>
-      <body>
+      <body className="h-auto min-h-screen pb-20 relative">
         <Header />
         {children}
         <LoadingFloating hasJWT={hasJWT} />
-        <footer className="my-10 w-full text-center">
+        <footer className="absolute bottom-0 w-full text-center">
           &copy; SSAFY 10th E101
         </footer>
       </body>
