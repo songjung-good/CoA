@@ -52,7 +52,7 @@ const Main = tw.main`
   flex-col
   items-center
   h-full
-
+  bg-background-dark
 `;
 
 const Header = tw.div`

@@ -11,6 +11,7 @@ const config: Config = {
       backgroundImage: {
         analyze: "url('/image/urlAnalyze.png')",
         'header-bg': "url('/image/tailwindbg.png')",
+        'background-dark': "url('/image/background-dark.png')",
       },
       colors: {
         appBlue1: "#48CAF8",
