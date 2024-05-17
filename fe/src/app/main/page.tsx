@@ -63,7 +63,6 @@ const Header = tw.div`
   flex flex-col
   sm:flex-row
   items-center
-  
 `;
 
 const Description = tw.div`
