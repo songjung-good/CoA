@@ -37,8 +37,8 @@ const DetailButton: React.FC<DetailButtonProps> = ({ hovered, repoViewId }) => {
   return (
     hovered && (
       <CardOverlay>
-        <Button onClick={() => handleDetailClick(repoViewId)}>상세보기</Button>
-      </CardOverlay>
+        <Button onClick={() => handleDetailClick(repoViewId)}>{`상세페이지 > `}</Button>
+      </CardOverlay>  
     )
   );
 };
@@ -49,25 +49,30 @@ const CardOverlay = tw.div`
   h-[15rem]
   mb-5 sm:m-5
   border
-  border-appYellow
+  border-appGrey2
   rounded-lg 
   bg-white
+  bg-opacity-90
   flex
-  items-center
-  justify-center
+  items-end
+  justify-end
   z-1
 `;
 
 const Button = tw.div`
-  bg-appYellow 
+  bg-appYellow
   text-black 
   font-bold 
   py-2 
-  px-4 
+  px-4
+  mb-5 
   z-5
   rounded 
-  mr-2 
+  mr-5
   cursor-pointer
+  transition-all
+  hover:border
+  hover:border-appRed
 `;
 
 export default DetailButton;
