@@ -44,7 +44,7 @@ public enum StatusCode {
     DATA_NOT_EXIST(false, 800, "api 응답이 존재하지 않습니다."),
     CANNOT_GET_CONTRIBUTOR(false, 801, "contributor 수를 가져오는데 실패했습니다."),
     SERVICE_UNAVAILABLE(false, 802, "비동기 요청 에러"),
-    PROJECT_NOT_FOUND(false, 803, "본인의 레포 목록에 존재하지 않는 프로젝트입니다."),
+    PROJECT_NOT_FOUND(false, 803, "본인이 기여하지 않은 프로젝트 입니다."),
 
     // search : 900
     KEYWORD_EMPTY(false, 900, "검색 키워드가 빈 문자열 입니다."),
