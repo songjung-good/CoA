@@ -131,7 +131,7 @@ class GithubRestClient(RestRepoClient[GithubAnalysisRequest]):
         """
         return diff_json['files']
 
-    def _get_patch_from_file(self, file_json: Any) -> str:
+    def _get_patch_from_file(self, file_json: Any) -> str | None:
         """
         커밋 상세 정보의 파일 정보에서 변경 내용(patch)를 가져옵니다.
 
@@ -141,4 +141,4 @@ class GithubRestClient(RestRepoClient[GithubAnalysisRequest]):
         Returns:
             변경 내용
         """
-        return file_json['patch']
+        return file_json.get('patch', None)

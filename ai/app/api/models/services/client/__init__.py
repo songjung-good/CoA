@@ -1,3 +1,4 @@
+import traceback
 from abc import *
 from abc import abstractmethod
 from typing import Any, TypeVar, Generic
@@ -39,11 +40,12 @@ class RepoClient(Generic[R], metaclass=ABCMeta):
         try:
             return await self._load_repo_data(author_name)
         except HTTPError as err:
-            analysis_status = RepoClient.HTTP_STATUS_TO_ANALYSIS_STATUS.get(
-                err.response.status_code,
-                AnalysisStatus.REPO_REQUEST_FAILED
-            )
-            raise AnalysisException(analysis_status)
+            if err.response.status_code not in RepoClient.HTTP_STATUS_TO_ANALYSIS_STATUS:
+                traceback.print_exc()
+                raise AnalysisException(AnalysisStatus.REPO_REQUEST_FAILED)
+            else:
+                analysis_status = RepoClient.HTTP_STATUS_TO_ANALYSIS_STATUS[err.response.status_code]
+                raise AnalysisException(analysis_status)
         except Timeout:
             raise AnalysisException(AnalysisStatus.REPO_REQUEST_TIMEOUT)
 
@@ -102,6 +104,8 @@ class RestRepoClient(Generic[R], RepoClient[R], metaclass=ABCMeta):
             files_json = self._get_files_from_diff(diff_json)
             for file_json in files_json:
                 patch = self._get_patch_from_file(file_json)
+                if patch is None:
+                    continue
                 commit['patches'].append(patch)
 
             commits.append(commit)
@@ -161,7 +165,7 @@ class RestRepoClient(Generic[R], RepoClient[R], metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def _get_patch_from_file(self, file_json: Any) -> str:
+    def _get_patch_from_file(self, file_json: Any) -> str | None:
         """
         커밋 상세 정보의 파일 정보에서 변경 내용(diff, patch)를 가져옵니다.
 
@@ -169,6 +173,6 @@ class RestRepoClient(Generic[R], RepoClient[R], metaclass=ABCMeta):
             file_json: 커밋 상세 JSON
 
         Returns:
-            변경 내용
+            변경 내용, 단 binary file의 경우 None
         """
         pass
