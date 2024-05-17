@@ -24,4 +24,7 @@ px-16
 rounded-2xl
 mb-32
 shadow-2xl
+hover:bg-gray-200
+transition-colors
+duration-300
 `;
