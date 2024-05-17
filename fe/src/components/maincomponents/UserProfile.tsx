@@ -118,15 +118,55 @@ export default function UserProfile() {
   return (
     <div className="w-full sm:w-1/3 flex flex-col mt-10 sm:mt-0 px-2 sm:ml-4 bg-white shadow-lg rounded-lg border hover:border-appBlue2 py-6 min-h-[300px]">
       <ProfileHead>
-        <div className="flex justify-start items-center h-1/3 min-h-[60px]">
-          <img
-            src={userCard?.memberImg || `/image/LoadingSpinner.gif`}
-            alt="member image"
-            className="rounded-full w-1/6"
-          />
-          <p className="m-[5%] text-base sm:text-base">
-            {userCard.memberNickName}
-          </p>
+        <div>
+          <div className="flex justify-start items-center h-1/3 min-h-[60px]">
+            <img
+              src={userCard?.memberImg || `/image/LoadingSpinner.gif`}
+              alt="member image"
+              className="rounded-full w-1/6"
+            />
+            <p className="m-[5%] text-base sm:text-base">
+              {userCard.memberNickName}
+            </p>
+          </div>
+          <div className="flex flex-col items-start">
+            <div className="flex justify-center items-center">
+              <img
+                src="/image/oauth/github-mark.svg"
+                alt="github logo"
+                width={20}
+                height={20}
+                className="mr-2"
+              />
+              {userInfo.accountLinkInfoDto.githubNickName ? (
+                <p className=" font-medium">
+                  {userInfo.accountLinkInfoDto.githubNickName}
+                </p>
+              ) : (
+                <Link href={"/auth/link"}>
+                  <button className=" font-medium">연동하기</button>
+                </Link>
+              )}
+            </div>
+            <div className="flex justify-center items-center">
+              <img
+                src="/image/oauth/gitlab-mark.svg"
+                alt="gitlab logo"
+                width={20}
+                height={20}
+                className="mr-2"
+              />
+              {userInfo.accountLinkInfoDto.gitlabNickName ? (
+                <p className=" font-medium">
+                  {userInfo.accountLinkInfoDto.gitlabNickName}
+                </p>
+              ) : (
+                <Link href={"/auth/link"}>
+                  <button className=" font-medium">연동하기</button>
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
       </ProfileHead>
       <div className="h-full">
@@ -183,44 +223,6 @@ export default function UserProfile() {
         </div>
         <div className="bg-appGrey1 p-4 rounded-2xl grow truncate">
           <p className="truncate">{userCard?.memberIntro}</p>
-        </div>
-      </div>
-      <div className="flex flex-col items-start mt-2">
-        <div className="flex justify-center items-center">
-          <img
-            src="/image/oauth/github-mark.svg"
-            alt="github logo"
-            width={20}
-            height={20}
-            className="mr-2"
-          />
-          {userInfo.accountLinkInfoDto.githubNickName ? (
-            <p className=" font-medium">
-              {userInfo.accountLinkInfoDto.githubNickName}
-            </p>
-          ) : (
-            <Link href={"/auth/link"}>
-              <button className=" font-medium">연동하기</button>
-            </Link>
-          )}
-        </div>
-        <div className="flex justify-center items-center">
-          <img
-            src="/image/oauth/gitlab-mark.svg"
-            alt="gitlab logo"
-            width={20}
-            height={20}
-            className="mr-2"
-          />
-          {userInfo.accountLinkInfoDto.gitlabNickName ? (
-            <p className=" font-medium">
-              {userInfo.accountLinkInfoDto.gitlabNickName}
-            </p>
-          ) : (
-            <Link href={"/auth/link"}>
-              <button className=" font-medium">연동하기</button>
-            </Link>
-          )}
         </div>
       </div>
     </div>
