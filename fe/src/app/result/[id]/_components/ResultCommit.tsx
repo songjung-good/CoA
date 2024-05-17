@@ -34,7 +34,7 @@ export default function ResultCommit() {
         <span className="text-appBlue1">{repo.repoViewTitle}</span> 프로젝트
         분석결과
       </p>
-      <div className="flex justify-center items-center w-full min-h-20 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl border hover:border-appBlue2">
+      <div className="flex justify-center items-center w-full min-h-20 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl">
         <div>
           {parts.map((part, index) =>
             part.isComment ? (
