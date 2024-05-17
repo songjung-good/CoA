@@ -2,9 +2,7 @@
 
 // 라이브러리
 import React from "react";
-import Image from "next/image";
 import tw from "tailwind-styled-components";
-import { useStore } from "zustand";
 
 // 컴포넌트
 // URL 입력(레포지토리 분석을 위한)
@@ -16,21 +14,14 @@ import ExhibitRepo from "@/app/main/ExhibitRepo";
 // 유저 정보
 import UserProfile from "@/components/maincomponents/UserProfile";
 
-// 전역변수
-import userStore from "@/store/user";
-
 const MainPage: React.FC = () => {
-  const githubUserName = useStore(userStore).githubUserName;
-  const isGithubToken = useStore(userStore).isGithubToken;
-  const gitlabUserName = useStore(userStore).gitlabUserName;
-  const isGitlabToken = useStore(userStore).isGitlabToken;
 
   return (
     <Main>
       <Header>
         <Description>
           <TextWrapper>
-            <Title>당신의 프로젝트 "CoA"에서 분석해보세요</Title>
+            <Title>당신의 프로젝트 <HoverText>{` "CoA"`}</HoverText>에서 분석해보세요</Title>
             <SubTitle>
               분석하고 싶은 프로젝트의 URL만 입력하면
               <br /> 해당 레포지토리 분석을 시작합니다.
@@ -123,28 +114,6 @@ const RepoDiv = tw.div`
   max-w-screen-xl
 `;
 
-const RepoLeft = tw.div`
-  bg-white
-  mt-10
-  mr-4
-  p-4
-  border
-  shadow-lg
-  rounded-2xl
-  hover:border-appBlue1
-`;
-
-const RepoRight = tw.div`
-  bg-white
-  mt-10
-  ml-4
-  p-4
-  border
-  shadow-lg
-  rounded-2xl
-  hover:border-appBlue1
-`;
-
 const Div = tw.div`
   w-full
   sm:w-2/3
@@ -163,6 +132,11 @@ const Heading = tw.h2`
   flex
   items-center
   mb-2
+`;
+
+const HoverText = tw.span`
+  cursor-pointer 
+  hover:text-appRed
 `;
 
 export default MainPage;
