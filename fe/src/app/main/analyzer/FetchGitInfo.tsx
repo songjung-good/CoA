@@ -80,7 +80,6 @@ const fetchGitlabMembers = async (projectname: string, username: string): Promis
     }
 
     if (projectsResponse.data.code === 803) {
-      console.log(projectsResponse.data.message)
       throw alert(projectsResponse.data.message)
     }
     if (projectsResponse.data.code === 200) {
