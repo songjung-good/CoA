@@ -49,9 +49,14 @@ export default function RepoPage({ params }: { params: { id: string } }) {
   return (
     <div className="flex flex-col items-center bg-appGrey1 pt-5 p-10 w-full h-full">
       <div className="w-full sm:w-4/5 lg:w-3/5 lg:min-w-[850px]">
-        <p className="mb-5 text-xl font-bold sm:text-2xl text-center">
-          {`${repoTitle} 레포지토리 상세 정보입니다.`}
-        </p>
+        <div className="w-full text-center mb-5 whitespace-pre-wrap break-words">
+          <span className="text-appBlue1 text-lg font-bold sm:text-2xl text-center">
+            {repoTitle}
+          </span>
+          <span className="text-lg font-bold sm:text-2xl text-center ">
+            {` 레포지토리 상세 정보입니다.`}
+          </span>
+        </div>
         <RepoInfo openModal={openModal} />
         <ResultTap />
         {isModalOpen && (

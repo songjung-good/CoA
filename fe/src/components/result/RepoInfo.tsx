@@ -24,8 +24,8 @@ const RepoInfo: React.FC = () => {
   return (
     <RepoInfoDiv>
       <div className="flex flex-col lg:flex-row items-start justify-between w-full ">
-        <div className="w-2/3">
-          <div className="flex items-center mb-5">
+        <div className="w-full lg:w-2/3">
+          <div className="flex w-full items-center mb-5">
             {repoInfo.repoViewPath.includes("github") ? (
               <Image
                 src="/image/githubSSO.png"
@@ -55,10 +55,10 @@ const RepoInfo: React.FC = () => {
             부제목을 작성해주세요.
           </p>
         </div>
-        <div className="w-3/5 h-full lg:flex lg:flex-col lg:justify-between">
+        <div className="w-full lg:w-3/5 h-full lg:flex lg:flex-col lg:justify-between">
           <div className="mb-2 flex flex-col justify-between items-start lg:items-end w-full h-full">
             <div>
-              <p className=" text-start">
+              <p className=" text-start w-full whitespace-pre-wrap break-words">
                 프로젝트 기간 :
                 {`${repoInfo.repoStartDate} ~ ${repoInfo.repoEndDate} (${projectDays}일)`}
               </p>
@@ -69,23 +69,8 @@ const RepoInfo: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col sm:flex-row justify-between sm:items-end w-full h-full">
-        {repoInfo.skillList === null ? (
-          <div className="flex-grow font-bold">
-            프로젝트에 사용한 기술 스택을 추가해주세요
-          </div>
-        ) : (
-          <ul className="flex flex-wrap w-4/5">
-            {repoInfo.skillList.map((skill, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center border-appBlue1 px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold"
-              >
-                {skill.codeName}
-              </li>
-            ))}
-          </ul>
-        )}
+      <div className="flex-grow font-bold text-sm sm:text-base">
+        사용한 기술 스택을 추가해주세요
       </div>
     </RepoInfoDiv>
   );

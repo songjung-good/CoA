@@ -15,7 +15,6 @@ import ExhibitRepo from "@/app/main/ExhibitRepo";
 import UserProfile from "@/components/maincomponents/UserProfile";
 
 const MainPage: React.FC = () => {
-
   return (
     <Main>
       <Header>
@@ -23,7 +22,7 @@ const MainPage: React.FC = () => {
           <TextWrapper>
             <Title>당신의 프로젝트 "CoA"에서 분석해보세요</Title>
             <SubTitle>
-              분석하고 싶은 프로젝트의 URL만  입력하면
+              분석하고 싶은 프로젝트의 URL만 입력하면
               <br /> 해당 레포지토리 분석을 시작합니다.
             </SubTitle>
             <UrlInput />
