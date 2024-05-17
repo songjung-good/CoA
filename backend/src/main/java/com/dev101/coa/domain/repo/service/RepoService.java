@@ -460,6 +460,8 @@ public class RepoService {
         // 키 초기화
         encryptionUtils.init();
 
+
+
         if (analysisReqDto.getProjectId() == null) { // github
             // 엑세스 토큰 가져오기
             Code code = codeRepository.findById(1002L).orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
@@ -478,10 +480,16 @@ public class RepoService {
 
             repoMemberCnt = getRepoMemberCnt(gitHubApiUrl + "/repos/" + userName + "/" + repoName + "/" + "contributors", accessToken);
 
+
+            // ai 요청 url
+            StringBuilder sb = new StringBuilder();
+            sb.append(userName).append("/").append(repoName);
+
+
             // ai 요청 디티오
             githubAnalysisReqDto = AiGithubAnalysisReqDto.builder()
                     .analysisId(analysisId)
-                    .repoPath(analysisReqDto.getRepoUrl())
+                    .repoPath(sb.toString())
                     .userName(analysisReqDto.getUserName())
                     .accessToken(accessToken)
                     .build();
