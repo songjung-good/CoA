@@ -52,7 +52,6 @@ const Main = tw.main`
   items-center
   h-full
   bg-cover
-  bg-main-bg
 `;
 
 const Header = tw.div`
@@ -82,7 +81,7 @@ const Description = tw.div`
   border
   border-appGrey2
   bg-cover
-  bg-header-bg
+  bg-tailwindbg
 `;
 
 const TextWrapper = tw.div`
