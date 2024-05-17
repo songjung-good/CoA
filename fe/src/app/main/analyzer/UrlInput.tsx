@@ -105,16 +105,14 @@ const StyledInput = tw.input`
   px-4
   py-2
   border-2
-  border-appGrey2
+  border-appGrey1
   rounded-xl
   transition-colors
   duration-300
-  hover:border-blue-400
+  hover:border-appGrey2
 `;
 
 const StyledButton = tw.button`
-  border-2
-  border-appGrey2
   bg-appBlue1
   rounded-full
   px-2
@@ -123,7 +121,7 @@ const StyledButton = tw.button`
   text-sm sm:text-base lg:text-md
   transition-colors
   duration-300
-  hover:bg-appYellow
+  hover:bg-appBlue2
 `;
 
 export default UrlInput;
