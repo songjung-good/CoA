@@ -44,7 +44,7 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
       setMergeData(res3);
       fitData(res3);
     } else {
-      setMergeData(res3);
+      setMergeData(null);
     }
     // console.log("res1");
     // console.log(res1);
