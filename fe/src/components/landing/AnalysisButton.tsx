@@ -33,6 +33,9 @@ const StyledLink = tw(Link)`
   mb-20
   mt-10
   shadow-2xl
+  hover:bg-orange-500
+  transition-colors
+  duration-300
 `;
 
 export default AnalysisButton;

@@ -4,7 +4,7 @@ import tw from "tailwind-styled-components";
 import { useState, useEffect, useRef } from "react";
 
 interface ServiceIntroduceLeftProps {
-  content: string;
+  content: Record<string, any>;
   image: string;
 }
 
@@ -44,12 +44,23 @@ const ServiceIntroduceLeft = forwardRef<
         overflow: "hidden",
       }}
     >
-      <div className="flex w-1/3 h-1/2 relative justify-center items-center">
+      <div className="flex w-1/2 h-1/2 relative justify-center items-center">
         <Image src={image} layout="fill" objectFit="cover" alt="analysis" />
       </div>
-      <p className="flex w-1/2 h-60 relative justify-center items-center">
-        {content}
-      </p>
+      <div className="w-1/3 flex flex-col justify-center items-center py-5 px-10 text-center border bg-white min-w-[350px] min-h-[472.5px] rounded-lg hover:border-appBlue2 shadow-lg">
+        <p className="text-3xl mb-2">{content.title}</p>
+        <p className="whitespace-pre-wrap mb-2">{content.description}</p>
+        <div className="flex flex-wrap justify-center">
+          {content.hashtags.map((tag: string, key: string) => (
+            <p
+              key={key}
+              className="border-2 mr-2 mb-2 px-2 py-1 rounded-lg hover:bg-appGrey1"
+            >
+              {tag}
+            </p>
+          ))}
+        </div>
+      </div>
     </Service>
   );
 });
@@ -57,5 +68,5 @@ const ServiceIntroduceLeft = forwardRef<
 export default ServiceIntroduceLeft;
 
 const Service = tw.div`
-  flex my-10 justify-between items-center mx-10 h-screen overflow-hidden
+  flex my-10 justify-around items-center mx-32 h-screen overflow-hidden
 `;

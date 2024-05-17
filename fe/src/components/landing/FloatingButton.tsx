@@ -22,13 +22,13 @@ export default function FloatingButton({
       <div>
         <ButtonsContainer $show={showFloatingButton}>
           <button
-            className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full"
+            className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full hover:bg-orange-500 transition-colors duration-300"
             onClick={scrollToTitle}
           >
             <Upicon width={30} height={30} />
           </button>
           <Link href="/auth/login">
-            <button className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full">
+            <button className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full hover:bg-orange-500 duration-300">
               <AnalysisIcon width={30} height={30} />
             </button>
           </Link>
