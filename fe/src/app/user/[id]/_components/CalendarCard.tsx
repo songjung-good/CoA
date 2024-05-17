@@ -15,9 +15,9 @@ import { useRouter } from "next/navigation";
 
 const CalendarCard = ({ uuid }: { uuid: string }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [githubData, setGithubData] = useState<ApiResponse>();
-  const [gitlabData, setGitlabData] = useState<ApiResponse>();
-  const [mergeData, setMergeData] = useState<ApiResponse>();
+  const [githubData, setGithubData] = useState<ApiResponse | null>(null);
+  const [gitlabData, setGitlabData] = useState<ApiResponse | null>(null);
+  const [mergeData, setMergeData] = useState<ApiResponse | null>(null);
   const userName = userStore((state) => state.githubUserName);
   // github에서 contributions(잔디) 가져오기
   const [totalContribution, setTotalContribution] = useState<
@@ -87,15 +87,15 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
 
   useEffect(() => {
     if (category === 0) {
-      if (githubData !== undefined) {
+      if (githubData !== null) {
         fitData(githubData);
       }
     } else if (category === 1) {
-      if (gitlabData !== undefined) {
+      if (gitlabData !== null) {
         fitData(gitlabData);
       }
     } else if (category === 2) {
-      if (mergeData !== undefined) {
+      if (mergeData !== null) {
         fitData(mergeData);
       }
     }
