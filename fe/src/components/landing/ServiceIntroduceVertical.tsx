@@ -3,15 +3,42 @@ import Image from "next/image";
 import tw from "tailwind-styled-components";
 
 interface ServiceIntroduceVerticalProps {
-  content: Record<string, any>;
+  content: {
+    title: string;
+    description: string;
+    hashtags: string[];
+  };
   image: string;
   style: React.CSSProperties;
 }
+
+// 특정 단어에 스타일을 적용하는 함수
+const highlightText = (text: string, wordsToHighlight: string[]) => {
+  const parts = text.split(new RegExp(`(${wordsToHighlight.join("|")})`, "gi"));
+  return parts.map((part, index) =>
+    wordsToHighlight.includes(part) ? (
+      <span key={index} className="text-appBlue1 text-xl font-medium">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  );
+};
 
 const ServiceIntroduceVertical = forwardRef<
   HTMLDivElement,
   ServiceIntroduceVerticalProps
 >(({ content, image, style }, ref) => {
+  const wordsToHighlight = [
+    "자동",
+    "리드미 초안",
+    "커밋을 분석",
+    "코딩 스타일",
+    "코멘트 기능",
+    "다양한 통계",
+  ]; // 예시로 강조하고 싶은 단어들
+
   return (
     <Service ref={ref} style={style}>
       <div className="w-full max-w-2xl flex flex-col justify-center items-center rounded-2xl border shadow-lg bg-white hover:border-appBlue1 py-5 px-4">
@@ -24,12 +51,17 @@ const ServiceIntroduceVertical = forwardRef<
           />
         </div>
         <div className="w-full flex flex-col justify-center items-center py-5 px-4 text-center">
-          <p className="text-xl mb-2">{content.title}</p>
-          <p className="whitespace-pre-wrap mb-2 text-sm">
-            {content.description}
+          <p className="text-3xl mb-2 text-appBlue1 font-bold">
+            {content.title}
+          </p>
+          <p
+            className="whitespace-pre-wrap break-words mb-2 text-sm"
+            style={{ wordBreak: "keep-all", whiteSpace: "pre-wrap" }}
+          >
+            {highlightText(content.description, wordsToHighlight)}
           </p>
           <div className="flex flex-wrap justify-center">
-            {content.hashtags.map((tag: string, key: string) => (
+            {content.hashtags.map((tag, key) => (
               <p
                 key={key}
                 className="border-2 mr-2 mb-2 px-2 py-1 rounded-lg text-sm hover:bg-appGrey1"
