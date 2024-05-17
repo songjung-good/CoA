@@ -35,7 +35,7 @@ export default function Header() {
         </div>
       </Link>
       <div className="w-1/2">
-        <Gauge />
+        <Gauge hasJWT={hasJWT} />
       </div>
       <div className="flex gap-2">
         {/* <Notification hasJWT={hasJWT} /> */}
