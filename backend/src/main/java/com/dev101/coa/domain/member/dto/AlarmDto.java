@@ -4,11 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Builder
 public class AlarmDto {
-    private Long memberId;
+    private UUID memberUuid;
     private String memberNickName;
     private Long repoViewId;
     private String repoViewTitle;

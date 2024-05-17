@@ -35,7 +35,7 @@ public class Alarm extends BaseEntity {
 
     public AlarmDto convertToDto(){
         return AlarmDto.builder()
-                .memberId(this.alarmMember.getMemberId())
+                .memberUuid(this.alarmMember.getMemberUuid())
                 .memberNickName(this.alarmMember.getMemberNickname())
                 .createAt(LocalDateTime.now())
                 .build();
