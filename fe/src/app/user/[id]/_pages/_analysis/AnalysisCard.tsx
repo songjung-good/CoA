@@ -7,7 +7,15 @@ export default function AnalysisCard({ data }: { data: RepoAnalysisResponse }) {
   const { response } = useCommonCodeStore.getState();
   const jobObj = response.result.commonCodeList[2].codes;
   const [selectedJob, setSelectedJob] = useState("2004");
-  console.log(jobObj);
+  // console.log(jobObj);
+  const keyName = {
+    exception: "예외 처리",
+    readability: "가독성",
+    performance: "성능",
+    testability: "테스트 용이성",
+    reusability: "재활용성",
+    total: "총 평균",
+  };
   return (
     <article className="card flex justify-center gap-4">
       <section>
@@ -27,7 +35,8 @@ export default function AnalysisCard({ data }: { data: RepoAnalysisResponse }) {
                       key={key}
                       className={key === "total" ? "text-lg pt-1" : ""}
                     >
-                      {key}: {Number(value).toFixed(1)}
+                      {keyName[key as keyof typeof keyName]}:{" "}
+                      {Number(value).toFixed(1)}
                     </li>
                   ))}
               </ul>
@@ -69,7 +78,8 @@ export default function AnalysisCard({ data }: { data: RepoAnalysisResponse }) {
               .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
               .map(([key, value]) => (
                 <li key={key} className={key === "total" ? "text-lg pt-1" : ""}>
-                  {key}: {Number(value).toFixed(1)}
+                  {keyName[key as keyof typeof keyName]}:{" "}
+                  {Number(value).toFixed(1)}
                 </li>
               ))}
           </ul>

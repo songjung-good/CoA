@@ -9,6 +9,14 @@ export default function RadarChart({
   scoreData: CommitScoreDto;
   scoreData2?: CommitScoreDto;
 }) {
+  const keyName = {
+    exception: "예외 처리",
+    readability: "가독성",
+    performance: "성능",
+    testability: "테스트 용이성",
+    reusability: "재활용성",
+    total: "총 평균",
+  };
   const svgRef = useRef<SVGSVGElement>(null);
   // let data2: { axis: string; value: number }[] | undefined;
 
@@ -90,7 +98,7 @@ export default function RadarChart({
         (d, i) => (radius + 12) * Math.sin(angleSlice * i - Math.PI / 2),
       )
       .attr("text-anchor", "middle")
-      .text((d) => d.axis);
+      .text((d) => keyName[d.axis as keyof typeof keyName]);
 
     // 반경 선 추가
     const levels = [20, 40, 60, 80, 100];

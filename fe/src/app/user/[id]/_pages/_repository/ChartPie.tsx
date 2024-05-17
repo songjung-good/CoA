@@ -29,8 +29,8 @@ const MyPageRepositoryCardChart = ({
     const svg = d3.select(svgRef.current);
 
     // Specify the chart’s dimensions.
-    const width = 260;
-    const height = 260;
+    const width = 168;
+    const height = 168;
 
     // Create the pie layout and arc generator.
     const pie = d3
@@ -40,7 +40,7 @@ const MyPageRepositoryCardChart = ({
 
     const radius = Math.min(width, height) / 2 - 1;
     const arc = d3.arc().innerRadius(0).outerRadius(radius);
-    const labelRadius = radius * 0.8;
+    const labelRadius = radius * 0.7;
 
     // A separate arc generator for labels.
     const arcLabel = d3.arc().innerRadius(labelRadius).outerRadius(labelRadius);
@@ -116,7 +116,7 @@ const MyPageRepositoryCardChart = ({
   return (
     <div className="flex p-4 gap-4">
       <svg ref={svgRef}></svg>
-      <ul>
+      {/* <ul>
         <h3 className="font-semibold">
           Total Lines of Code: {totalLinesOfCode}
         </h3>
@@ -126,7 +126,7 @@ const MyPageRepositoryCardChart = ({
             %)
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 };
