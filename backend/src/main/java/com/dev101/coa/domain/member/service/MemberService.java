@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -120,6 +121,7 @@ public class MemberService {
         return dtoBuilder.build();
     }
 
+    @Transactional
     public BookmarkResDto toggleBookmark(Long loginMemberId, String targetMemberUuid) {
         // 멤버 존재 유무
         Member loginMember = memberRepository.findById(loginMemberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
