@@ -71,25 +71,21 @@ public class ExternalController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
-    @GetMapping("/gitlab/projects/{userName}")
-    public ResponseEntity<BaseResponse<String>> getGitlabUserId(@AuthenticationPrincipal Long currentId, @PathVariable("userName") String userName) throws Exception {
+    @GetMapping("/gitlab/projects/{projectName}")
+    public ResponseEntity<BaseResponse<String>> getGitlabUserId(@AuthenticationPrincipal Long currentId, @PathVariable("projectName") String projectName) throws Exception {
         Member member = memberRepository.findByMemberId(currentId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
         AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
         String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
 
-        String result = externalApiService.fetchGitlabProjects(userName, accessToken);
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
-    }
+        String userName = accountLink.getAccountLinkNickname();
 
-    @GetMapping("/gitlab/members/{projectId}")
-    public ResponseEntity<BaseResponse<String>> getGitlabMembers(@AuthenticationPrincipal Long currentId, @PathVariable("projectId") String projectId) throws Exception {
-        Member member = memberRepository.findByMemberId(currentId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
-        AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
-        String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
+        String projectId = externalApiService.handleGitlabProject(userName, accessToken, projectName);
 
         String result = externalApiService.fetchGitlabMembers(projectId, accessToken);
+
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
+
 
     @Operation(description = "깃헙 잔디 602 -> 링크 X , 303 -> 토큰 확인(외부 에러)")
     @GetMapping("/events/github/{memberUuid}")

@@ -78,22 +78,70 @@ public class ExternalApiService {
 
     }
 
-    public String fetchGitlabProjects(String userName, String accessToken) {
-        return webClient.get()
-                .uri("https://lab.ssafy.com/api/v4/users/{userName}/projects", userName)
-                .headers(headers -> headers.setBearerAuth(accessToken))
-                .retrieve()
-                .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
-                .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.NOT_FOUND)))
-                .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitHub repos fetching")))
-                .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub repos fetching")))
-                .bodyToMono(String.class)
-                .block();
+
+    public List<Map<String, Object>> fetchGitlabProjects(String userName, String accessToken) {
+        System.out.println("userName = " + userName);
+        List<Map<String, Object>> allProjects = new ArrayList<>();
+        int page = 1;
+
+        while (true) {
+            System.out.println("page = " + page);
+
+            List<Map<String, Object>> projects = fetchProjectsByPage(userName, accessToken, page);
+            System.out.println("projects = " + projects);
+            if (projects == null || projects.isEmpty()) {
+                break;
+            }
+            allProjects.addAll(projects);
+            page++;
+        }
+
+        return allProjects;
+    }
+
+    private List<Map<String, Object>> fetchProjectsByPage(String userName, String accessToken, int page) {
+        try {
+            return webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .scheme("https")
+                            .host("lab.ssafy.com")
+                            .path("/api/v4/users/{userName}/contributed_projects")
+                            .queryParam("page", page)
+                            .queryParam("per_page", 100) // Adjust per_page value if necessary
+                            .build(userName))
+                    .headers(headers -> headers.setBearerAuth(accessToken))
+                    .retrieve()
+                    .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
+                    .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.NOT_FOUND)))
+                    .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitLab repos fetching")))
+                    .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitLab repos fetching")))
+                    .bodyToMono(List.class)
+                    .block();
+        } catch (WebClientResponseException ex) {
+            // Handle exception as needed
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public String handleGitlabProject(String userName, String accessToken, String projectNameToCheck) {
+        List<Map<String, Object>> projects = fetchGitlabProjects(userName, accessToken);
+
+        for (Map<String, Object> project : projects) {
+            System.out.println("project = " + project);
+            String projectName = (String) project.get("name");
+            if (projectNameToCheck.equals(projectName)) {
+                return String.valueOf(project.get("id"));
+            }
+        }
+
+        throw new BaseException(StatusCode.PROJECT_NOT_FOUND);
     }
 
     public String fetchGitlabMembers(String projectId, String accessToken) {
         return webClient.get()
-                .uri("https://lab.ssafy.com/api/v4/projects/{projectId}/members", projectId)
+                .uri("https://lab.ssafy.com/api/v4/projects/{projectId}/members?per_page=100", projectId)
                 .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
