@@ -23,7 +23,7 @@ export default function Header() {
             height={48}
             className="mr-4"
           />
-          <div className="invisible md:visible">
+          <div className="hidden md:block">
             <Image
               src="/image/textLogo48.png"
               alt="logoText"
@@ -35,7 +35,7 @@ export default function Header() {
         </div>
       </Link>
       <div className="w-1/2">
-        <Gauge />
+        <Gauge hasJWT={hasJWT} />
       </div>
       <div className="flex gap-2">
         {/* <Notification hasJWT={hasJWT} /> */}

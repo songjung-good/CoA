@@ -33,8 +33,8 @@ const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
   return (
     <RepoInfoDiv>
       <div className="flex flex-col lg:flex-row items-start justify-between w-full ">
-        <div className="w-2/3">
-          <div className="flex items-center mb-5">
+        <div className="w-full lg:w-2/3">
+          <div className="flex w-full items-center mb-5">
             {repoInfo.repoViewPath.includes("github") ? (
               <Image
                 src="/image/githubSSO.png"
@@ -64,10 +64,10 @@ const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
             {repoInfo.repoViewSubtitle}
           </p>
         </div>
-        <div className="w-3/5 h-full lg:flex lg:flex-col lg:justify-between">
+        <div className="w-full lg:w-3/5 h-full lg:flex lg:flex-col lg:justify-between">
           <div className="mb-2 flex flex-col justify-between items-start lg:items-end w-full h-full">
             <div>
-              <p className=" text-start">
+              <p className=" text-start w-full whitespace-pre-wrap break-words">
                 프로젝트 기간 :
                 {`${repoInfo.repoStartDate} ~ ${repoInfo.repoEndDate} (${projectDays}일)`}
               </p>

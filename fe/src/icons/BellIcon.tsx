@@ -6,7 +6,6 @@ export default function BellIcon() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-10 h-10"
     >
       <path
         strokeLinecap="round"

@@ -181,8 +181,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-5 rounded-lg shadow-lg relative w-full max-w-sm sm:max-w-lg lg:max-w-2xl">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ">
+      <div className="bg-white p-5 rounded-lg shadow-lg relative w-full max-w-sm sm:max-w-lg lg:max-w-2xl z-40">
         <button
           onClick={onClose}
           className="absolute top-3 right-3 bg-transparent font-bold hover:text-red-600 p-1 rounded-full"
