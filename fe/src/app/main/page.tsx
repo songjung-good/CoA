@@ -21,10 +21,10 @@ const MainPage: React.FC = () => {
       <Header>
         <Description>
           <TextWrapper>
-            <Title>당신의 프로젝트 <HoverText>&nbsp;{` "CoA"`}</HoverText>에서 분석해보세요</Title>
+            <Title>당신의 프로젝트 "CoA"에서 분석해보세요</Title>
             <SubTitle>
-              분석하고 싶은 프로젝트의&nbsp;<HoverText>URL</HoverText>만  입력하면
-              <br /> 해당 레포지토리 &nbsp;<HoverText>분석</HoverText>을 시작합니다.
+              분석하고 싶은 프로젝트의 URL만  입력하면
+              <br /> 해당 레포지토리 분석을 시작합니다.
             </SubTitle>
             <UrlInput />
           </TextWrapper>
@@ -70,6 +70,7 @@ const Description = tw.div`
   flex-row
   w-full
   min-h-[300px]
+  shadow-md
   rounded-lg
   sm:w-2/3
   items-center
@@ -78,7 +79,8 @@ const Description = tw.div`
   max-w-screen-xl
   sm:flex-row
   bg-cover
-  bg-analyze
+  border
+  border-appGrey2
 `;
 
 const TextWrapper = tw.div`
@@ -126,22 +128,14 @@ const Div = tw.div`
   rounded-2xl
   transition
   duration-300
-  hover:border-appBlue1
 `;
 
-const Heading = tw.h2`
-  font-bold
-  text-xl sm:text-2xl md:text-4xl
+const Heading = tw.h3`
+  font-medium
+  text-lg sm:text-xl md:text-3xl
   flex
   items-center
   mb-2
-`;
-
-const HoverText = tw.span`
-  cursor-pointer
-  transition
-  duration-300
-  hover:text-appYellow
 `;
 
 export default MainPage;

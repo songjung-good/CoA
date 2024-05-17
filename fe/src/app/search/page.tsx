@@ -97,13 +97,19 @@ const SearchPage = () => {
       setError('페이지 변경 중 오류가 발생했습니다.');
     }
   };
+
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      handleSearch(searchQuery, searchType);
+    }
+  };
   
   return (
     <Main className="max-w-screen-xl mx-auto">
       <H2>
         검색페이지
       </H2>
-      <SearchInput onSearch={handleSearch} />
+      <SearchInput onSearch={handleSearch} onKeyPress={handleKeyPress}/>
         {searchRepoData?.length === 0 && <p>검색 결과가 없습니다.</p>}
         {searchMemberData?.length === 0  && <p>검색 결과가 없습니다.</p>}
         {results ? (
