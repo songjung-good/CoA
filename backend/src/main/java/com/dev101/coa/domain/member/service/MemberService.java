@@ -12,8 +12,10 @@ import com.dev101.coa.domain.repo.dto.MyRepoAnalysisResDto;
 import com.dev101.coa.domain.repo.dto.RepoAnalysisDto;
 import com.dev101.coa.domain.repo.dto.RepoCardDto;
 import com.dev101.coa.domain.repo.entity.CommitScore;
+import com.dev101.coa.domain.repo.entity.LineOfCode;
 import com.dev101.coa.domain.repo.entity.RepoView;
 import com.dev101.coa.domain.repo.repository.CommitScoreRepository;
+import com.dev101.coa.domain.repo.repository.LineOfCodeRepository;
 import com.dev101.coa.domain.repo.repository.RepoViewRepository;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
@@ -41,6 +43,7 @@ public class MemberService {
     private final MemberJobRepository memberJobRepository;
     private final RepoViewRepository repoViewRepository;
     private final TypeRepository typeRepository;
+    private final LineOfCodeRepository lineOfCodeRepository;
 
 
     public MemberInfoDto getMemberInfo(Long memberId) {
@@ -333,5 +336,42 @@ public class MemberService {
         memberCntBySkillDtoList.sort((d1, d2) -> (int) (d2.getCnt() - d1.getCnt()));
 
         return memberCntBySkillDtoList;
+    }
+
+    public List<Map<String, Object>> getMemberRepos(String memberUuid) {
+        Member member = memberRepository.findByMemberUuid(UUID.fromString(memberUuid))
+                .orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
+
+        List<RepoView> repoViews = repoViewRepository.findAllByMember(member);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (RepoView repoView : repoViews) {
+            List<LineOfCode> linesOfCode = lineOfCodeRepository.findAllByRepoView(repoView);
+
+            Map<String, Object> repoData = new HashMap<>();
+            repoData.put("name", repoView.getRepoViewTitle());
+            repoData.put("createdAt", repoView.getRepoStartDate());
+            repoData.put("pushedAt", repoView.getRepoEndDate());
+            repoData.put("updatedAt", repoView.getRepoEndDate());
+            repoData.put("repoInfo", RepoCardDto.createRepoCardDto(repoView, member.getMemberUuid()));
+
+            Map<String, Integer> languageLineCounts = new HashMap<>();
+            int totalLinesOfCode = 0;
+
+            for (LineOfCode loc : linesOfCode) {
+                String language = loc.getSkillCode().getCodeName();
+                int lineCount = loc.getLineCount();
+                languageLineCounts.put(language, languageLineCounts.getOrDefault(language, 0) + lineCount);
+                totalLinesOfCode += lineCount;
+            }
+
+            repoData.put("languages", languageLineCounts);
+            repoData.put("totalLinesOfCode", totalLinesOfCode);
+
+            result.add(repoData);
+        }
+
+        return result;
     }
 }

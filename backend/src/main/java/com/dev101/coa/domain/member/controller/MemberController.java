@@ -20,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -112,6 +113,12 @@ public class MemberController {
         MyRepoAnalysisResDto myRepoAnalysisResDto = memberService.makeMemberAnalysis(pageMember);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(myRepoAnalysisResDto));
 
+    }
+    @GetMapping("/{memberUuid}/lines")
+    @Operation(description = "멤버 코드 줄 수")
+    public ResponseEntity<BaseResponse<List<Map<String, Object>>>> getMemberRepos(@PathVariable String memberUuid) {
+        List<Map<String, Object>> repos = memberService.getMemberRepos(memberUuid);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(repos));
     }
 
     @GetMapping("/{memberUuid}/repos")
