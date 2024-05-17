@@ -127,7 +127,7 @@ export default function HomePage() {
         <LandingCarousel />
       </div>
       <LadingComponent>
-        <Slogan>코드만 치세요. 분석은 우리가 할께요.</Slogan>
+        <Slogan>코드만 치세요. 분석은 우리가 할게요.</Slogan>
         <Title>CoA</Title>
         <IntroduceText />
         <AnalysisButton
