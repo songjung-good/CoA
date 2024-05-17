@@ -29,6 +29,9 @@ const config: Config = {
       },
       minWidth: {
         "760px": "760px",
+      },
+      screens: {
+        'xs': "480px"
       }
     },
   },
