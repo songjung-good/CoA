@@ -128,53 +128,10 @@ export default function UserProfile() {
             {userCard.memberNickName}
           </p>
         </div>
-        <Link href={`/user/${userInfo.memberUuid}`}>
-          <span className="text-md font-bold text-end mr-4 text-gray-400 hover:text-appRed">
-            마이페이지&#10097;{" "}
-          </span>
-        </Link>
       </ProfileHead>
       <div className="h-full">
         <div className="flex justify-between mx-[5%] my-[2%] ">
-          <div className="flex flex-col items-start mt-2">
-            <div className="flex justify-center items-center">
-              <img
-                src="/image/oauth/github-mark.svg"
-                alt="github logo"
-                width={20}
-                height={20}
-                className="mr-2"
-              />
-              {userInfo.accountLinkInfoDto.githubNickName ? (
-                <p className=" font-medium">
-                  {userInfo.accountLinkInfoDto.githubNickName}
-                </p>
-              ) : (
-                <Link href={"/auth/link"}>
-                  <button className=" font-medium">연동하기</button>
-                </Link>
-              )}
-            </div>
-            <div className="flex justify-center items-center">
-              <img
-                src="/image/oauth/gitlab-mark.svg"
-                alt="gitlab logo"
-                width={20}
-                height={20}
-                className="mr-2"
-              />
-              {userInfo.accountLinkInfoDto.gitlabNickName ? (
-                <p className=" font-medium">
-                  {userInfo.accountLinkInfoDto.gitlabNickName}
-                </p>
-              ) : (
-                <Link href={"/auth/link"}>
-                  <button className=" font-medium">연동하기</button>
-                </Link>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-col justify-center items-center ">
+          <div className="flex justify-center items-center gap-2">
             <p className="text-nowrap">포지션</p>
             <p>
               {response?.result.commonCodeList[2]?.codes &&
@@ -183,6 +140,11 @@ export default function UserProfile() {
                 ]}
             </p>
           </div>
+          <Link href={`/user/${userInfo.memberUuid}`}>
+            <span className="text-md font-bold text-end mr-4 text-gray-400 hover:text-appRed">
+              마이페이지 &#10097;
+            </span>
+          </Link>
         </div>
         <div className="skills-container flex flex-col justify-between  mx-[3%] my-[3%]">
           <p>기술스택</p>
@@ -221,6 +183,44 @@ export default function UserProfile() {
         </div>
         <div className="bg-appGrey1 p-4 rounded-2xl grow truncate">
           <p className="truncate">{userCard?.memberIntro}</p>
+        </div>
+      </div>
+      <div className="flex flex-col items-start mt-2">
+        <div className="flex justify-center items-center">
+          <img
+            src="/image/oauth/github-mark.svg"
+            alt="github logo"
+            width={20}
+            height={20}
+            className="mr-2"
+          />
+          {userInfo.accountLinkInfoDto.githubNickName ? (
+            <p className=" font-medium">
+              {userInfo.accountLinkInfoDto.githubNickName}
+            </p>
+          ) : (
+            <Link href={"/auth/link"}>
+              <button className=" font-medium">연동하기</button>
+            </Link>
+          )}
+        </div>
+        <div className="flex justify-center items-center">
+          <img
+            src="/image/oauth/gitlab-mark.svg"
+            alt="gitlab logo"
+            width={20}
+            height={20}
+            className="mr-2"
+          />
+          {userInfo.accountLinkInfoDto.gitlabNickName ? (
+            <p className=" font-medium">
+              {userInfo.accountLinkInfoDto.gitlabNickName}
+            </p>
+          ) : (
+            <Link href={"/auth/link"}>
+              <button className=" font-medium">연동하기</button>
+            </Link>
+          )}
         </div>
       </div>
     </div>
