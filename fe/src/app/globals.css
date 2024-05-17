@@ -46,5 +46,5 @@ body {
 }
 
 .card {
-  @apply bg-white hover:border-appBlue1 border shadow-lg p-4 rounded-2xl;
+  @apply bg-white  border shadow-lg p-4 rounded-2xl;
 }
