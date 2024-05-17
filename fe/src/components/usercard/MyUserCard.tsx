@@ -88,8 +88,9 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
                 height={144}
               />
             </div>
-            <p>{myData?.memberNickName || AuthUserName}</p>
+            <p className="text-lg">{myData?.memberNickName || AuthUserName}</p>
             <p>
+              포지션{"  "}
               {response?.result?.commonCodeList[2]?.codes &&
                 response.result.commonCodeList[2].codes[
                   `${myData?.memberJobCodeId}`
@@ -104,7 +105,7 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
 
             <div className="relative flex items-center">
               <div className="">
-                <p>Skills</p>
+                <p>기술스택</p>
                 <ul className="flex flex-wrap gap-2 p-1">
                   {myData?.skillList.map((skill) => (
                     <li
