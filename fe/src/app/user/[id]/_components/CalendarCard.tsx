@@ -50,11 +50,13 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
     // console.log(res2);
     // console.log("res3");
     // console.log(res3);
+    setIsLoading(false);
   };
 
   const fitData = (res: ApiResponse) => {
+    setIsLoading(true);
     // res와 res.total이 존재하는지 확인
-    if (res && res.total) {
+    if (res && res.total && res.contributions) {
       setTotalContribution(res.total);
       // data를 년도별로 분류
       const dataByYear = res.contributions.reduce(
@@ -73,9 +75,8 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
       const firstKey = Object.keys(dataByYear)[0];
       setData(dataByYear[firstKey]);
       setIsActive(firstKey);
-
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
