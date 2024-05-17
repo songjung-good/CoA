@@ -103,11 +103,11 @@ export default function IntroduceText() {
 }
 
 const TextDiv = tw.div`
-  min-h-[16vh]
+  min-h-[19vh]
   text-center
   font-medium
   text-black
   lg:text-3xl
-  md:text-2xl
+  md:text-xl
   sm:text-lg
 `;

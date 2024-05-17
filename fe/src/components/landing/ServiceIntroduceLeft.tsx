@@ -69,8 +69,8 @@ const ServiceIntroduceLeft = forwardRef<
       <div className="flex w-1/2 h-1/2 relative justify-center items-center">
         <Image src={image} fill style={{ objectFit: "cover" }} alt="analysis" />
       </div>
-      <div className="w-1/3 flex flex-col justify-center items-center py-5 px-10 text-center border bg-white min-w-[350px] min-h-[472.5px] rounded-lg hover:border-appBlue2 shadow-lg">
-        <p className="text-3xl mb-2 text-appBlue1 font-bold">{content.title}</p>
+      <div className="w-1/3 flex flex-col justify-evenly items-center py-5 px-10 text-center bg-white min-w-[350px] min-h-[472.5px] rounded-lg shadow-lg">
+        <p className="text-4xl mb-2 text-appBlue1 font-bold">{content.title}</p>
         <p
           className="whitespace-pre-wrap break-words mb-2"
           style={{ wordBreak: "keep-all", whiteSpace: "pre-wrap" }}
@@ -81,7 +81,7 @@ const ServiceIntroduceLeft = forwardRef<
           {content.hashtags.map((tag: string, key: string) => (
             <p
               key={key}
-              className="border-2 mr-2 mb-2 px-2 py-1 rounded-lg hover:bg-appGrey1"
+              className="border-2 mr-2 mb-2 px-2 py-1 rounded-lg hover:bg-appGrey1 text-gray-400"
             >
               {tag}
             </p>
