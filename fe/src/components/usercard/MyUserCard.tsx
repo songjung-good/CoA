@@ -59,67 +59,71 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
 
   return (
     <>
-      <section className="card flex flex-col gap-4 ">
+      <section className="card flex flex-col gap-4 relative">
         <div className="flex flex-row gap-4">
-          {/* <Image src="/image/logo144.png" alt="logo" width={144} height={144} /> */}
-          <div className="rounded-full overflow-hidden w-36 h-36">
-            <img
-              src={myData?.memberImg || userImage}
-              alt="logo"
-              width={144}
-              height={144}
-            />
+          <div className="flex flex-col items-center relative">
+            <div className="absolute top-0 left-0">
+              {myData &&
+                (myData?.isMine ? (
+                  <button
+                    onClick={() => {
+                      setIsEdit(!isEdit);
+                    }}
+                  >
+                    <EditIconDark />
+                  </button>
+                ) : (
+                  <IsStar
+                    isBookmark={myData?.isBookmark}
+                    Uuid={myData?.memberUuid}
+                  />
+                ))}
+            </div>
+            {/* <Image src="/image/logo144.png" alt="logo" width={144} height={144} /> */}
+            <div className="rounded-full overflow-hidden w-36 h-36">
+              <img
+                src={myData?.memberImg || userImage}
+                alt="logo"
+                width={144}
+                height={144}
+              />
+            </div>
+            <p>{myData?.memberNickName || AuthUserName}</p>
+            <p>
+              {response?.result?.commonCodeList[2]?.codes &&
+                response.result.commonCodeList[2].codes[
+                  `${myData?.memberJobCodeId}`
+                ]}
+            </p>
           </div>
           <div className="grow flex flex-col gap-2">
-            <div className="flex justify-between">
-              <p>{myData?.memberNickName || AuthUserName}</p>
-              <div className="flex gap-2">
-                <p>
-                  {response?.result?.commonCodeList[2]?.codes &&
-                    response.result.commonCodeList[2].codes[
-                      `${myData?.memberJobCodeId}`
-                    ]}
-                </p>
-                {myData &&
-                  (myData?.isMine ? (
-                    <button
-                      onClick={() => {
-                        setIsEdit(!isEdit);
-                      }}
-                    >
-                      <EditIconDark />
-                    </button>
-                  ) : (
-                    <IsStar
-                      isBookmark={myData?.isBookmark}
-                      Uuid={myData?.memberUuid}
-                    />
-                  ))}
-              </div>
-            </div>
+            {/* 자기소개 란 */}
             <div className="bg-appGrey1 p-4 rounded-2xl grow">
               <p>{myData?.memberIntro}</p>
+            </div>
+
+            <div className="relative flex items-center">
+              <div className="">
+                <p>Skills</p>
+                <ul className="flex flex-wrap gap-2 p-1">
+                  {myData?.skillList.map((skill) => (
+                    <li
+                      key={skill.codeId}
+                      style={{
+                        padding: "4px",
+                        borderRadius: "9999px",
+                        backgroundColor: `${colorMapping[skill.codeName]}`,
+                      }}
+                    >
+                      <p className="px-1 text-white ">{skill.codeName}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="skills-container flex items-center">
-          <p>기술 스택 : </p>
-          <ul className="flex flex-wrap gap-2 p-1">
-            {myData?.skillList.map((skill) => (
-              <li
-                key={skill.codeId}
-                style={{
-                  padding: "4px",
-                  borderRadius: "9999px",
-                  backgroundColor: `${colorMapping[skill.codeName]}`,
-                }}
-              >
-                <p className="px-1 text-white">{skill.codeName}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
         {isEdit && (
           <MyInfoEditCard
             intro={myData?.memberIntro || ""}

@@ -118,25 +118,18 @@ export default function UserProfile() {
   return (
     <div className="w-full sm:w-1/3 flex flex-col mt-10 sm:mt-0 px-2 sm:ml-4 bg-white shadow-lg rounded-lg border hover:border-appBlue2 py-6 min-h-[300px]">
       <ProfileHead>
-        <div className="flex justify-start items-center h-1/3 min-h-[60px]">
-          <img
-            src={userCard?.memberImg || `/image/LoadingSpinner.gif`}
-            alt="member image"
-            className="rounded-full w-1/6"
-          />
-          <p className="m-[5%] text-base sm:text-base">
-            {userCard.memberNickName}
-          </p>
-        </div>
-        <Link href={`/user/${userInfo.memberUuid}`}>
-          <span className="text-md font-bold text-end mr-4 text-gray-400 hover:text-appRed">
-            마이페이지&#10097;{" "}
-          </span>
-        </Link>
-      </ProfileHead>
-      <div className="h-full">
-        <div className="flex justify-between mx-[5%] my-[2%] ">
-          <div className="flex flex-col items-start mt-2">
+        <div>
+          <div className="flex justify-start items-center h-1/3 min-h-[60px]">
+            <img
+              src={userCard?.memberImg || `/image/LoadingSpinner.gif`}
+              alt="member image"
+              className="rounded-full w-1/6"
+            />
+            <p className="m-[5%] text-base sm:text-base">
+              {userCard.memberNickName}
+            </p>
+          </div>
+          <div className="flex flex-col items-start">
             <div className="flex justify-center items-center">
               <img
                 src="/image/oauth/github-mark.svg"
@@ -174,7 +167,11 @@ export default function UserProfile() {
               )}
             </div>
           </div>
-          <div className="flex flex-col justify-center items-center ">
+        </div>
+      </ProfileHead>
+      <div className="h-full">
+        <div className="flex justify-between mx-[5%] my-[2%] ">
+          <div className="flex justify-center items-center gap-2">
             <p className="text-nowrap">포지션</p>
             <p>
               {response?.result.commonCodeList[2]?.codes &&
@@ -183,6 +180,11 @@ export default function UserProfile() {
                 ]}
             </p>
           </div>
+          <Link href={`/user/${userInfo.memberUuid}`}>
+            <span className="text-md font-bold text-end mr-4 text-gray-400 hover:text-appRed">
+              마이페이지 &#10097;
+            </span>
+          </Link>
         </div>
         <div className="skills-container flex flex-col justify-between  mx-[3%] my-[3%]">
           <p>기술스택</p>
