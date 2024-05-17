@@ -15,14 +15,15 @@ import { useRouter } from "next/navigation";
 
 const CalendarCard = ({ uuid }: { uuid: string }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [githubData, setGithubData] = useState<ApiResponse>();
-  const [gitlabData, setGitlabData] = useState<ApiResponse>();
-  const [mergeData, setMergeData] = useState<ApiResponse>();
+  const [githubData, setGithubData] = useState<ApiResponse | null>(null);
+  const [gitlabData, setGitlabData] = useState<ApiResponse | null>(null);
+  const [mergeData, setMergeData] = useState<ApiResponse | null>(null);
   const userName = userStore((state) => state.githubUserName);
   // github에서 contributions(잔디) 가져오기
-  const [totalContribution, setTotalContribution] = useState<
-    Record<string, number>
-  >({});
+  const [totalContribution, setTotalContribution] = useState<Record<
+    string,
+    number
+  > | null>(null);
   const [dataByYear, SetDataByYear] = useState<Record<string, Contribution[]>>(
     {},
   );
@@ -46,12 +47,12 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
     } else {
       setMergeData(null);
     }
-    // console.log("res1");
-    // console.log(res1);
-    // console.log("res2");
-    // console.log(res2);
-    // console.log("res3");
-    // console.log(res3);
+    console.log("res1");
+    console.log(res1);
+    console.log("res2");
+    console.log(res2);
+    console.log("res3");
+    console.log(res3);
     setIsLoading(false);
   };
 
@@ -87,15 +88,15 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
 
   useEffect(() => {
     if (category === 0) {
-      if (githubData !== undefined) {
+      if (githubData !== null) {
         fitData(githubData);
       }
     } else if (category === 1) {
-      if (gitlabData !== undefined) {
+      if (gitlabData !== null) {
         fitData(gitlabData);
       }
     } else if (category === 2) {
-      if (mergeData !== undefined) {
+      if (mergeData !== null) {
         fitData(mergeData);
       }
     }
@@ -155,8 +156,7 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
         </section>
       ) : (
         <>
-          {gitlabData === undefined}
-          {category === 2 && mergeData === undefined ? (
+          {category === 2 && mergeData === null ? (
             <section className="">
               <p className="text-lg h-10 py-2">
                 Github, Gitlab 계정을 연동해주세요
@@ -168,7 +168,7 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
                 연동 페이지로 이동
               </button>
             </section>
-          ) : category === 0 && githubData === undefined ? (
+          ) : category === 0 && githubData === null ? (
             <section className="">
               <p className="text-lg h-10 py-2">Github 계정을 연동해주세요</p>
               <button
@@ -178,7 +178,7 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
                 연동 페이지로 이동
               </button>
             </section>
-          ) : category === 1 && gitlabData === undefined ? (
+          ) : category === 1 && gitlabData === null ? (
             <section className="">
               <p className="text-lg h-10 py-2">Gitlab 계정을 연동해주세요</p>
               <button
@@ -188,12 +188,16 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
                 연동 페이지로 이동
               </button>
             </section>
+          ) : totalContribution === null ? (
+            <>
+              <div>error</div>
+            </>
           ) : (
             <>
               <div className="flex gap-2 items-center py-2">
                 <p className="text-lg">
                   total:
-                  {Object.values(totalContribution).reduce((a, b) => a + b)}
+                  {Object.values(totalContribution).reduce((a, b) => a + b, 0)}
                 </p>
                 <ul className="flex gap-2">
                   {Object.entries(totalContribution).map(([key, value]) => (

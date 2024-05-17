@@ -11,6 +11,9 @@ import ServiceIntroduceRight from "@/components/landing/ServiceIntroduceRight.ts
 import FloatingButton from "@/components/landing/FloatingButton.tsx";
 import LandingCarousel from "@/components/landing/LandingCarousel.tsx";
 
+// introText data
+import IntroText from "@/components/landing/introText.json";
+
 // Intersection Observer 커스텀 훅
 import { useObserver } from "@/components/landing/ObserverOption.tsx";
 
@@ -147,26 +150,26 @@ export default function HomePage() {
           <>
             <ServiceIntroduceVertical
               ref={introRef1}
-              content="여기에 내용을 적어주세요"
-              image="/image/chun.png"
+              content={IntroText.features[0]}
+              image="/image/introduce/login.gif"
               style={fadeEffect(active1)}
             />
             <ServiceIntroduceVertical
               ref={introRef2}
-              content="또 다른 서비스 설명"
-              image="/image/chun.png"
+              content={IntroText.features[1]}
+              image="/image/introduce/analyze.gif"
               style={fadeEffect(active2)}
             />
             <ServiceIntroduceVertical
               ref={introRef3}
-              content="세 번째 서비스 내용"
-              image="/image/chun.png"
+              content={IntroText.features[2]}
+              image="/image/introduce/mainpage.gif"
               style={fadeEffect(active3)}
             />
             <ServiceIntroduceVertical
               ref={introRef4}
-              content="마지막 서비스 설명"
-              image="/image/chun.png"
+              content={IntroText.features[3]}
+              image="/image/introduce/mypage.gif"
               style={fadeEffect(active4)}
             />
           </>
@@ -174,23 +177,23 @@ export default function HomePage() {
           <>
             <ServiceIntroduceLeft
               ref={introRef5}
-              content="여기에 내용을 적어주세요"
-              image="/image/chun.png"
+              content={IntroText.features[0]}
+              image="/image/introduce/login.gif"
             />
             <ServiceIntroduceRight
               ref={introRef6}
-              content="또 다른 서비스 설명"
-              image="/image/chun.png"
+              content={IntroText.features[1]}
+              image="/image/introduce/analyze.gif"
             />
             <ServiceIntroduceLeft
               ref={introRef7}
-              content="세 번째 서비스 내용"
-              image="/image/chun.png"
+              content={IntroText.features[2]}
+              image="/image/introduce/mainpage.gif"
             />
             <ServiceIntroduceRight
               ref={introRef8}
-              content="마지막 서비스 설명"
-              image="/image/chun.png"
+              content={IntroText.features[3]}
+              image="/image/introduce/mypage.gif"
             />
           </>
         )}

@@ -62,7 +62,7 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
       <section className="card flex flex-col gap-4 ">
         <div className="flex flex-row gap-4">
           {/* <Image src="/image/logo144.png" alt="logo" width={144} height={144} /> */}
-          <div className="rounded-full overflow-hidden">
+          <div className="rounded-full overflow-hidden w-36 h-36">
             <img
               src={myData?.memberImg || userImage}
               alt="logo"
