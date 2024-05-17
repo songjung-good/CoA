@@ -42,8 +42,8 @@ const repositoryStore = create<repositoryStore>((set) => ({
     try {
       const repos = await getTotalLinesOfCode(userName);
       let languageTotals: LanguageStats = {};
-      console.log("repos");
-      console.log(repos);
+      // console.log("repos");
+      // console.log(repos);
       repos.forEach((repo) => {
         Object.entries(repo.languages).forEach(([language, lines]) => {
           if (languageTotals[language]) {
