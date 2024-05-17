@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import useAnalyzingStore from "@/store/analyze";
+import UrlInput from "@/app/main/analyzer/UrlInput";
 
 // StyledRangeProps 타입 정의
 type StyledRangeProps = React.HTMLProps<HTMLDivElement> & {
@@ -69,7 +70,7 @@ function Gauge({ initialExp = 0 }) {
 
   return (
     <div>
-      {isAnalyzing && (
+      {isAnalyzing ? (
         <StyledBase>
           <StyledRange width={width} />
           <StyledPercentage>
@@ -80,6 +81,8 @@ function Gauge({ initialExp = 0 }) {
                 : `${width}%`}
           </StyledPercentage>
         </StyledBase>
+      ) : (
+        <UrlInput />
       )}
     </div>
   );
