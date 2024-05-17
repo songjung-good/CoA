@@ -32,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
@@ -79,6 +80,7 @@ public class RepoService {
     private final ExternalApiService externalApiService;
 
 
+    @Transactional
     public void editReadme(Long memberId, Long repoViewId, String editReadmeReq) {
         Member loginMember = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
@@ -96,6 +98,7 @@ public class RepoService {
         repoRepository.save(repoView.getRepo());
     }
 
+    @Transactional
     public void editComment(Long currentMemberId, Long repoViewId, List<CommitCommentDto> editCommentListReq) {
         Member loginMember = memberRepository.findById(currentMemberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
@@ -136,6 +139,7 @@ public class RepoService {
 
     }
 
+    @Transactional
     public void editRepoCard(Long currentMemberId, Long repoViewId, RepoCardEditReqDto repoCardEditReqDto) {
         Member loginMember = memberRepository.findById(currentMemberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
@@ -178,6 +182,7 @@ public class RepoService {
         repoViewRepository.save(repoView);
     }
 
+    @Transactional
     public Long saveAnalysis(Long memberId, String analysisId, SaveAnalysisReqDto saveAnalysisReqDto) {
 
         // redis에서 analysisId 로 값 조회시 존재 여부 판단
@@ -435,6 +440,7 @@ public class RepoService {
      * @param analysisReqDto
      * @return
      */
+    @Transactional
     public String startAnalysis(Long memberId, AnalysisReqDto analysisReqDto) throws Exception {
 
         // 로그인한 member 받아오기
@@ -636,7 +642,6 @@ public class RepoService {
         String redisRepoPath = redisData.getRepoPath();
 
 
-
         // memberId와 요소의 memberId의 일치여부를 확인한다.(로그인한 유저와 분석요청 유저의 일치 여부)
         Long redisMemberId = redisData.getMemberId();
         if (!Objects.equals(memberId, redisMemberId)) {
@@ -647,6 +652,7 @@ public class RepoService {
         // 분석 상태를 체크한다.
         // PROCESSING 이나 DONE 이 아니면 redis 데이터를 삭제하고 예외를 발생시킨다.
         if (Integer.parseInt(redisData.getStatus()) > 200) {
+            System.out.println("redisData.getStatus() = " + redisData.getStatus());
             redisRepoRepository.deleteById(analysisId);
             throw new BaseException(StatusCode.RETRY_AI_ANALYSIS);
         }
