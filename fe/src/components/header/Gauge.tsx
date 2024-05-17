@@ -77,7 +77,7 @@ function Gauge({ initialExp = 0, hasJWT }: GaugeProps) {
   return (
     <div>
       {hasJWT && (
-        <div>
+        <div className="hidden md:block">
           {isAnalyzing ? (
             <StyledBase>
               <StyledRange width={width} />

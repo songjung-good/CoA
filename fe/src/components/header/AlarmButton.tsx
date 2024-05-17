@@ -43,7 +43,9 @@ export default function AlarmButton() {
   return (
     <div className="relative flex justify-center items-center" ref={modalRef}>
       <button onClick={handleAlarmButton}>
-        <BellIcon />
+        <div className="w-5 h-5 md:w-7 md:h-7 lg:w-10 lg:h-10">
+          <BellIcon />
+        </div>
         {alarmCount !== 0 ? (
           <div className="absolute top-0 right-0 bg-red-500 rounded-full w-4 h-4"></div>
         ) : null}
