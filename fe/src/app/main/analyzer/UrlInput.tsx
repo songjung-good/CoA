@@ -68,7 +68,7 @@ const UrlInput = () => {
     <Container>
       <StyledInput
         type="text"
-        placeholder="🔎Repository URL을 입력하세요"
+        placeholder="Repository URL을 입력하세요"
         value={inputValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
@@ -113,8 +113,8 @@ const StyledInput = tw.input`
 `;
 
 const StyledButton = tw.button`
-  bg-appBlue1
-  rounded-full
+  bg-appBlue3
+  rounded-xl
   px-2
   ml-4
   text-nowrap

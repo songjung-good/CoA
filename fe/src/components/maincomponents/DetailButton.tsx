@@ -52,7 +52,7 @@ const CardOverlay = tw.div`
   border-appGrey2
   rounded-lg 
   bg-white
-  bg-opacity-90
+  bg-opacity-85
   flex
   items-end
   justify-end
@@ -60,8 +60,8 @@ const CardOverlay = tw.div`
 `;
 
 const Button = tw.div`
-  bg-appYellow
-  text-black 
+  text-black
+  border-b-2
   font-bold 
   py-2 
   px-4
@@ -71,8 +71,8 @@ const Button = tw.div`
   mr-5
   cursor-pointer
   transition-all
-  hover:border
-  hover:border-appRed
+  hover:border-b
+  hover:border-b-appRed
 `;
 
 export default DetailButton;
