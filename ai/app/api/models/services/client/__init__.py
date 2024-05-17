@@ -3,6 +3,7 @@ from abc import *
 from abc import abstractmethod
 from typing import Any, TypeVar, Generic
 
+from pathspec import PathSpec
 from requests import HTTPError, Timeout
 
 from api.models.code import AnalysisStatus
@@ -23,7 +24,8 @@ class RepoClient(Generic[R], metaclass=ABCMeta):
     }
 
     @abstractmethod
-    def __init__(self, request: R):
+    def __init__(self, request: R, ignore_spec: PathSpec):
+        self.ignore_spec = ignore_spec
         pass
 
     @abstractmethod

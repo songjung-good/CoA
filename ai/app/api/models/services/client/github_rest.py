@@ -2,6 +2,7 @@ import base64
 from typing import Any
 
 import requests
+from pathspec import PathSpec
 
 from api.models.code import AnalysisStatus
 from api.models.dto import AnalysisRequest, GithubAnalysisRequest
@@ -14,13 +15,14 @@ class GithubRestClient(RestRepoClient[GithubAnalysisRequest]):
     Github REST API에서 파일, 커밋 데이터를 가져오기 위한 클라이언트입니다.
     """
 
-    def __init__(self, request: GithubAnalysisRequest):
+    def __init__(self, request: GithubAnalysisRequest, ignore_spec: PathSpec):
         """
         Github REST API 클라이언트를 만듭니다.
 
         Parameters:
             path: Github 저장소 경로 (예: DoubleDeltas/MineCollector)
         """
+        super().__init__(request, ignore_spec)
         self.path = request.repoPath
         self.access_token = request.accessToken
 
@@ -63,6 +65,8 @@ class GithubRestClient(RestRepoClient[GithubAnalysisRequest]):
         )
         for entry in git_trees_json['tree']:
             if entry['type'] == 'tree':     # 해당 entry는 directory
+                continue
+            if self.ignore_spec.match_file(entry['path']):  # 무시할 파일일지 검사
                 continue
 
             # 내부 내용을 가져오자

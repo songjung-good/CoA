@@ -2,6 +2,7 @@ import base64
 from typing import Any
 
 import requests
+from pathspec import PathSpec
 
 from api.models.code import AnalysisStatus
 from api.models.dto import AnalysisRequest, GitLabAnalysisRequest
@@ -14,7 +15,7 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
     GitLab REST API에서 파일, 커밋 데이터를 가져오기 위한 클라이언트입니다.
     """
 
-    def __init__(self, request: GitLabAnalysisRequest):
+    def __init__(self, request: GitLabAnalysisRequest, ignore_spec: PathSpec):
         """
         GitLab 클라이언트를 만듭니다.
 
@@ -22,6 +23,7 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
             base_url: GitLab 저장소 기본 URL (예: https://github.example.com)
             project_id: GitLab Project ID
         """
+        super().__init__(request, ignore_spec)
         self.base_url = request.baseUrl
         self.project_id = request.projectId
         self.private_token = request.privateToken
