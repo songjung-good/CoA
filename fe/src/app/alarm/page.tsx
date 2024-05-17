@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Alarm, getAlarmData } from "@/api/alarm/apiAlarm";
+import Link from "next/link";
 
 export default function AlarmPage() {
   const [alarmData, setAlarmData] = useState<Alarm[]>([]);
@@ -36,14 +37,34 @@ export default function AlarmPage() {
                 <p className="text-xl">{date}</p>
                 <ul className="flex flex-col gap-2 min-w-16">
                   {alarms.map((alarm, index) => (
-                    <li key={index}>
+                    <li key={index} className="bg-white p-4 border">
                       {alarm.repoViewTitle !== null ? (
                         <p>
-                          {alarm.memberNickName}님이 {alarm.repoViewTitle}를
-                          조회했습니다
+                          <Link
+                            href={`/user/${alarm.memberUuid}`}
+                            className="text-appBlue1"
+                          >
+                            {alarm.memberNickName}
+                          </Link>
+                          님이
+                          <Link
+                            href={`/repo/${alarm.repoViewId}`}
+                            className="text-appBlue1"
+                          >
+                            {alarm.repoViewTitle}
+                          </Link>
+                          를 조회했습니다
                         </p>
                       ) : (
-                        <p>{alarm.memberNickName}님이 팔로우했습니다</p>
+                        <p>
+                          <Link
+                            href={`/user/${alarm.memberUuid}`}
+                            className="text-appBlue1"
+                          >
+                            {alarm.memberNickName}
+                          </Link>
+                          님이 팔로우했습니다
+                        </p>
                       )}
                       {/* <p>{alarm.createAt}</p> */}
                     </li>
