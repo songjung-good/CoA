@@ -51,7 +51,8 @@ const Main = tw.main`
   flex-col
   items-center
   h-full
-  bg-background-dark
+  bg-cover
+  bg-main-bg
 `;
 
 const Header = tw.div`
@@ -78,9 +79,9 @@ const Description = tw.div`
   sm:justify-between
   max-w-screen-xl
   sm:flex-row
-  bg-cover
   border
   border-appGrey2
+  bg-cover
   bg-header-bg
 `;
 
