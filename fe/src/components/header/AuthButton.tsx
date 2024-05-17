@@ -11,7 +11,9 @@ export default function AuthButton({ hasJWT }: { hasJWT: boolean }) {
           <UserIconButton />
         </>
       ) : (
-        <Link href="/auth/login">로그인</Link>
+        <Link href="/auth/login" className="text-sm text-nowrap sm:text:xl">
+          로그인
+        </Link>
       )}
     </div>
   );
