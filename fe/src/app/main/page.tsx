@@ -51,7 +51,7 @@ const Main = tw.main`
   flex-col
   items-center
   h-full
-
+  bg-cover
 `;
 
 const Header = tw.div`
@@ -62,7 +62,6 @@ const Header = tw.div`
   flex flex-col
   sm:flex-row
   items-center
-  
 `;
 
 const Description = tw.div`
@@ -79,10 +78,10 @@ const Description = tw.div`
   sm:justify-between
   max-w-screen-xl
   sm:flex-row
-  bg-cover
   border
   border-appGrey2
-  bg-header-bg
+  bg-cover
+  bg-tailwindbg
 `;
 
 const TextWrapper = tw.div`

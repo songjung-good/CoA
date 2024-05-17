@@ -13,7 +13,7 @@ export default function Header() {
   const hasJWT = cookieStore.has("JWT");
 
   return (
-    <header className="p-4 border-b-2 flex flex-row mx-auto w-full justify-between items-center max-w-screen-xl">
+    <header className="p-4 border-b-2 flex flex-row mx-auto w-full justify-between items-center max-w-screen-xl bg-header-bg bg-cover">
       <Link href="/main">
         <div className="flex flex-row items-center">
           <Image

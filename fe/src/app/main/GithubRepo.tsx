@@ -109,6 +109,7 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
   return (
     <RepoList>
       {currentRepos.map((repo, key) => (
+        <li key={key}>
         <a
           href={repo.html_url}
           key={key}
@@ -134,6 +135,7 @@ const GithubRepo: React.FC<MyRepoProps> = ({ userID, isToken }) => {
             <p></p>
           </div>
         </a>
+        </li>
       ))}
       <Pagination>
         {getPageNumbers().map((pageNumber) => (
