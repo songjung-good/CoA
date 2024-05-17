@@ -298,7 +298,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
               {stacks.map((key, index) => (
                 <li
                   key={index}
-                  className={`flex justify-between items-center px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold border-2 hover:cursor-pointer`}
+                  className={`flex justify-between items-center px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold hover:cursor-pointer`}
                   style={{
                     padding: "6px 8px",
                     borderRadius: "9999px",

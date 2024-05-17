@@ -58,11 +58,11 @@ const RepoInfo: React.FC = () => {
         <div className="w-3/5 h-full lg:flex lg:flex-col lg:justify-between">
           <div className="mb-2 flex flex-col justify-between items-start lg:items-end w-full h-full">
             <div>
-              <p className="font-extrabold text-start">
+              <p className=" text-start">
                 프로젝트 기간 :
                 {`${repoInfo.repoStartDate} ~ ${repoInfo.repoEndDate} (${projectDays}일)`}
               </p>
-              <p className="font-extrabold text-start">
+              <p className=" text-start">
                 프로젝트 인원: {repoInfo.repoMemberCnt}명
               </p>
             </div>
@@ -79,7 +79,7 @@ const RepoInfo: React.FC = () => {
             {repoInfo.skillList.map((skill, index) => (
               <li
                 key={index}
-                className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold"
+                className="flex justify-between items-center border-appBlue1 px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold"
               >
                 {skill.codeName}
               </li>
