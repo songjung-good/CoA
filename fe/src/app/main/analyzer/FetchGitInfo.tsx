@@ -3,6 +3,7 @@
 // 컴포넌트
 import { ExtractUserInfo } from '@/app/main/analyzer/ExtractUserInfo';
 import UseAxios from '@/api/common/useAxios';
+import { error } from 'console';
 
 interface Contributor {
   id: number;
@@ -82,9 +83,7 @@ const fetchGitlabMembers = async (projectname: string, username: string): Promis
     if (projectsResponse.data.code === 803) {
       throw alert(projectsResponse.data.message)
     }
-    if (projectsResponse.data.code === 200) {
-      return JSON.parse(projectsResponse.data.result);
-    }
+    return JSON.parse(projectsResponse.data.result);
 
   } catch (error) {
     console.error('멤버 찾는데 실패하였습니다. : ', error);
