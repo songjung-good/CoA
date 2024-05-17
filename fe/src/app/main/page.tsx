@@ -3,7 +3,6 @@
 // 라이브러리
 import React from "react";
 import tw from "tailwind-styled-components";
-import { useStore } from "zustand";
 
 // 컴포넌트
 // URL 입력(레포지토리 분석을 위한)
