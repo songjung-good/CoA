@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.UUID;
@@ -41,7 +42,9 @@ public class AuthenticationService {
         return member;
 
     }
-    private Member updateOrCreateMember(OAuth2User oauthUser, String registrationId) {
+
+    @Transactional
+    public Member updateOrCreateMember(OAuth2User oauthUser, String registrationId) {
 
         SocialUserInfo userInfo = extractUserInfo(registrationId, oauthUser);
 

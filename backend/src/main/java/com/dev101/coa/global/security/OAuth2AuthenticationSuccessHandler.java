@@ -91,7 +91,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         super.onAuthenticationSuccess(request, response, authentication);
     }
 
-    private String determineRedirectUrl(HttpServletRequest request) throws Exception {
+    public String determineRedirectUrl(HttpServletRequest request) throws Exception {
 //        String refererHeader = request.getHeader("Referer"); // https -> http의 경우 헤더가 보안상 사라짐
 //        System.out.println("refererHeader = " + refererHeader);
         String urlString = request.getRequestURL().toString();

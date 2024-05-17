@@ -52,17 +52,9 @@ public class SecurityConfig {
 //                                .anyRequest().permitAll()
                                 .requestMatchers("/api/swagger-ui/**", "/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
-//                )
                 )
                 .addFilterBefore(new JwtAuthenticationCookieFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
 
-//                .exceptionHandling(exceptionHandling -> exceptionHandling
-//                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
-//                .formLogin(formLogin ->
-//                        formLogin.loginPage("/auth/login")
-////                                .failureHandler(new CustomAuthenticationFailureHandler()) // 실패 핸들러 추가
-//                                .permitAll()
-//                )
                 .httpBasic(AbstractHttpConfigurer::disable) // HTTP Basic 인증 비활성화
                 .formLogin(AbstractHttpConfigurer::disable) // Form Login 비활성화
                 .exceptionHandling(exceptionHandling -> exceptionHandling
@@ -85,7 +77,7 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler(oAuth2AuthenticationSuccessHandler)
-                        .failureHandler(new CustomAuthenticationFailureHandler()) // 실패 핸들러 추가
+                        .failureHandler(new CustomAuthenticationFailureHandler(oAuth2AuthenticationSuccessHandler)) // 실패 핸들러 추가
 
                 );
 
