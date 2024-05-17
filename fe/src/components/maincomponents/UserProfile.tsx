@@ -84,7 +84,6 @@ export default function UserProfile() {
     axios
       .get(`/api/member`)
       .then((res) => {
-        console.log(res.data.result);
         setUserInfo(res.data.result);
       })
       .catch((error) => {
@@ -98,7 +97,6 @@ export default function UserProfile() {
       axios
         .get(`/api/member/${userInfo.memberUuid}`)
         .then((res) => {
-          console.log(res.data.result);
           setUserCard(res.data.result);
         })
         .catch((error) => {
