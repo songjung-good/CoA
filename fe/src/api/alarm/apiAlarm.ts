@@ -8,7 +8,7 @@ interface getAlarmCountDataResponse {
 }
 
 export interface Alarm {
-  memberId: number;
+  memberUuid: number;
   memberNickName: string;
   repoViewId: number;
   repoViewTitle: string;

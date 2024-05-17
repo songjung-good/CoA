@@ -121,7 +121,7 @@ export default function MyInfoEditCard({
   const inputStyle = "bg-appGrey1 border hover:border-appBlue1";
   return (
     <div
-      className="card flex flex-col gap-4 absolute w-1/2"
+      className="card flex flex-col gap-4 absolute w-4/5"
       // onSubmit={onSubmit}
     >
       <button className="absolute right-4" onClick={closeEdit}>
@@ -142,6 +142,16 @@ export default function MyInfoEditCard({
             ))}
           </select>
         )}
+      </label>
+      <label htmlFor="introduce">
+        <p>자기 소개 글</p>
+        <textarea
+          id="introduce"
+          className={`${inputStyle} p-4 rounded-2xl w-full`}
+          rows={3}
+          value={introduce}
+          onChange={(e) => setIntroduce(e.target.value)}
+        />
       </label>
       <div>
         <label htmlFor="skillIdList">기술 스택</label>
@@ -176,16 +186,7 @@ export default function MyInfoEditCard({
           </datalist>
         )}
       </div>
-      <label htmlFor="introduce">
-        <p>자기 소개 글</p>
-        <textarea
-          id="introduce"
-          className={`${inputStyle} p-4 rounded-2xl w-full`}
-          rows={3}
-          value={introduce}
-          onChange={(e) => setIntroduce(e.target.value)}
-        />
-      </label>
+
       <div className="grid">
         <button
           onClick={onSubmit}

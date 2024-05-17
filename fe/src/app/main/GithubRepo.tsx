@@ -164,10 +164,8 @@ const RepoList = tw.ul`
 `;
 
 const Div = tw.div`
-  mx-auto
   my-1
   p-4
-  px-[12rem]
   flex
   flex-col
   justify-center
@@ -179,8 +177,8 @@ const Button = tw.button`
   hover:bg-blue-400
   text-black
   font-bold
-  py-[0.25rem]
-  px-[0.75rem]
+  py-[0.75rem]
+  px-[1.25rem]
   mt-[1rem]
   text-md
   rounded

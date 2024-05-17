@@ -166,10 +166,8 @@ const RepoItem = tw.li`
 `;
 
 const Div = tw.div`
-  mx-auto
   my-1
   p-4
-  px-[12rem]
   flex
   flex-col
   justify-center
@@ -177,7 +175,8 @@ const Div = tw.div`
 `;
 
 const Button = tw.button`
-  bg-appYellow
+  bg-yellow-200
+  hover:bg-yellow-400
   text-black
   font-bold
   py-[0.75rem]
@@ -185,6 +184,7 @@ const Button = tw.button`
   my-[1rem]
   text-md
   rounded
+  m-2
 `;
 
 const Pagination = tw.div`

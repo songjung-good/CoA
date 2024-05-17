@@ -11,19 +11,19 @@ import repositoryStore from "./../../../store/repos";
 
 export default function UserPage({ params }: { params: { id: string } }) {
   const [tabIndex, setTabIndex] = useState(0);
-  const userName = userStore((state) => state.githubUserName);
-  const setRepos = repositoryStore((state) => state.setRepos);
-  useEffect(() => {
-    // console.log("userName");
-    // console.log(userName);
-    if (userName !== null) {
-      setRepos(userName);
-    }
-  }, [userName, setRepos]);
-  //     const setRepos1 = repositoryStore((state) => state.setRepos1);
+  // const userName = userStore((state) => state.githubUserName);
+  // const setRepos = repositoryStore((state) => state.setRepos);
   // useEffect(() => {
-  //   setRepos1(params.id);
-  // }, []);
+  //   // console.log("userName");
+  //   // console.log(userName);
+  //   if (userName !== null) {
+  //     setRepos(userName);
+  //   }
+  // }, [userName, setRepos]);
+  const setRepos1 = repositoryStore((state) => state.setRepos1);
+  useEffect(() => {
+    setRepos1(params.id);
+  }, []);
   //탭에 따른 랜더링될 페이지
   const renderTabContent = () => {
     switch (tabIndex) {
@@ -45,7 +45,11 @@ export default function UserPage({ params }: { params: { id: string } }) {
   };
   return (
     <>
-      <UserPageTabBar onClickTap={onClickTap} tabIndex={tabIndex} />
+      <UserPageTabBar
+        onClickTap={onClickTap}
+        tabIndex={tabIndex}
+        uuid={params.id}
+      />
       {renderTabContent()}
     </>
   );
