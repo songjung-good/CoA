@@ -79,7 +79,7 @@ const RepoInfo: React.FC = () => {
             {repoInfo.skillList.map((skill, index) => (
               <li
                 key={index}
-                className="flex justify-between items-center border-2 border-appBlue1 px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold"
+                className="flex justify-between items-center border-appBlue1 px-4 py-2 mr-4 mb-2 shadow-lg rounded-lg font-bold"
               >
                 {skill.codeName}
               </li>
