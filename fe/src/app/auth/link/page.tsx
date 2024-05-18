@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import tw from "tailwind-styled-components";
+import Link from "next/link";
 
 import UseAxios from "@/api/common/useAxios";
 import Image from "next/image";
@@ -128,10 +130,16 @@ export default function LinkPage() {
       );
     }
   };
+
   return (
     <main className="bg-appGrey1  flex flex-col items-center">
       <div className="max-w-screen-xl w-full flex flex-col py-4 gap-4">
-        <h1 className="text-xl font-bold">계정 연동하기</h1>
+        <Header>
+          <h1 className="text-xl font-bold">계정 연동하기</h1>
+          <Link href='/info'>
+            <Button>토큰 발급 안내</Button>
+          </Link>
+        </Header>
         <section className="card flex flex-col md:flex-row gap-4 justify-between">
           <div className="flex gap-4">
             <div>
@@ -400,3 +408,31 @@ export default function LinkPage() {
     </main>
   );
 }
+
+const Header = tw.header`
+  w-full
+  flex
+  justify-between
+  items-center
+  gap-4
+  p-4
+  bg-white
+  shadow-lg
+  rounded-t-xl
+`;
+
+const Button = tw.a`
+  inline-flex
+  items-center
+  justify-center
+  px-2
+  py-1
+  border
+  border-transparent
+  text-base
+  font-medium
+  rounded-md
+  text-white
+  bg-black
+  hover:bg-opacity-75
+  `;
