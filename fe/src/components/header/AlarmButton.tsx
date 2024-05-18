@@ -42,7 +42,7 @@ export default function AlarmButton() {
 
   return (
     <div className="relative flex justify-center items-center" ref={modalRef}>
-      <button id='alart' onClick={handleAlarmButton}>
+      <button id="goAlarm" aria-label="알람 확인" onClick={handleAlarmButton}>
         <div className="w-5 h-5 md:w-7 md:h-7 lg:w-10 lg:h-10">
           <BellIcon />
         </div>
@@ -50,11 +50,6 @@ export default function AlarmButton() {
           <div className="absolute top-0 right-0 bg-red-500 rounded-full w-4 h-4"></div>
         ) : null}
       </button>
-      {/* {alarmModal ? (
-        <div className="absolute top-10 right-0 card z-50">
-          <AlarmModal />
-        </div>
-      ) : null} */}
     </div>
   );
 }

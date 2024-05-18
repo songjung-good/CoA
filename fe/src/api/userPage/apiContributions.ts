@@ -31,7 +31,7 @@ export const getGithubEventsData = async (
     const response = await customAxios.get(
       `/api/external/events/github/${memberUuid}`,
     );
-    console.log(response);
+    // console.log(response);
     if (response.data.code === 200) {
       return response.data.result;
     } else {

@@ -41,8 +41,8 @@ export const getGithubLOCData = async (memberUuid: string) => {
     const response = await UseAxios().get<GithubLOC>(
       `/api/member/${memberUuid}/lines`,
     );
-    console.log("getGithubLOCData");
-    console.log(response);
+    // console.log("getGithubLOCData");
+    // console.log(response);
     const data: Repository[] = response.data.result;
     if (data.length !== 0) {
       return data;

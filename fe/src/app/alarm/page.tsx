@@ -39,7 +39,7 @@ export default function AlarmPage() {
                   {alarms.map((alarm, index) => (
                     <li key={index} className="bg-white p-4 border">
                       {alarm.repoViewTitle !== null ? (
-                        <p>
+                        <>
                           <Link
                             href={`/user/${alarm.memberUuid}`}
                             className="text-appBlue1"
@@ -54,9 +54,9 @@ export default function AlarmPage() {
                             {alarm.repoViewTitle}
                           </Link>
                           를 조회했습니다
-                        </p>
+                        </>
                       ) : (
-                        <p>
+                        <>
                           <Link
                             href={`/user/${alarm.memberUuid}`}
                             className="text-appBlue1"
@@ -64,9 +64,8 @@ export default function AlarmPage() {
                             {alarm.memberNickName}
                           </Link>
                           님이 팔로우했습니다
-                        </p>
+                        </>
                       )}
-                      {/* <p>{alarm.createAt}</p> */}
                     </li>
                   ))}
                 </ul>

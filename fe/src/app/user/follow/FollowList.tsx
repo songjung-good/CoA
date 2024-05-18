@@ -29,17 +29,11 @@ interface ApiResponse {
   result: Member[];
 }
 
-// interface api {
-//   isSuccess: boolean;
-//   message: string;
-//   code: number;
-//   result: Member[];
-// }
 const noFollowData = [
   {
     memberUuid: "no-follow-user",
     memberNickName: "팔로우한 유저가 없어요!",
-    memberImg: "/image/logo200.png",
+    memberImg: "/image/logo200.webp",
     memberIntro: `다른 유저를 팔로우 해보세요!`,
     skillList: [],
     memberJobCodeId: 0,
@@ -58,8 +52,8 @@ export default function FollowList() {
       const bookmarksResponse = await UseAxios().get<ApiResponse>(
         "/api/member/bookmarks",
       );
-      console.log(bookmarksResponse);
-      console.log(bookmarksResponse.data.isSuccess);
+      // console.log(bookmarksResponse);
+      // console.log(bookmarksResponse.data.isSuccess);
       if (bookmarksResponse.data.isSuccess === true) {
         if (bookmarksResponse?.data.result.length === 0) {
           setData(noFollowData);
@@ -81,8 +75,8 @@ export default function FollowList() {
 
   useEffect(() => {
     fetchFollowData();
-    console.log(response.result);
-    console.log(response.result.commonCodeList[2].codes);
+    // console.log(response.result);
+    // console.log(response.result.commonCodeList[2].codes);
   }, []);
 
   return (

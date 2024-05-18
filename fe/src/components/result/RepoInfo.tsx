@@ -28,7 +28,7 @@ const RepoInfo: React.FC = () => {
           <div className="flex w-full items-center mb-5">
             {repoInfo.repoViewPath.includes("github") ? (
               <Image
-                src="/image/githubSSO.png"
+                src="/image/githubSSO.svg"
                 alt="github logo"
                 width={30}
                 height={30}
