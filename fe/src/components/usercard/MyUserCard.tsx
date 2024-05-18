@@ -66,6 +66,7 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
               {myData &&
                 (myData?.isMine ? (
                   <button
+                    aria-label="유저정보 수정하기"
                     onClick={() => {
                       setIsEdit(!isEdit);
                     }}

@@ -11,6 +11,9 @@ export default function UserIconButton() {
   const userImage = userStore((state) => state.userImage);
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const modalClose = () => {
+    setIsOpen(false);
+  };
   const axiosInstance = UseAxios();
   const { setResponse } = useCommonCodeStore.getState();
 
@@ -79,7 +82,7 @@ export default function UserIconButton() {
           />
         </div>
       </button>
-      {isOpen ? <UserMenu /> : null}
+      {isOpen ? <UserMenu modalClose={modalClose} /> : null}
     </div>
   );
 }

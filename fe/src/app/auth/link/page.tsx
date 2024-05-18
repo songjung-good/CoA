@@ -136,8 +136,23 @@ export default function LinkPage() {
       <div className="max-w-screen-xl w-full flex flex-col py-4 gap-4">
         <Header>
           <h1 className="text-xl font-bold">계정 연동하기</h1>
-          <Link href='/info'>
-            <Button>토큰 발급 안내</Button>
+          <Link
+            href="/info"
+            className="  inline-flex
+  items-center
+  justify-center
+  px-2
+  py-1
+  border
+  border-transparent
+  text-base
+  font-medium
+  rounded-md
+  text-white
+  bg-black
+  hover:bg-opacity-75"
+          >
+            토큰 발급 안내
           </Link>
         </Header>
         <section className="card flex flex-col md:flex-row gap-4 justify-between">
@@ -160,9 +175,10 @@ export default function LinkPage() {
               </p>
             </div>
           </div>
-          <div>
+          <div className="max-w-52">
             <button
-              className="bg-white hover:bg-appGrey2 border shadow-lg rounded-t-xl p-4  flex gap-2"
+              aria-label="깃허브 연동하기"
+              className="bg-white hover:bg-appGrey2 border shadow-lg rounded-t-xl p-4  flex gap-2  w-full"
               onClick={handleGithubLogin}
             >
               <Image
@@ -175,7 +191,8 @@ export default function LinkPage() {
               Sign in with GitHub
             </button>
             <button
-              className=" bg-appGrey1 hover:bg-appGrey2 border shadow-lg rounded-b-xl px-4 py-2 flex gap-2 w-full"
+              aria-label="깃허브 토큰 등록하기"
+              className=" bg-appGrey1 hover:bg-appGrey2 border shadow-lg rounded-b-xl px-4 py-2 flex gap-2  w-full"
               onClick={() => {
                 setGithubTokenModal(!githubTokenModal);
               }}
@@ -204,6 +221,7 @@ export default function LinkPage() {
                     access token 등록
                   </div>
                   <button
+                    aria-label="깃허브 토큰 등록 취소하기"
                     onClick={() => {
                       setGithubTokenModal(false);
                     }}
@@ -219,6 +237,7 @@ export default function LinkPage() {
                     onChange={(e) => setGithubToken(e.target.value)}
                   />
                   <button
+                    aria-label="깃허브 토큰 저장하기"
                     className="py-1 px-2 bg-appGreen rounded-r-xl"
                     onClick={saveAccessTokenGithub}
                   >
@@ -249,9 +268,9 @@ export default function LinkPage() {
               </p>
             </div>
           </div>
-          <div>
+          <div className="max-w-52">
             <button
-              className="bg-white hover:bg-appGrey2 border shadow-lg rounded-t-xl p-4 flex gap-2"
+              className="bg-white hover:bg-appGrey2 border shadow-lg rounded-t-xl p-4 flex gap-2 w-full"
               onClick={handleGitLabLogin}
             >
               <Image
@@ -333,7 +352,7 @@ export default function LinkPage() {
             </div>
           </div>
           <div>
-            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2">
+            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2 w-fit">
               <div className="flex gap-2">
                 <Image
                   src="/image/oauth/solvedAC.svg"
@@ -377,7 +396,7 @@ export default function LinkPage() {
             </div>
           </div>
           <div>
-            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2">
+            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2 w-fit">
               <div className="flex gap-2">
                 <Image
                   src="/image/oauth/CodeForces.svg"
@@ -420,19 +439,3 @@ const Header = tw.header`
   shadow-lg
   rounded-t-xl
 `;
-
-const Button = tw.a`
-  inline-flex
-  items-center
-  justify-center
-  px-2
-  py-1
-  border
-  border-transparent
-  text-base
-  font-medium
-  rounded-md
-  text-white
-  bg-black
-  hover:bg-opacity-75
-  `;
