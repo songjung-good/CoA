@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "COA",
   description: "커밋 기반 기여도 분석 사이트",
   icons: {
-    icon: "/image/logo48.png",
+    icon: "/image/logo.webp",
   },
 };
 
@@ -37,7 +37,7 @@ export default function RootLayout({
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="robots" content="index, follow" />
-        <link rel="icon" href="/image/logo48.png" />
+        <link rel="icon" href="/image/logo.webp" />
 
         {/* Open Graph */}
         <meta property="og:type" content="website" />

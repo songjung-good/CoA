@@ -17,7 +17,7 @@ export default function Header() {
       <Link href="/main">
         <div className="flex flex-row items-center">
           <Image
-            src="/image/logo48.png"
+            src="/image/logo48.webp"
             alt="logo"
             width={48}
             height={48}
@@ -25,7 +25,7 @@ export default function Header() {
           />
           <div className="hidden md:block">
             <Image
-              src="/image/textLogo48.png"
+              src="/image/textLogo48.webp"
               alt="logoText"
               width={128}
               height={40}
