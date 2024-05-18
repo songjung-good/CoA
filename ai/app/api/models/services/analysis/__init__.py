@@ -68,6 +68,7 @@ class AnalysisService:
             # 리드미 생성
             self._update_status(dto, AnalysisStatus.GENERATING_README)
             readme_result = await self.ai_service.generate_readme(chain, preprocessed_content_doc)
+            logging.error(f'README: {readme_result}')
 
             # Mutex chain 되돌리기
             await self.ai_mutex.release(chain)

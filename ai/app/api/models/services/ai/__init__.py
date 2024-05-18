@@ -41,7 +41,7 @@ class AiService:
 
             logging.error('README TOTAL TOKEN CNT: ' + str(cb.total_tokens))
             logging.error('README TOTAL TOKEN COST: ' + f'$ {cb.total_cost:.6f}')
-            logging.error('README TOTAL TIME:' + f'{end - start:.2f} secs')
+            logging.error('README TOTAL TIME: ' + f'{end - start:.2f} secs')
             return result
 
     async def score_commits(self, chain: Chain, data: list[Document]) -> CommitScoreDto:
@@ -57,8 +57,8 @@ class AiService:
 
             end = time.time()
 
-            logging.error('README TOTAL TOKEN CNT: ' + str(cb.total_tokens))
-            logging.error('README TOTAL TOKEN COST: ' + f'$ {cb.total_cost:.6f}')
-            logging.error('README TOTAL TIME: ' + f'{end - start:.2f} secs')
+            logging.error('COMMITS TOTAL TOKEN CNT: ' + str(cb.total_tokens))
+            logging.error('COMMITS TOTAL TOKEN COST: ' + f'$ {cb.total_cost:.6f}')
+            logging.error('COMMITS TOTAL TIME: ' + f'{end - start:.2f} secs')
 
             return result
