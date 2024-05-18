@@ -1,82 +1,82 @@
 # C
-.c
+*.c
 # C++
-.cpp, .cxx, .cc, .c++
+*.cpp, *.cxx, *.cc, *.c++
 # C#
-.cs
+*.cs
 # Java
-.java
+*.java
 # JavaScript
-.js
+*.js
 # TypeScript
-.ts
+*.ts
 # Python
-.py
+*.py
 # Ruby
-.rb
+*.rb
 # PHP
-.php
+*.php
 # Swift
-.swift
+*.swift
 # Kotlin
-.kt, .kts
+*.kt, *.kts
 # Go
-.go
+*.go
 # Rust
-.rs
+*.rs
 # Dart
-.dart
+*.dart
 # Perl
-.pl, .pm
+*.pl, *.pm
 # Objective-C
-.m, .mm
+*.m, *.mm
 # HTML
-.html, .htm
+*.html, *.htm
 # CSS
-.css
+*.css
 # Sass/SCSS
-.scss, .sass
+*.scss, *.sass
 # R
-.R
+*.R
 # MATLAB
-.m
+*.m
 # Markdown
-.md, .markdown
+*.md, *.markdown
 # Haskell
-.hs
+*.hs
 # Erlang
-.erl, .hrl
+*.erl, *.hrl
 # Elixir
-.ex, .exs
+*.ex, *.exs
 # F#
-.fs, .fsi, .fsx
+*.fs, *.fsi, *.fsx
 # OCaml
-.ml, .mli
+*.ml, *.mli
 # Scala
-.scala
+*.scala
 # Scheme
-.scm, .ss
+*.scm, *.ss
 # Lisp
-.lisp, .lsp
+*.lisp, *.lsp
 # Prolog
-.pl, .pro
+*.pl, *.pro
 # Vue.js
-.vue
+*.vue
 # React
-.jsx, .tsx
+*.jsx, *.tsx
 # Svelte
-.svelte
+*.svelte
 # Pug (Former Jade)
-.pug
+*.pug
 # EJS (Embedded JavaScript)
-.ejs
+*.ejs
 # Handlebars
-.hbs, .handlebars
+*.hbs, *.handlebars
 # Mustache
-.mustache
+*.mustache
 # Liquid
-.liquid
+*.liquid
 # Smarty
-.tpl
+*.tpl
 # Stylus
-.styl
+*.styl

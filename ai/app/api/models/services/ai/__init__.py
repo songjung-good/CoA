@@ -22,6 +22,7 @@ class AiService:
     async def preprocess_commits(self, commit_data: list[dict[Any, Any]]) -> list[Document]:
         commit_loader = RepoCommitLoader(commit_data)
         docs = commit_loader.load()
+        print(len(docs))
         split_docs = self.text_splitter.split_documents(docs)
         return split_docs
 
