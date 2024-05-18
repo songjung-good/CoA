@@ -24,7 +24,8 @@ class RepoClient(Generic[R], metaclass=ABCMeta):
     }
 
     @abstractmethod
-    def __init__(self, request: R, ignore_spec: PathSpec):
+    def __init__(self, request: R, accept_spec: PathSpec, ignore_spec: PathSpec):
+        self.accept_spec = accept_spec
         self.ignore_spec = ignore_spec
         pass
 

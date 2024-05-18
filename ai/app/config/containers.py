@@ -20,6 +20,10 @@ from api.models.services.client.github_rest import GithubRestClient
 from api.models.services.client.gitlab import GitLabClient
 
 
+def load_analysisaccept() -> PathSpec:
+    with open('resources/.analysisaccept', 'r') as f:
+        return PathSpec.from_lines(GitWildMatchPattern, f)
+
 def load_analysisignore() -> PathSpec:
     with open('resources/.analysisignore', 'r') as f:
         return PathSpec.from_lines(GitWildMatchPattern, f)
@@ -44,6 +48,7 @@ class Container(DeclarativeContainer):
         port=config.redis.port
     )
 
+    accept_spec = providers.Resource(load_analysisaccept)
     ignore_spec = providers.Resource(load_analysisignore)
 
     repo_client: dict[R, providers.Factory[RepoClient[R]]] = {

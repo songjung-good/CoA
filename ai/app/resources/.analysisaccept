@@ -1,0 +1,82 @@
+# C
+.c
+# C++
+.cpp, .cxx, .cc, .c++
+# C#
+.cs
+# Java
+.java
+# JavaScript
+.js
+# TypeScript
+.ts
+# Python
+.py
+# Ruby
+.rb
+# PHP
+.php
+# Swift
+.swift
+# Kotlin
+.kt, .kts
+# Go
+.go
+# Rust
+.rs
+# Dart
+.dart
+# Perl
+.pl, .pm
+# Objective-C
+.m, .mm
+# HTML
+.html, .htm
+# CSS
+.css
+# Sass/SCSS
+.scss, .sass
+# R
+.R
+# MATLAB
+.m
+# Markdown
+.md, .markdown
+# Haskell
+.hs
+# Erlang
+.erl, .hrl
+# Elixir
+.ex, .exs
+# F#
+.fs, .fsi, .fsx
+# OCaml
+.ml, .mli
+# Scala
+.scala
+# Scheme
+.scm, .ss
+# Lisp
+.lisp, .lsp
+# Prolog
+.pl, .pro
+# Vue.js
+.vue
+# React
+.jsx, .tsx
+# Svelte
+.svelte
+# Pug (구 Jade)
+.pug
+# EJS (Embedded JavaScript)
+.ejs
+# Handlebars
+.hbs, .handlebars
+# Mustache
+.mustache
+# Liquid
+.liquid
+# Smarty
+.tpl
+# Stylus
+.styl
