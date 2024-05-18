@@ -1,4 +1,5 @@
 import json
+import logging
 import time
 from typing import Any
 
@@ -38,9 +39,9 @@ class AiService:
 
             end = time.time()
 
-            print('README TOTAL TOKEN CNT:', cb.total_tokens)
-            print('README TOTAL TOKEN COST:', f'$ {cb.total_cost:.6f}')
-            print('README TOTAL TIME:', f'{end - start:.2f} secs')
+            logging.error('README TOTAL TOKEN CNT: ' + str(cb.total_tokens))
+            logging.error('README TOTAL TOKEN COST: ' + f'$ {cb.total_cost:.6f}')
+            logging.error('README TOTAL TIME:' + f'{end - start:.2f} secs')
             return result
 
     async def score_commits(self, chain: Chain, data: list[Document]) -> CommitScoreDto:
@@ -56,8 +57,8 @@ class AiService:
 
             end = time.time()
 
-            print('README TOTAL TOKEN CNT:', cb.total_tokens)
-            print('README TOTAL TOKEN COST:', f'$ {cb.total_cost:.6f}')
-            print('README TOTAL TIME:', f'{end - start:.2f} secs')
+            logging.error('README TOTAL TOKEN CNT: ' + str(cb.total_tokens))
+            logging.error('README TOTAL TOKEN COST: ' + f'$ {cb.total_cost:.6f}')
+            logging.error('README TOTAL TIME: ' + f'{end - start:.2f} secs')
 
             return result

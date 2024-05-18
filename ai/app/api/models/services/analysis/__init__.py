@@ -1,3 +1,4 @@
+import logging
 import traceback
 from typing import TypeVar
 
@@ -43,10 +44,10 @@ class AnalysisService:
             # 레포에서 데이터 가져오기
             self._update_status(dto, AnalysisStatus.REQUESTING_TO_REPO)
 
-            print(request.analysisId, 'START TO COLLECTING DATA')
+            logging.error(f'{request.analysisId} START TO COLLECTING DATA')
             repo_data = await repo_client.load(request.userName)
-            print(request.analysisId, 'FILTERED FILE CNT:', len(repo_data['content']))
-            print(request.analysisId, 'FILTERED COMMITS CNT:', len(repo_data['commits']))
+            logging.error(f'{request.analysisId} FILTERED FILE CNT: {len(repo_data["content"])}')
+            logging.error(f'{request.analysisId} FILTERED COMMITS CNT: {len(repo_data["commits"])}')
 
             # total_commit_cnt, personal_commit_cnt 세기
             # TODO
@@ -55,14 +56,14 @@ class AnalysisService:
 
             preprocessed_content_doc = await self.ai_service.preprocess_content(repo_data['content'])
             preprocessed_commits_doc = await self.ai_service.preprocess_commits(repo_data['commits'])
-            print(request.analysisId, 'FILTERED SPLIT FILE DOCS CNT:', len(repo_data['content']))
-            print(request.analysisId, 'FILTERED SPLIT COMMIT DOCS CNT:', len(repo_data['commits']))
+            logging.error(request.analysisId + ' FILTERED SPLIT FILE DOCS CNT: ' + str(len(repo_data['content'])))
+            logging.error(request.analysisId + ' FILTERED SPLIT COMMIT DOCS CNT: ' + str(len(repo_data['commits'])))
 
             # AI 서비스 Readme Lock 대기
             # TODO ...
             chain = await self.ai_mutex.wait_for_readme_chain(request.analysisId)
 
-            print(request.analysisId, 'START TO GENERATE README')
+            logging.error(request.analysisId + ' START TO GENERATE README')
 
             # 리드미 생성
             self._update_status(dto, AnalysisStatus.GENERATING_README)
@@ -74,6 +75,8 @@ class AnalysisService:
             # AI 서비스 Commit Lock 대기
             # TODO ...
             chain = await self.ai_mutex.wait_for_commit_chain(request.analysisId)
+
+            logging.error(request.analysisId + ' START TO SCORE COMMITS')
 
             # 커밋 점수 매기기
             self._update_status(dto, AnalysisStatus.SCORING_COMMITS)
