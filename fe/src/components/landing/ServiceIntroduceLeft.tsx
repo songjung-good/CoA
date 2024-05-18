@@ -13,7 +13,7 @@ const highlightText = (text: string, wordsToHighlight: string[]) => {
   const parts = text.split(new RegExp(`(${wordsToHighlight.join("|")})`, "gi"));
   return parts.map((part, index) =>
     wordsToHighlight.includes(part) ? (
-      <span key={index} className="text-appBlue1 text-xl font-medium">
+      <span key={index} className="text-appBlue1 text-2xl font-medium">
         {part}
       </span>
     ) : (
@@ -66,26 +66,35 @@ const ServiceIntroduceLeft = forwardRef<
         overflow: "hidden",
       }}
     >
-      <div className="flex w-1/2 h-1/2 relative justify-center items-center">
-        <Image src={image} fill style={{ objectFit: "cover" }} alt="analysis" />
-      </div>
-      <div className="w-1/3 flex flex-col justify-evenly items-center py-5 px-10 text-center bg-white min-w-[350px] min-h-[472.5px] rounded-lg shadow-lg">
-        <p className="text-4xl mb-2 text-appBlue1 font-bold">{content.title}</p>
-        <p
-          className="whitespace-pre-wrap break-words mb-2"
-          style={{ wordBreak: "keep-all", whiteSpace: "pre-wrap" }}
-        >
-          {highlightText(content.description, wordsToHighlight)}
-        </p>
-        <div className="flex flex-wrap justify-center">
-          {content.hashtags.map((tag: string, key: string) => (
-            <p
-              key={key}
-              className="border-2 mr-2 mb-2 px-2 py-1 rounded-lg hover:bg-appGrey1 text-gray-400"
-            >
-              {tag}
-            </p>
-          ))}
+      <p className="text-3xl sm:text-6xl text-appBlue1 font-bold mb-[5%] text-center">
+        {content.title}
+      </p>
+      <div className="flex justify-between w-full">
+        <div className="flex w-1/2 h-1/2 relative justify-center items-center min-h-[472.5px]">
+          <Image
+            src={image}
+            fill
+            style={{ objectFit: "cover" }}
+            alt="analysis"
+          />
+        </div>
+        <div className="w-2/5 h-full flex flex-col justify-around items-center text-center bg-white min-w-[350px] min-h-[472.5px]">
+          <p
+            className="whitespace-pre-wrap break-words mb-2 text-xl"
+            style={{ wordBreak: "keep-all", whiteSpace: "pre-wrap" }}
+          >
+            {highlightText(content.description, wordsToHighlight)}
+          </p>
+          <div className="flex flex-wrap justify-center">
+            {content.hashtags.map((tag: string, key: string) => (
+              <p
+                key={key}
+                className="border-2 mr-2 mb-2 px-2 py-1 rounded-lg hover:bg-appGrey1 duration-300 text-gray-400"
+              >
+                {tag}
+              </p>
+            ))}
+          </div>
         </div>
       </div>
     </Service>
@@ -95,5 +104,5 @@ const ServiceIntroduceLeft = forwardRef<
 export default ServiceIntroduceLeft;
 
 const Service = tw.div`
-  flex my-10 justify-around items-center mx-32 h-screen overflow-hidden
+  flex flex-col py-10 justify-evenly items-center px-24 h-screen overflow-hidden bg-white
 `;

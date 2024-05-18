@@ -222,7 +222,7 @@ text-center font-extrabold mt-16
 `;
 
 const IntroBar = tw.div`
-bg-white py-5 rounded-t-3xl w-full text-center shadow-sm 
+bg-appGrey1 py-5 rounded-t-3xl w-full text-center shadow-sm 
 `;
 
 const ServiceComponent = tw.div`
