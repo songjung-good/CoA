@@ -1,8 +1,11 @@
 .gitignore
 
+# Env
+*.env
+
 # Node
 package.json
-node_modules/
+**/node_modules/
 
 # NPM
 package-lock.json
@@ -18,7 +21,7 @@ pom.xml
 
 # Gradle
 build.gradle
-gradle/
+**/gradle/
 gradle
 gradlew
 settings.gradle
