@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "COA",
   description: "커밋 기반 기여도 분석 사이트",
   icons: {
-    icon: "/image/logo.webp",
+    icon: "/image/logo48.webp",
   },
 };
 

@@ -33,7 +33,7 @@ const noFollowData = [
   {
     memberUuid: "no-follow-user",
     memberNickName: "팔로우한 유저가 없어요!",
-    memberImg: "/image/logo200.png",
+    memberImg: "/image/logo200.webp",
     memberIntro: `다른 유저를 팔로우 해보세요!`,
     skillList: [],
     memberJobCodeId: 0,
