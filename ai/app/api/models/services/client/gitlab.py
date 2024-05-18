@@ -15,7 +15,7 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
     GitLab REST API에서 파일, 커밋 데이터를 가져오기 위한 클라이언트입니다.
     """
 
-    def __init__(self, request: GitLabAnalysisRequest, ignore_spec: PathSpec):
+    def __init__(self, request: GitLabAnalysisRequest, accept_spec: PathSpec, ignore_spec: PathSpec):
         """
         GitLab 클라이언트를 만듭니다.
 
@@ -23,7 +23,7 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
             base_url: GitLab 저장소 기본 URL (예: https://github.example.com)
             project_id: GitLab Project ID
         """
-        super().__init__(request, ignore_spec)
+        super().__init__(request, accept_spec, ignore_spec)
         self.base_url = request.baseUrl
         self.project_id = request.projectId
         self.private_token = request.privateToken
@@ -61,6 +61,11 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
 
         for entry in tree_json:
             if entry['type'] == 'tree':     # 해당 entry는 directory
+                continue
+            path = entry['path']
+            if not self.accept_spec.match_file(path): # 허용된 파일인지 검사
+                continue
+            if self.ignore_spec.match_file(path):  # 무시할 파일일지 검사
                 continue
 
             file_json = await self._request_json(
