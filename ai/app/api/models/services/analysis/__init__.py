@@ -4,7 +4,7 @@ from typing import TypeVar
 from redis import Redis
 
 from api.models.code import AnalysisStatus, analysis_percentages
-from api.models.dto import AnalysisRequest, AnalysisDataDto
+from api.models.dto import AnalysisRequest, AnalysisDataDto, AiResultDto
 from api.models.services.ai import AiService
 from api.models.services.ai.mutex import AiMutex
 from api.models.services.client import RepoClient
@@ -58,7 +58,7 @@ class AnalysisService:
 
             # 리드미 생성
             self._update_status(dto, AnalysisStatus.GENERATING_README)
-            dto.result.readme = await self.ai_service.generate_readme(chain, preprocessed_content_doc)
+            readme_result = await self.ai_service.generate_readme(chain, preprocessed_content_doc)
 
             # Mutex chain 되돌리기
             await self.ai_mutex.release(chain)
@@ -69,10 +69,18 @@ class AnalysisService:
 
             # 커밋 점수 매기기
             self._update_status(dto, AnalysisStatus.SCORING_COMMITS)
-            dto.result.commit_score = await self.ai_service.score_commits(chain, preprocessed_commits_doc)
+            commit_result = await self.ai_service.score_commits(chain, preprocessed_commits_doc)
 
             # Mutex chain 되돌리기
             await self.ai_mutex.release(chain)
+
+            dto.result = AiResultDto(
+                total_commit_cnt=0,
+                personal_commit_cnt=0,
+                readme=readme_result,
+                repo_view_result='',
+                commit_score=commit_result
+            )
 
             # 완료 처리
             self._update_status(dto, AnalysisStatus.DONE)
