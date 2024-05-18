@@ -188,7 +188,7 @@ export default function LinkPage() {
                 <div className="flex justify-between">
                   <div className="flex gap-2">
                     <Image
-                      src="/image/githubSSO.png"
+                      src="/image/githubSSO.svg"
                       alt="githubSSO"
                       width={24}
                       height={24}

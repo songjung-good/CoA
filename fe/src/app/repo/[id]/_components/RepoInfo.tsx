@@ -46,13 +46,17 @@ export default function RepoInfo() {
         <div className="flex items-center mb-5">
           {repoInfo.repoViewPath.includes("github") ? (
             <Image
-              src="/image/githubSSO.png"
+              src="/image/githubSSO.svg"
               alt="github logo"
-              width={30} height={30}
+              width={30}
+              height={30}
             ></Image>
           ) : (
-            <Image 
-              src="/image/googleSSO.png" alt="gitlab logo" width={30} height={30}
+            <Image
+              src="/image/googleSSO.png"
+              alt="gitlab logo"
+              width={30}
+              height={30}
             ></Image>
           )}
           <Link
