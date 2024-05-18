@@ -56,8 +56,8 @@ class AnalysisService:
 
             preprocessed_content_doc = await self.ai_service.preprocess_content(repo_data['content'])
             preprocessed_commits_doc = await self.ai_service.preprocess_commits(repo_data['commits'])
-            logging.error(request.analysisId + ' FILTERED SPLIT FILE DOCS CNT: ' + str(len(repo_data['content'])))
-            logging.error(request.analysisId + ' FILTERED SPLIT COMMIT DOCS CNT: ' + str(len(repo_data['commits'])))
+            logging.error(request.analysisId + ' FILTERED SPLIT FILE DOCS CNT: ' + str(len(preprocessed_content_doc)))
+            logging.error(request.analysisId + ' FILTERED SPLIT COMMIT DOCS CNT: ' + str(len(preprocessed_commits_doc)))
 
             # AI 서비스 Readme Lock 대기
             # TODO ...
