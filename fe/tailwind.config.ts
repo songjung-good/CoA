@@ -10,9 +10,9 @@ const config: Config = {
     extend: {
       backgroundImage: {
         analyze: "url('/image/urlAnalyze.png')",
-        'tailwindbg': "url('/image/tailwindbg.png')",
-        'blur-circle': "url('/image/blur-circle.png')",
-        'header-bg': "url('/image/header-bg.png')",
+        'tailwindbg': "url('/image/tailwindbg.webp')",
+        'blur-circle': "url('/image/blur-circle.webp')",
+        'header-bg': "url('/image/header-bg.webp')",
       },
       colors: {
         appBlue1: "#48CAF8",
