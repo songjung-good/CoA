@@ -52,8 +52,8 @@ class Container(DeclarativeContainer):
     ignore_spec = providers.Resource(load_analysisignore)
 
     repo_client: dict[R, providers.Factory[RepoClient[R]]] = {
-        GithubAnalysisRequest: providers.Factory(GithubRestClient, ignore_spec=ignore_spec),
-        GitLabAnalysisRequest: providers.Factory(GitLabClient, ignore_spec=ignore_spec)
+        GithubAnalysisRequest: providers.Factory(GithubRestClient, accept_spec=accept_spec, ignore_spec=ignore_spec),
+        GitLabAnalysisRequest: providers.Factory(GitLabClient, accept_spec=accept_spec, ignore_spec=ignore_spec)
     }
 
     llm = providers.Resource(

@@ -66,7 +66,7 @@
 .jsx, .tsx
 # Svelte
 .svelte
-# Pug (구 Jade)
+# Pug (Former Jade)
 .pug
 # EJS (Embedded JavaScript)
 .ejs
