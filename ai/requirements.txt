@@ -37,6 +37,7 @@ ollama==0.1.8
 openai==1.28.1
 orjson==3.10.1
 packaging==23.2
+pathspec==0.12.1
 pydantic==2.7.1
 pydantic_core==2.18.2
 python-dotenv==1.0.1

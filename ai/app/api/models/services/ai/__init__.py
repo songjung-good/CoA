@@ -1,7 +1,9 @@
 import json
+import time
 from typing import Any
 
 from langchain.chains.base import Chain
+from langchain_community.callbacks import get_openai_callback
 from langchain_core.documents import Document
 from langchain_text_splitters import TextSplitter
 
@@ -29,12 +31,33 @@ class AiService:
         """
         리드미를 생성합니다.
         """
-        return chain.invoke(data)['output_text']
+        with get_openai_callback() as cb:
+            start = time.time()
+
+            result = chain.invoke(data)['output_text']
+
+            end = time.time()
+
+            print('README TOTAL TOKEN CNT:', cb.total_tokens)
+            print('README TOTAL TOKEN COST:', f'$ {cb.total_cost:.6f}')
+            print('README TOTAL TIME:', f'{end - start:.2f} secs')
+            return result
 
     async def score_commits(self, chain: Chain, data: list[Document]) -> CommitScoreDto:
         """
         평가한 커밋의 점수를 매깁니다.
         """
-        output = chain.invoke(data)['output_text']
-        dct = json.loads(output)
-        return CommitScoreDto.from_dict(dct)
+        with get_openai_callback() as cb:
+            start = time.time()
+
+            output = chain.invoke(data)['output_text']
+            dct = json.loads(output)
+            result = CommitScoreDto.from_dict(dct)
+
+            end = time.time()
+
+            print('README TOTAL TOKEN CNT:', cb.total_tokens)
+            print('README TOTAL TOKEN COST:', f'$ {cb.total_cost:.6f}')
+            print('README TOTAL TIME:', f'{end - start:.2f} secs')
+
+            return result
