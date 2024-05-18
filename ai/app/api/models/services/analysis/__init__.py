@@ -44,10 +44,10 @@ class AnalysisService:
             # 레포에서 데이터 가져오기
             self._update_status(dto, AnalysisStatus.REQUESTING_TO_REPO)
 
-            logging.error(f'{request.analysisId} START TO COLLECTING DATA')
+            logging.debug(f'{request.analysisId} START TO COLLECTING DATA')
             repo_data = await repo_client.load(request.userName)
-            logging.error(f'{request.analysisId} FILTERED FILE CNT: {len(repo_data["content"])}')
-            logging.error(f'{request.analysisId} FILTERED COMMITS CNT: {len(repo_data["commits"])}')
+            logging.debug(f'{request.analysisId} FILTERED FILE CNT: {len(repo_data["content"])}')
+            logging.debug(f'{request.analysisId} FILTERED COMMITS CNT: {len(repo_data["commits"])}')
 
             # total_commit_cnt, personal_commit_cnt 세기
             # TODO
@@ -56,19 +56,19 @@ class AnalysisService:
 
             preprocessed_content_doc = await self.ai_service.preprocess_content(repo_data['content'])
             preprocessed_commits_doc = await self.ai_service.preprocess_commits(repo_data['commits'])
-            logging.error(request.analysisId + ' FILTERED SPLIT FILE DOCS CNT: ' + str(len(preprocessed_content_doc)))
-            logging.error(request.analysisId + ' FILTERED SPLIT COMMIT DOCS CNT: ' + str(len(preprocessed_commits_doc)))
+            logging.debug(request.analysisId + ' FILTERED SPLIT FILE DOCS CNT: ' + str(len(preprocessed_content_doc)))
+            logging.debug(request.analysisId + ' FILTERED SPLIT COMMIT DOCS CNT: ' + str(len(preprocessed_commits_doc)))
 
             # AI 서비스 Readme Lock 대기
             # TODO ...
             chain = await self.ai_mutex.wait_for_readme_chain(request.analysisId)
 
-            logging.error(request.analysisId + ' START TO GENERATE README')
+            logging.debug(request.analysisId + ' START TO GENERATE README')
 
             # 리드미 생성
             self._update_status(dto, AnalysisStatus.GENERATING_README)
             readme_result = await self.ai_service.generate_readme(chain, preprocessed_content_doc)
-            logging.error(f'README: {readme_result}')
+            logging.debug(f'README: {readme_result}')
 
             # Mutex chain 되돌리기
             await self.ai_mutex.release(chain)
@@ -77,7 +77,7 @@ class AnalysisService:
             # TODO ...
             chain = await self.ai_mutex.wait_for_commit_chain(request.analysisId)
 
-            logging.error(request.analysisId + ' START TO SCORE COMMITS')
+            logging.debug(request.analysisId + ' START TO SCORE COMMITS')
 
             # 커밋 점수 매기기
             self._update_status(dto, AnalysisStatus.SCORING_COMMITS)
