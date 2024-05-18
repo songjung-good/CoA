@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -19,6 +20,9 @@ if __name__ == '__main__':
     container = Container()
     container.wire([sys.modules[__name__]])
     container.init_resources()
+
+    logging.basicConfig(level=logging.DEBUG)
+    logging.debug('AI SERVER OPENING')
 
     uvicorn.run(
         'main:app',
