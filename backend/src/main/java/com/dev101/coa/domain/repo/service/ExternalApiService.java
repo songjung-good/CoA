@@ -115,7 +115,7 @@ public class ExternalApiService {
                     .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.NOT_FOUND)))
                     .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitLab repos fetching")))
                     .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitLab repos fetching")))
-                    .bodyToMono(List.class)
+                    .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
                     .block();
         } catch (WebClientResponseException ex) {
             // Handle exception as needed
@@ -189,7 +189,8 @@ public class ExternalApiService {
     private Flux<Event> fetchUserCommitsRecursive(String userId, String accessToken, int page) {
         return webClient.get()
                 .uri("https://lab.ssafy.com/api/v4/users/" + userId + "/events?action=pushed&per_page=100&page=" + page)
-                .header("Authorization", "Bearer " + accessToken)
+//                .header("Authorization", "Bearer " + accessToken)
+                .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
                 .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.NOT_FOUND)))
@@ -292,7 +293,7 @@ public class ExternalApiService {
     private Mono<List<Map<String, Object>>> fetchRepositories(String username, String accessToken) {
         return webClient.get()
                 .uri("https://api.github.com/users/{username}/repos", username)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
                 .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.NOT_FOUND)))
@@ -316,7 +317,7 @@ public class ExternalApiService {
                         .queryParam("per_page", 100)
                         .queryParam("page", page)
                         .build(username, repoName))
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
                 .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.NOT_FOUND)))
@@ -347,7 +348,7 @@ public class ExternalApiService {
     private Mono<List<Map<String, Object>>> fetchCommitFiles(String repoName, String commitSha, String username, String accessToken) {
         return webClient.get()
                 .uri("https://api.github.com/repos/{username}/{repoName}/commits/{commitSha}", username, repoName, commitSha)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(status -> status.equals(HttpStatus.UNAUTHORIZED), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
                 .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.NOT_FOUND)))
