@@ -29,12 +29,6 @@ interface ApiResponse {
   result: Member[];
 }
 
-// interface api {
-//   isSuccess: boolean;
-//   message: string;
-//   code: number;
-//   result: Member[];
-// }
 const noFollowData = [
   {
     memberUuid: "no-follow-user",
@@ -58,8 +52,8 @@ export default function FollowList() {
       const bookmarksResponse = await UseAxios().get<ApiResponse>(
         "/api/member/bookmarks",
       );
-      console.log(bookmarksResponse);
-      console.log(bookmarksResponse.data.isSuccess);
+      // console.log(bookmarksResponse);
+      // console.log(bookmarksResponse.data.isSuccess);
       if (bookmarksResponse.data.isSuccess === true) {
         if (bookmarksResponse?.data.result.length === 0) {
           setData(noFollowData);
@@ -81,8 +75,8 @@ export default function FollowList() {
 
   useEffect(() => {
     fetchFollowData();
-    console.log(response.result);
-    console.log(response.result.commonCodeList[2].codes);
+    // console.log(response.result);
+    // console.log(response.result.commonCodeList[2].codes);
   }, []);
 
   return (

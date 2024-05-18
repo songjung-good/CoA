@@ -47,12 +47,12 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
     } else {
       setMergeData(null);
     }
-    console.log("res1");
-    console.log(res1);
-    console.log("res2");
-    console.log(res2);
-    console.log("res3");
-    console.log(res3);
+    // console.log("res1");
+    // console.log(res1);
+    // console.log("res2");
+    // console.log(res2);
+    // console.log("res3");
+    // console.log(res3);
     setIsLoading(false);
   };
 
