@@ -47,7 +47,7 @@ const MainRepoCard: React.FC<RepoData> = ({ data }) => {
       <Card>
         <AvatarWrapper>
           <Avatar src={result.memberImg} alt={result.memberNickname} />
-          <div>
+          <div className="w-full">
             <ContentWrapper>
               <RepoName>{result.repoViewTitle}</RepoName>
             </ContentWrapper>
@@ -105,6 +105,7 @@ const Card = tw.div`
 const AvatarWrapper = tw.div`
   flex
   items-center
+  w-full
 `;
 
 const Avatar = tw.img`
@@ -131,10 +132,12 @@ const RepoName = tw.h2`
 const Description = tw.p`
   text-gray-600
   mb-2
+  w-full
+  turncate
 `;
 
 const Date = tw.p`
-  text-gray-600
+  text-gray-600 text-xs
 `;
 
 const SkillWrapper = tw.div`
