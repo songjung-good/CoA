@@ -19,6 +19,7 @@ export default function UserMenu({ modalClose }: { modalClose: () => void }) {
     <div className="absolute top-11 right-0 card min-w-32 z-50">
       <ul className="flex flex-col gap-4">
         <li
+          className="cursor-pointer"
           onClick={() => {
             modalClose();
             router.push(`/user/${UUID}`);
@@ -27,6 +28,7 @@ export default function UserMenu({ modalClose }: { modalClose: () => void }) {
           마이 페이지
         </li>
         <li
+          className="cursor-pointer"
           onClick={() => {
             modalClose();
             router.push(`/user/follow`);
@@ -35,6 +37,7 @@ export default function UserMenu({ modalClose }: { modalClose: () => void }) {
           팔로우 페이지
         </li>
         <li
+          className="cursor-pointer"
           onClick={() => {
             modalClose();
             router.push(`/auth/link`);

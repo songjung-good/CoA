@@ -35,7 +35,7 @@ export const getGithubEventsData = async (
     if (response.data.code === 200) {
       return response.data.result;
     } else {
-      console.log(response.data.result);
+      // console.log(response.data.result);
       return null;
     }
   } catch (error) {
@@ -52,11 +52,11 @@ export const getGitlabEventsData = async (
     const response = await customAxios.get(
       `/api/external/events/gitlab/${memberUuid}`,
     );
-    console.log(response);
+    // console.log(response);
     if (response.data.code === 200) {
       return response.data.result;
     } else {
-      console.log(response.data.result);
+      // console.log(response.data.result);
       return null;
     }
   } catch (error) {
