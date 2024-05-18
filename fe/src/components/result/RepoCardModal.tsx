@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, MutableRefObject } from "react";
 import { useRouter } from "next/navigation";
 import { colorMapping } from "@/components/colorMap";
 import useCommonCodeStore from "@/store/commoncode";
@@ -13,6 +13,7 @@ import UseAxios from "@/api/common/useAxios";
 interface RepoCardModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isSave: MutableRefObject<boolean>;
 }
 
 interface SkillOption {
@@ -20,7 +21,11 @@ interface SkillOption {
   value: string;
 }
 
-const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
+const RepoCardModal: React.FC<RepoCardModalProps> = ({
+  isOpen,
+  onClose,
+  isSave,
+}) => {
   const { response } = useCommonCodeStore.getState();
   const [selectedStack, setSelectedStack] = useState("");
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
@@ -345,6 +350,9 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
             <button
               type="submit"
               className="text-white bg-appBlue1 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-base py-2.5 px-5"
+              onClick={() => {
+                isSave.current = true;
+              }}
             >
               저장하기
             </button>
