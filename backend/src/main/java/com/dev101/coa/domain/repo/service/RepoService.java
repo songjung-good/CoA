@@ -21,6 +21,9 @@ import com.dev101.coa.domain.repo.repository.*;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import com.dev101.coa.global.security.service.EncryptionUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -876,7 +879,8 @@ public class RepoService {
         }
     }
 
-    private List<Map<String, Object>> fetchGitHubCommits(String repoName, String username, String accessToken) {
+    private List<Map<String, Object>> fetchGitHubCommits(String repoName, String username, String accessToken) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
         WebClient webClient = webClientBuilder.build();
         List<Map<String, Object>> allCommits = new ArrayList<>();
         int page = 1;
@@ -884,7 +888,7 @@ public class RepoService {
         while (true) {
             String url = String.format("https://api.github.com/repos/%s/%s/commits?page=%d&per_page=100", username, repoName, page);
 
-            List<Map<String, Object>> commits = webClient.get()
+            String responseBody = webClient.get()
                     .uri(url)
                     .header("Authorization", "Bearer " + accessToken)
                     .retrieve()
@@ -902,9 +906,10 @@ public class RepoService {
                         }
                     })
                     .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub 코드 줄 수")))
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
-                    .flatMap(this::mapToList) // Map을 List로 변환
-                    .block(Duration.ofSeconds(20)); // Synchronously wait for the result
+                    .bodyToMono(String.class)
+                    .block(Duration.ofSeconds(20));
+            // Synchronously wait for the result
+            List<Map<String, Object>> commits = objectMapper.readValue(responseBody, new TypeReference<List<Map<String, Object>>>() {});
 
             System.out.println("commits = " + commits);
 
@@ -919,7 +924,8 @@ public class RepoService {
         return allCommits;
     }
 
-    private List<Map<String, Object>> fetchGitLabCommits(Integer projectId, String accessToken) {
+    private List<Map<String, Object>> fetchGitLabCommits(Integer projectId, String accessToken) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
         WebClient webClient = webClientBuilder.build();
         List<Map<String, Object>> allCommits = new ArrayList<>();
         int page = 1;
@@ -927,7 +933,7 @@ public class RepoService {
         while (true) {
             String url = String.format("https://gitlab.com/api/v4/projects/%s/repository/commits?page=%d&per_page=100", projectId, page);
 
-            List<Map<String, Object>> commits = webClient.get()
+            String responseBody = webClient.get()
                     .uri(url)
                     .header("Authorization", "Bearer " + accessToken)
                     .retrieve()
@@ -945,10 +951,10 @@ public class RepoService {
                         }
                     })
                     .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitLab 코드 줄 수")))
-
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
-                    .flatMap(this::mapToList) // Map을 List로 변환
+                    .bodyToMono(String.class)
                     .block(Duration.ofSeconds(20)); // Synchronously wait for the result
+
+            List<Map<String, Object>> commits = objectMapper.readValue(responseBody, new TypeReference<List<Map<String, Object>>>() {});
 
             if (commits == null || commits.isEmpty()) {
                 break;
@@ -1031,9 +1037,5 @@ public class RepoService {
                 .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
                 .block(Duration.ofSeconds(10)); // Synchronously wait for the result
     }
-    private Mono<List<Map<String, Object>>> mapToList(Map<String, Object> map) {
-        List<Map<String, Object>> list = new ArrayList<>();
-        list.add(map);
-        return Mono.just(list);
-    }
+
 }
