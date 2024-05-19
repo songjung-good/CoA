@@ -18,11 +18,14 @@ class AiChains:
 
         self.__reduce_chain = LLMChain(
             llm=llm,
-            prompt=PromptTemplate.from_template(
-                "The following is set of summaries:\n"
-                "{docs}\n"
-                "Take these and distill it into a final, consolidated summary of the main themes.\n"
-                "Helpful Answer:"
+            prompt=PromptTemplate.from_template("""
+The following is set of summaries and raw source codes.
+Take these and distill it into a final, consolidated summary of the main themes.
+----------
+{docs}
+----------
+CONSOLIDATED SUMMARY: 
+"""
             )
         )
 
@@ -33,17 +36,24 @@ You are an useful repository readme file generator.
 
 You must generate README.md template according to repository content according to files below, in Korean.
 
-Summary up with following paragraphs:
+Take the summaries and generate README.md following paragraphs:
   - 주제
   - 서비스 설명
   - 프로젝트 전체 구현 기능
   - 기술 스택
+  - 기대 효과
   
 Each paragraph should be separated with "##"(Heading level 2).
-'기술 스택' paragraph should be written by listing keywords.
+'프로젝트 전체 구현 기능' paragraph should contains brief comment about benefits of the functions.
+'기술 스택' paragraph should be written by listing keywords, not exceeding 10 items.
+'기대 효과' paragraph should contain expected experience and benefits from the app's features to users.
 
 Summaries:
-{docs}""")
+{docs}
+
+----------
+README.md:
+""")
         )
 
         self.__commit_combine_chain = LLMChain(
@@ -60,7 +70,7 @@ The criteria are:
 
 The scores must be integers, out of 100.
 
-The output form should be following JSON:
+The output form should be following JSON. Answer with only JSON.:
 {{
     "readability": <readability score>
     "reusability": <reusability score>
@@ -71,7 +81,10 @@ The output form should be following JSON:
 }}
 
 Summaries:
-{docs}""")
+{docs}
+
+Answer:
+""")
         )
 
         self.__collapse_documents_chain = StuffDocumentsChain(
