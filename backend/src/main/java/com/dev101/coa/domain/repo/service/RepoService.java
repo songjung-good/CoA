@@ -865,14 +865,18 @@ public class RepoService {
         List<Map.Entry<String, Integer>> linesOfCodeList = new ArrayList<>(linesOfCodeMap.entrySet());
 
         for (Map.Entry<String, Integer> entry : linesOfCodeList) {
-            Code code = codeRepository.findByCodeName(entry.getKey())
-                    .orElseThrow(() -> new BaseException(StatusCode.CODE_NOT_FOUND));
+            if (entry.getKey() == null) {
+                continue;
+            }
+            Optional<Code> code = codeRepository.findByCodeName(entry.getKey());
+            if (code.isPresent()) {
             LineOfCode lineOfCode = LineOfCode.builder()
                     .repoView(repoView)
-                    .skillCode(code)
+                    .skillCode(code.get())
                     .lineCount(entry.getValue())
                     .build();
             lineOfCodeRepository.save(lineOfCode);
+            }
         }
     }
 
@@ -904,8 +908,6 @@ public class RepoService {
                     .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
                     .block(Duration.ofSeconds(20));
             // Synchronously wait for the result
-
-            System.out.println("commits = " + commits);
 
             if (commits == null || commits.isEmpty()) {
                 break;
