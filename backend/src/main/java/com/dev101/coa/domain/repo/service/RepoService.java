@@ -183,7 +183,7 @@ public class RepoService {
     }
 
     @Transactional
-    public Long saveAnalysis(Long memberId, String analysisId, SaveAnalysisReqDto saveAnalysisReqDto) {
+    public Long saveAnalysis(Long memberId, String analysisId, SaveAnalysisReqDto saveAnalysisReqDto) throws Exception {
 
         // redis에서 analysisId 로 값 조회시 존재 여부 판단
         RedisResult redisData = redisRepoRepository.findById(analysisId).orElseThrow(() -> new BaseException(StatusCode.ANALYSIS_RESULT_NOT_EXIST));
