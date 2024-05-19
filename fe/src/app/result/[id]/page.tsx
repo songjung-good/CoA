@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import UseAxios from "@/api/common/useAxios";
 import { useRouter } from "next/navigation";
 import RepoInfo from "@/components/result/RepoInfo.tsx";
 import ResultTap from "@/components/result/ResultTap.tsx";
@@ -13,6 +14,7 @@ export default function ResultPage({ params }: { params: { id: string } }) {
   const userNickName = useResultStore(
     (state) => state.result.repoCardDto.memberNickname,
   ); // 이후 유저닉네임으로 변경
+  const axios = UseAxios();
 
   const isSave = useRef(false);
 
@@ -62,6 +64,13 @@ export default function ResultPage({ params }: { params: { id: string } }) {
       window.removeEventListener("popstate", handlePopState);
     };
   }, []);
+
+  // useEffect(() => {
+  //   axios.get(`/api/repos/analysis/done/${params.id}`).then((res) => {
+  //     useResultStore.getState().updateResultState(res.data);
+  //     console.log(res.data);
+  //   });
+  // }, []);
 
   return (
     <div className="flex flex-col items-center bg-appGrey1 pt-5 p-10 w-full h-full">

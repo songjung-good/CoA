@@ -57,22 +57,32 @@ const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
               {repoInfo.repoViewPath}
             </Link>
           </div>
-          <p className="text-2xl font-semibold lg:text-3xl mb-5 truncate">
+          <p className="text-2xl font-bold lg:text-3xl mb-5 truncate">
             {repoInfo.repoViewTitle}
           </p>
-          <p className="text-xl font-bold lg:text-2xl mb-2 truncate">
+          <p className="text-xl lg:text-2xl mb-2 truncate">
             {repoInfo.repoViewSubtitle}
           </p>
         </div>
         <div className="w-full lg:w-3/5 h-full lg:flex lg:flex-col lg:justify-between">
           <div className="mb-2 flex flex-col justify-between items-start lg:items-end w-full h-full">
             <div>
+              <p>
+                분석 대상 :
+                <Link href={`/user/${repoInfo.memberUuid}`}>
+                  <span className="text-appPink hover:cursor-pointer">{` ${repoInfo.memberNickname} `}</span>
+                </Link>
+                님
+              </p>
               <p className=" text-start w-full whitespace-pre-wrap break-words">
                 프로젝트 기간 :
-                {`${repoInfo.repoStartDate} ~ ${repoInfo.repoEndDate} (${projectDays}일)`}
+                {`${repoInfo.repoStartDate} ~ ${repoInfo.repoEndDate} `}
+                <span className="font-bold ml-1">{`(${projectDays}일)`}</span>
               </p>
               <p className="text-start">
-                프로젝트 인원: {repoInfo.repoMemberCnt}명
+                프로젝트 인원 :{" "}
+                {<span className="font-bold">{repoInfo.repoMemberCnt} </span>}{" "}
+                명
               </p>
             </div>
           </div>
@@ -80,7 +90,7 @@ const RepoInfo: React.FC<RepoInfoProps> = ({ openModal }) => {
       </div>
       <div className="flex flex-col sm:flex-row justify-between sm:items-end w-full h-full">
         {repoInfo.skillList === null ? (
-          <div className="flex-grow font-bold">
+          <div className="flex-grow">
             프로젝트에 사용한 기술 스택을 추가해주세요
           </div>
         ) : (

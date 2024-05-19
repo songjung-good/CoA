@@ -9,6 +9,7 @@ import { colorMapping } from "@/components/colorMap";
 import useCommonCodeStore from "@/store/commoncode";
 import MyInfoEditCard from "./MyInfoEditCard";
 import IsStar from "./IsStar";
+import React from "react";
 
 interface Skill {
   codeId: number;
@@ -35,6 +36,7 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
   const { response } = useCommonCodeStore.getState();
   const [myData, setMyData] = useState<Member>();
   const [isEdit, setIsEdit] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const getMyData = async () => {
     try {
       // console.log(UUID);
@@ -56,6 +58,10 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
   const closeEdit = () => {
     setIsEdit(false);
   };
+
+  // URL에 "search"가 포함되어 있는지 확인합니다.
+  const isSearchPage =
+    typeof window !== "undefined" && window.location.href.includes("search");
 
   return (
     <>
@@ -82,8 +88,14 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
           <div className="grow flex flex-col gap-2">
             {/* 자기소개 란 */}
             <div className="bg-appGrey1 p-4 rounded-2xl grow">
-              <p>{myData?.memberIntro}</p>
+              {myData?.memberIntro.split("\n").map((line, index) => (
+                <React.Fragment key={index}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
             </div>
+
             <div className="relative flex items-center">
               <div className="">
                 <p>기술스택</p>
@@ -103,7 +115,9 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
                 </ul>
               </div>
             </div>
-            <div className="absolute top-[5%] right-[1%]">
+            <div
+              className={`absolute top-[5%] right-[1%] ${isSearchPage ? "pointer-events-none" : ""}`}
+            >
               {myData &&
                 (myData?.isMine ? (
                   <button

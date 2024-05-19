@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import tw from "tailwind-styled-components";
 import Link from "next/link";
-
 import UseAxios from "@/api/common/useAxios";
 import Image from "next/image";
 import CloseIcon from "@/icons/CloseIcon";
@@ -18,8 +16,6 @@ export default function LinkPage() {
   // 입력 받을 변수
   const [githubToken, setGithubToken] = useState("");
   const [gitlabToken, setGitlabToken] = useState("");
-  const [solvedacNickName, setSolvedacNickName] = useState("");
-  const [codeforcesNickName, setCodeforcesNickName] = useState("");
 
   // 반환 받을 변수
   const [hubNickName, setHubNickName] = useState("");
@@ -27,18 +23,11 @@ export default function LinkPage() {
   const [isHubToken, setIsHubToken] = useState("");
   const [isLabToken, setIsLabToken] = useState("");
 
-  const [sacNickName, setSacNickName] = useState("");
-  const [cofNickName, setCofNickName] = useState("");
-
   const axiosInstance = UseAxios();
-
   // fetchData 함수 정의
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get("api/accountLink");
-
-      // console.log(response.data);
-      // console.log(response.data.result);
       const getData = response.data.result;
 
       setHubNickName(getData.githubNickName);
@@ -46,9 +35,6 @@ export default function LinkPage() {
 
       setLabNickName(getData.gitlabNickName);
       setIsLabToken(getData.isGitlabToken);
-
-      setSacNickName(getData.solvedacNickName);
-      setCofNickName(getData.codeforcesNickName);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -105,43 +91,22 @@ export default function LinkPage() {
     }
   };
 
-  const saveNickNameSolvedac = async () => {
-    try {
-      const response = await axiosInstance.post("/api/accountLink/solvedac", {
-        nickName: solvedacNickName,
-      });
-      setSacNickName(response.data.result);
-      setSolvedacNickName("");
-    } catch (error) {
-      console.error("saveNickNameSolvedac 저장 중 오류가 발생했습니다:", error);
-    }
-  };
-  const saveNickNameCodeforces = async () => {
-    try {
-      const response = await axiosInstance.post("/api/accountLink/codeforces", {
-        nickName: codeforcesNickName,
-      });
-      setCofNickName(response.data.result);
-      setCodeforcesNickName("");
-    } catch (error) {
-      console.error(
-        "saveNickNameCodeforces 저장 중 오류가 발생했습니다:",
-        error,
-      );
-    }
-  };
-
   return (
     <main className="bg-appGrey1  flex flex-col items-center">
       <div className="max-w-screen-xl w-full flex flex-col py-4 gap-4">
-        <Header>
+        <section className={Header}>
           <h1 className="text-xl font-bold">계정 연동하기</h1>
-          <ButtonGroup>
-            <Link href='/info' target='_blank' rel='noopener noreferrer'>
-              <Button>토큰 발급 안내</Button>
-            </Link>
-            </ButtonGroup>
-        </Header>
+
+          <Link
+            className={ButtonGroup}
+            href="/info"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <p className={Button}>토큰 발급 안내</p>
+          </Link>
+        </section>
+
         <section className="card flex flex-col md:flex-row gap-4 justify-between">
           <div className="flex gap-4">
             <div>
@@ -158,11 +123,18 @@ export default function LinkPage() {
               <p>UserName : {hubNickName}</p>
               <p>
                 Token 등록:{" "}
-                {isHubToken ? "토큰 등록 완료되었습니다" : 
-                  <Link href='https://github.com/settings/tokens' target='_blank' rel='noopener noreferrer'>
-                    <AccessButton>토큰 발급 링크</AccessButton>
-                  </Link> 
-                }
+                {isHubToken ? (
+                  "토큰 등록 완료되었습니다"
+                ) : (
+                  <Link
+                    className={AccessButton}
+                    href="https://github.com/settings/tokens"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    토큰 발급 링크
+                  </Link>
+                )}
               </p>
             </div>
           </div>
@@ -208,11 +180,17 @@ export default function LinkPage() {
                       alt="githubSSO"
                       width={24}
                       height={24}
+                      style={{ width: "24px", height: "24px" }}
                     />
                     access token 등록
                   </div>
-                  <Link href='https://github.com/settings/tokens' target='_blank' rel='noopener noreferrer'>
-                    <AccessButton>토큰발급링크</AccessButton>
+                  <Link
+                    className={AccessButton}
+                    href="https://github.com/settings/tokens"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    토큰발급링크
                   </Link>
                   <button
                     aria-label="깃허브 토큰 등록 취소하기"
@@ -226,6 +204,7 @@ export default function LinkPage() {
                 <div>
                   <input
                     type="password"
+                    autoComplete="off"
                     className="py-1 px-2 bg-appGrey1 rounded-l-xl"
                     value={githubToken}
                     onChange={(e) => setGithubToken(e.target.value)}
@@ -251,6 +230,7 @@ export default function LinkPage() {
                 alt="github"
                 width={100}
                 height={100}
+                style={{ width: "100px", height: "100px" }}
               />
             </div>
             <div>
@@ -258,11 +238,18 @@ export default function LinkPage() {
               <p>UserName : {labNickName}</p>
               <p>
                 Token 등록:{" "}
-                {isLabToken ? "토큰 등록 완료되었습니다" : 
-                  <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens' target='_blank' rel='noopener noreferrer'>
-                    <AccessButton>토큰 발급 링크</AccessButton>
+                {isLabToken ? (
+                  "토큰 등록 완료되었습니다"
+                ) : (
+                  <Link
+                    className={AccessButton}
+                    href="https://lab.ssafy.com/-/user_settings/personal_access_tokens"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    토큰 발급 링크
                   </Link>
-                }
+                )}
               </p>
             </div>
           </div>
@@ -276,6 +263,7 @@ export default function LinkPage() {
                 alt="githubSSO"
                 width={24}
                 height={24}
+                style={{ width: "24px", height: "24px" }}
               />
               Sign in with GitLab
             </button>
@@ -290,6 +278,7 @@ export default function LinkPage() {
                 alt="githubSSO"
                 width={24}
                 height={24}
+                style={{ width: "24px", height: "24px" }}
               />
               access token 등록
             </button>
@@ -304,11 +293,17 @@ export default function LinkPage() {
                       alt="githubSSO"
                       width={24}
                       height={24}
+                      style={{ width: "24px", height: "24px" }}
                     />
                     access token 등록
                   </div>
-                  <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens' target='_blank' rel='noopener noreferrer'>
-                    <AccessButton>토큰 발급 링크</AccessButton>
+                  <Link
+                    className={AccessButton}
+                    href="https://lab.ssafy.com/-/user_settings/personal_access_tokens"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    토큰 발급 링크
                   </Link>
                   <button
                     onClick={() => {
@@ -321,6 +316,7 @@ export default function LinkPage() {
                 <div>
                   <input
                     type="password"
+                    autoComplete="off"
                     className="py-1 px-2 bg-appGrey1 rounded-l-xl"
                     value={gitlabToken}
                     onChange={(e) => setGitlabToken(e.target.value)}
@@ -336,100 +332,12 @@ export default function LinkPage() {
             </div>
           ) : null}
         </section>
-        {/* solvedAC */}
-        <section className="card flex flex-col md:flex-row gap-4 justify-between">
-          <div className="flex gap-4">
-            <div>
-              <Image
-                src="/image/oauth/solvedAC.svg"
-                alt="github"
-                width={100}
-                height={100}
-              />
-            </div>
-            <div>
-              <p className="text-xl font-bold">solvedAC</p>
-              <p>UserName : {sacNickName}</p>
-            </div>
-          </div>
-          <div>
-            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2 w-fit">
-              <div className="flex gap-2">
-                <Image
-                  src="/image/oauth/solvedAC.svg"
-                  alt="githubSSO"
-                  width={24}
-                  height={24}
-                />
-                solved.ac 닉네임
-              </div>
-              <div>
-                <input
-                  type="text"
-                  className="bg-appGrey1 rounded-l-xl py-1 px-2 w-40"
-                  value={solvedacNickName}
-                  onChange={(e) => setSolvedacNickName(e.target.value)}
-                />
-                <button
-                  className="bg-appGreen rounded-r-xl py-1 px-2"
-                  onClick={saveNickNameSolvedac}
-                >
-                  등록
-                </button>
-              </div>
-            </label>
-          </div>
-        </section>
-        {/* Codeforces */}
-        <section className="card flex flex-col md:flex-row gap-4 justify-between">
-          <div className="flex gap-4">
-            <div>
-              <Image
-                src="/image/oauth/CodeForces.svg"
-                alt="github"
-                width={100}
-                height={100}
-              />
-            </div>
-            <div>
-              <p className="text-xl font-bold">Codeforces</p>
-              <p>UserName : {cofNickName}</p>
-            </div>
-          </div>
-          <div>
-            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2 w-fit">
-              <div className="flex gap-2">
-                <Image
-                  src="/image/oauth/CodeForces.svg"
-                  alt="githubSSO"
-                  width={24}
-                  height={24}
-                />
-                solved.ac 닉네임
-              </div>
-              <div>
-                <input
-                  type="text"
-                  className="bg-appGrey1 rounded-l-xl py-1 px-2 w-40"
-                  value={codeforcesNickName}
-                  onChange={(e) => setCodeforcesNickName(e.target.value)}
-                />
-                <button
-                  className="bg-appGreen rounded-r-xl py-1 px-2"
-                  onClick={saveNickNameCodeforces}
-                >
-                  등록
-                </button>
-              </div>
-            </label>
-          </div>
-        </section>
       </div>
     </main>
   );
 }
 
-const Header = tw.header`
+const Header = `
   w-full
   flex
   justify-between
@@ -441,12 +349,12 @@ const Header = tw.header`
   rounded-t-xl
 `;
 
-const ButtonGroup = tw.div`
+const ButtonGroup = `
   flex
   gap-4
 `;
 
-const AccessButton = tw.a`
+const AccessButton = `
   inline-flex
   items-center
   justify-center
@@ -461,7 +369,7 @@ const AccessButton = tw.a`
   hover:bg-opacity-75
 `;
 
-const Button = tw.a`
+const Button = `
   inline-flex
   items-center
   justify-center
