@@ -98,7 +98,7 @@ const useResultStore = create<ResultState>(
           repoReadme: "Initial README",
           repoViewResult: "Initial result",
           commentList: [],
-          repoViewTotalCommitCnt: 1,
+          repoViewTotalCommitCnt: 0,
           repoViewCommitCnt: 0,
           repoViewMemberCnt: 0,
           repoLineCntList: []
