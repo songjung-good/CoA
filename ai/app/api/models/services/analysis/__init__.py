@@ -51,8 +51,10 @@ class AnalysisService:
 
             # total_commit_cnt, personal_commit_cnt 세기
             # TODO
-            total_commit_cnt = repo_client.load_total_commit_cnt()
-            personal_commit_cnt = repo_client.load_personal_commit_cnt(request.userName)
+            total_commit_cnt = await repo_client.load_total_commit_cnt()
+            logging.debug(f'TOTAL COMMIT CNT: {total_commit_cnt}')
+            personal_commit_cnt = await repo_client.load_personal_commit_cnt(request.userName)
+            logging.debug(f'PERSONAL COMMIT CNT: {personal_commit_cnt}')
 
             preprocessed_content_doc = await self.ai_service.preprocess_content(repo_data['content'])
             preprocessed_commits_doc = await self.ai_service.preprocess_commits(repo_data['commits'])

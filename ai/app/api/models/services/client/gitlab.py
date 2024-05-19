@@ -7,8 +7,8 @@ from requests import Response
 
 from api.models.code import AnalysisStatus
 from api.models.dto import AnalysisRequest, GitLabAnalysisRequest
-
 from api.models.services.client import RestRepoClient
+from exception import AnalysisException
 
 
 class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
@@ -149,10 +149,37 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
         """
         해당 레포에 총 커밋 개수를 불러옵니다.
         """
-        pass # TODO
+        url = f'https://lab.ssafy.com/api/v4/projects/{self.project_id}/repository/commits?per_page=1&page=1'
+        try:
+            return await self._load_page_cnt(url)
+        except Exception:
+            raise AnalysisException(AnalysisStatus.REPO_REQUEST_FAILED, msg="총 커밋 수 불러오기 실패")
 
     async def load_personal_commit_cnt(self, author_name: str) -> int:
         """
         해당 레포에 개인 커밋 개수를 불러옵니다.
         """
-        pass # TODO
+        url = f'https://lab.ssafy.com/api/v4/projects/{self.project_id}/repository/commits?per_page=1&page=1&author={author_name}'
+        try:
+            return await self._load_page_cnt(url)
+        except Exception:
+            raise AnalysisException(AnalysisStatus.REPO_REQUEST_FAILED, msg="개인 커밋 수 불러오기 실패")
+
+    async def _load_page_cnt(self, url: str) -> int:
+        response = await self._request_get(url)
+
+        # link: <https://api.github.com/repositories/1300192/issues?page=2>; rel="prev", <https://api.github.com/repositories/1300192/issues?page=4>; rel="next", <https://api.github.com/repositories/1300192/issues?page=515>; rel="last", <https://api.github.com/repositories/1300192/issues?page=1>; rel="first"
+        link = response.headers['Link']
+        for section in link.split(', '):
+            encased_url, rel_equals_rel = section.split('; ')
+            if rel_equals_rel != 'rel="last"':
+                continue
+            rel_url = encased_url[1:-1]
+            _, query_string = rel_url.split('?')
+            queries = query_string.split('&')
+            for query in queries:
+                key, value = query.split('=')
+                if key == 'page':
+                    return int(value)
+
+        raise Exception("응답 헤더 'link'에서 페이지 수 가져오기 실패")
