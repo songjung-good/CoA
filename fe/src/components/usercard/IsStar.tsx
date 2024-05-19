@@ -35,7 +35,7 @@ export default function IsStar({
   };
 
   return (
-    <button aria-label="팔로우 하기" onClick={changeStar} className="w-6 h-6">
+    <button aria-label="팔로우 하기" onClick={changeStar} className="p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all">
       {starState ? <StartIconFilled /> : <StartIcon />}
     </button>
   );
