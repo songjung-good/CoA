@@ -51,8 +51,8 @@ class AnalysisService:
 
             # total_commit_cnt, personal_commit_cnt 세기
             # TODO
-            # dto.result.total_commit_cnt = 123       # TODO: client에 커밋 개수 세는 로직 추가
-            # dto.result.personal_commit_cnt = 123    # TODO: client에 커밋 개수 세는 로직 추가
+            total_commit_cnt = 1234       # TODO: client에 커밋 개수 세는 로직 추가
+            personal_commit_cnt = 567    # TODO: client에 커밋 개수 세는 로직 추가
 
             preprocessed_content_doc = await self.ai_service.preprocess_content(repo_data['content'])
             preprocessed_commits_doc = await self.ai_service.preprocess_commits(repo_data['commits'])
@@ -87,8 +87,8 @@ class AnalysisService:
             await self.ai_mutex.release(chain)
 
             dto.result = AiResultDto(
-                total_commit_cnt=0,
-                personal_commit_cnt=0,
+                total_commit_cnt=total_commit_cnt,
+                personal_commit_cnt=personal_commit_cnt,
                 readme=readme_result,
                 repo_view_result='',
                 commit_score=commit_result
