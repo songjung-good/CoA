@@ -4,11 +4,6 @@ import { colorMapping } from "../../../../../components/colorMap";
 import repositoryStore from "@/store/repos";
 
 const LinesOfCodeChart = () => {
-  // data 양식
-  // const data1 = [
-  //   { language: "JavaScript", lines: 298655 },
-  //   { language: "Vue", lines: 32934 },
-  // ];
   const obj = repositoryStore((state) => state.languageTotals);
   const data1 = Object.entries(obj).map(([language, lines]) => ({
     language,
@@ -86,7 +81,16 @@ const LinesOfCodeChart = () => {
       .attr("transform", `translate(${marginLeft},0)`)
       .call(d3.axisLeft(y).tickSizeOuter(0));
   }, [data1]);
-  return <svg className="w-full" ref={svgRef}></svg>;
+  return (
+    <div className="relative">
+      <svg className="w-full" ref={svgRef}></svg>
+      {totalLines === 4000 ? (
+        <div className="absolute bottom-0 right-0">
+          분석을 진행해 본인의 통계를 확인해 보세요
+        </div>
+      ) : null}
+    </div>
+  );
 };
 
 export default LinesOfCodeChart;

@@ -5,6 +5,7 @@ import UseAxios from "@/api/common/useAxios";
 import { colorMapping } from "../../../components/colorMap";
 import IsStar from "@/components/usercard/IsStar";
 import useCommonCodeStore from "@/store/commoncode";
+import { useRouter } from "next/navigation";
 
 interface Skill {
   codeId: number;
@@ -47,6 +48,7 @@ export default function FollowList() {
   const { response } = useCommonCodeStore.getState();
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("서버 오류입니다.");
+  const router = useRouter();
   const fetchFollowData = async () => {
     try {
       const bookmarksResponse = await UseAxios().get<ApiResponse>(
@@ -92,7 +94,10 @@ export default function FollowList() {
           {data.map((member) => (
             <li key={member.memberUuid} className="card flex flex-col gap-4">
               <div className="flex flex-row gap-4">
-                <div className="rounded-full overflow-hidden">
+                <div
+                  className="rounded-full overflow-hidden cursor-pointer"
+                  onClick={() => router.push(`/user/${member.memberUuid}`)}
+                >
                   <img
                     src={member.memberImg}
                     alt={member.memberNickName}
@@ -101,7 +106,11 @@ export default function FollowList() {
                 </div>
                 <div className="flex flex-col grow gap-2">
                   <div className="flex justify-between">
-                    <p>{member.memberNickName}</p>
+                    <button
+                      onClick={() => router.push(`/user/${member.memberUuid}`)}
+                    >
+                      {member.memberNickName}
+                    </button>
                     <div className="flex gap-2">
                       <p>
                         {

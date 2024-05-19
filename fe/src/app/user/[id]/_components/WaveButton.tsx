@@ -7,10 +7,10 @@ export default function WaveButton() {
 
   const getRandomUUID = async () => {
     try {
-      // console.log(UUID);
       const getResponse = await UseAxios().get(`/api/member/random`);
-      // console.log(getResponse.data.result);
+
       const UUID = getResponse.data.result;
+
       router.push(`/user/${UUID}`);
     } catch (error) {
       console.error(`/api/member/random 요청 에러`, error);
