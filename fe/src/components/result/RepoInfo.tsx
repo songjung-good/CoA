@@ -48,10 +48,10 @@ const RepoInfo: React.FC = () => {
               {repoInfo.repoViewPath}
             </Link>
           </div>
-          <p className="text-2xl font-semibold lg:text-3xl mb-5 truncate">
+          <p className="text-2xl font-bold lg:text-3xl mb-5 truncate">
             {repoInfo.repoViewTitle}
           </p>
-          <p className="text-xl font-bold lg:text-2xl mb-2 truncate">
+          <p className="text-xl lg:text-2xl mb-2 truncate">
             부제목을 작성해주세요.
           </p>
         </div>
@@ -61,7 +61,7 @@ const RepoInfo: React.FC = () => {
               <p>
                 분석 대상 :
                 <Link href={`/user/${repoInfo.memberUuid}`}>
-                  <span className="hover:text-appPink hover:cursor-pointer">{` ${repoInfo.memberNickname} `}</span>
+                  <span className="text-appPink hover:cursor-pointer">{` ${repoInfo.memberNickname} `}</span>
                 </Link>
                 님
               </p>
@@ -79,7 +79,7 @@ const RepoInfo: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="flex-grow font-bold text-sm sm:text-base">
+      <div className="flex-grow text-sm sm:text-base">
         사용한 기술 스택을 추가해주세요
       </div>
     </RepoInfoDiv>
