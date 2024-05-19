@@ -890,8 +890,12 @@ public class RepoService {
 
             String responseBody = webClient.get()
                     .uri(url)
-                    .header("Authorization", "Bearer " + accessToken)
+                    .headers(headers -> headers.setBearerAuth(accessToken))
                     .retrieve()
+                    .onStatus(HttpStatusCode::is2xxSuccessful, response -> {
+                        System.out.println("response = " + response);
+                        return response.createException();
+                    })
                     .onStatus(HttpStatusCode::is4xxClientError, response -> {
                         if (response.statusCode().equals(HttpStatus.UNAUTHORIZED)) {
                             return Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR));
@@ -935,7 +939,7 @@ public class RepoService {
 
             String responseBody = webClient.get()
                     .uri(url)
-                    .header("Authorization", "Bearer " + accessToken)
+                    .headers(headers -> headers.setBearerAuth(accessToken))
                     .retrieve()
                     .onStatus(HttpStatusCode::is4xxClientError, response -> {
                         if (response.statusCode().equals(HttpStatus.UNAUTHORIZED)) {
