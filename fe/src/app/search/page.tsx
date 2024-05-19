@@ -136,9 +136,19 @@ const SearchPage = () => {
             {(results.result.memberCardDtoList as MemberCardDto[])?.map(
               (result) => (
                 // <MemberCard key={result.memberUuid} memberInfo={result} />
-                <MemberButton key={result.memberUuid}  onClick={() => handleDetailClick(result.memberUuid)}>
+                <Card>
+                  <div className="flex justify-end">
+                  <MemberButton 
+                    onClick={() => handleDetailClick(result.memberUuid)}
+                  >
+                    유저 프로필로 가기 &nbsp;
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+                  </MemberButton>
+                  </div>
                   <MyUserCard key={result.memberUuid} uuid={result.memberUuid} />
-                </MemberButton>
+                </Card>
               ),
             )}
           </ResultComponent>
@@ -195,15 +205,6 @@ const Main = tw.div`
   mx-auto
 `;
 
-const H2 = tw.h2`
-  text-3xl
-  font-bold
-  mt-8
-  mb-4
-  text-center
-  text-black
-`;
-
 const ResultComponent = tw.div`
   mt-8
   grid
@@ -221,6 +222,8 @@ const PageTransition = tw.div`
 `;
 
 const Button = tw.button`
+  absolute
+  top-1/2
   bg-appYellow
   text-black
   px-3
@@ -232,17 +235,28 @@ const Button = tw.button`
   transition-all
   border-2 border-transparent
   hover:border-appRed
-  bottom-0
 `;
 
-const MemberButton = tw.div`
-  justify-left
-  border-2 
-  border-transparent
-  rounded-xl
+const Card = tw.div`
+  flex
+  flex-col
+  justify-between
+  w-full
+  p-4
+  rounded-lg
+  relative
+`;
+
+const MemberButton = tw.button`
+  flex
+  items-center
+  bg-appYellow
+  text-black
+  p-2
+  mx-2
   transition-all
-  hover:border-appRed
-  hover:cusor-pointer
+  hover:bg-appBlue1
+  hover:text-white
 `;
 
 const LeftButton = tw(Button)`
