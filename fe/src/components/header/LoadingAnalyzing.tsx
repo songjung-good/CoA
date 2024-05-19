@@ -32,7 +32,7 @@ export default function LoadingAnalyzing({ hasJWT }: { hasJWT: boolean }) {
       .get(`/api/repos/analysis/done/${analyzeId}`)
       .then((res) => {
         updateResultState(res.data); // 분석 결과 데이터 저장
-        console.log(res);
+        // console.log(res);
       })
       .then((res) => {
         resetAnalysis; // 분석 상태 초기화

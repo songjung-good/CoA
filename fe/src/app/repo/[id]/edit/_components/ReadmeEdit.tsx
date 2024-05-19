@@ -43,7 +43,7 @@ const ReadmeEdit: NextPage<ReadmeEditProps> = ({ setShowModal }) => {
     await axios
       .put(`/api/repos/readme/${params.id}`, data)
       .then((res) => {
-        console.log("리드미 변경 성공", res);
+        // console.log("리드미 변경 성공", res);
       })
       .catch((err) => {
         console.error("리드미 변경 실패", err);

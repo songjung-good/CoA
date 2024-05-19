@@ -135,7 +135,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
     // 폼 제출 로직 구현, 예: API 호출 등
-    console.log("수정 API 구현해라!");
+    // console.log("수정 API 구현해라!");
     // 여기에 수정 로직을 추가하세요
     const data = {
       repoViewTitle: title,
@@ -148,8 +148,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({ isOpen, onClose }) => {
     await axios
       .put(`/api/repos/repoCard/${params.id}`, data)
       .then((res) => {
-        console.log("데이터 변경 성공");
-        console.log(res);
+        // console.log("데이터 변경 성공");
+        // console.log(res);
       })
       .catch((err) => {
         console.log(err);

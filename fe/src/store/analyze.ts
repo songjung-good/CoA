@@ -56,12 +56,12 @@ const useAnalyzingStore = create<AnalyzingState, []>(
           axios.get(`/api/repos/analysis/${analysisId}`).then((res) => {
             const newPercent = res.data.result?.percentage;  // 서버로부터 받은 진행도
             set({ analyzingPercent: newPercent });  // 상태 업데이트
-            console.log(res.data)
-            console.log(analysisId)
+            // console.log(res.data)
+            // console.log(analysisId)
             // 진행도가 100%에 도달했을 경우 분석을 완료합니다.
             if (newPercent >= 100) {
               set({ isCompleted: true, showNotification: true });
-              console.log("분석 완료");
+              // console.log("분석 완료");
             }
           }).catch(error => {
             console.error('분석 상태 업데이트 실패:', error);
