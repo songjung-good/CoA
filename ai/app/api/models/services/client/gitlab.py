@@ -3,11 +3,12 @@ from typing import Any
 
 import requests
 from pathspec import PathSpec
+from requests import Response
 
 from api.models.code import AnalysisStatus
 from api.models.dto import AnalysisRequest, GitLabAnalysisRequest
-
 from api.models.services.client import RestRepoClient
+from exception import AnalysisException
 
 
 class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
@@ -31,23 +32,21 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
     async def check_loadability(self, request: AnalysisRequest) -> AnalysisStatus | None:
         return None     # TODO - 일단은 항상 load할 수 있다고 생각합시다
 
-    async def _request_json(self, url: str) -> Any:
+    async def _request_get(self, url: str) -> Response:
         """
-        특정 URL로 JSON 파일을 요청합니다.
+        특정 URL로 HTTP GET 요청을 보냅니다.
 
         Parameters:
             url: 요청을 보낼 URL
 
         Returns:
-            커밋 목록 JSON 객체
+            응답 객체
         """
         headers = {}
         if self.private_token is not None:
             headers['PRIVATE-TOKEN'] = self.private_token
 
-        response = requests.get(url=url, headers=headers)
-        response.raise_for_status()  # Raise an exception for 4XX and 5XX status codes
-        return response.json()
+        return requests.get(url=url, headers=headers)
 
     async def load_content(self) -> list[dict[Any, Any]]:
         # TODO: 리팩토링은 나중에...
@@ -145,3 +144,42 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
             변경 내용
         """
         return file_json.get('diff', None)
+
+    async def load_total_commit_cnt(self) -> int:
+        """
+        해당 레포에 총 커밋 개수를 불러옵니다.
+        """
+        url = f'https://lab.ssafy.com/api/v4/projects/{self.project_id}/repository/commits?per_page=1&page=1'
+        try:
+            return await self._load_page_cnt(url)
+        except Exception:
+            raise AnalysisException(AnalysisStatus.REPO_REQUEST_FAILED, msg="총 커밋 수 불러오기 실패")
+
+    async def load_personal_commit_cnt(self, author_name: str) -> int:
+        """
+        해당 레포에 개인 커밋 개수를 불러옵니다.
+        """
+        url = f'https://lab.ssafy.com/api/v4/projects/{self.project_id}/repository/commits?per_page=1&page=1&author={author_name}'
+        try:
+            return await self._load_page_cnt(url)
+        except Exception:
+            raise AnalysisException(AnalysisStatus.REPO_REQUEST_FAILED, msg="개인 커밋 수 불러오기 실패")
+
+    async def _load_page_cnt(self, url: str) -> int:
+        response = await self._request_get(url)
+
+        # link: <https://api.github.com/repositories/1300192/issues?page=2>; rel="prev", <https://api.github.com/repositories/1300192/issues?page=4>; rel="next", <https://api.github.com/repositories/1300192/issues?page=515>; rel="last", <https://api.github.com/repositories/1300192/issues?page=1>; rel="first"
+        link = response.headers['Link']
+        for section in link.split(', '):
+            encased_url, rel_equals_rel = section.split('; ')
+            if rel_equals_rel != 'rel="last"':
+                continue
+            rel_url = encased_url[1:-1]
+            _, query_string = rel_url.split('?')
+            queries = query_string.split('&')
+            for query in queries:
+                key, value = query.split('=')
+                if key == 'page':
+                    return int(value)
+
+        raise Exception("응답 헤더 'link'에서 페이지 수 가져오기 실패")
