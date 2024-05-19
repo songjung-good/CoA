@@ -51,8 +51,8 @@ class AnalysisService:
 
             # total_commit_cnt, personal_commit_cnt 세기
             # TODO
-            total_commit_cnt = 1234       # TODO: client에 커밋 개수 세는 로직 추가
-            personal_commit_cnt = 567    # TODO: client에 커밋 개수 세는 로직 추가
+            total_commit_cnt = repo_client.load_total_commit_cnt()
+            personal_commit_cnt = repo_client.load_personal_commit_cnt(request.userName)
 
             preprocessed_content_doc = await self.ai_service.preprocess_content(repo_data['content'])
             preprocessed_commits_doc = await self.ai_service.preprocess_commits(repo_data['commits'])

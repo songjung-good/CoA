@@ -3,6 +3,7 @@ from typing import Any
 
 import requests
 from pathspec import PathSpec
+from requests import Response
 
 from api.models.code import AnalysisStatus
 from api.models.dto import AnalysisRequest, GitLabAnalysisRequest
@@ -31,23 +32,21 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
     async def check_loadability(self, request: AnalysisRequest) -> AnalysisStatus | None:
         return None     # TODO - 일단은 항상 load할 수 있다고 생각합시다
 
-    async def _request_json(self, url: str) -> Any:
+    async def _request_get(self, url: str) -> Response:
         """
-        특정 URL로 JSON 파일을 요청합니다.
+        특정 URL로 HTTP GET 요청을 보냅니다.
 
         Parameters:
             url: 요청을 보낼 URL
 
         Returns:
-            커밋 목록 JSON 객체
+            응답 객체
         """
         headers = {}
         if self.private_token is not None:
             headers['PRIVATE-TOKEN'] = self.private_token
 
-        response = requests.get(url=url, headers=headers)
-        response.raise_for_status()  # Raise an exception for 4XX and 5XX status codes
-        return response.json()
+        return requests.get(url=url, headers=headers)
 
     async def load_content(self) -> list[dict[Any, Any]]:
         # TODO: 리팩토링은 나중에...
@@ -145,3 +144,15 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
             변경 내용
         """
         return file_json.get('diff', None)
+
+    async def load_total_commit_cnt(self) -> int:
+        """
+        해당 레포에 총 커밋 개수를 불러옵니다.
+        """
+        pass # TODO
+
+    async def load_personal_commit_cnt(self, author_name: str) -> int:
+        """
+        해당 레포에 개인 커밋 개수를 불러옵니다.
+        """
+        pass # TODO
