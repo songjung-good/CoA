@@ -41,8 +41,10 @@ const CalendarCard = () => {
         {} as Record<string, Contribution[]>,
       );
       SetDataByYear(dataByYear);
-      setYears(Object.keys(dataByYear));
-      const firstKey = Object.keys(dataByYear)[0];
+      const keys = Object.keys(dataByYear);
+      setYears(keys);
+      const lastIndex = keys.length - 1;
+      const firstKey = keys[lastIndex];
       setData(dataByYear[firstKey]);
       setIsActive(firstKey);
     }
@@ -165,15 +167,17 @@ const CalendarCard = () => {
                   {Object.values(totalContribution).reduce((a, b) => a + b, 0)}
                 </p>
                 <ul className="flex gap-2">
-                  {Object.entries(totalContribution).map(([key, value]) => (
-                    <li
-                      key={key}
-                      className={`px-4 py-2 rounded-md hover:bg-appBlue1 ${isActive === key ? "bg-appBlue2" : "bg-appGrey2"}`}
-                      onClick={() => handleYear(key)}
-                    >
-                      {key}: {value}
-                    </li>
-                  ))}
+                  {Object.entries(totalContribution)
+                    .sort(([a], [b]) => b.localeCompare(a)) // 키를 기준으로 오름차순 정렬
+                    .map(([key, value]) => (
+                      <li
+                        key={key}
+                        className={`px-4 py-2 rounded-md hover:bg-appBlue1 ${isActive === key ? "bg-appBlue2" : "bg-appGrey2"}`}
+                        onClick={() => handleYear(key)}
+                      >
+                        {key}: {value}
+                      </li>
+                    ))}
                 </ul>
               </div>
               <ChartCalendar data={data} category={category} />
