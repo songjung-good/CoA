@@ -2,17 +2,17 @@ import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 
 import { colorMapping } from "@/components/colorMap";
-import { getMembersSkillsData } from "@/api/mainChart/skillCount";
+import { getReposSkillsData } from "@/api/mainChart/skillCount";
 
 interface SkillCount {
   codeName: string;
   cnt: number;
 }
 
-const MemberChart = () => {
+const ReposChart = () => {
   const [data1, setData] = useState<SkillCount[] | undefined>(undefined);
   const fetchData = async () => {
-    const MembersSkillsData = await getMembersSkillsData();
+    const MembersSkillsData = await getReposSkillsData();
     const slicedData = MembersSkillsData.slice(0, 10);
     // const filteredData = MembersSkillsData.filter((item) => item.cnt !== 0);
     setData(slicedData);
@@ -95,11 +95,11 @@ const MemberChart = () => {
   return (
     <section>
       <p className="pl-4 font-medium text-lg sm:text-xl md:text-2xl">
-        유저별 스킬 TOP 10
+        프로젝트별 스킬 TOP 10
       </p>
       <svg className="w-full" ref={svgRef}></svg>
     </section>
   );
 };
 
-export default MemberChart;
+export default ReposChart;
