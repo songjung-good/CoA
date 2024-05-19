@@ -43,6 +43,8 @@ const RepoInfo: React.FC = () => {
             )}
             <Link
               href={`${repoInfo.repoViewPath}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="ml-2 font-bold truncate"
             >
               {repoInfo.repoViewPath}
