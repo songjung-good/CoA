@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useResultStore from "@/store/result";
+import CommitRate from "./CommitRate";
 
 export default function ResultCommit() {
   const repo = useResultStore.getState().result.repoCardDto;
@@ -26,15 +27,27 @@ export default function ResultCommit() {
 
   return (
     <div className="flex flex-col w-full justify-between">
-      <div className="flex flex-col justify-center items-center min-h-80">
-        커밋 그래프
+      <div className="flex flex-col justify-evenly items-center min-h-80">
+        <CommitRate />
+        <div className="flex flex-col items-center">
+          <p className=" mb-4">프로젝트에 사용한 언어</p>
+          {repo.isMine ? (
+            <p className="text-center whitespace-pre-wrap break-words">
+              분석 결과를 저장하고 가장 많이 사용한 언어를 확인하세요
+            </p>
+          ) : (
+            <p className="text-center whitespace-pre-wrap break-words">
+              레포지토리 소유자에게만 공개되는 데이터 입니다.
+            </p>
+          )}
+        </div>
       </div>
       <p className="text-base sm:text-xl lg:text-2xl mt-2">
         <span className="text-appBlue1">{repo.memberNickname}</span> 님의{" "}
         <span className="text-appBlue1">{repo.repoViewTitle}</span> 프로젝트
         분석결과
       </p>
-      <div className="flex justify-center items-center w-full min-h-20 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl">
+      <div className="flex justify-center items-center w-full min-h-20 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl px-5 py-2">
         <div>
           {parts.map((part, index) =>
             part.isComment ? (

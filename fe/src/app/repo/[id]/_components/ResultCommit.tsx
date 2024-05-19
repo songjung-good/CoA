@@ -1,5 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import useRepoDetailStore from "@/store/repodetail";
+import CommitRate from "@/app/repo/[id]/_components/CommitRate";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function ResultCommit() {
   const repo = useRepoDetailStore.getState().result.repoCardDto;
@@ -17,7 +22,6 @@ export default function ResultCommit() {
   );
 
   const handleCommentClick = (comment: Comment, event: React.MouseEvent) => {
-    // 클릭된 코멘트가 이미 표시 중인 코멘트와 같다면 해제
     if (
       currentComment &&
       currentComment.commentContent === comment.commentContent
@@ -26,7 +30,6 @@ export default function ResultCommit() {
       setModalPosition(null);
     } else {
       setCurrentComment(comment);
-      // 클릭된 텍스트의 위치를 기준으로 모달 위치 설정
       const rect = (event.target as HTMLElement).getBoundingClientRect();
       setModalPosition({
         top: rect.top - 10,
@@ -54,10 +57,66 @@ export default function ResultCommit() {
     };
   }, [currentComment]);
 
+  const totalLineCount = result.repoLineCntList.reduce(
+    (acc, line) => acc + line.lineCnt,
+    0,
+  );
+
+  const pieData = {
+    labels: result.repoLineCntList.map((line) => line.codeName),
+    datasets: [
+      {
+        data: result.repoLineCntList.map((line) => line.lineCnt),
+        backgroundColor: [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9F40",
+        ],
+        hoverBackgroundColor: [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9F40",
+        ],
+      },
+    ],
+  };
+
+  const pieOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "bottom" as const,
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem: any) {
+            const label = tooltipItem.label || "";
+            const value = tooltipItem.raw || 0;
+            return `${label}: ${value} 줄`;
+          },
+        },
+      },
+    },
+    cutout: "50%", // 도넛 형태로 만들기 위해 중앙 부분을 비웁니다.
+  };
+
   return (
     <div className="flex flex-col w-full justify-between">
-      <div className="flex flex-col justify-center items-center min-h-80">
-        커밋 그래프
+      <div className="flex flex-col justify-between items-center min-h-80">
+        <CommitRate />
+        <div className="w-1/3 relative">
+          <Pie data={pieData} options={pieOptions} />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-3/4 text-center">
+            <p className="font-bold">전체 코드</p>
+            <p className="font-bold text-sm">{totalLineCount}</p>
+          </div>
+        </div>
       </div>
       <p className="text-base sm:text-xl lg:text-2xl mt-2">
         <span className="text-appBlue1">{repo.memberNickname}</span> 님의{" "}
@@ -107,14 +166,12 @@ function splitTextByComments(text: string, comments: Comment[]) {
   let lastEnd = 0;
   const parts: { text: string; isComment: boolean; comment?: Comment }[] = [];
 
-  // comments 배열이 유효한지 확인하고, 유효하지 않은 요소를 제거합니다.
   if (!comments) {
-    comments = []; // 또는 적절한 기본값 할당
+    comments = [];
   } else {
     comments = comments.filter((comment) => comment != null);
   }
 
-  // comments 배열을 시작 인덱스에 따라 정렬합니다.
   comments.sort((a, b) => a.commentStartIndex - b.commentStartIndex);
 
   comments.forEach((comment) => {
