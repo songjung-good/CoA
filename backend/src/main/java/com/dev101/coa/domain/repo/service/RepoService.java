@@ -513,7 +513,7 @@ public class RepoService {
             String accessToken = encryptionUtils.decrypt(accountLink.getAccountLinkReceiveToken());
 
             String[] split = analysisReqDto.getRepoUrl().split("/");
-            String baseUrl = split[split.length - 5];
+            String baseUrl = split[2];
             String gitLabApiUrl = "https://" + baseUrl + "/api/v4/projects/" + projectId;
 
             System.out.println("gitLabApiUrl = " + gitLabApiUrl);
