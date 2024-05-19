@@ -43,7 +43,7 @@ export default function RepoPage({ params }: { params: { id: string } }) {
   }, []);
 
   if (isLoading) {
-    return <div>로딩 중...</div>; // 로딩 인디케이터 또는 컴포넌트 표시
+    return null; // 로딩 인디케이터 또는 컴포넌트 표시
   }
 
   return (

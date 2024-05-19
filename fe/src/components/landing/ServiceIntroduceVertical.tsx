@@ -34,6 +34,7 @@ const ServiceIntroduceVertical = forwardRef<
     "자동",
     "리드미 초안",
     "커밋을 분석",
+    "구현 기능",
     "코딩 스타일",
     "코멘트 기능",
     "다양한 통계",
