@@ -16,7 +16,7 @@ interface Result {
 }
 
 interface RepoCardDto {
-  memberId: number;
+  memberUuid: number;
   memberNickname: string;
   memberImg: string;
   repoViewId: number;
@@ -79,7 +79,7 @@ const useRepoDetailStore = create<ResultState>(
       code: 0,
       result: {
         repoCardDto: {
-          memberId: 0,
+          memberUuid: 0,
           memberNickname: "Initial name",
           memberImg: "Initial image URL",
           repoViewId: 0,
