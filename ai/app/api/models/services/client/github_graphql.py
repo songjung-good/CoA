@@ -29,3 +29,15 @@ class GithubGraphQLClient(RepoClient[GithubAnalysisRequest]):
     async def load(self, author_name: str) -> dict[Any, Any]:
         # TODO
         pass
+
+    async def load_total_commit_cnt(self) -> int:
+        """
+        해당 레포에 총 커밋 개수를 불러옵니다.
+        """
+        pass
+
+    async def load_personal_commit_cnt(self, author_name: str) -> int:
+        """
+        해당 레포에 개인 커밋 개수를 불러옵니다.
+        """
+        pass

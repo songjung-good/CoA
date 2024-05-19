@@ -4,7 +4,7 @@ from abc import abstractmethod
 from typing import Any, TypeVar, Generic
 
 from pathspec import PathSpec
-from requests import HTTPError, Timeout
+from requests import HTTPError, Timeout, Response
 
 from api.models.code import AnalysisStatus
 from api.models.dto import AnalysisRequest
@@ -56,6 +56,20 @@ class RepoClient(Generic[R], metaclass=ABCMeta):
     async def _load_repo_data(self, author_name: str) -> dict[Any, Any]:
         pass
 
+    @abstractmethod
+    async def load_total_commit_cnt(self) -> int:
+        """
+        해당 레포에 총 커밋 개수를 불러옵니다.
+        """
+        pass
+
+    @abstractmethod
+    async def load_personal_commit_cnt(self, author_name: str) -> int:
+        """
+        해당 레포에 개인 커밋 개수를 불러옵니다.
+        """
+        pass
+
 
 class RestRepoClient(Generic[R], RepoClient[R], metaclass=ABCMeta):
     """
@@ -63,6 +77,18 @@ class RestRepoClient(Generic[R], RepoClient[R], metaclass=ABCMeta):
     """
 
     @abstractmethod
+    async def _request_get(self, url: str) -> Response:
+        """
+        특정 URL로 HTTP GET 요청을 보냅니다.
+
+        Parameters:
+            url: 요청을 보낼 URL
+
+        Returns:
+            응답 객체
+        """
+        pass
+
     async def _request_json(self, url: str) -> Any:
         """
         특정 URL로 JSON 파일을 요청합니다.
@@ -73,7 +99,9 @@ class RestRepoClient(Generic[R], RepoClient[R], metaclass=ABCMeta):
         Returns:
             커밋 목록 JSON 객체
         """
-        pass
+        response = await self._request_get(url)
+        response.raise_for_status()  # Raise an exception for 4XX and 5XX status codes
+        return response.json()
 
     async def _load_repo_data(self, author_name: str) -> dict[Any, Any]:
         return {
@@ -82,7 +110,7 @@ class RestRepoClient(Generic[R], RepoClient[R], metaclass=ABCMeta):
         }
 
     async def load_content(self) -> list[dict[Any, Any]]:
-        # TODO
+        # 각 구현체에서 구현됨
         pass
 
     async def load_commits(self, author_name: str) -> list[dict[Any, Any]]:
