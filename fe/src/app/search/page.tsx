@@ -2,12 +2,13 @@
 // 라이브러리
 import React, { useState } from "react";
 import tw from "tailwind-styled-components";
+import { useRouter } from "next/navigation";
 // 컴포넌트
 import SearchInput from "@/app/search/SearchInput";
 import { fetchSearchResults } from "@/api/search/fetchSearchResults";
 import RepoCard from "@/components/searchcomponents/RepoCard";
+import MyUserCard from "@/components/usercard/MyUserCard";
 import MemberCard from "@/components/searchcomponents/MemberCard";
-import repocardDTO from "@/components/maincomponents/repocardDTO";
 
 // 타입 정의
 interface Skill {
@@ -65,6 +66,7 @@ const SearchPage = () => {
   const [page, setPage] = useState<number>(0);
   const [isNext, setIsNext] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   // 검색 실행 함수
   const handleSearch = async (query: string, type: "repo" | "member") => {
@@ -105,6 +107,10 @@ const SearchPage = () => {
     }
   };
 
+  const handleDetailClick = (uuid: string) => {
+    router.push(`/user/${uuid}`)
+  };
+
   return (
     <Main className="max-w-screen-xl mx-auto">
       {/* <H2>
@@ -129,7 +135,10 @@ const SearchPage = () => {
           <ResultComponent className="mt-8 grid gap-8 grid-cols-1 justify-center items-start">
             {(results.result.memberCardDtoList as MemberCardDto[])?.map(
               (result) => (
-                <MemberCard key={result.memberUuid} memberInfo={result} />
+                // <MemberCard key={result.memberUuid} memberInfo={result} />
+                <MemberButton key={result.memberUuid}  onClick={() => handleDetailClick(result.memberUuid)}>
+                  <MyUserCard key={result.memberUuid} uuid={result.memberUuid} />
+                </MemberButton>
               ),
             )}
           </ResultComponent>
@@ -224,6 +233,16 @@ const Button = tw.button`
   border-2 border-transparent
   hover:border-appRed
   bottom-0
+`;
+
+const MemberButton = tw.div`
+  justify-left
+  border-2 
+  border-transparent
+  rounded-xl
+  transition-all
+  hover:border-appRed
+  hover:cusor-pointer
 `;
 
 const LeftButton = tw(Button)`
