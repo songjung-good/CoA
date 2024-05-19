@@ -923,7 +923,7 @@ public class RepoService {
         int page = 1;
 
         while (true) {
-            String url = String.format("https://gitlab.com/api/v4/projects/%s/repository/commits?page=%d&per_page=100", projectId, page);
+            String url = String.format("https://lab.ssafy.com/api/v4/projects/%s/repository/commits?page=%d&per_page=100", projectId, page);
 
             List<Map<String, Object>> commits = webClient.get()
                     .uri(url)
@@ -962,7 +962,7 @@ public class RepoService {
         Map<String, Integer> linesOfCodeMap = new HashMap<>();
 
         for (Map<String, Object> commit : commits) {
-            String commitSha = (String) commit.get("id");
+            String commitSha = isGitLab ? (String) commit.get("id") : (String) commit.get("sha");
 
             List<Map<String, Object>> files = isGitLab ? fetchGitLabCommitFiles(commitSha, (Long) commit.get("project_id"), accessToken) : fetchGitHubCommitFiles(repoName, commitSha, username, accessToken);
 
@@ -1004,7 +1004,7 @@ public class RepoService {
     }
 
     private List<Map<String, Object>> fetchGitLabCommitFiles(String commitSha, Long projectId, String accessToken) {
-        String url = String.format("https://gitlab.com/api/v4/projects/%s/repository/commits/%s/diff", projectId, commitSha);
+        String url = String.format("https://lab.ssafy.com/api/v4/projects/%s/repository/commits/%s/diff", projectId, commitSha);
 
         return webClient.get()
                 .uri(url)
