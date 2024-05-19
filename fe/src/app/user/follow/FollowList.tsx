@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import UseAxios from "@/api/common/useAxios";
 import { colorMapping } from "../../../components/colorMap";
 import IsStar from "@/components/usercard/IsStar";
@@ -48,6 +48,7 @@ export default function FollowList() {
   const { response } = useCommonCodeStore.getState();
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("서버 오류입니다.");
+  const [isExpanded, setIsExpanded] = useState(false);
   const router = useRouter();
   const fetchFollowData = async () => {
     try {
@@ -126,7 +127,19 @@ export default function FollowList() {
                     </div>
                   </div>
                   <div className="bg-appGrey1 p-4 rounded-2xl grow">
-                    <p>{member.memberIntro}</p>
+                    {isExpanded
+                      ? member.memberIntro.split("\n").map((line, index) => (
+                          <React.Fragment key={index}>
+                            {line}
+                            <br />
+                          </React.Fragment>
+                        ))
+                      : member.memberIntro.split("\n")[0]}
+                    {member.memberIntro.split("\n").length > 1 && (
+                      <button onClick={() => setIsExpanded(!isExpanded)}>
+                        {isExpanded ? "[간략히]" : "[더보기]"}
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
