@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import Link from "next/link";
 import tw from 'tailwind-styled-components';
 
 interface ListItemIconProps {
@@ -23,7 +24,12 @@ const GitHubTokenPage = () => {
         <TextCenter>
           <SmallText>Token Registration</SmallText>
           <Title>Github 액세스 토큰을 받는 8가지 스텝</Title>
-          <Subtitle>아래의 순서에 따라 당신의 액세스 토큰을 발급 받아보세요.</Subtitle>
+          <Subtitle>
+            아래의 순서에 따라 당신의 액세스 토큰을 발급 받아보세요.
+          </Subtitle>
+          <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens' target='_blank' rel='noopener noreferrer'>
+            <AccessButton>해당 버튼을 누르면 step4의 페이지로 이동합니다.</AccessButton>
+          </Link>
         </TextCenter>
         <List>
           {[
@@ -36,8 +42,8 @@ const GitHubTokenPage = () => {
             '아래 Scope 섹션에서 repo 체크박스를 필수로 선택합니다.',
             'Generate token 버튼을 클릭하여 토큰을 생성합니다.'
           ].map((step, index) => (
-            <ListItem key={index}>
-              <ListItemIcon checked={checkedItems[index]} onClick={() => handleCheckChange(index)}>
+            <ListItem key={index}  onClick={() => handleCheckChange(index)}>
+              <ListItemIcon checked={checkedItems[index]}>
                 {/* SVG can be replaced with relevant icons for each step */}
               </ListItemIcon>
               <ListItemText>
@@ -91,7 +97,7 @@ const Title = tw.h2`
 
 const Subtitle = tw.p`
   mx-auto
-  mt-4
+  my-4
   max-w-2xl
   text-lg
   font-normal
@@ -155,6 +161,22 @@ const ListItemDescription = tw.h4`
   mt-2
   text-base
   text-gray-700
+`;
+
+const AccessButton = tw.button`
+  inline-flex
+  items-center
+  justify-center
+  py-2
+  px-3
+  border-1-black
+  border
+  text-base
+  font-medium
+  rounded-md
+  text-white
+  bg-black
+  hover:bg-opacity-75
 `;
 
 export default GitHubTokenPage;

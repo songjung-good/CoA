@@ -58,12 +58,22 @@ const RepoInfo: React.FC = () => {
         <div className="w-full lg:w-3/5 h-full lg:flex lg:flex-col lg:justify-between">
           <div className="mb-2 flex flex-col justify-between items-start lg:items-end w-full h-full">
             <div>
+              <p>
+                분석 대상 :
+                <Link href={`/user/${repoInfo.memberUuid}`}>
+                  <span className="hover:text-appPink hover:cursor-pointer">{` ${repoInfo.memberNickname} `}</span>
+                </Link>
+                님
+              </p>
               <p className=" text-start w-full whitespace-pre-wrap break-words">
                 프로젝트 기간 :
-                {`${repoInfo.repoStartDate} ~ ${repoInfo.repoEndDate} (${projectDays}일)`}
+                {`${repoInfo.repoStartDate} ~ ${repoInfo.repoEndDate} `}
+                <span className="font-bold ml-1">{`(${projectDays}일)`}</span>
               </p>
               <p className=" text-start">
-                프로젝트 인원: {repoInfo.repoMemberCnt}명
+                프로젝트 인원 :{" "}
+                {<span className="font-bold">{repoInfo.repoMemberCnt} </span>}{" "}
+                명
               </p>
             </div>
           </div>
