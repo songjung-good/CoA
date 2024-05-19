@@ -6,7 +6,6 @@ import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -40,21 +39,13 @@ public class Repo extends BaseEntity {
     @Column(name = "repo_gitlab_project_id")
     private Integer repoGitlabProjectId;
 
-    @Column(name = "repo_member_cnt")
-    private Integer repoMemberCnt;
-
-
     public void updateRepo(RepoInfo repoInfo){
 
         this.platCode = repoInfo.getRepoCode();
         this.repoReadmeOrigin = repoInfo.getRepoReadmeOrigin();
         this.repoCommitCnt = repoInfo.getRepoCommitCnt();
         this.repoGitlabProjectId = repoInfo.getRepoGitLabProjectId();
-        this.repoMemberCnt = repoInfo.getRepoMemberCnt();
         this.setUpdatedAt(LocalDateTime.now());
     }
 
-    public void updateRepoMemberCnt(Integer repoMemberCnt){
-        this.repoMemberCnt = repoMemberCnt;
-    }
 }
