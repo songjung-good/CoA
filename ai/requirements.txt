@@ -28,6 +28,7 @@ langchain-experimental==0.0.57
 langchain-openai==0.1.6
 langchain-text-splitters==0.0.1
 langsmith==0.1.49
+llama_cpp_python==0.2.71
 MarkupSafe==2.1.5
 marshmallow==3.21.1
 multidict==6.0.5
