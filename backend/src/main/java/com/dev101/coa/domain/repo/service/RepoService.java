@@ -516,6 +516,8 @@ public class RepoService {
             String baseUrl = split[split.length - 5];
             String gitLabApiUrl = "https://" + baseUrl + "/api/v4/projects/" + projectId;
 
+            System.out.println("gitLabApiUrl = " + gitLabApiUrl);
+
             JsonObject jsonObject = getJsonObject(gitLabApiUrl, accessToken);
             projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "updated_at");
 

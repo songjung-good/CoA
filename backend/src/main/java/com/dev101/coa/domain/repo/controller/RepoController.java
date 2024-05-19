@@ -5,13 +5,8 @@ import com.dev101.coa.domain.repo.dto.*;
 import com.dev101.coa.domain.repo.service.RepoService;
 import com.dev101.coa.global.common.BaseResponse;
 import com.dev101.coa.global.common.StatusCode;
-import com.dev101.coa.global.exception.BaseException;
-import com.dev101.coa.global.security.oauth2user.CustomOAuth2User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,7 +64,6 @@ public class RepoController {
             @PathVariable("analysisId") String analysisId,
             @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) throws Exception {
 
-        System.out.println("11111111111111111111");
         Long result = repoService.saveAnalysis(currentMemberId, analysisId, saveAnalysisReqDto);
         System.out.println("7777777777777");
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
