@@ -610,7 +610,7 @@ public class RepoService {
                 .memberNickname(redisData.getUserName())
                 .repoViewPath(redisRepoPath)
                 .repoViewTitle(title)
-                .repoViewMemberCnt(redisData.getRepoMemberCnt())
+                .repoMemberCnt(redisData.getRepoMemberCnt())
                 .repoStartDate(redisData.getRepoStartDate())
                 .repoEndDate(redisData.getRepoEndDate())
                 .isMine(isMine)
