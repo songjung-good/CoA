@@ -139,7 +139,7 @@ public class ExternalApiService {
         throw new BaseException(StatusCode.PROJECT_NOT_FOUND);
     }
 
-    public String fetchGitlabMembers(String projectId, String accessToken) {
+    public List<Map<String, Object>> fetchGitlabMembers(String projectId, String accessToken) {
         return webClient.get()
                 .uri("https://lab.ssafy.com/api/v4/projects/{projectId}/members?per_page=100", projectId)
                 .headers(headers -> headers.setBearerAuth(accessToken))
@@ -149,7 +149,7 @@ public class ExternalApiService {
 //TODO 잘못된 유저 정보 ( 유저닉네임 업데이트 됐을 때 )                .onStatus(status -> status.equals(HttpStatus.NOT_FOUND), response -> Mono.error(new BaseException(StatusCode.UNAUTHORIZED_API_ERROR)))
                 .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitHub repos fetching")))
                 .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub repos fetching")))
-                .bodyToMono(String.class)
+                .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
                 .block();
     }
 

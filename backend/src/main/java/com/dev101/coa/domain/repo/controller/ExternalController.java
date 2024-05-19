@@ -81,9 +81,18 @@ public class ExternalController {
 
         String projectId = externalApiService.handleGitlabProject(userName, accessToken, projectName);
 
-        String result = externalApiService.fetchGitlabMembers(projectId, accessToken);
+        List<Map<String, Object>> mans = externalApiService.fetchGitlabMembers(projectId, accessToken);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
+        // JSON 형식의 문자열로 변환
+        StringBuilder result = new StringBuilder("[");
+        for (Map<String, Object> men : mans) {
+            men.put("projectId", projectId);
+            result.append(men.toString()).append(",");
+        }
+        // 마지막 쉼표 제거 및 닫는 대괄호 추가
+        result.deleteCharAt(result.length() - 1).append("]");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result.toString()));
     }
 
 
