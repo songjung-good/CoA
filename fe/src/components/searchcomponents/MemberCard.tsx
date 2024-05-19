@@ -82,13 +82,16 @@ const MemberCard: React.FC<MemberCardProps> = ({ memberInfo }) => {
   return (
     <MemberInfoDiv>
       <Header>
-        <div className='flex flex-col mb-[2rem]'>
-          <Info>{memberInfo.memberNickName} | {jobName} | {bookmarkDisplay}</Info>
-        </div>
         <ProfileImg
           src={memberInfo.memberImg}
           alt="member image"
-        />
+        /> 
+        <div className='flex flex-col justify-center'>
+          <Info>
+          {memberInfo.memberNickName} | {bookmarkDisplay}
+          </Info>
+          <Info>  {jobName} </Info>
+        </div>
       </Header>
       <Body>
         <p className="text-xl mb-2">{memberInfo.memberIntro}</p>
@@ -133,8 +136,7 @@ const MemberInfoDiv = tw.div`
 `;
 
 const Header = tw.div`
-  flex
-  justify-between
+  flex  
   items-center
   mb-5
 `;
@@ -151,6 +153,7 @@ const Info = tw.p`
   font-bold
   text-2xl
   flex
+  items-center
 `;
 
 const Body = tw.div`
