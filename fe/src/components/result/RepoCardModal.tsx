@@ -31,6 +31,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({
   const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
   const [filteredOptions, setFilteredOptions] = useState<SkillOption[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const router = useRouter();
   const axios = UseAxios();
   const searchRef = useRef<HTMLDivElement>(null);
@@ -144,8 +145,8 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
+    setIsLoading(true); // 로딩 상태를 true로 설정
     // 폼 제출 로직 구현, 예: API 호출 등
-    await console.log("저장!");
     const analyzeId = useAnalyzingStore.getState().analyzeId;
     let repoViewId = 0;
     // 여기에 수정 로직을 추가하세요
@@ -159,32 +160,30 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({
       repoViewSkillList: stacks.map((stack) => stack),
     };
 
-    console.log(data);
+    try {
+      const saveResponse = await axios.post(`/api/repos/${analyzeId}`, data);
+      repoViewId = saveResponse.data.result;
 
-    await axios.post(`/api/repos/${analyzeId}`, data).then((res) => {
-      console.log(res);
-      repoViewId = res.data.result;
-    });
+      const detailResponse = await axios.get(`/api/repos/${repoViewId}`);
+      useRepoDetailStore.getState().updateResultState(detailResponse.data); // 분석 결과 데이터 저장
 
-    await axios.get(`/api/repos/${repoViewId}`).then((res) => {
-      useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
-      console.log(res);
-    });
+      if (!repoViewId) {
+        throw new Error("repoViewId가 정의되지 않았습니다.");
+      }
 
-    await router.push(`/repo/${repoViewId}`);
-    // 분석 저장 로직 ------------------------------------------------------------------
-
-    // 수정 완료 후 모달 닫기
-    await onClose();
-
-    // await axios.get(`/api/repos/9`).then((res) => {
-    //   useRepoDetailStore.getState().updateResultState(res.data); // 분석 결과 데이터 저장
-    //   console.log(res);
-    // });
-    // await await router.push(`/repo/9`);
+      onClose();
+      router.push(`/repo/${repoViewId}`);
+    } catch (error) {
+      console.error("저장 중 오류 발생:", error);
+      onClose();
+      router.push("/error");
+    } finally {
+      setIsLoading(false); // 로딩 상태를 false로 설정
+    }
   };
 
   if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ">
       <div className="bg-white p-5 rounded-lg shadow-lg relative w-full max-w-sm sm:max-w-lg lg:max-w-2xl z-40">
@@ -353,8 +352,21 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({
               onClick={() => {
                 isSave.current = true;
               }}
+              disabled={isLoading} // 로딩 중일 때 버튼 비활성화
             >
-              저장하기
+              {isLoading ? (
+                <div className="flex">
+                  <img
+                    src="/image/LoadingSpinner.gif"
+                    alt="로딩 스피너"
+                    width={20}
+                    height={40}
+                  />
+                  <p>저장중입니다...</p>
+                </div>
+              ) : (
+                "저장하기"
+              )}{" "}
             </button>
           </div>
         </form>
