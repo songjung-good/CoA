@@ -526,8 +526,8 @@ public class RepoService {
             // ai 요청 디티오
             gitlabAnalysisReqDto = AiGitlabAnalysisReqDto.builder()
                     .analysisId(analysisId)
-                    .baseUrl(baseUrl)
-                    .projectId(projectId)
+                    .baseUrl("https://" +baseUrl)
+                    .projectId(String.valueOf(projectId))
                     .userName(analysisReqDto.getUserName())
                     .privateToken(accessToken)
                     .build();

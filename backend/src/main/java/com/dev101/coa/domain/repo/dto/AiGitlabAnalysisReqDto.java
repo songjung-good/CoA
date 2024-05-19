@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class AiGitlabAnalysisReqDto {
     private String analysisId;
     private String baseUrl;
-    private Integer projectId;
+    private String projectId;
     private String userName;
     private String privateToken;
 }
