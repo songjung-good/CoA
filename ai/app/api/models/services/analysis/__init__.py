@@ -83,7 +83,8 @@ class AnalysisService:
 
             # 커밋 점수 매기기
             self._update_status(dto, AnalysisStatus.SCORING_COMMITS)
-            commit_result = await self.ai_service.score_commits(chain, preprocessed_commits_doc)
+            repo_view_result, commit_result =\
+                await self.ai_service.explain_and_score_comment(chain, preprocessed_commits_doc)
 
             # Mutex chain 되돌리기
             await self.ai_mutex.release(chain)
@@ -92,7 +93,7 @@ class AnalysisService:
                 total_commit_cnt=total_commit_cnt,
                 personal_commit_cnt=personal_commit_cnt,
                 readme=readme_result,
-                repo_view_result='임시 레포 뷰 분석 결과입니다',
+                repo_view_result=repo_view_result,
                 commit_score=commit_result
             )
 

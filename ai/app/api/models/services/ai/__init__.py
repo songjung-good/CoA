@@ -44,9 +44,9 @@ class AiService:
             logging.debug('README TOTAL TIME: ' + f'{end - start:.2f} secs')
             return result
 
-    async def score_commits(self, chain: Chain, data: list[Document]) -> CommitScoreDto:
+    async def explain_and_score_comment(self, chain: Chain, data: list[Document]) -> tuple[str, CommitScoreDto]:
         """
-        평가한 커밋의 점수를 매깁니다.
+        커밋 내용을 분석하고 점수를 매깁니다
         """
         with get_openai_callback() as cb:
             start = time.time()
@@ -54,8 +54,9 @@ class AiService:
             output = chain.invoke(data)['output_text']
             logging.debug('SCORE OUTPUT:')
             logging.debug(output)
+            
             dct = json.loads(output)
-            result = CommitScoreDto.from_dict(dct)
+            result = CommitScoreDto.from_dict(dct['score'])
 
             end = time.time()
 
@@ -63,4 +64,4 @@ class AiService:
             logging.debug('COMMITS TOTAL TOKEN COST: ' + f'$ {cb.total_cost:.6f}')
             logging.debug('COMMITS TOTAL TIME: ' + f'{end - start:.2f} secs')
 
-            return result
+            return dct['explanation'], result
