@@ -52,6 +52,8 @@ class AiService:
             start = time.time()
 
             output = chain.invoke(data)['output_text']
+            logging.debug('SCORE OUTPUT:')
+            logging.debug(output)
             dct = json.loads(output)
             result = CommitScoreDto.from_dict(dct)
 
