@@ -58,7 +58,7 @@ export default function AnalysisCard({ data }: { data: RepoAnalysisResponse }) {
             <select
               onChange={(e) => {
                 setSelectedJob(e.target.value);
-                console.log(selectedJob);
+                // console.log(selectedJob);
               }}
               className="border hover:border-appBlue1"
               value={selectedJob}

@@ -87,8 +87,8 @@ const RepoViewComment: React.FC<RepoViewCommentProps> = ({ setShowModal }) => {
     await axios
       .put(`/api/repos/comments/${params.id}`, comments)
       .then((res) => {
-        console.log(res.data);
-        console.log("코멘트 저장 성공");
+        // console.log(res.data);
+        // console.log("코멘트 저장 성공");
       })
       .catch((err) => {
         console.log(err);

@@ -30,9 +30,9 @@ export default function ResultTab() {
     const { id } = params;
 
     router.push(`/result/${id}/edit`);
-    console.log(
-      useRepoDetailStore.getState().result.repoCardDto.memberNickname,
-    );
+    // console.log(
+    //   useRepoDetailStore.getState().result.repoCardDto.memberNickname,
+    // );
   };
 
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";
