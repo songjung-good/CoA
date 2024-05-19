@@ -57,6 +57,10 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
     setIsEdit(false);
   };
 
+  // URL에 "search"가 포함되어 있는지 확인합니다.
+  const isSearchPage =
+    typeof window !== "undefined" && window.location.href.includes("search");
+
   return (
     <>
       <section className="card flex flex-col gap-4 relative">
@@ -103,7 +107,9 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
                 </ul>
               </div>
             </div>
-            <div className="absolute top-[5%] right-[1%]">
+            <div
+              className={`absolute top-[5%] right-[1%] ${isSearchPage ? "pointer-events-none" : ""}`}
+            >
               {myData &&
                 (myData?.isMine ? (
                   <button
