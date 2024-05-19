@@ -83,7 +83,7 @@ class AnalysisService:
 
             # 커밋 점수 매기기
             self._update_status(dto, AnalysisStatus.SCORING_COMMITS)
-            commit_result = await self.ai_service.score_commits(chain, preprocessed_commits_doc)
+            commit_result = await self.ai_service.explain_and_score_comment(chain, preprocessed_commits_doc)
 
             # Mutex chain 되돌리기
             await self.ai_mutex.release(chain)
