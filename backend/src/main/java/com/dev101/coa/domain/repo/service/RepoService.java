@@ -22,8 +22,6 @@ import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import com.dev101.coa.global.security.service.EncryptionUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -76,7 +74,6 @@ public class RepoService {
 
     // AI server 통신을 위한 WebClient
     private final WebClient webClient;
-    private final WebClient.Builder webClientBuilder;
 
     // 토큰 복호화를 위한 클래스
     private final EncryptionUtils encryptionUtils;
@@ -880,15 +877,13 @@ public class RepoService {
     }
 
     private List<Map<String, Object>> fetchGitHubCommits(String repoName, String username, String accessToken) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        WebClient webClient = webClientBuilder.build();
         List<Map<String, Object>> allCommits = new ArrayList<>();
         int page = 1;
 
         while (true) {
             String url = String.format("https://api.github.com/repos/%s/%s/commits?page=%d&per_page=100", username, repoName, page);
 
-            Object commits = webClient.get()
+            List<Map<String, Object>> commits = webClient.get()
                     .uri(url)
                     .headers(headers -> headers.setBearerAuth(accessToken))
                     .retrieve()
@@ -906,34 +901,31 @@ public class RepoService {
                         }
                     })
                     .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub 코드 줄 수")))
-                    .bodyToMono(Object.class)
+                    .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
                     .block(Duration.ofSeconds(20));
             // Synchronously wait for the result
-            System.out.println("responseBody = " + commits);
-//            List<Map<String, Object>> commits = objectMapper.readValue(responseBody, new TypeReference<List<Map<String, Object>>>() {});
 
             System.out.println("commits = " + commits);
-//
-//            if (commits == null || commits.isEmpty()) {
-//                break;
-//            }
-//
-//            allCommits.addAll(commits);
+
+            if (commits == null || commits.isEmpty()) {
+                break;
+            }
+
+            allCommits.addAll(commits);
             page++;
         }
+        return allCommits;
 
     }
 
     private List<Map<String, Object>> fetchGitLabCommits(Integer projectId, String accessToken) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        WebClient webClient = webClientBuilder.build();
         List<Map<String, Object>> allCommits = new ArrayList<>();
         int page = 1;
 
         while (true) {
             String url = String.format("https://gitlab.com/api/v4/projects/%s/repository/commits?page=%d&per_page=100", projectId, page);
 
-            String responseBody = webClient.get()
+            List<Map<String, Object>> commits = webClient.get()
                     .uri(url)
                     .headers(headers -> headers.setBearerAuth(accessToken))
                     .retrieve()
@@ -951,10 +943,9 @@ public class RepoService {
                         }
                     })
                     .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitLab 코드 줄 수")))
-                    .bodyToMono(String.class)
+                    .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
                     .block(Duration.ofSeconds(20)); // Synchronously wait for the result
 
-            List<Map<String, Object>> commits = objectMapper.readValue(responseBody, new TypeReference<List<Map<String, Object>>>() {});
 
             if (commits == null || commits.isEmpty()) {
                 break;
@@ -988,7 +979,6 @@ public class RepoService {
     }
 
     private List<Map<String, Object>> fetchGitHubCommitFiles(String repoName, String commitSha, String username, String accessToken) {
-        WebClient webClient = webClientBuilder.build();
         String url = String.format("https://api.github.com/repos/%s/%s/commits/%s", username, repoName, commitSha);
 
         return webClient.get()
@@ -1014,7 +1004,6 @@ public class RepoService {
     }
 
     private List<Map<String, Object>> fetchGitLabCommitFiles(String commitSha, Long projectId, String accessToken) {
-        WebClient webClient = webClientBuilder.build();
         String url = String.format("https://gitlab.com/api/v4/projects/%s/repository/commits/%s/diff", projectId, commitSha);
 
         return webClient.get()
