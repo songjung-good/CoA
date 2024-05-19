@@ -199,7 +199,7 @@ export default function LinkPage() {
             </button>
           </div>
           {githubTokenModal ? (
-            <div className="absolute ml-[8%]">
+            <div className="absolute">
               <label className="card flex flex-col gap-2">
                 <div className="flex justify-between">
                   <div className="flex gap-2">
@@ -295,7 +295,7 @@ export default function LinkPage() {
             </button>
           </div>
           {gitlabTokenModal ? (
-            <div className="absolute ml-[8%]">
+            <div className="absolute">
               <label className="card flex flex-col gap-2">
                 <div className="flex justify-between">
                   <div className="flex gap-2">
