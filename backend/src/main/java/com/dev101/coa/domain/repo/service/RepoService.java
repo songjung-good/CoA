@@ -847,6 +847,7 @@ public class RepoService {
         String userName = null;
         String repoName = null;
         String accessToken;
+        System.out.println("repoInfo = " + repoInfo.toString());
         if (repoInfo.getRepoGitLabProjectId() != null) {
 
             accessToken = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST)).getAccountLinkReceiveToken();
