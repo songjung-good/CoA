@@ -199,8 +199,10 @@ public class RepoService {
 
         // repo 저장(platformCodeId, repoPath, repoReadmeOrigin, repoCommtCnt,
         // - repoPath로 찾은 후, 존재하면 업데이트 존재하지 않으면 생성
+        System.out.println("22222222222222");
         RepoInfo repoInfo = getRepoInfo(redisData);
 
+        System.out.println("33333333333333");
         Repo repo = null;
         Optional<Repo> optionalRepo = repoRepository.findByRepoPath(redisData.getRepoPath());
 
@@ -248,6 +250,7 @@ public class RepoService {
                 .repoEndDate(saveAnalysisReqDto.getRepoEndDate())
                 .build();
 
+        System.out.println("444444444444");
         RepoView saveRepoView = repoViewRepository.save(repoView);
 
 
@@ -274,8 +277,10 @@ public class RepoService {
 //            lineOfCodeRepository.save(lineOfCode);
 //        }
 
+        System.out.println("55555555555");
         processLinesOfCode(repoView, repoInfo, member);
 
+        System.out.println("666666666666666666");
         // commitScore 저장
         CommitScoreDto commitScoreDto = redisData.getResult().getCommitScore();
         commitScoreRepository.save(CommitScore.builder()

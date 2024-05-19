@@ -69,7 +69,9 @@ public class RepoController {
             @PathVariable("analysisId") String analysisId,
             @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) {
 
+        System.out.println("11111111111111111111");
         Long result = repoService.saveAnalysis(currentMemberId, analysisId, saveAnalysisReqDto);
+        System.out.println("7777777777777");
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
