@@ -46,7 +46,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ memberInfo }) => {
       const postResponse = await UseAxios().post(
         `/api/member/bookmarks/${uuid}`,
       );
-      console.log(postResponse.data.result["currentStatus"]);
+      // console.log(postResponse.data.result["currentStatus"]);
       return postResponse.data.result["currentStatus"];
     } catch (error) {
       console.error("'팔로우 post'요청 에러", error);
