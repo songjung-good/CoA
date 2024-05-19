@@ -155,7 +155,7 @@ const RepoCardModal: React.FC<RepoCardModalProps> = ({
       repoViewSubtitle: subtitle,
       repoStartDate: startDate,
       repoEndDate: endDate,
-      repoMemberCnt: memberCount,
+      repoViewMemberCnt: memberCount,
       repoViewSkillList: stacks.map((stack) => stack),
     };
 
