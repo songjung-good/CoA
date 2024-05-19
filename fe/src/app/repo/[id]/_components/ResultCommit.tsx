@@ -91,7 +91,7 @@ export default function ResultCommit() {
     responsive: true,
     plugins: {
       legend: {
-        position: "bottom" as const,
+        position: "right" as const,
       },
       tooltip: {
         callbacks: {
@@ -103,18 +103,20 @@ export default function ResultCommit() {
         },
       },
     },
-    cutout: "50%", // 도넛 형태로 만들기 위해 중앙 부분을 비웁니다.
+    cutout: "40%", // 도넛 형태로 만들기 위해 중앙 부분을 비웁니다.
   };
 
   return (
     <div className="flex flex-col w-full justify-between">
       <div className="flex flex-col justify-between items-center min-h-80">
         <CommitRate />
-        <div className="w-1/3 relative">
+        <div className="w-full max-w-[80%] sm:max-w-[40%] min-h-[300px] flex flex-col items-center justify-center relative">
           <Pie data={pieData} options={pieOptions} />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-3/4 text-center">
-            <p className="font-bold">전체 코드</p>
-            <p className="font-bold text-sm">{totalLineCount}</p>
+          <div className="">
+            <p className="font-bold my-4">
+              전체 코드 :{" "}
+              {<span className="text-appBlue1">{totalLineCount} </span>}줄
+            </p>
           </div>
         </div>
       </div>
