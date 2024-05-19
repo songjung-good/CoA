@@ -20,7 +20,7 @@ export default function IsStar({
       const postResponse = await UseAxios().post(
         `/api/member/bookmarks/${Uuid}`,
       );
-      console.log(postResponse.data.result["currentStatus"]);
+      // console.log(postResponse.data.result["currentStatus"]);
       return postResponse.data.result["currentStatus"];
     } catch (error) {
       console.error("'팔로우 post'요청 에러", error);
