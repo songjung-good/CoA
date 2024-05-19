@@ -901,6 +901,7 @@ public class RepoService {
                             return Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitHub commits fetching"));
                         }
                     })
+                    .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub 코드 줄 수")))
                     .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
                     .block(Duration.ofSeconds(10)); // Synchronously wait for the result
 
@@ -940,6 +941,8 @@ public class RepoService {
                             return Mono.error(new ResponseStatusException(response.statusCode(), "Client error during GitLab commits fetching"));
                         }
                     })
+                    .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitLab 코드 줄 수")))
+
                     .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
                     .block(Duration.ofSeconds(10)); // Synchronously wait for the result
 
