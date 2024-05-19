@@ -29,6 +29,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Map<String, Object>> applicationHandler(Exception e, WebRequest request) {
         log.error("Error occurs {}", e.toString());
 
+        System.out.println("#################");
+        System.out.println("e = " + e);
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
