@@ -50,17 +50,31 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
 
     async def load_content(self) -> list[dict[Any, Any]]:
         # TODO: 리팩토링은 나중에...
-        # TODO: pagination
 
         result: list[dict[Any, Any]] = []
 
-        tree_json = await self._request_json(
-            f'https://lab.ssafy.com/api/v4/projects/{self.project_id}/repository/tree?recursive=1'
-        )
+        tree_list = []
 
-        for entry in tree_json:
+        tree_response = await self._request_get(
+            f'https://lab.ssafy.com/api/v4/projects/{self.project_id}/repository/tree?per_page=100&recursive=1'
+        )
+        tree_response.raise_for_status()
+        for file in tree_response.json():
+            tree_list.append(file)
+        next_url = self.__get_next_from_link(tree_response.headers['Link'])
+        while True:
+            tree_response = await self._request_get(next_url)
+            tree_response.raise_for_status()
+            for file in tree_response.json():
+                tree_list.append(file)
+            next_url = self.__get_next_from_link(tree_response.headers['Link'])
+            if next_url is None:
+                break
+
+        for entry in tree_list:
             if entry['type'] == 'tree':     # 해당 entry는 directory
                 continue
+            print(entry)
             path = entry['path']
             if not self.accept_spec.match_file(path): # 허용된 파일인지 검사
                 continue
@@ -183,3 +197,15 @@ class GitLabClient(RestRepoClient[GitLabAnalysisRequest]):
                     return int(value)
 
         raise Exception("응답 헤더 'link'에서 페이지 수 가져오기 실패")
+
+    def __get_next_from_link(self, link_header: str) -> str | None:
+        """
+        응답 헤더 Link에서 다음 페이지 URL을 가져옵니다.
+        """
+        for section in link_header.split(', '):
+            encased_url, rel_equals_rel = section.split('; ')
+            if rel_equals_rel != 'rel="next"':
+                continue
+            rel_url = encased_url[1:-1]
+            return rel_url
+        return None

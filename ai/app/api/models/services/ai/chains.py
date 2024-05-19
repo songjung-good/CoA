@@ -9,14 +9,17 @@ from langchain_core.prompts import PromptTemplate
 
 class AiChains:
     def __init__(self, llm: BaseLLM):
-        self.__map_chain = LLMChain(
+
+        # README ===========================================================================
+
+        self.__readme_map_chain = LLMChain(
             llm=llm,
             prompt=PromptTemplate.from_template(
                 "Summarize this content: {docs}"
             )
         )
 
-        self.__reduce_chain = LLMChain(
+        self.__readme_reduce_chain = LLMChain(
             llm=llm,
             prompt=PromptTemplate.from_template("""
 The following is set of summaries and raw source codes.
@@ -26,7 +29,7 @@ Take these and distill it into a final, consolidated summary of the main themes.
 ----------
 CONSOLIDATED SUMMARY: 
 """
-            )
+                                             )
         )
 
         self.__readme_combine_chain = LLMChain(
@@ -54,6 +57,56 @@ Summaries:
 ----------
 README.md:
 """)
+        )
+
+        self.__readme_collapse_documents_chain = StuffDocumentsChain(
+            llm_chain=self.__readme_reduce_chain, document_variable_name="docs"
+        )
+
+        self.__readme_combine_documents_chain = StuffDocumentsChain(
+            llm_chain=self.__readme_combine_chain, document_variable_name="docs"
+        )
+
+        self.__readme_reduce_documents_chain = ReduceDocumentsChain(
+            # This is final chain that is called.
+            combine_documents_chain=self.__readme_combine_documents_chain,
+            # If documents exceed context for `StuffDocumentsChain`
+            collapse_documents_chain=self.__readme_collapse_documents_chain,
+            # The maximum number of tokens to group documents into.
+            token_max=3000,
+        )
+
+        self.readme_map_reduce_chain = MapReduceDocumentsChain(
+            # Map chain
+            llm_chain=self.__readme_map_chain,
+            # Reduce chain
+            reduce_documents_chain=self.__readme_reduce_documents_chain,
+            # The variable name in the llm_chain to put the documents in
+            document_variable_name="docs",
+            # Return the results of the map steps in the output
+            return_intermediate_steps=False
+        )
+
+        # COMMIT ===========================================================================
+
+        self.__commit_map_chain = LLMChain(
+            llm=llm,
+            prompt=PromptTemplate.from_template(
+                "Summarize this content: {docs}"
+            )
+        )
+
+        self.__commit_reduce_chain = LLMChain(
+            llm=llm,
+            prompt=PromptTemplate.from_template("""
+The following is set of summaries and raw source codes.
+Take these and distill it into a final, consolidated summary of the main themes.
+----------
+{docs}
+----------
+CONSOLIDATED SUMMARY: 
+"""
+                                                )
         )
 
         self.__commit_combine_chain = LLMChain(
@@ -87,50 +140,26 @@ Answer:
 """)
         )
 
-        self.__collapse_documents_chain = StuffDocumentsChain(
-            llm_chain=self.__reduce_chain, document_variable_name="docs"
-        )
-
-        self.__readme_combine_documents_chain = StuffDocumentsChain(
-            llm_chain=self.__readme_combine_chain, document_variable_name="docs"
+        self.__commit_collapse_documents_chain = StuffDocumentsChain(
+            llm_chain=self.__commit_reduce_chain, document_variable_name="docs"
         )
 
         self.__commit_combine_documents_chain = StuffDocumentsChain(
             llm_chain=self.__commit_combine_chain, document_variable_name="docs"
         )
 
-        self.__readme_reduce_documents_chain = ReduceDocumentsChain(
-            # This is final chain that is called.
-            combine_documents_chain=self.__readme_combine_documents_chain,
-            # If documents exceed context for `StuffDocumentsChain`
-            collapse_documents_chain=self.__collapse_documents_chain,
-            # The maximum number of tokens to group documents into.
-            token_max=3000,
-        )
-
         self.__commit_reduce_documents_chain = ReduceDocumentsChain(
             # This is final chain that is called.
             combine_documents_chain=self.__commit_combine_documents_chain,
             # If documents exceed context for `StuffDocumentsChain`
-            collapse_documents_chain=self.__collapse_documents_chain,
+            collapse_documents_chain=self.__commit_collapse_documents_chain,
             # The maximum number of tokens to group documents into.
             token_max=3000,
         )
 
-        self.readme_map_reduce_chain = MapReduceDocumentsChain(
-            # Map chain
-            llm_chain=self.__map_chain,
-            # Reduce chain
-            reduce_documents_chain=self.__readme_reduce_documents_chain,
-            # The variable name in the llm_chain to put the documents in
-            document_variable_name="docs",
-            # Return the results of the map steps in the output
-            return_intermediate_steps=False
-        )
-
         self.commit_map_reduce_chain = MapReduceDocumentsChain(
             # Map chain
-            llm_chain=self.__map_chain,
+            llm_chain=self.__readme_map_chain,
             # Reduce chain
             reduce_documents_chain=self.__commit_reduce_documents_chain,
             # The variable name in the llm_chain to put the documents in
