@@ -243,7 +243,7 @@ public class RepoService {
                 .repoViewCommitCnt(aiResult.getPersonalCommitCnt())
                 .repoViewTitle(saveAnalysisReqDto.getRepoViewTitle())
                 .repoViewSubtitle(saveAnalysisReqDto.getRepoViewSubtitle())
-                .repoViewMemberCnt(repoInfo.getRepoMemberCnt())
+                .repoViewMemberCnt(saveAnalysisReqDto.getRepoViewMemberCnt())
                 .repoStartDate(saveAnalysisReqDto.getRepoStartDate())
                 .repoEndDate(saveAnalysisReqDto.getRepoEndDate())
                 .build();

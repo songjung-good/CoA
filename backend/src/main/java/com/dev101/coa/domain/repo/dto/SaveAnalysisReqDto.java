@@ -1,11 +1,8 @@
 package com.dev101.coa.domain.repo.dto;
 
-import com.dev101.coa.domain.repo.entity.RepoViewSkill;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -14,5 +11,6 @@ public class SaveAnalysisReqDto {
     private String repoViewSubtitle;
     private LocalDate repoStartDate;
     private LocalDate repoEndDate;
+    private Integer repoViewMemberCnt;
     private List<Long> repoViewSkillList;
 }
