@@ -969,8 +969,8 @@ public class RepoService {
             List<Map<String, Object>> files = isGitLab ? fetchGitLabCommitFiles(commitSha, (Long) commit.get("project_id"), accessToken) : fetchGitHubCommitFiles(repoName, commitSha, username, accessToken);
 
             for (Map<String, Object> file : files) {
-                String filename = (String) file.get("filename");
-                Integer linesAdded = (Integer) file.get("additions");
+                String filename = isGitLab ? (String) file.get("new_path") : (String) file.get("filename");
+                Integer linesAdded = isGitLab ? (Integer) countAddedLines((String) file.get("diff")) : (Integer) file.get("additions");
                 String skillCodeName = externalApiService.getLanguageFromFilePath(filename); // You need to implement this method to map filename to skillCodeId
 
                 linesOfCodeMap.put(skillCodeName, linesOfCodeMap.getOrDefault(skillCodeName, 0) + linesAdded);
@@ -979,13 +979,22 @@ public class RepoService {
 
         return linesOfCodeMap;
     }
-
+    private int countAddedLines(String diffText) {
+        int count = 0;
+        String[] lines = diffText.split("\n");
+        for (String line : lines) {
+            if (line.startsWith("+") && !line.startsWith("+++")) {
+                count++;
+            }
+        }
+        return count;
+    }
     private List<Map<String, Object>> fetchGitHubCommitFiles(String repoName, String commitSha, String username, String accessToken) {
         String url = String.format("https://api.github.com/repos/%s/%s/commits/%s", username, repoName, commitSha);
 
         return webClient.get()
                 .uri(url)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, response -> {
                     if (response.statusCode().equals(HttpStatus.UNAUTHORIZED)) {
@@ -1010,7 +1019,7 @@ public class RepoService {
 
         return webClient.get()
                 .uri(url)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, response -> {
                     if (response.statusCode().equals(HttpStatus.UNAUTHORIZED)) {
