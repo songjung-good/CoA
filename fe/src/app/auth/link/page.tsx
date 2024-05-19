@@ -136,9 +136,11 @@ export default function LinkPage() {
       <div className="max-w-screen-xl w-full flex flex-col py-4 gap-4">
         <Header>
           <h1 className="text-xl font-bold">계정 연동하기</h1>
-          <Link href='/info'>
-            <Button>토큰 발급 안내</Button>
-          </Link>
+          <ButtonGroup>
+            <Link href='/info'>
+              <Button>토큰 발급 안내</Button>
+            </Link>
+            </ButtonGroup>
         </Header>
         <section className="card flex flex-col md:flex-row gap-4 justify-between">
           <div className="flex gap-4">
@@ -156,7 +158,11 @@ export default function LinkPage() {
               <p>UserName : {hubNickName}</p>
               <p>
                 Token 등록:{" "}
-                {isHubToken ? "토큰 등록 완료" : "등록된 토큰이 없어요"}
+                {isHubToken ? "토큰 등록 완료되었습니다" : 
+                  <Link href='https://github.com/settings/tokens'>
+                    <AccessButton>토큰 발급 링크</AccessButton>
+                  </Link> 
+                }
               </p>
             </div>
           </div>
@@ -191,7 +197,7 @@ export default function LinkPage() {
             </button>
           </div>
           {githubTokenModal ? (
-            <div className="absolute">
+            <div className="absolute ml-[8%]">
               <label className="card flex flex-col gap-2">
                 <div className="flex justify-between">
                   <div className="flex gap-2">
@@ -203,6 +209,9 @@ export default function LinkPage() {
                     />
                     access token 등록
                   </div>
+                  <Link href='https://github.com/settings/tokens'>
+                    <AccessButton>토큰발급링크</AccessButton>
+                  </Link>
                   <button
                     onClick={() => {
                       setGithubTokenModal(false);
@@ -245,7 +254,11 @@ export default function LinkPage() {
               <p>UserName : {labNickName}</p>
               <p>
                 Token 등록:{" "}
-                {isLabToken ? "토큰 등록 완료" : "등록된 토큰이 없어요"}
+                {isLabToken ? "토큰 등록 완료되었습니다" : 
+                  <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens'>
+                    <AccessButton>토큰 발급 링크</AccessButton>
+                  </Link>
+                }
               </p>
             </div>
           </div>
@@ -278,7 +291,7 @@ export default function LinkPage() {
             </button>
           </div>
           {gitlabTokenModal ? (
-            <div className="absolute">
+            <div className="absolute ml-[8%]">
               <label className="card flex flex-col gap-2">
                 <div className="flex justify-between">
                   <div className="flex gap-2">
@@ -290,6 +303,9 @@ export default function LinkPage() {
                     />
                     access token 등록
                   </div>
+                  <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens'>
+                    <AccessButton>토큰 발급 링크</AccessButton>
+                  </Link>
                   <button
                     onClick={() => {
                       setGitlabTokenModal(false);
@@ -421,6 +437,26 @@ const Header = tw.header`
   rounded-t-xl
 `;
 
+const ButtonGroup = tw.div`
+  flex
+  gap-4
+`;
+
+const AccessButton = tw.a`
+  inline-flex
+  items-center
+  justify-center
+  px-1
+  border-1-black
+  border
+  text-base
+  font-medium
+  rounded-md
+  text-white
+  bg-appBlue1
+  hover:bg-opacity-75
+`;
+
 const Button = tw.a`
   inline-flex
   items-center
@@ -435,4 +471,4 @@ const Button = tw.a`
   text-white
   bg-black
   hover:bg-opacity-75
-  `;
+`;
