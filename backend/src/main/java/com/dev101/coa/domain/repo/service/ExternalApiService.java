@@ -395,6 +395,9 @@ public class ExternalApiService {
         return switch (extension) {
             case "java" -> "Java";
             case "js" -> "JavaScript";
+            case "jsx", "tsx" -> "React.js";
+            case "ts" -> "TypeScript";
+            case "vue" -> "Vue.js";
             case "py" -> "Python";
             case "html" -> "HTML";
             case "css" -> "CSS";
@@ -402,7 +405,6 @@ public class ExternalApiService {
             case "cs" -> "C#";
             case "c" -> "C";
             case "cpp", "cxx", "cc", "h" -> "C++";
-            case "ts" -> "TypeScript";
             case "php" -> "PHP";
             case "swift" -> "Swift";
             case "kt" -> "Kotlin";
