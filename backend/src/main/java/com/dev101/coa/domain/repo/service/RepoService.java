@@ -714,6 +714,11 @@ public class RepoService {
             lineCntList.add(codeCntDto);
         }
 
+        // lineCnt를 기준으로 내림차순 정렬
+        lineCntList = lineCntList.stream()
+                .sorted(Comparator.comparing(CodeCntDto::getLineCnt).reversed())
+                .collect(Collectors.toList());
+
         BasicDetailDto basicDetailDto = BasicDetailDto.builder()
                 .repoReadme(repoView.getRepoViewReadme())
                 .repoViewResult(repoView.getRepoViewResult())
