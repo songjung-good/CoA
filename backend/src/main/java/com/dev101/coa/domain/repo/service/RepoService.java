@@ -805,7 +805,7 @@ public class RepoService {
     public List<RepoCardDto> getPopularRepoViewList(Long loginMemberId) {
         Member member = memberRepository.findById(loginMemberId).orElseThrow(() -> new BaseException(StatusCode.MEMBER_NOT_EXIST));
 
-        List<Long> repoViewIdList = Arrays.asList(3L, 4L, 5L, 6L);
+        List<Long> repoViewIdList = Arrays.asList(53L, 55L, 67L, 68L);
         List<RepoView> repoViewList = repoViewRepository.findByRepoViewIdList(repoViewIdList);
 
         List<RepoCardDto> repoCardDtoList = new ArrayList<>();
