@@ -62,24 +62,6 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
       <section className="card flex flex-col gap-4 relative">
         <div className="flex flex-row gap-4">
           <div className="flex flex-col items-center relative">
-            <div className="absolute top-0 left-0">
-              {myData &&
-                (myData?.isMine ? (
-                  <button
-                    aria-label="유저정보 수정하기"
-                    onClick={() => {
-                      setIsEdit(!isEdit);
-                    }}
-                  >
-                    <EditIconDark />
-                  </button>
-                ) : (
-                  <IsStar
-                    isBookmark={myData?.isBookmark}
-                    Uuid={myData?.memberUuid}
-                  />
-                ))}
-            </div>
             <div className="rounded-full overflow-hidden w-36 h-36">
               <img
                 src={myData?.memberImg || userImage}
@@ -102,7 +84,6 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
             <div className="bg-appGrey1 p-4 rounded-2xl grow">
               <p>{myData?.memberIntro}</p>
             </div>
-
             <div className="relative flex items-center">
               <div className="">
                 <p>기술스택</p>
@@ -121,6 +102,25 @@ export default function MyUserCard({ uuid }: { uuid: string }) {
                   ))}
                 </ul>
               </div>
+            </div>
+            <div className="absolute top-[5%] right-[1%]">
+              {myData &&
+                (myData?.isMine ? (
+                  <button
+                    aria-label="유저정보 수정하기"
+                    className="p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all"
+                    onClick={() => {
+                      setIsEdit(!isEdit);
+                    }}
+                  >
+                    <EditIconDark />
+                  </button>
+                ) : (
+                  <IsStar
+                    isBookmark={myData?.isBookmark}
+                    Uuid={myData?.memberUuid}
+                  />
+                ))}
             </div>
           </div>
         </div>
