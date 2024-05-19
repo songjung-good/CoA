@@ -18,11 +18,14 @@ class AiChains:
 
         self.__reduce_chain = LLMChain(
             llm=llm,
-            prompt=PromptTemplate.from_template(
-                "The following is set of summaries:\n"
-                "{docs}\n"
-                "Take these and distill it into a final, consolidated summary of the main themes.\n"
-                "Helpful Answer:"
+            prompt=PromptTemplate.from_template("""
+The following is set of summaries and raw source codes.
+Take these and distill it into a final, consolidated summary of the main themes.
+----------
+{docs}
+----------
+CONSOLIDATED SUMMARY: 
+"""
             )
         )
 
@@ -60,7 +63,7 @@ The criteria are:
 
 The scores must be integers, out of 100.
 
-The output form should be following JSON:
+The output form should be following JSON. Answer with only JSON.:
 {{
     "readability": <readability score>
     "reusability": <reusability score>
@@ -71,7 +74,10 @@ The output form should be following JSON:
 }}
 
 Summaries:
-{docs}""")
+{docs}
+
+Answer:
+""")
         )
 
         self.__collapse_documents_chain = StuffDocumentsChain(
