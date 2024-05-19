@@ -15,7 +15,6 @@ const LinesOfCodeChart = () => {
   // Chart svg 만들기
   const svgRef = useRef<SVGSVGElement>(null);
   useEffect(() => {
-    console.log(totalLines);
     if (!svgRef.current) return;
     const svg = d3.select(svgRef.current);
     // Specify the chart’s dimensions, based on a bar’s height.

@@ -12,7 +12,7 @@ const CalendarChart: React.FC<CalendarChartProps> = ({ data, category }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   useEffect(() => {
     if (!svgRef.current) return;
-
+    if (category === 3) return;
     const svg = d3.select(svgRef.current);
     const svgWidth = svgRef.current.getBoundingClientRect().width;
     const cellSize = svgWidth / 53;

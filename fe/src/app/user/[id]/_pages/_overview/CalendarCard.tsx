@@ -1,24 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  ApiResponse,
-  Contribution,
-  getContributions,
-  getGithubEventsData,
-  getGitlabEventsData,
-} from "@/api/userPage/apiContributions";
-import userStore from "@/store/user";
+import { ApiResponse, Contribution } from "@/api/userPage/apiContributions";
 import ChartCalendar from "./CalendarChart";
-import { mergeCalendarData } from "../../_components/mergeEvents";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import calendarStore from "@/store/calendar";
 
-const CalendarCard = ({ uuid }: { uuid: string }) => {
+const CalendarCard = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [githubData, setGithubData] = useState<ApiResponse | null>(null);
-  const [gitlabData, setGitlabData] = useState<ApiResponse | null>(null);
-  const [mergeData, setMergeData] = useState<ApiResponse | null>(null);
-  const userName = userStore((state) => state.githubUserName);
+  const { githubData, gitlabData, mergeData, category, setCategory } =
+    calendarStore();
   // github에서 contributions(잔디) 가져오기
   const [totalContribution, setTotalContribution] = useState<Record<
     string,
@@ -30,31 +21,7 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
   const [years, setYears] = useState<string[]>(["2024"]);
   const [data, setData] = useState<Contribution[]>([]);
   const [isActive, setIsActive] = useState("2024");
-  const [category, setCategory] = useState(2);
   const router = useRouter();
-  // github에서 contributions(잔디) 가져오기
-  const fetchData = async () => {
-    // const res = await getContributions(userName!);
-    setIsLoading(true);
-    const res1 = await getGithubEventsData(uuid);
-    const res2 = await getGitlabEventsData(uuid);
-    const res3 = mergeCalendarData(res1, res2);
-    setGithubData(res1);
-    setGitlabData(res2);
-    if (res3 !== null) {
-      setMergeData(res3);
-      fitData(res3);
-    } else {
-      setMergeData(null);
-    }
-    // console.log("res1");
-    // console.log(res1);
-    // console.log("res2");
-    // console.log(res2);
-    // console.log("res3");
-    // console.log(res3);
-    setIsLoading(false);
-  };
 
   const fitData = (res: ApiResponse) => {
     setIsLoading(true);
@@ -83,10 +50,6 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     if (category === 0) {
       if (githubData !== null) {
         fitData(githubData);
@@ -99,6 +62,8 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
       if (mergeData !== null) {
         fitData(mergeData);
       }
+    } else if (category === 3) {
+      setIsLoading(true);
     }
   }, [category]);
 
@@ -147,7 +112,7 @@ const CalendarCard = ({ uuid }: { uuid: string }) => {
           </button>
         </li>
       </ul>
-      {isLoading ? (
+      {isLoading && category === 3 ? (
         <section className="">
           <p className="text-lg h-10 py-2">Loading...</p>
           <div className="w-full aspect-[53/9] bg-appGrey1">
