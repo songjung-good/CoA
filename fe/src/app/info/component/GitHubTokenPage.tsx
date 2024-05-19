@@ -27,7 +27,7 @@ const GitHubTokenPage = () => {
           <Subtitle>
             아래의 순서에 따라 당신의 액세스 토큰을 발급 받아보세요.
           </Subtitle>
-          <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens'>
+          <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens' target='_blank' rel='noopener noreferrer'>
             <AccessButton>해당 버튼을 누르면 step4의 페이지로 이동합니다.</AccessButton>
           </Link>
         </TextCenter>
@@ -163,7 +163,7 @@ const ListItemDescription = tw.h4`
   text-gray-700
 `;
 
-const AccessButton = tw.a`
+const AccessButton = tw.button`
   inline-flex
   items-center
   justify-center
