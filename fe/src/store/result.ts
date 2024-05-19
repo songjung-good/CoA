@@ -92,13 +92,13 @@ const useResultStore = create<ResultState>(
           skillList: [],
           repoStartDate: "2024-05-07",
           repoEndDate: "2024-05-07",
-          isMine: true
+          isMine: false
         },
         basicDetailDto: {
           repoReadme: "Initial README",
           repoViewResult: "Initial result",
           commentList: [],
-          repoViewTotalCommitCnt: 0,
+          repoViewTotalCommitCnt: 1,
           repoViewCommitCnt: 0,
           repoViewMemberCnt: 0,
           repoLineCntList: []

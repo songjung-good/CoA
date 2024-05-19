@@ -166,9 +166,10 @@ export default function LinkPage() {
               </p>
             </div>
           </div>
-          <div>
+          <div className="max-w-52">
             <button
-              className="bg-white hover:bg-appGrey2 border shadow-lg rounded-t-xl p-4  flex gap-2"
+              aria-label="깃허브 연동하기"
+              className="bg-white hover:bg-appGrey2 border shadow-lg rounded-t-xl p-4  flex gap-2  w-full"
               onClick={handleGithubLogin}
             >
               <Image
@@ -181,7 +182,8 @@ export default function LinkPage() {
               Sign in with GitHub
             </button>
             <button
-              className=" bg-appGrey1 hover:bg-appGrey2 border shadow-lg rounded-b-xl px-4 py-2 flex gap-2 w-full"
+              aria-label="깃허브 토큰 등록하기"
+              className=" bg-appGrey1 hover:bg-appGrey2 border shadow-lg rounded-b-xl px-4 py-2 flex gap-2  w-full"
               onClick={() => {
                 setGithubTokenModal(!githubTokenModal);
               }}
@@ -213,6 +215,7 @@ export default function LinkPage() {
                     <AccessButton>토큰발급링크</AccessButton>
                   </Link>
                   <button
+                    aria-label="깃허브 토큰 등록 취소하기"
                     onClick={() => {
                       setGithubTokenModal(false);
                     }}
@@ -228,6 +231,7 @@ export default function LinkPage() {
                     onChange={(e) => setGithubToken(e.target.value)}
                   />
                   <button
+                    aria-label="깃허브 토큰 저장하기"
                     className="py-1 px-2 bg-appGreen rounded-r-xl"
                     onClick={saveAccessTokenGithub}
                   >
@@ -262,9 +266,9 @@ export default function LinkPage() {
               </p>
             </div>
           </div>
-          <div>
+          <div className="max-w-52">
             <button
-              className="bg-white hover:bg-appGrey2 border shadow-lg rounded-t-xl p-4 flex gap-2"
+              className="bg-white hover:bg-appGrey2 border shadow-lg rounded-t-xl p-4 flex gap-2 w-full"
               onClick={handleGitLabLogin}
             >
               <Image
@@ -349,7 +353,7 @@ export default function LinkPage() {
             </div>
           </div>
           <div>
-            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2">
+            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2 w-fit">
               <div className="flex gap-2">
                 <Image
                   src="/image/oauth/solvedAC.svg"
@@ -393,7 +397,7 @@ export default function LinkPage() {
             </div>
           </div>
           <div>
-            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2">
+            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2 w-fit">
               <div className="flex gap-2">
                 <Image
                   src="/image/oauth/CodeForces.svg"
