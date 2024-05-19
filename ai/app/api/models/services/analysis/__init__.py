@@ -90,7 +90,7 @@ class AnalysisService:
                 total_commit_cnt=total_commit_cnt,
                 personal_commit_cnt=personal_commit_cnt,
                 readme=readme_result,
-                repo_view_result='',
+                repo_view_result='임시 레포 뷰 분석 결과입니다',
                 commit_score=commit_result
             )
 
