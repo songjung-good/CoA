@@ -137,7 +137,7 @@ export default function LinkPage() {
         <Header>
           <h1 className="text-xl font-bold">계정 연동하기</h1>
           <ButtonGroup>
-            <Link href='/info'>
+            <Link href='/info' target='_blank' rel='noopener noreferrer'>
               <Button>토큰 발급 안내</Button>
             </Link>
             </ButtonGroup>
@@ -159,7 +159,7 @@ export default function LinkPage() {
               <p>
                 Token 등록:{" "}
                 {isHubToken ? "토큰 등록 완료되었습니다" : 
-                  <Link href='https://github.com/settings/tokens'>
+                  <Link href='https://github.com/settings/tokens' target='_blank' rel='noopener noreferrer'>
                     <AccessButton>토큰 발급 링크</AccessButton>
                   </Link> 
                 }
@@ -199,7 +199,7 @@ export default function LinkPage() {
             </button>
           </div>
           {githubTokenModal ? (
-            <div className="absolute ml-[8%]">
+            <div className="absolute">
               <label className="card flex flex-col gap-2">
                 <div className="flex justify-between">
                   <div className="flex gap-2">
@@ -211,7 +211,7 @@ export default function LinkPage() {
                     />
                     access token 등록
                   </div>
-                  <Link href='https://github.com/settings/tokens'>
+                  <Link href='https://github.com/settings/tokens' target='_blank' rel='noopener noreferrer'>
                     <AccessButton>토큰발급링크</AccessButton>
                   </Link>
                   <button
@@ -259,7 +259,7 @@ export default function LinkPage() {
               <p>
                 Token 등록:{" "}
                 {isLabToken ? "토큰 등록 완료되었습니다" : 
-                  <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens'>
+                  <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens' target='_blank' rel='noopener noreferrer'>
                     <AccessButton>토큰 발급 링크</AccessButton>
                   </Link>
                 }
@@ -295,7 +295,7 @@ export default function LinkPage() {
             </button>
           </div>
           {gitlabTokenModal ? (
-            <div className="absolute ml-[8%]">
+            <div className="absolute">
               <label className="card flex flex-col gap-2">
                 <div className="flex justify-between">
                   <div className="flex gap-2">
@@ -307,7 +307,7 @@ export default function LinkPage() {
                     />
                     access token 등록
                   </div>
-                  <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens'>
+                  <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens' target='_blank' rel='noopener noreferrer'>
                     <AccessButton>토큰 발급 링크</AccessButton>
                   </Link>
                   <button
