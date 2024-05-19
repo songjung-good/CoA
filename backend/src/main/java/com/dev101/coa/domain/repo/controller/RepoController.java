@@ -67,7 +67,7 @@ public class RepoController {
     public ResponseEntity<BaseResponse<Long>> saveAnalysis(
             @AuthenticationPrincipal Long currentMemberId,
             @PathVariable("analysisId") String analysisId,
-            @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) {
+            @RequestBody SaveAnalysisReqDto saveAnalysisReqDto) throws Exception {
 
         System.out.println("11111111111111111111");
         Long result = repoService.saveAnalysis(currentMemberId, analysisId, saveAnalysisReqDto);
