@@ -217,7 +217,6 @@ public class RepoService {
                     .repoReadmeOrigin(repoInfo.getRepoReadmeOrigin())
                     .repoCommitCnt(repoInfo.getRepoCommitCnt())
                     .repoGitlabProjectId(repoInfo.getRepoGitLabProjectId())
-                    .repoMemberCnt(redisData.getRepoMemberCnt())
                     .build();
 
             repoRepository.save(repo);
@@ -244,6 +243,7 @@ public class RepoService {
                 .repoViewCommitCnt(aiResult.getPersonalCommitCnt())
                 .repoViewTitle(saveAnalysisReqDto.getRepoViewTitle())
                 .repoViewSubtitle(saveAnalysisReqDto.getRepoViewSubtitle())
+                .repoViewMemberCnt(repoInfo.getRepoMemberCnt())
                 .repoStartDate(saveAnalysisReqDto.getRepoStartDate())
                 .repoEndDate(saveAnalysisReqDto.getRepoEndDate())
                 .build();
@@ -610,7 +610,7 @@ public class RepoService {
                 .memberNickname(redisData.getUserName())
                 .repoViewPath(redisRepoPath)
                 .repoViewTitle(title)
-                .repoMemberCnt(redisData.getRepoMemberCnt())
+                .repoViewMemberCnt(redisData.getRepoMemberCnt())
                 .repoStartDate(redisData.getRepoStartDate())
                 .repoEndDate(redisData.getRepoEndDate())
                 .isMine(isMine)
@@ -713,7 +713,7 @@ public class RepoService {
                 .commentList(commentDtoList)
                 .repoViewTotalCommitCnt(repoView.getRepo().getRepoCommitCnt())
                 .repoViewCommitCnt(repoView.getRepoViewCommitCnt())
-                .repoViewMemberCnt(repoView.getRepo().getRepoMemberCnt())
+                .repoViewMemberCnt(repoView.getRepoViewMemberCnt())
                 .repoLineCntList(lineCntList)
                 .build();
 

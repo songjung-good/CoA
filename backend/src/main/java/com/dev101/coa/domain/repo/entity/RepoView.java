@@ -1,6 +1,5 @@
 package com.dev101.coa.domain.repo.entity;
 
-import com.dev101.coa.domain.code.entity.Code;
 import com.dev101.coa.domain.member.entity.Member;
 import com.dev101.coa.domain.repo.dto.RepoCardEditReqDto;
 import com.dev101.coa.global.common.BaseEntity;
@@ -8,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,10 +29,10 @@ public class RepoView extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String repoViewReadme;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String repoViewResult;
 
     private Long repoViewCommitCnt;
@@ -44,6 +42,9 @@ public class RepoView extends BaseEntity {
 
     @Column(length = 255)
     private String repoViewSubtitle;
+
+    @Column(name = "repoView_member_cnt")
+    private Integer repoViewMemberCnt;
 
     @Column(name = "repo_start_date")
     private LocalDate repoStartDate;
@@ -77,8 +78,8 @@ public class RepoView extends BaseEntity {
     public void updateRepoCard(RepoCardEditReqDto repoCardEditReqDto) {
         this.repoViewTitle = repoCardEditReqDto.getRepoViewTitle();
         this.repoViewSubtitle = repoCardEditReqDto.getRepoViewSubtitle();
-        this.repo.updateRepoMemberCnt(repoCardEditReqDto.getRepoMemberCnt());
         this.repoStartDate = repoCardEditReqDto.getRepoStartDate();
         this.repoEndDate = repoCardEditReqDto.getRepoEndDate();
+        this.repoViewMemberCnt = repoCardEditReqDto.getRepoMemberCnt();
     }
 }

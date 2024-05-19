@@ -26,7 +26,7 @@ public class RepoCardDto {
 
     private String repoViewSubtitle;
 
-    private Integer repoMemberCnt;
+    private Integer repoViewMemberCnt;
 
     private List<CodeDto> skillList;
 
@@ -49,7 +49,7 @@ public class RepoCardDto {
                 .repoViewPath(repoView.getRepo().getRepoPath())
                 .repoViewTitle(repoView.getRepoViewTitle())
                 .repoViewSubtitle(repoView.getRepoViewSubtitle())
-                .repoMemberCnt(repoView.getRepo().getRepoMemberCnt())
+                .repoViewMemberCnt(repoView.getRepoViewMemberCnt())
                 .repoStartDate(repoView.getRepoStartDate())
                 .repoEndDate(repoView.getRepoEndDate())
                 .isMine(isMine)
