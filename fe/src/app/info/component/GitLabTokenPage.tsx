@@ -1,4 +1,6 @@
+
 import React from 'react';
+import Link from "next/link";
 import tw from 'tailwind-styled-components';
 
 const GitLabTokenPage = () => {
@@ -13,6 +15,9 @@ const GitLabTokenPage = () => {
           <Subtitle className="mx-auto mt-4 max-w-2xl text-lg font-normal text-gray-700 lg:text-xl lg:leading-8">
             아래의 순서에 따라 당신의 액세스 토큰을 발급 받아보세요.
           </Subtitle>
+          <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens'>
+            <AccessButton>해당 버튼을 누르면 step4의 페이지로 이동합니다.</AccessButton>
+          </Link>
         </TextCenter>
         <List className="mx-auto mt-12 grid max-w-md grid-cols-1 gap-10 sm:mt-16 lg:mt-20 lg:max-w-5xl lg:grid-cols-4">
           {[
@@ -81,7 +86,7 @@ const Title = tw.h2`
 
 const Subtitle = tw.p`
   mx-auto
-  mt-4
+  my-4
   max-w-2xl
   text-lg
   font-normal
@@ -144,6 +149,22 @@ const ListItemDescription = tw.h4`
   mt-2
   text-base
   text-gray-700
+`;
+
+const AccessButton = tw.a`
+  inline-flex
+  items-center
+  justify-center
+  py-2
+  px-3
+  border-1-black
+  border
+  text-base
+  font-medium
+  rounded-md
+  text-white
+  bg-black
+  hover:bg-opacity-75
 `;
 
 export default GitLabTokenPage;
