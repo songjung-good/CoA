@@ -835,7 +835,7 @@ public class RepoService {
         return repoViewCntBySkillDtoList;
     }
 
-    public void processLinesOfCode(RepoView repoView, RepoInfo repoInfo, Member member) {
+    public void processLinesOfCode(RepoView repoView, RepoInfo repoInfo, Member member) throws Exception {
         List<Map<String, Object>> commits;
         String userName = null;
         String repoName = null;
@@ -843,17 +843,21 @@ public class RepoService {
         if (repoInfo.getRepoGitLabProjectId() != null) {
 
             accessToken = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST)).getAccountLinkReceiveToken();
+            accessToken = encryptionUtils.decrypt(accessToken);
             commits = fetchGitLabCommits(repoInfo.getRepoGitLabProjectId(), accessToken);
  
         } else {
             AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
             accessToken = accountLink.getAccountLinkReceiveToken();
+            accessToken = encryptionUtils.decrypt(accessToken);
 
             String[] split = repoInfo.getRepoPath().split("/");
             repoName = split[split.length - 1];
             userName = split[split.length - 2];
 
+            System.out.println("!!!!!!!!!!!!!!!!!!!!");
             commits = fetchGitHubCommits(repoName, userName, accessToken);
+            System.out.println("!!!!!!!!!!!!!!11111111111111");
         }
 
         Map<String, Integer> linesOfCodeMap = calculateLinesOfCode(commits, repoName, userName, accessToken, repoInfo.getRepoGitLabProjectId() != null);
