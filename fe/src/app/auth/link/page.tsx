@@ -18,8 +18,6 @@ export default function LinkPage() {
   // 입력 받을 변수
   const [githubToken, setGithubToken] = useState("");
   const [gitlabToken, setGitlabToken] = useState("");
-  const [solvedacNickName, setSolvedacNickName] = useState("");
-  const [codeforcesNickName, setCodeforcesNickName] = useState("");
 
   // 반환 받을 변수
   const [hubNickName, setHubNickName] = useState("");
@@ -27,18 +25,11 @@ export default function LinkPage() {
   const [isHubToken, setIsHubToken] = useState("");
   const [isLabToken, setIsLabToken] = useState("");
 
-  const [sacNickName, setSacNickName] = useState("");
-  const [cofNickName, setCofNickName] = useState("");
-
   const axiosInstance = UseAxios();
-
   // fetchData 함수 정의
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get("api/accountLink");
-
-      // console.log(response.data);
-      // console.log(response.data.result);
       const getData = response.data.result;
 
       setHubNickName(getData.githubNickName);
@@ -46,9 +37,6 @@ export default function LinkPage() {
 
       setLabNickName(getData.gitlabNickName);
       setIsLabToken(getData.isGitlabToken);
-
-      setSacNickName(getData.solvedacNickName);
-      setCofNickName(getData.codeforcesNickName);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -102,32 +90,6 @@ export default function LinkPage() {
       setGitlabTokenModal(false);
     } catch (error) {
       console.error("Gitlab Token 저장 중 오류가 발생했습니다:", error);
-    }
-  };
-
-  const saveNickNameSolvedac = async () => {
-    try {
-      const response = await axiosInstance.post("/api/accountLink/solvedac", {
-        nickName: solvedacNickName,
-      });
-      setSacNickName(response.data.result);
-      setSolvedacNickName("");
-    } catch (error) {
-      console.error("saveNickNameSolvedac 저장 중 오류가 발생했습니다:", error);
-    }
-  };
-  const saveNickNameCodeforces = async () => {
-    try {
-      const response = await axiosInstance.post("/api/accountLink/codeforces", {
-        nickName: codeforcesNickName,
-      });
-      setCofNickName(response.data.result);
-      setCodeforcesNickName("");
-    } catch (error) {
-      console.error(
-        "saveNickNameCodeforces 저장 중 오류가 발생했습니다:",
-        error,
-      );
     }
   };
 
@@ -334,94 +296,6 @@ export default function LinkPage() {
               </label>
             </div>
           ) : null}
-        </section>
-        {/* solvedAC */}
-        <section className="card flex flex-col md:flex-row gap-4 justify-between">
-          <div className="flex gap-4">
-            <div>
-              <Image
-                src="/image/oauth/solvedAC.svg"
-                alt="github"
-                width={100}
-                height={100}
-              />
-            </div>
-            <div>
-              <p className="text-xl font-bold">solvedAC</p>
-              <p>UserName : {sacNickName}</p>
-            </div>
-          </div>
-          <div>
-            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2 w-fit">
-              <div className="flex gap-2">
-                <Image
-                  src="/image/oauth/solvedAC.svg"
-                  alt="githubSSO"
-                  width={24}
-                  height={24}
-                />
-                solved.ac 닉네임
-              </div>
-              <div>
-                <input
-                  type="text"
-                  className="bg-appGrey1 rounded-l-xl py-1 px-2 w-40"
-                  value={solvedacNickName}
-                  onChange={(e) => setSolvedacNickName(e.target.value)}
-                />
-                <button
-                  className="bg-appGreen rounded-r-xl py-1 px-2"
-                  onClick={saveNickNameSolvedac}
-                >
-                  등록
-                </button>
-              </div>
-            </label>
-          </div>
-        </section>
-        {/* Codeforces */}
-        <section className="card flex flex-col md:flex-row gap-4 justify-between">
-          <div className="flex gap-4">
-            <div>
-              <Image
-                src="/image/oauth/CodeForces.svg"
-                alt="github"
-                width={100}
-                height={100}
-              />
-            </div>
-            <div>
-              <p className="text-xl font-bold">Codeforces</p>
-              <p>UserName : {cofNickName}</p>
-            </div>
-          </div>
-          <div>
-            <label className="bg-white hover:bg-appGrey2 border shadow-lg rounded-xl p-4 flex flex-col gap-2 w-fit">
-              <div className="flex gap-2">
-                <Image
-                  src="/image/oauth/CodeForces.svg"
-                  alt="githubSSO"
-                  width={24}
-                  height={24}
-                />
-                solved.ac 닉네임
-              </div>
-              <div>
-                <input
-                  type="text"
-                  className="bg-appGrey1 rounded-l-xl py-1 px-2 w-40"
-                  value={codeforcesNickName}
-                  onChange={(e) => setCodeforcesNickName(e.target.value)}
-                />
-                <button
-                  className="bg-appGreen rounded-r-xl py-1 px-2"
-                  onClick={saveNickNameCodeforces}
-                >
-                  등록
-                </button>
-              </div>
-            </label>
-          </div>
         </section>
       </div>
     </main>
