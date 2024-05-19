@@ -902,7 +902,8 @@ public class RepoService {
                         }
                     })
                     .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub 코드 줄 수")))
-                    .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .flatMap(this::mapToList) // Map을 List로 변환
                     .block(Duration.ofSeconds(20)); // Synchronously wait for the result
 
             System.out.println("commits = " + commits);
@@ -945,7 +946,8 @@ public class RepoService {
                     })
                     .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitLab 코드 줄 수")))
 
-                    .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .flatMap(this::mapToList) // Map을 List로 변환
                     .block(Duration.ofSeconds(20)); // Synchronously wait for the result
 
             if (commits == null || commits.isEmpty()) {
@@ -1029,5 +1031,9 @@ public class RepoService {
                 .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
                 .block(Duration.ofSeconds(10)); // Synchronously wait for the result
     }
-
+    private Mono<List<Map<String, Object>>> mapToList(Map<String, Object> map) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        list.add(map);
+        return Mono.just(list);
+    }
 }
