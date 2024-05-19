@@ -1,7 +1,7 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
 import Link from "next/link";
-import tw from 'tailwind-styled-components';
+import tw from "tailwind-styled-components";
 
 interface ListItemIconProps {
   checked: boolean;
@@ -10,8 +10,8 @@ interface ListItemIconProps {
 const GitHubTokenPage = () => {
   const [checkedItems, setCheckedItems] = useState(Array(8).fill(false)); // 8개의 체크박스 상태를 관리하는 상태
 
-  const handleCheckChange = (index:number) => {
-    setCheckedItems(prevState => {
+  const handleCheckChange = (index: number) => {
+    setCheckedItems((prevState) => {
       const newState = [...prevState];
       newState[index] = !newState[index];
       return newState;
@@ -27,22 +27,28 @@ const GitHubTokenPage = () => {
           <Subtitle>
             아래의 순서에 따라 당신의 액세스 토큰을 발급 받아보세요.
           </Subtitle>
-          <Link href='https://lab.ssafy.com/-/user_settings/personal_access_tokens' target='_blank' rel='noopener noreferrer'>
-            <AccessButton>해당 버튼을 누르면 step4의 페이지로 이동합니다.</AccessButton>
+          <Link
+            href="https://github.com/settings/tokens"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <AccessButton>
+              해당 버튼을 누르면 step4의 페이지로 이동합니다.
+            </AccessButton>
           </Link>
         </TextCenter>
         <List>
           {[
-            'GitHub에 로그인하고 프로필 아이콘을 클릭한 후, Settings를 선택합니다.',
-            '좌측 메뉴에서 Developer settings를 클릭합니다.',
-            '좌측 메뉴 중 Personal access tokens에서 Tokens(classic)를 클릭합니다.',
-            'Generate new token 버튼을 클릭하고 classic 토큰을 선택합니다.',
-            'Note 란에 토큰 이름을 작성합니다. (예: GitHub_Access_Token)',
-            'Expiration 기한을 선택합니다. (No expiration을 권장)',
-            '아래 Scope 섹션에서 repo 체크박스를 필수로 선택합니다.',
-            'Generate token 버튼을 클릭하여 토큰을 생성합니다.'
+            "GitHub에 로그인하고 프로필 아이콘을 클릭한 후, Settings를 선택합니다.",
+            "좌측 메뉴에서 Developer settings를 클릭합니다.",
+            "좌측 메뉴 중 Personal access tokens에서 Tokens(classic)를 클릭합니다.",
+            "Generate new token 버튼을 클릭하고 classic 토큰을 선택합니다.",
+            "Note 란에 토큰 이름을 작성합니다. (예: GitHub_Access_Token)",
+            "Expiration 기한을 선택합니다. (No expiration을 권장)",
+            "아래 Scope 섹션에서 repo 체크박스를 필수로 선택합니다.",
+            "Generate token 버튼을 클릭하여 토큰을 생성합니다.",
           ].map((step, index) => (
-            <ListItem key={index}  onClick={() => handleCheckChange(index)}>
+            <ListItem key={index} onClick={() => handleCheckChange(index)}>
               <ListItemIcon checked={checkedItems[index]}>
                 {/* SVG can be replaced with relevant icons for each step */}
               </ListItemIcon>
@@ -142,7 +148,7 @@ const ListItemIcon = tw.div<ListItemIconProps>`
   duration-200
   group-hover:border-gray-900
   group-hover:bg-gray-900
-  ${props => props.checked && 'bg-gray-900 border-gray-900'}
+  ${(props) => props.checked && "bg-gray-900 border-gray-900"}
 `;
 
 const ListItemText = tw.div`
