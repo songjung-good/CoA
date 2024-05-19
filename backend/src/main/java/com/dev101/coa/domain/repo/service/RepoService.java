@@ -350,6 +350,7 @@ public class RepoService {
                     .repoReadmeOrigin(repoReadmeOrigin)
                     .repoCommitCnt(repoCommitCnt)
                     .repoMemberCnt(redisData.getRepoMemberCnt())
+                    .repoGitLabProjectId(redisProjectId)
                     .build();
 
         }
@@ -847,8 +848,7 @@ public class RepoService {
         String userName = null;
         String repoName = null;
         String accessToken;
-        System.out.println("repoInfo = " + repoInfo.toString());
-        System.out.println("repoInfo = " + repoInfo.getRepoGitLabProjectId());
+        
         if (repoInfo.getRepoGitLabProjectId() != null) {
 
             accessToken = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST)).getAccountLinkReceiveToken();
