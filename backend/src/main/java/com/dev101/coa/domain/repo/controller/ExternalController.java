@@ -10,6 +10,7 @@ import com.dev101.coa.global.common.BaseResponse;
 import com.dev101.coa.global.common.StatusCode;
 import com.dev101.coa.global.exception.BaseException;
 import com.dev101.coa.global.security.service.EncryptionUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class ExternalController {
     private final AccountLinkRepository accountLinkRepository;
     private final EncryptionUtils encryptionUtils;
     private final Scheduler dbScheduler = Schedulers.boundedElastic();
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/github/repos/{userName}")
     public ResponseEntity<BaseResponse<String>> getGithubRepos(@AuthenticationPrincipal Long currentId, @PathVariable("userName") String userName) throws Exception {
@@ -83,16 +85,13 @@ public class ExternalController {
 
         List<Map<String, Object>> mans = externalApiService.fetchGitlabMembers(projectId, accessToken);
 
-        // JSON 형식의 문자열로 변환
-        StringBuilder result = new StringBuilder("[");
-        for (Map<String, Object> men : mans) {
-            men.put("projectId", projectId);
-            result.append(men.toString()).append(",");
+        // 각 멤버에 projectId 추가
+        for (Map<String, Object> man : mans) {
+            man.put("projectId", projectId);
         }
-        // 마지막 쉼표 제거 및 닫는 대괄호 추가
-        result.deleteCharAt(result.length() - 1).append("]");
+        String result = objectMapper.writeValueAsString(mans);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result.toString()));
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(result));
     }
 
 
