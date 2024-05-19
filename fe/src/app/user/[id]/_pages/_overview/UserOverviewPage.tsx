@@ -1,4 +1,4 @@
-import CalendarCard from "../../_components/CalendarCard";
+import CalendarCard from "./CalendarCard";
 import CodeLinesCard from "./LinesOfCodeCard";
 
 export default function UserOverviewPage({ uuid }: { uuid: string }) {

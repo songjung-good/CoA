@@ -9,7 +9,7 @@ import {
 } from "@/api/userPage/apiContributions";
 import userStore from "@/store/user";
 import ChartCalendar from "./CalendarChart";
-import { mergeCalendarData } from "./mergeEvents";
+import { mergeCalendarData } from "../../_components/mergeEvents";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
