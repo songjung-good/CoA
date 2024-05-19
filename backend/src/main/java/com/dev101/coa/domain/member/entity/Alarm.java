@@ -6,8 +6,6 @@ import com.dev101.coa.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,7 +35,7 @@ public class Alarm extends BaseEntity {
         return AlarmDto.builder()
                 .memberUuid(this.alarmMember.getMemberUuid())
                 .memberNickName(this.alarmMember.getMemberNickname())
-                .createAt(LocalDateTime.now())
+                .createAt(this.getCreatedAt())
                 .build();
     }
 }
