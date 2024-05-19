@@ -888,7 +888,7 @@ public class RepoService {
         while (true) {
             String url = String.format("https://api.github.com/repos/%s/%s/commits?page=%d&per_page=100", username, repoName, page);
 
-            String responseBody = webClient.get()
+            Object commits = webClient.get()
                     .uri(url)
                     .headers(headers -> headers.setBearerAuth(accessToken))
                     .retrieve()
@@ -910,22 +910,22 @@ public class RepoService {
                         }
                     })
                     .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new ResponseStatusException(response.statusCode(), "Server error during GitHub 코드 줄 수")))
-                    .bodyToMono(String.class)
+                    .bodyToMono(Object.class)
                     .block(Duration.ofSeconds(20));
             // Synchronously wait for the result
-            List<Map<String, Object>> commits = objectMapper.readValue(responseBody, new TypeReference<List<Map<String, Object>>>() {});
+            System.out.println("responseBody = " + commits);
+//            List<Map<String, Object>> commits = objectMapper.readValue(responseBody, new TypeReference<List<Map<String, Object>>>() {});
 
             System.out.println("commits = " + commits);
-
-            if (commits == null || commits.isEmpty()) {
-                break;
-            }
-
-            allCommits.addAll(commits);
+//
+//            if (commits == null || commits.isEmpty()) {
+//                break;
+//            }
+//
+//            allCommits.addAll(commits);
             page++;
         }
 
-        return allCommits;
     }
 
     private List<Map<String, Object>> fetchGitLabCommits(Integer projectId, String accessToken) throws JsonProcessingException {
