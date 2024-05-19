@@ -521,7 +521,7 @@ public class RepoService {
             JsonObject jsonObject = getJsonObject(gitLabApiUrl, accessToken);
             projectPeriod = getGetProjectPeriod(jsonObject, "created_at", "updated_at");
 
-            repoMemberCnt = getRepoMemberCnt(gitLabApiUrl, accessToken);
+            repoMemberCnt = getRepoMemberCnt(gitLabApiUrl + "/members", accessToken);
 
             // ai 요청 디티오
             gitlabAnalysisReqDto = AiGitlabAnalysisReqDto.builder()
