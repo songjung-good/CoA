@@ -1,0 +1,73 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.5'
+	id 'io.spring.dependency-management' version '1.1.4'
+
+}
+
+group = 'com.dev101'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:3.2.5'
+//	implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+
+	// JWT 라이브러리
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// OAuth2 클라이언트 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.security:spring-security-oauth2-jose'
+
+	// SpringDoc OpenAPI UI
+//	implementation 'org.springdoc:springdoc-openapi-ui:1.8.0' // 얘는 안되던데ㅔ
+// 	implementation 'org.springdoc:springdoc-openapi-webflux-core:1.8.0'
+//	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0' // 얘도
+//	implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.5.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+//	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0' // 추가 했는데 변동 사항 모르겠음
+
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//	runtimeOnly 'com.mysql.cj:mysql-connector-java'
+//	runtimeOnly 'mysql:mysql-connector-java:8.0.27'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// webflux - AI 서버로 요청을 보내기 위함
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// gson
+	implementation 'com.google.code.gson:gson:2.10.1'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
