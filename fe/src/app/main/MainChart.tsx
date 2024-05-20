@@ -3,7 +3,7 @@ import ReposChart from "./chart/ReposChart";
 
 export default function MainChart() {
   return (
-    <section className="card w-full m-10 flex">
+    <section className="card w-full max-w-screen-xl my-10 flex">
       <div className="flex-1">
         <MemberChart />
       </div>
