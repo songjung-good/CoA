@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS에서 @font-face 규칙 정의 */
+
+@font-face {
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 1 Thin.ttf") format("truetype");
+  font-weight: 100; /* Thin */
+}
+
+@font-face {
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 2 Light.ttf") format("truetype");
+  font-weight: 300; /* Light */
+}
+
+@font-face {
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 3 Regular.ttf") format("truetype");
+  font-weight: 400; /* Regular */
+}
+
+@font-face {
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 4 Medium.ttf") format("truetype");
+  font-weight: 500; /* Medium */
+}
+
+@font-face {
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 5 Bold.ttf") format("truetype");
+  font-weight: 700; /* Bold */
+}
+
+@font-face {
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 6 ExtraBold.ttf") format("truetype");
+  font-weight: 800; /* ExtraBold */
+}
+
+/* 기본 글꼴로 The Jamsil 설정 */
+body {
+  font-family: "The Jamsil", sans-serif;
+}
+
+.card {
+  @apply bg-white  border shadow-lg p-4 rounded-2xl;
+}
