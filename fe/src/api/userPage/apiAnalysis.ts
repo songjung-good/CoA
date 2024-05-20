@@ -12,7 +12,11 @@ export interface CommitScoreDto {
 interface RepoAnalysisDto {
   repoViewId: number;
   comment: string;
-  commitScore: CommitScoreDto;
+  commitScoreDto: CommitScoreDto;
+  repoTitle: string;
+  repoSubTitle: string;
+  repoStartDate: string;
+  repoEndDate: string;
 }
 
 export interface Jobs {
@@ -73,7 +77,7 @@ const dummyData: RepoAnalysisResponse = {
     {
       repoViewId: 1,
       comment: "This is a dummy comment for repo 1",
-      commitScore: {
+      commitScoreDto: {
         readability: 77,
         performance: 88,
         reusability: 99,
@@ -81,11 +85,15 @@ const dummyData: RepoAnalysisResponse = {
         exception: 66,
         total: 407,
       },
+      repoTitle: "분석한 레포지토리가 없습니다",
+      repoSubTitle: "분석을 진행해 주세요",
+      repoStartDate: "2023-10-10",
+      repoEndDate: "2023-10-20",
     },
     {
       repoViewId: 2,
       comment: "This is a dummy comment for repo 2",
-      commitScore: {
+      commitScoreDto: {
         readability: 66,
         performance: 77,
         reusability: 88,
@@ -93,6 +101,10 @@ const dummyData: RepoAnalysisResponse = {
         exception: 55,
         total: 385,
       },
+      repoTitle: "분석을 진행해 주세요",
+      repoSubTitle: "분석한 레포지토리가 없습니다",
+      repoStartDate: "2023-11-10",
+      repoEndDate: "2023-11-20",
     },
   ],
 };
