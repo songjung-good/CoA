@@ -22,7 +22,7 @@ const apiUrl: string = "https://api.github.com/graphql";
 // GraphQL 요청을 보내는 함수  // GitHub 사용자 이름
 async function sendGraphQLRequest(username: string): Promise<any> {
   if (accessToken === undefined) {
-    console.log("accessToken Data가 undefined입니다.");
+    // console.log("accessToken Data가 undefined입니다.");
   }
   // GraphQL 쿼리
   const query = `
@@ -34,6 +34,7 @@ query {
                 createdAt
                 pushedAt
                 updatedAt
+                isFork
                 languages(first: 10) {
                     edges {
                         node {
@@ -57,8 +58,9 @@ query {
       },
     },
   );
-  console.log(response);
-  return response.data.data.user.repositories.nodes;
+  return response.data.data.user.repositories.nodes.filter(
+    (repo: any) => !repo.isFork,
+  );
 }
 
 // 모든 저장소의 언어별 코드 줄 수를 가져오는 함수
@@ -105,10 +107,10 @@ export async function getTotalLinesOfCode(
       repo.languages = sortedLanguages;
     });
 
-    console.log(repositories);
+    // console.log(repositories);
     return repositories;
   } catch (error) {
-    console.error("Error fetching data from GitHub GraphQL API:", error);
+    console.error("getTotalLinesOfCode 에러:", error);
     return [];
   }
 }

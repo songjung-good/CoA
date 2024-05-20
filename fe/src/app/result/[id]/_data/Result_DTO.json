@@ -1,0 +1,70 @@
+{
+    "isSuccess": true,
+    "message": "Dummy data generated successfully",
+    "code": 200,
+    "result": {
+      "repoCardDto": {
+        "memberId": 12345,
+        "memberNickname": "Developer Nick",
+        "memberImg": "https://example.com/images/member12345.jpg",
+        "repoViewId": 67890,
+        "repoViewPath": "https://github.com/123123/123123123",
+        "repoViewTitle": "Example Project",
+        "repoViewSubtitle": "A demonstration of API usage",
+        "repoMemberCnt": 6,
+        "skillList": [
+          {
+            "codeId": 3002,
+            "codeName": "JavaScript"
+          },
+          {
+            "codeId": 3003,
+            "codeName": "Python"
+          }
+        ],
+        "repoStartDate": "2024-04-01",
+        "repoEndDate": "2024-04-30",
+        "isMine": true
+      },
+      "basicDetailDto": {
+        "repoReadme": "# Hello World!!!!\n## 레포 리드미 테스트\n### h3 작동 확인",
+        "repoViewResult": "Project executed successfully with minor warnings.",
+        "commentList": [
+          {
+            "commentStartIndex": 0,
+            "commentEndIndex": 10,
+            "commentContent": "Great job on the initial commit!",
+            "commentTargetString": "Project ex"
+          },
+          {
+            "commentStartIndex": 20,
+            "commentEndIndex": 25,
+            "commentContent": "Need to improve error handling.",
+            "commentTargetString": "ssful"
+          }
+        ],
+        "repoViewTotalCommitCnt": 10,
+        "repoViewCommitCnt": 5,
+        "repoViewMemberCnt": 3,
+        "repoLineCntList": [
+          {
+            "codeName": "JavaScript",
+            "lineCnt": 500
+          },
+          {
+            "codeName": "Python",
+            "lineCnt": 300
+          }
+        ]
+      },
+      "commitScoreDto": {
+        "readability": 80,
+        "performance": 70,
+        "reusability": 85,
+        "testability": 90,
+        "exception": 5,
+        "total": 75,
+        "scoreComment": "Overall good but needs better exception handling."
+      }
+    }
+  }

@@ -1,8 +1,4 @@
-"use client";
-
-import tw from "tailwind-styled-components";
 import styled from "styled-components";
-import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import AnalysisIcon from "@/icons/AnalysisIcon.tsx";
 import Upicon from "@/icons/Upicon.tsx";
@@ -14,7 +10,7 @@ interface FloatingButtonProps {
 }
 
 interface ButtonsContainerProps {
-  show: boolean;
+  $show: boolean;
 }
 
 export default function FloatingButton({
@@ -24,15 +20,15 @@ export default function FloatingButton({
   return (
     <>
       <div>
-        <ButtonsContainer show={showFloatingButton}>
+        <ButtonsContainer $show={showFloatingButton}>
           <button
-            className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full"
+            className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full hover:bg-orange-500 transition-colors duration-300"
             onClick={scrollToTitle}
           >
             <Upicon width={30} height={30} />
           </button>
-          <Link href="/main">
-            <button className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full">
+          <Link href="/auth/login">
+            <button className="bg-appOrange text-white mb-2 px-3 py-3 rounded-full hover:bg-orange-500 duration-300">
               <AnalysisIcon width={30} height={30} />
             </button>
           </Link>
@@ -52,6 +48,6 @@ const ButtonsContainer = styled.div<ButtonsContainerProps>`
   padding: 8px 16px;
   border-radius: 8px;
   z-index: 50;
-  transform: ${(props) => (props.show ? "translateY(0)" : "translateY(100%)")};
+  transform: ${(props) => (props.$show ? "translateY(0)" : "translateY(100%)")};
   transition: transform 200ms ease-out;
 `;

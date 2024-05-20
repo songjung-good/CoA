@@ -16,10 +16,15 @@ export default function IntroduceButton({
 }
 
 const IntroduceBtn = tw.button`
-  text-xl
-  font-bold
-  bg-appGrey2
-  py-4
-  px-16
-  rounded-2xl
+text-xl
+font-bold
+bg-white
+py-4
+px-16
+rounded-2xl
+mb-[2%]
+shadow-2xl
+hover:bg-gray-200
+transition-colors
+duration-300
 `;

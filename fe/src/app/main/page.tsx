@@ -1,124 +1,143 @@
-'use client'
+"use client";
 
-// src/app/main/page.tsx
-import React from 'react';
-// 레포지토리 분석기(URL 입력)
-import UrlInput from '@/components/analyzer/UrlInput';
-// 개인 레포 불러오기
-import MyRepo from '@/components/repocard/MyRepo';
-// 임시 레포 카드
-import RepoCard from '@/components/repocard/RepoCard';
-import tw from 'tailwind-styled-components';
+// 라이브러리
+import React from "react";
+import tw from "tailwind-styled-components";
 
-const MainPage = () => {
+// 컴포넌트
+// URL 입력(레포지토리 분석을 위한)
+import UrlInput from "@/app/main/analyzer/UrlInput";
+// 나의 레포
+import GitRepoList from "./GitRepoList";
+// 레포 카드
+import ExhibitRepo from "@/app/main/ExhibitRepo";
+// 유저 정보
+import UserProfile from "@/components/maincomponents/UserProfile";
+import MainChart from "./MainChart";
+
+const MainPage: React.FC = () => {
   return (
     <Main>
       <Header>
         <Description>
           <TextWrapper>
-            <Title>당신의 프로젝트 <br />COA에서 분석해보세요</Title>
-            <SubTitle>분석하고 싶은 프로젝트의 URL만 입력하면<br /> 해당 레포지토리 분석을 시작합니다.</SubTitle>
+            <Title>당신의 프로젝트 "CoA"에서 분석해보세요</Title>
+            <SubTitle>
+              분석하고 싶은 프로젝트의 URL만 입력하면
+              <br /> 해당 레포지토리 분석을 시작합니다.
+            </SubTitle>
+            <UrlInput />
           </TextWrapper>
-          <Img src='https://www.lgcns.com/wp-content/uploads/2021/11/9981C0435CB8247727.png'></Img>
         </Description>
+        <UserProfile />
       </Header>
-      <Div1>
-        <UrlInput />
-      </Div1>
-      <Div>
-        <Heading>여기는 나의 레포</Heading>
-        <MyRepo userID='songjung-good' />
-      </Div>
-      <Div>
-        <Heading>여기는 자주찾는 레포</Heading>
-        <RepoCard />
-      </Div>
-      <Div>
-        <Heading>여기는 통계 컴포넌트</Heading>
-      </Div>
+      <RepoDiv>
+        <Div>
+          <Heading>유명 프로젝트 분석 결과</Heading>
+          <ExhibitRepo />
+        </Div>
+        <GitRepoList />
+      </RepoDiv>
+
+      <MainChart />
     </Main>
   );
 };
 
 const Main = tw.main`
-  bg-appGrey1
+  sm:mx-20
+  mx-5
   flex
   flex-col
   items-center
   h-full
+  bg-cover
 `;
 
 const Header = tw.div`
-  w-4/5
-  bg-white
+  max-w-screen-xl
+  w-full
+  mx-auto
   mt-10
-  p-4
-  border
-  shadow-lg
-  rounded-2xl
-  hover:border-appBlue1
+  flex flex-col
+  sm:flex-row
+  items-center
 `;
 
 const Description = tw.div`
+  relative
   flex
   flex-row
+  w-full
+  min-h-[300px]
+  shadow-md
+  rounded-lg
+  sm:w-2/3
   items-center
-  justify-between
-  mx-8
-`;
-
-const Title = tw.h1`
-  font-bold
-  text-3xl
-  lg:text-5xl
-  text-left
-  mb-4
-`;
-
-const SubTitle = tw.p`
-  font-light
-  text-lg
-  text-left
-  mb-4
+  sm:items-center
+  sm:justify-between
+  max-w-screen-xl
+  sm:flex-row
+  border
+  border-appGrey2
+  bg-cover
+  bg-tailwindbg
 `;
 
 const TextWrapper = tw.div`
-  w-1/2
+  relative
+  w-full
+  pl-5 pr-2 py-10
+  items-center
+  flex
+  flex-col
 `;
 
-const Img = tw.img`
-  w-1/2
+const Title = tw.h2`
+  font-bold
   mb-4
-  ml-4
-  opacity-60
-  rounded-md
-  shadow-md
+  lg:text-4xl
+  md:text-2xl
+  sm:text-xl
+  flex
+`;
+
+const SubTitle = tw.p`
+  font-md
+  text-center
+  mb-5
+  lg:text-lg
+  md:text-sm
+  sm:text-xs
+`;
+
+const RepoDiv = tw.div`
+  flex 
+  flex-col sm:flex-row
+  justify-between 
+  w-full
+  max-w-screen-xl
 `;
 
 const Div = tw.div`
-  w-4/5
+  w-full
+  sm:w-2/3
   bg-white
   mt-10
   p-4
   border
   shadow-lg
   rounded-2xl
-  hover:border-appBlue1
-`;
-  
-
-const Div1 = tw.div`
-  w-4/5
-  bg-white
-  mt-10
-  p-4
-  border
-  shadow-lg
-  rounded-2xl
+  transition
+  duration-300
 `;
 
 const Heading = tw.h3`
-  text
+  font-medium
+  text-lg sm:text-xl md:text-3xl
+  flex
+  items-center
+  mb-2
 `;
 
 export default MainPage;

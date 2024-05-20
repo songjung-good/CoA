@@ -5,58 +5,46 @@
 /* CSS에서 @font-face 규칙 정의 */
 
 @font-face {
-  font-family: "Pretendard";
-  src: url("../../public/font/Pretendard-ExtraBold.ttf") format("truetype");
-  font-weight: 800; /* ExtraBold */
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 1 Thin.ttf") format("truetype");
+  font-weight: 100; /* Thin */
 }
 
 @font-face {
-  font-family: "Pretendard";
-  src: url("../../public/font/Pretendard-Bold.ttf") format("truetype");
-  font-weight: 700; /* Bold */
-}
-
-@font-face {
-  font-family: "Pretendard";
-  src: url("../../public/font/Pretendard-SemiBold.ttf") format("truetype");
-  font-weight: 600; /* SemiBold */
-}
-
-@font-face {
-  font-family: "Pretendard";
-  src: url("../../public/font/Pretendard-Medium.ttf") format("truetype");
-  font-weight: 500; /* Medium */
-}
-
-@font-face {
-  font-family: "Pretendard";
-  src: url("../../public/font/Pretendard-Regular.ttf") format("truetype");
-  font-weight: 400; /* Regular */
-}
-
-@font-face {
-  font-family: "Pretendard";
-  src: url("../../public/font/Pretendard-Light.ttf") format("truetype");
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 2 Light.ttf") format("truetype");
   font-weight: 300; /* Light */
 }
 
 @font-face {
-  font-family: "Pretendard";
-  src: url("../../public/font/Pretendard-ExtraLight.ttf") format("truetype");
-  font-weight: 200; /* ExtraLight */
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 3 Regular.ttf") format("truetype");
+  font-weight: 400; /* Regular */
 }
 
 @font-face {
-  font-family: "Pretendard";
-  src: url("../../public/font/Pretendard-Thin.ttf") format("truetype");
-  font-weight: 100; /* Thin */
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 4 Medium.ttf") format("truetype");
+  font-weight: 500; /* Medium */
 }
 
-/* 기본 글꼴로 Pretendard 설정 */
+@font-face {
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 5 Bold.ttf") format("truetype");
+  font-weight: 700; /* Bold */
+}
+
+@font-face {
+  font-family: "The Jamsil";
+  src: url("../../public/font/The Jamsil 6 ExtraBold.ttf") format("truetype");
+  font-weight: 800; /* ExtraBold */
+}
+
+/* 기본 글꼴로 The Jamsil 설정 */
 body {
-  font-family: "Pretendard", sans-serif;
+  font-family: "The Jamsil", sans-serif;
 }
 
 .card {
-  @apply bg-white hover:border-appBlue1 border shadow-lg p-4 rounded-2xl;
+  @apply bg-white  border shadow-lg p-4 rounded-2xl;
 }
