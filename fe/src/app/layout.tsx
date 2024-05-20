@@ -23,7 +23,7 @@ export default function RootLayout({
 
   const title = "CoA - 커밋 기반 프로젝트 기여도 분석 사이트";
   const description =
-    "Commit Analyze는 프로젝트 레포지토리의 커밋을 분석하여 유용한 지표를 제공합니다.";
+    "Commit Analyze는 프로젝트 내 개인의 커밋 기록을 분석하여 개인의 작업 패턴과 성과를 평가할 수 있는 유용한 지표들을 제공하는 도구입니다. 이를 통해 개인의 개발 역량을 객관적으로 파악하고, 향후 성장을 위한 인사이트를 얻을 수 있습니다.";
   const image = "https://commitanalyze.com/image/textLogo48.webp";
   const url = "https://commitanalyze.com";
 
@@ -37,7 +37,7 @@ export default function RootLayout({
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={url} />
+        <link rel="canonical" href="https://commitanalyze.com/main" />
         <link rel="icon" href="/image/logo.webp" />
 
         {/* Open Graph */}
