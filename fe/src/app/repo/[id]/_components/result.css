@@ -1,0 +1,39 @@
+/* 왼쪽에서 오른쪽으로 슬라이드 */
+.slide-left-enter {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.slide-left-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.5s ease-out;
+}
+.slide-left-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+.slide-left-exit-active {
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.5s ease-out;
+}
+
+/* 오른쪽에서 왼쪽으로 슬라이드 */
+.slide-right-enter {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.slide-right-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.5s ease-out;
+}
+.slide-right-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+.slide-right-exit-active {
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: all 0.5s ease-out;
+}
