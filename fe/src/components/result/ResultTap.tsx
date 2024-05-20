@@ -31,7 +31,7 @@ const ResultTap: React.FC<ResultTabProps> = ({ openModal }) => {
   const axios = UseAxios();
 
   useEffect(() => {
-    console.log(`현재 선택된 탭: ${tabIndex}`);
+    // console.log(`현재 선택된 탭: ${tabIndex}`);
   }, [tabIndex]);
 
   const handleTab = (index: number) => {
@@ -46,7 +46,7 @@ const ResultTap: React.FC<ResultTabProps> = ({ openModal }) => {
     const { id } = params;
 
     router.push(`/result/${id}/edit`);
-    console.log(useResultStore.getState().result.repoCardDto.memberNickname);
+    // console.log(useResultStore.getState().result.repoCardDto.memberNickname);
   };
 
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";

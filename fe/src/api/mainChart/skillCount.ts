@@ -12,18 +12,18 @@ interface Response {
   result: SkillCount[];
 }
 const axios = UseAxios();
-export const getReposSkillsData = async (UUID: string) => {
+export const getReposSkillsData = async () => {
   const response = await axios.get(`/api/repos/skill-count`);
-  console.log("getReposSkillsData");
-  console.log(response);
-  const data: Response = response.data.result;
+  // console.log("getReposSkillsData");
+  // console.log(response);
+  const data: SkillCount[] = response.data.result;
   return data;
 };
 
-export const getMembersSkillsData = async (UUID: string) => {
+export const getMembersSkillsData = async () => {
   const response = await axios.get(`/api/member/skill-count`);
-  console.log("getMembersSkillsData");
-  console.log(response);
-  const data: Response = response.data.result;
+  // console.log("getMembersSkillsData");
+  // console.log(response);
+  const data: SkillCount[] = response.data.result;
   return data;
 };

@@ -32,7 +32,7 @@ export default function RepoPage({ params }: { params: { id: string } }) {
       .get(`/api/repos/${params.id}`)
       .then((res) => {
         useRepoDetailStore.getState().updateResultState(res.data);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((error) => {
         console.error("데이터 로딩 중 오류 발생:", error);
@@ -43,7 +43,7 @@ export default function RepoPage({ params }: { params: { id: string } }) {
   }, []);
 
   if (isLoading) {
-    return <div>로딩 중...</div>; // 로딩 인디케이터 또는 컴포넌트 표시
+    return null; // 로딩 인디케이터 또는 컴포넌트 표시
   }
 
   return (

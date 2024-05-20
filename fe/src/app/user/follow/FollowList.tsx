@@ -127,15 +127,15 @@ export default function FollowList() {
                     </div>
                   </div>
                   <div className="bg-appGrey1 p-4 rounded-2xl grow">
-                    {isExpanded
+                    {member.memberIntro && isExpanded
                       ? member.memberIntro.split("\n").map((line, index) => (
                           <React.Fragment key={index}>
                             {line}
                             <br />
                           </React.Fragment>
                         ))
-                      : member.memberIntro.split("\n")[0]}
-                    {member.memberIntro.split("\n").length > 1 && (
+                      : member.memberIntro?.split("\n")[0]}
+                    {member.memberIntro?.split("\n").length > 1 && (
                       <button onClick={() => setIsExpanded(!isExpanded)}>
                         {isExpanded ? "[간략히]" : "[더보기]"}
                       </button>

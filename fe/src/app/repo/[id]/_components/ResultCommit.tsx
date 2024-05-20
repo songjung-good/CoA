@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import useRepoDetailStore from "@/store/repodetail";
 import CommitRate from "@/app/repo/[id]/_components/CommitRate";
 import { Pie } from "react-chartjs-2";
@@ -6,22 +6,28 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+// Comment 타입 정의
+interface Comment {
+  commentStartIndex: number;
+  commentEndIndex: number;
+  commentContent: string;
+  commentTargetString: string;
+}
+
 export default function ResultCommit() {
   const repo = useRepoDetailStore.getState().result.repoCardDto;
   const result = useRepoDetailStore.getState().result.basicDetailDto;
-  const commentList = result.commentList;
+  const commentList: any = result.commentList || [];
   const [currentComment, setCurrentComment] = useState<Comment | null>(null);
   const [modalPosition, setModalPosition] = useState<{
     top: number;
     left: number;
   } | null>(null);
 
-  const parts = splitTextByComments(
-    result.repoViewResult,
-    commentList as Comment[],
-  );
-
-  const handleCommentClick = (comment: Comment, event: React.MouseEvent) => {
+  const handleCommentClick = (
+    comment: Comment,
+    event: React.MouseEvent<HTMLSpanElement>,
+  ) => {
     if (
       currentComment &&
       currentComment.commentContent === comment.commentContent
@@ -32,8 +38,8 @@ export default function ResultCommit() {
       setCurrentComment(comment);
       const rect = (event.target as HTMLElement).getBoundingClientRect();
       setModalPosition({
-        top: rect.top - 10,
-        left: rect.left + rect.width / 2,
+        top: rect.top + window.scrollY + rect.height, // Adjust for scroll position
+        left: rect.left + window.scrollX + rect.width / 2,
       });
     }
   };
@@ -56,6 +62,36 @@ export default function ResultCommit() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [currentComment]);
+
+  const generateHtmlWithComments = (text: string, comments: Comment[]) => {
+    let htmlString = "";
+    let lastEnd = 0;
+    const sortedComments = comments.sort(
+      (a, b) => a.commentStartIndex - b.commentStartIndex,
+    );
+
+    sortedComments.forEach((comment, index) => {
+      if (comment.commentStartIndex > lastEnd) {
+        htmlString += text.slice(lastEnd, comment.commentStartIndex);
+      }
+      htmlString += `<span class="comment" data-index="${index}" style="color: #48CAF8; cursor: pointer;">${text.slice(comment.commentStartIndex, comment.commentEndIndex)}</span>`;
+      lastEnd = comment.commentEndIndex;
+    });
+
+    if (lastEnd < text.length) {
+      htmlString += text.slice(lastEnd);
+    }
+
+    return htmlString;
+  };
+
+  const handleSpanClick = (event: React.MouseEvent<HTMLSpanElement>) => {
+    const target = event.target as HTMLSpanElement;
+    const index = target.getAttribute("data-index");
+    if (index !== null) {
+      handleCommentClick(commentList[parseInt(index)], event);
+    }
+  };
 
   const totalLineCount = result.repoLineCntList.reduce(
     (acc, line) => acc + line.lineCnt,
@@ -91,7 +127,7 @@ export default function ResultCommit() {
     responsive: true,
     plugins: {
       legend: {
-        position: "bottom" as const,
+        position: "right" as const,
       },
       tooltip: {
         callbacks: {
@@ -103,18 +139,20 @@ export default function ResultCommit() {
         },
       },
     },
-    cutout: "50%", // 도넛 형태로 만들기 위해 중앙 부분을 비웁니다.
+    cutout: "40%",
   };
 
   return (
     <div className="flex flex-col w-full justify-between">
       <div className="flex flex-col justify-between items-center min-h-80">
         <CommitRate />
-        <div className="w-1/3 relative">
+        <div className="w-full max-w-[80%] sm:max-w-[40%] min-h-[300px] flex flex-col items-center justify-center relative">
           <Pie data={pieData} options={pieOptions} />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-3/4 text-center">
-            <p className="font-bold">전체 코드</p>
-            <p className="font-bold text-sm">{totalLineCount}</p>
+          <div className="">
+            <p className="font-bold my-4">
+              전체 코드 :{" "}
+              <span className="text-appBlue1">{totalLineCount}</span> 줄
+            </p>
           </div>
         </div>
       </div>
@@ -123,85 +161,35 @@ export default function ResultCommit() {
         <span className="text-appBlue1">{repo.repoViewTitle}</span> 프로젝트
         분석결과
       </p>
-      <div className="flex justify-center items-center w-full min-h-20 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl">
+      <div className="flex justify-center items-center w-full min-h-20 bg-white shadow-lg rounded-lg mt-2 text-xl lg:text-xl py-8 px-4">
         <div className="w-full flex justify-center">
-          {parts.map((part, index) =>
-            part.isComment ? (
-              <span
-                key={index}
-                className="text-appBlue1 relative cursor-pointer"
-                onClick={(event) =>
-                  part.comment && handleCommentClick(part.comment, event)
-                }
-                style={{ whiteSpace: "pre-wrap" }} // 공백을 유지하기 위한 스타일 추가
-              >
-                {part.text}
-                {currentComment &&
-                  part.comment &&
-                  currentComment.commentContent ===
-                    part.comment.commentContent &&
-                  modalPosition && (
-                    <div
-                      className="absolute bg-white p-4 shadow-lg rounded-lg border border-gray-300 text-gray-800 text-left min-w-[350px] w-fit break-words cursor-pointer modal-content"
-                      onClick={() => setCurrentComment(null)}
-                    >
-                      <p className="font-semibold w-full">{`${currentComment.commentTargetString} 코멘트`}</p>
-                      <p className="mt-2 text-sm">{`${currentComment.commentContent}`}</p>
-                    </div>
-                  )}
-              </span>
-            ) : (
-              <span key={index} style={{ whiteSpace: "pre-wrap" }}>
-                {part.text}
-              </span>
-            ),
+          <span
+            onClick={handleSpanClick}
+            dangerouslySetInnerHTML={{
+              __html: generateHtmlWithComments(
+                result.repoViewResult,
+                commentList,
+              ),
+            }}
+            style={{ whiteSpace: "pre-wrap" }}
+            className=" leading-relaxed"
+          />
+          {currentComment && modalPosition && (
+            <div
+              className="absolute bg-white p-4 shadow-lg rounded-lg border border-gray-300 text-gray-800 text-left min-w-[350px] w-fit break-words cursor-pointer modal-content"
+              style={{
+                top: `${modalPosition.top}px`,
+                left: `${modalPosition.left}px`,
+                transform: "translateX(-50%)",
+              }}
+              onClick={() => setCurrentComment(null)}
+            >
+              <p className="font-semibold w-full">{`${currentComment.commentTargetString} 코멘트`}</p>
+              <p className="mt-2 text-sm">{`${currentComment.commentContent}`}</p>
+            </div>
           )}
         </div>
       </div>
     </div>
   );
-}
-
-function splitTextByComments(text: string, comments: Comment[]) {
-  let lastEnd = 0;
-  const parts: { text: string; isComment: boolean; comment?: Comment }[] = [];
-
-  if (!comments) {
-    comments = [];
-  } else {
-    comments = comments.filter((comment) => comment != null);
-  }
-
-  comments.sort((a, b) => a.commentStartIndex - b.commentStartIndex);
-
-  comments.forEach((comment) => {
-    if (comment.commentStartIndex > lastEnd) {
-      parts.push({
-        text: text.slice(lastEnd, comment.commentStartIndex),
-        isComment: false,
-      });
-    }
-    parts.push({
-      text: text.slice(comment.commentStartIndex, comment.commentEndIndex),
-      isComment: true,
-      comment: comment,
-    });
-    lastEnd = comment.commentEndIndex;
-  });
-
-  if (lastEnd < text.length) {
-    parts.push({
-      text: text.slice(lastEnd),
-      isComment: false,
-    });
-  }
-
-  return parts;
-}
-
-interface Comment {
-  commentStartIndex: number;
-  commentEndIndex: number;
-  commentContent: string;
-  commentTargetString: string;
 }

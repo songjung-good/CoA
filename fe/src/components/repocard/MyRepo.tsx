@@ -41,7 +41,8 @@ const MyRepo: React.FC<MyRepoProps> = ({ userID }) => {
   return (
     <ul className="flex justify-center flex-wrap list-none p-30">
       {repos.map((repo) => (
-        <li key={repo.id} className="border-1 border-appYellow m-1 p-2 relative flex justify-center items-center flex-col transition duration-300 hover:shadow-md" onMouseEnter={() => console.log('Mouse Enter')} onMouseLeave={() => console.log('Mouse Leave')}>
+        <li key={repo.id} className="border-1 border-appYellow m-1 p-2 relative flex justify-center items-center flex-col transition duration-300 hover:shadow-md" //onMouseEnter={() => console.log('Mouse Enter')} onMouseLeave={() => console.log('Mouse Leave')}
+        >
           <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
             {repo.name}
           </a>

@@ -22,7 +22,7 @@ const apiUrl: string = "https://api.github.com/graphql";
 // GraphQL 요청을 보내는 함수  // GitHub 사용자 이름
 async function sendGraphQLRequest(username: string): Promise<any> {
   if (accessToken === undefined) {
-    console.log("accessToken Data가 undefined입니다.");
+    // console.log("accessToken Data가 undefined입니다.");
   }
   // GraphQL 쿼리
   const query = `

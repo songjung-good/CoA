@@ -13,6 +13,7 @@ import GitRepoList from "./GitRepoList";
 import ExhibitRepo from "@/app/main/ExhibitRepo";
 // 유저 정보
 import UserProfile from "@/components/maincomponents/UserProfile";
+import MainChart from "./MainChart";
 
 const MainPage: React.FC = () => {
   return (
@@ -37,9 +38,8 @@ const MainPage: React.FC = () => {
         </Div>
         <GitRepoList />
       </RepoDiv>
-      {/* <Div>
-        <Heading>여기는 통계 컴포넌트</Heading>
-      </Div> */}
+
+      <MainChart />
     </Main>
   );
 };

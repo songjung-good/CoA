@@ -25,7 +25,7 @@ export default function ResultTab() {
   const axios = UseAxios();
 
   useEffect(() => {
-    console.log(`현재 선택된 탭: ${tabIndex}`);
+    // console.log(`현재 선택된 탭: ${tabIndex}`);
   }, [tabIndex]);
 
   const handleTab = (index: number) => {
@@ -40,9 +40,9 @@ export default function ResultTab() {
     const { id } = params;
 
     router.push(`/repo/${id}/edit`);
-    console.log(
-      useRepoDetailStore.getState().result.repoCardDto.memberNickname,
-    );
+    // console.log(
+    //   useRepoDetailStore.getState().result.repoCardDto.memberNickname,
+    // );
   };
 
   const slideDirection = tabIndex > lastIndex ? "slide-right" : "slide-left";

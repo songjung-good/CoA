@@ -32,7 +32,7 @@ export default function RadarChart({
 
   // 'total' 키를 제외한 데이터 추출
   const data = Object.entries(scoreData)
-    .filter(([key]) => key !== "total") // 'total' 키 필터링
+    .filter(([key]) => key !== "scoreComment" && key !== "total") // 'total' 키 필터링
     .map(([key, value]) => ({
       axis: key,
       value: value,

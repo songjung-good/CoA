@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import styled from "styled-components";
 
 interface UserModalProps {
   userData: {
@@ -17,7 +17,7 @@ const UserModal: React.FC<UserModalProps> = ({ userData }) => {
 
   const toggleUser = (login: string) => {
     setSelectedUser(selectedUser === login ? null : login);
-    console.log(selectedUser)
+    // console.log(selectedUser)
   };
 
   return (
@@ -35,9 +35,9 @@ const UserModal: React.FC<UserModalProps> = ({ userData }) => {
             </ModalUser>
           ))}
         </ModalUserGrid>
-      <ModalCloseButton onClick={() => setSelectedUser(null)}>
-        X
-      </ModalCloseButton>
+        <ModalCloseButton onClick={() => setSelectedUser(null)}>
+          X
+        </ModalCloseButton>
       </ModalContent>
     </ModalOverlay>
   );
@@ -83,7 +83,8 @@ const UserAvatar = styled.img<AvatarProps>`
   max-width: 100px; /* 최대 너비 조절 */
   height: auto;
   border-radius: 50%;
-  border: ${(props) => (props.isSelected ? '2px solid blue' : '2px solid transparent')};
+  border: ${(props) =>
+    props.isSelected ? "2px solid blue" : "2px solid transparent"};
 `;
 
 const UserId = styled.p`

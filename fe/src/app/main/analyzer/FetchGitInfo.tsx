@@ -6,7 +6,7 @@ import UseAxios from '@/api/common/useAxios';
 import { error } from 'console';
 
 interface Contributor {
-  id: number;
+  projectId: number;
   username: string;
   name: string;
   state: string;
@@ -60,7 +60,7 @@ const fetchGitLabData = async (gitInfo: any, setUserData: Function) => {
     // GitLab projectId를 반환 값에 포함
     setUserData({
       data: members,
-      projectId: members.length > 0 ? members[0].id : null
+      projectId: members.length > 0 ? members[0].projectId : null
     });
   } catch (error) {
     console.error("GitLab 정보를 가져오는 데 실패했습니다.", error);
