@@ -21,7 +21,15 @@ export default function UserAnalysisPage({ uuid }: { uuid: string }) {
   useEffect(() => {
     fetchData();
   }, []);
-  const [selectedJob, setSelectedJob] = useState("ALL");
+  const keyName = {
+    exception: "예외 처리",
+    readability: "가독성",
+    performance: "성능",
+    testability: "테스트 용이성",
+    reusability: "재활용성",
+    total: "총 평균",
+  };
+  const [selectedJob, setSelectedJob] = useState("FE");
   return (
     <>
       {data !== undefined ? (
@@ -30,21 +38,38 @@ export default function UserAnalysisPage({ uuid }: { uuid: string }) {
           {/* repos */}
           <section className="flex flex-col gap-4">
             {data.repos.map((repo) => (
-              <div className="card flex gap-4" key={repo.repoViewId}>
+              <div
+                className="card flex gap-4 justify-center"
+                key={repo.repoViewId}
+              >
                 <div>
-                  <h3>Repo ID: {repo.repoViewId}</h3>
+                  <h3 className="text-xl">{repo.repoTitle}</h3>
+                  <h4 className="text-lg">{repo.repoSubTitle}</h4>
+                  <p>프로젝트 기간</p>
+                  <p>
+                    {repo.repoStartDate} ~ {repo.repoEndDate}
+                  </p>
                 </div>
-                <RadarChart scoreData={repo.commitScore} />
+                <RadarChart scoreData={repo.commitScoreDto} />
                 <ul className="card">
-                  {Object.entries(repo.commitScore)
+                  {Object.entries(repo.commitScoreDto)
                     .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
                     .map(([key, value]) => (
-                      <li key={key}>
-                        {key}: {Number(value).toFixed(1)}
+                      <li
+                        key={key}
+                        className={
+                          key === "total"
+                            ? "text-lg pt-1"
+                            : key === "scoreComment"
+                              ? "hidden"
+                              : ""
+                        }
+                      >
+                        {keyName[key as keyof typeof keyName]}:{" "}
+                        {Number(value).toFixed(1)}
                       </li>
                     ))}
                 </ul>
-                <div className="card">Comment: {repo.comment}</div>
               </div>
             ))}
           </section>
