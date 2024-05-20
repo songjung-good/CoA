@@ -8,6 +8,7 @@
   - Back-end: Intellij IDEA (2023.3.6)
 
 ## B. 빌드 시 사용되는 환경변수 등의 내용 상세 기재
+### Spring application.yml
 ```
 spring:
   application:
