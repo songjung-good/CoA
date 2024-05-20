@@ -8,6 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        analyze: "url('/image/urlAnalyze.png')",
+        'tailwindbg': "url('/image/tailwindbg.webp')",
+        'blur-circle': "url('/image/blur-circle.webp')",
+        'header-bg': "url('/image/header-bg.webp')",
+      },
       colors: {
         appBlue1: "#48CAF8",
         appBlue2: "#88DDFB",
@@ -22,8 +28,14 @@ const config: Config = {
         appGrey2: "#E2E8E6",
       },
       height: {
-        appVh: "calc(100vh - 80px)",
+        appVh: "calc(100vh - 96px)",
       },
+      minWidth: {
+        "760px": "760px",
+      },
+      screens: {
+        'xs': "480px"
+      }
     },
   },
   plugins: [],

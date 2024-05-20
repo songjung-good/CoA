@@ -30,7 +30,11 @@ const StyledLink = tw(Link)`
   bg-appOrange
   p-2
   rounded-lg
-  mb-24
+  my-[2%]
+  shadow-2xl
+  hover:bg-orange-500
+  transition-colors
+  duration-300
 `;
 
 export default AnalysisButton;

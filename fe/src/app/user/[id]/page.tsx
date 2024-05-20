@@ -6,23 +6,21 @@ import UserAnalysisPage from "./_pages/_analysis/UserAnalysisPage";
 import UserHistoryPage from "./_pages/_history/UserHistoryPage";
 import UserRepositoryPage from "./_pages/_repository/UserRepositoryPage";
 import UserOverviewPage from "./_pages/_overview/UserOverviewPage";
-import userStore from "@/store/user";
 import repositoryStore from "./../../../store/repos";
+import calendarStore from "@/store/calendar";
 
 export default function UserPage({ params }: { params: { id: string } }) {
   const [tabIndex, setTabIndex] = useState(0);
-  const [text, setText] = useState("");
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
+  const { fetchData1, setCategory } = calendarStore();
+  const setRepos1 = repositoryStore((state) => state.setRepos1);
+  const fetchData = async () => {
+    setCategory(3);
+    await fetchData1(params.id);
   };
-  const userName = userStore((state) => state.userName);
-  const setUserName = userStore((state) => state.setUserName);
-  const setRepos = repositoryStore((state) => state.setRepos);
-
   useEffect(() => {
-    setRepos(userName);
-  }, [userName, setRepos]);
-
+    setRepos1(params.id);
+    fetchData();
+  }, []);
   //탭에 따른 랜더링될 페이지
   const renderTabContent = () => {
     switch (tabIndex) {
@@ -33,7 +31,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
       case 2:
         return <UserRepositoryPage />;
       case 3:
-        return <UserAnalysisPage />;
+        return <UserAnalysisPage uuid={params.id} />;
       default:
         return <UserOverviewPage />;
     }
@@ -44,19 +42,11 @@ export default function UserPage({ params }: { params: { id: string } }) {
   };
   return (
     <>
-      {/* <div className="p-4 bg-appGrey1 flex">
-        <input onChange={onChange} value={text} />
-        <button
-          className="p-2 bg-appGrey2"
-          onClick={() => {
-            setUserName(text);
-          }}
-        >
-          유저 이름 변경
-        </button>
-      </div> */}
-      <UserPageTabBar onClickTap={onClickTap} tabIndex={tabIndex} />
-      {/* <h1>User Page ID: {params.id}</h1> */}
+      <UserPageTabBar
+        onClickTap={onClickTap}
+        tabIndex={tabIndex}
+        uuid={params.id}
+      />
       {renderTabContent()}
     </>
   );
