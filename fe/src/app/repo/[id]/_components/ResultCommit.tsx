@@ -66,8 +66,11 @@ export default function ResultCommit() {
   const generateHtmlWithComments = (text: string, comments: Comment[]) => {
     let htmlString = "";
     let lastEnd = 0;
+    const sortedComments = comments.sort(
+      (a, b) => a.commentStartIndex - b.commentStartIndex,
+    );
 
-    comments.forEach((comment, index) => {
+    sortedComments.forEach((comment, index) => {
       if (comment.commentStartIndex > lastEnd) {
         htmlString += text.slice(lastEnd, comment.commentStartIndex);
       }
