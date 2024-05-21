@@ -58,7 +58,6 @@
     <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
     <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">    
     <br>      
-  
     <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white">    
     <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">    
     <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
@@ -67,7 +66,6 @@
     <img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black">    
     <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white">    
     <img src="https://img.shields.io/badge/apache tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
-
     <br>      
     <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">   
     <img src="https://img.shields.io/badge/gitlab-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white">
@@ -77,7 +75,6 @@
 #### 기술스택(사용목적)
 
 - JavaScript es6++
-
 
 - Node v20.12.2
 
@@ -223,8 +220,12 @@
 
 ### 검색포털 등록
 
-| | **네이버** | **구글** |
-| ---------------------------------------- | ![네이버사진](./docs/검색통계/네이버_기여도분석사이트_12등.jpg) | ![사진](./docs/검색통계/구글_프로젝트기여도분석_7등.jpg) |
+**네이버**
+
+![네이버사진](./docs/검색통계/네이버_기여도분석사이트_12등.jpg)
+
+**구글**
+![사진](./docs/검색통계/구글_프로젝트기여도분석_7등.jpg)
 
     - 포털에 등록하여 (뭐라뭐라 할말 적가)
 
