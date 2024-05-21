@@ -56,25 +56,18 @@
 </div>  
 <div align=center>    
     <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
-    <img src="https://img.shields.io/badge/jquery-0769AD?style=for-the-badge&logo=jquery&logoColor=white">
     <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">    
-    <img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">   
     <br>      
-    <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white">    
+  
     <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white">    
     <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">    
-    <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black">
     <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
-    <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white">  
     <br>      
     <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">    
-    <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white">    
-    <img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">   
-    <img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white">   
     <img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black">    
     <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white">    
     <img src="https://img.shields.io/badge/apache tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
-    <img src="https://img.shields.io/badge/socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white">
+
     <br>      
     <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">   
     <img src="https://img.shields.io/badge/gitlab-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white">
@@ -85,17 +78,24 @@
 
 - JavaScript es6++
 
-- JAVA 17
 
 - Node v20.12.2
 
-- vite 5.0.8
+- Next 14.2.2
 
-- react 18.2.0
+- typescript 5
 
-- zustand
+- zustand 4.5.2
 
 - tailwindcss 3.4.1
+
+- styled-components 6.1.8
+
+- prettier 3.2.5
+
+- d3 7.9.0
+
+- JAVA 17
 
 - SpringBoot 3.2.2
 
@@ -104,8 +104,6 @@
 - JPA
 
 - MySQL
-
-- openVIdu
 
 - OAUTH
 
@@ -121,7 +119,6 @@
 - Mattermost
 - gitlab
 - jira
-- gerrit
 - google docs
 - Figma
 
