@@ -985,7 +985,7 @@ public class RepoService {
         AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
         for (Map<String, Object> commit : commits) {
             if (isGitLab) {
-                if (commit.get("author_email") != accountLink.getAccountLinkEmail()){
+                if (!commit.get("author_email").equals(accountLink.getAccountLinkEmail())){
                     continue;
                 }
             }
