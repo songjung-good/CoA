@@ -32,6 +32,9 @@ public class AccountLink extends BaseEntity {
     private String accountLinkNickname;
 
     @Column
+    private String accountLinkEmail;
+
+    @Column
     private String accountLinkToken;
 
     @Column
@@ -41,10 +44,11 @@ public class AccountLink extends BaseEntity {
     private String accountLinkReceiveToken;
 
 
-    public void updateAccountLinkFields(Long id, String nickName, String token, String refreshToken) {
+    public void updateAccountLinkFields(Long id, String nickName, String token, String refreshToken, String email) {
         this.accountLinkNickname = nickName;
         this.accountLinkToken = token;
         this.accountLinkRefreshToken = refreshToken;
+        this.accountLinkEmail = email;
     }
     public void updateReceiveToken(String receiveToken) {
         this.accountLinkReceiveToken = receiveToken;

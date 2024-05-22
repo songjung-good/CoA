@@ -848,12 +848,13 @@ public class RepoService {
         String userName = null;
         String repoName = null;
         String accessToken;
-        
+
         if (repoInfo.getRepoGitLabProjectId() != null) {
 
             accessToken = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST)).getAccountLinkReceiveToken();
             accessToken = encryptionUtils.decrypt(accessToken);
             commits = fetchGitLabCommits(repoInfo.getRepoGitLabProjectId(), accessToken);
+            System.out.println("!#!#!#!#!#!#!#!#!#");
  
         } else {
             AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
@@ -869,9 +870,12 @@ public class RepoService {
             System.out.println("!!!!!!!!!!!!!!11111111111111");
         }
 
-        Map<String, Integer> linesOfCodeMap = calculateLinesOfCode(commits, repoName, userName, accessToken, repoInfo.getRepoGitLabProjectId() != null);
+        System.out.println("!@!@!@!@!@!@!@!@!@!@!@");
+        Map<String, Integer> linesOfCodeMap = calculateLinesOfCode(member, commits, repoInfo.getRepoGitLabProjectId(), repoName, userName, accessToken, repoInfo.getRepoGitLabProjectId() != null);
 
         List<Map.Entry<String, Integer>> linesOfCodeList = new ArrayList<>(linesOfCodeMap.entrySet());
+
+        System.out.println("parents linesOfCodeList.size() = " + linesOfCodeList.size());
 
         for (Map.Entry<String, Integer> entry : linesOfCodeList) {
             if (entry.getKey() == null) {
@@ -887,6 +891,8 @@ public class RepoService {
             lineOfCodeRepository.save(lineOfCode);
             }
         }
+
+        System.out.println("process lines of code end!!!!");
     }
 
     private List<Map<String, Object>> fetchGitHubCommits(String repoName, String username, String accessToken) throws JsonProcessingException {
@@ -935,6 +941,7 @@ public class RepoService {
 
         while (true) {
             String url = String.format("https://lab.ssafy.com/api/v4/projects/%s/repository/commits?page=%d&per_page=100", projectId, page);
+            System.out.println("fetchGitLabCommits url = " + url);
 
             List<Map<String, Object>> commits = webClient.get()
                     .uri(url)
@@ -959,6 +966,7 @@ public class RepoService {
 
 
             if (commits == null || commits.isEmpty()) {
+                System.out.println("last page = " + page);
                 break;
             }
 
@@ -966,16 +974,25 @@ public class RepoService {
             page++;
         }
 
+        System.out.println("allCommits.size = " + allCommits.size());
         return allCommits;
     }
-    private Map<String, Integer> calculateLinesOfCode(List<Map<String, Object>> commits, String repoName, String username, String accessToken, boolean isGitLab) {
+    private Map<String, Integer> calculateLinesOfCode(Member member, List<Map<String, Object>> commits, Integer projectId, String repoName, String username, String accessToken, boolean isGitLab) {
         // Line of code map to hold the skillCodeId and their respective line counts
         Map<String, Integer> linesOfCodeMap = new HashMap<>();
+        int cnt = 0;
 
+        AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
         for (Map<String, Object> commit : commits) {
+            if (isGitLab) {
+                if (!commit.get("author_email").equals(accountLink.getAccountLinkEmail())){
+                    continue;
+                }
+            }
             String commitSha = isGitLab ? (String) commit.get("id") : (String) commit.get("sha");
+            cnt++;
 
-            List<Map<String, Object>> files = isGitLab ? fetchGitLabCommitFiles(commitSha, (Long) commit.get("project_id"), accessToken) : fetchGitHubCommitFiles(repoName, commitSha, username, accessToken);
+            List<Map<String, Object>> files = isGitLab ? fetchGitLabCommitFiles(commitSha, projectId, accessToken) : fetchGitHubCommitFiles(repoName, commitSha, username, accessToken);
 
             for (Map<String, Object> file : files) {
                 String filename = isGitLab ? (String) file.get("new_path") : (String) file.get("filename");
@@ -985,6 +1002,8 @@ public class RepoService {
                 linesOfCodeMap.put(skillCodeName, linesOfCodeMap.getOrDefault(skillCodeName, 0) + linesAdded);
             }
         }
+        System.out.println("linesOfCodeMap.size() = " + linesOfCodeMap.size());
+        System.out.println("cnt = " + cnt);
 
         return linesOfCodeMap;
     }
@@ -1023,8 +1042,10 @@ public class RepoService {
                 .block(Duration.ofSeconds(10)); // Synchronously wait for the result
     }
 
-    private List<Map<String, Object>> fetchGitLabCommitFiles(String commitSha, Long projectId, String accessToken) {
+    private List<Map<String, Object>> fetchGitLabCommitFiles(String commitSha, Integer projectId, String accessToken) {
         String url = String.format("https://lab.ssafy.com/api/v4/projects/%s/repository/commits/%s/diff", projectId, commitSha);
+
+        System.out.println("fetchGitLabCommitFiles url = " + url);
 
         return webClient.get()
                 .uri(url)
