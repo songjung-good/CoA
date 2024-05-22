@@ -871,7 +871,7 @@ public class RepoService {
         }
 
         System.out.println("!@!@!@!@!@!@!@!@!@!@!@");
-        Map<String, Integer> linesOfCodeMap = calculateLinesOfCode(member, commits, repoName, userName, accessToken, repoInfo.getRepoGitLabProjectId() != null);
+        Map<String, Integer> linesOfCodeMap = calculateLinesOfCode(member, commits, repoInfo.getRepoGitLabProjectId(), repoName, userName, accessToken, repoInfo.getRepoGitLabProjectId() != null);
 
         List<Map.Entry<String, Integer>> linesOfCodeList = new ArrayList<>(linesOfCodeMap.entrySet());
 
@@ -977,7 +977,7 @@ public class RepoService {
         System.out.println("allCommits.size = " + allCommits.size());
         return allCommits;
     }
-    private Map<String, Integer> calculateLinesOfCode(Member member, List<Map<String, Object>> commits, String repoName, String username, String accessToken, boolean isGitLab) {
+    private Map<String, Integer> calculateLinesOfCode(Member member, List<Map<String, Object>> commits, Integer projectId, String repoName, String username, String accessToken, boolean isGitLab) {
         // Line of code map to hold the skillCodeId and their respective line counts
         Map<String, Integer> linesOfCodeMap = new HashMap<>();
         int cnt = 0;
@@ -990,11 +990,9 @@ public class RepoService {
                 }
             }
             String commitSha = isGitLab ? (String) commit.get("id") : (String) commit.get("sha");
-
             cnt++;
 
-
-            List<Map<String, Object>> files = isGitLab ? fetchGitLabCommitFiles(commitSha, (Long) commit.get("project_id"), accessToken) : fetchGitHubCommitFiles(repoName, commitSha, username, accessToken);
+            List<Map<String, Object>> files = isGitLab ? fetchGitLabCommitFiles(commitSha, projectId, accessToken) : fetchGitHubCommitFiles(repoName, commitSha, username, accessToken);
 
             for (Map<String, Object> file : files) {
                 String filename = isGitLab ? (String) file.get("new_path") : (String) file.get("filename");
@@ -1044,8 +1042,10 @@ public class RepoService {
                 .block(Duration.ofSeconds(10)); // Synchronously wait for the result
     }
 
-    private List<Map<String, Object>> fetchGitLabCommitFiles(String commitSha, Long projectId, String accessToken) {
+    private List<Map<String, Object>> fetchGitLabCommitFiles(String commitSha, Integer projectId, String accessToken) {
         String url = String.format("https://lab.ssafy.com/api/v4/projects/%s/repository/commits/%s/diff", projectId, commitSha);
+
+        System.out.println("fetchGitLabCommitFiles url = " + url);
 
         return webClient.get()
                 .uri(url)
