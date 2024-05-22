@@ -875,6 +875,8 @@ public class RepoService {
 
         List<Map.Entry<String, Integer>> linesOfCodeList = new ArrayList<>(linesOfCodeMap.entrySet());
 
+        System.out.println("parents linesOfCodeList.size() = " + linesOfCodeList.size());
+
         for (Map.Entry<String, Integer> entry : linesOfCodeList) {
             if (entry.getKey() == null) {
                 continue;
@@ -889,6 +891,8 @@ public class RepoService {
             lineOfCodeRepository.save(lineOfCode);
             }
         }
+
+        System.out.println("process lines of code end!!!!");
     }
 
     private List<Map<String, Object>> fetchGitHubCommits(String repoName, String username, String accessToken) throws JsonProcessingException {
@@ -990,6 +994,7 @@ public class RepoService {
                 linesOfCodeMap.put(skillCodeName, linesOfCodeMap.getOrDefault(skillCodeName, 0) + linesAdded);
             }
         }
+        System.out.println("linesOfCodeMap.size() = " + linesOfCodeMap.size());
 
         return linesOfCodeMap;
     }
