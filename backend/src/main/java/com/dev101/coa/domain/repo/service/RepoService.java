@@ -1036,6 +1036,8 @@ public class RepoService {
     private List<Map<String, Object>> fetchGitLabCommitFiles(String commitSha, Long projectId, String accessToken) {
         String url = String.format("https://lab.ssafy.com/api/v4/projects/%s/repository/commits/%s/diff", projectId, commitSha);
 
+        System.out.println("fetchGitLabCommitFiles url = " + url);
+        
         return webClient.get()
                 .uri(url)
                 .headers(headers -> headers.setBearerAuth(accessToken))
