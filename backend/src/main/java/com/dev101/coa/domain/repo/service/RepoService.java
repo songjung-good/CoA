@@ -871,7 +871,7 @@ public class RepoService {
         }
 
         System.out.println("!@!@!@!@!@!@!@!@!@!@!@");
-        Map<String, Integer> linesOfCodeMap = calculateLinesOfCode(commits, repoName, userName, accessToken, repoInfo.getRepoGitLabProjectId() != null);
+        Map<String, Integer> linesOfCodeMap = calculateLinesOfCode(member, commits, repoName, userName, accessToken, repoInfo.getRepoGitLabProjectId() != null);
 
         List<Map.Entry<String, Integer>> linesOfCodeList = new ArrayList<>(linesOfCodeMap.entrySet());
 
@@ -977,12 +977,22 @@ public class RepoService {
         System.out.println("allCommits.size = " + allCommits.size());
         return allCommits;
     }
-    private Map<String, Integer> calculateLinesOfCode(List<Map<String, Object>> commits, String repoName, String username, String accessToken, boolean isGitLab) {
+    private Map<String, Integer> calculateLinesOfCode(Member member, List<Map<String, Object>> commits, String repoName, String username, String accessToken, boolean isGitLab) {
         // Line of code map to hold the skillCodeId and their respective line counts
         Map<String, Integer> linesOfCodeMap = new HashMap<>();
+        int cnt = 0;
 
+        AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
         for (Map<String, Object> commit : commits) {
+            if (isGitLab) {
+                if (commit.get("author_email") != accountLink.getAccountLinkEmail()){
+                    continue;
+                }
+            }
             String commitSha = isGitLab ? (String) commit.get("id") : (String) commit.get("sha");
+
+            cnt++;
+
 
             List<Map<String, Object>> files = isGitLab ? fetchGitLabCommitFiles(commitSha, (Long) commit.get("project_id"), accessToken) : fetchGitHubCommitFiles(repoName, commitSha, username, accessToken);
 
@@ -995,6 +1005,7 @@ public class RepoService {
             }
         }
         System.out.println("linesOfCodeMap.size() = " + linesOfCodeMap.size());
+        System.out.println("cnt = " + cnt);
 
         return linesOfCodeMap;
     }

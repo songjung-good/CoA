@@ -178,13 +178,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 //        System.out.println("userInfo = " + userInfo);
 //        System.out.println("userInfo = " + userInfo.getUsername());
         String userName = userInfo != null ? userInfo.getUsername() : null;
+        String email = userInfo != null ? userInfo.getEmail() : null;
 
         // 기존에 연동된 계정인지 조회
         Optional<AccountLink> optionalAccountLink = accountLinkRepository.findByMemberAndCode(existingMember, platCode);
         optionalAccountLink.ifPresentOrElse(
                 accountLink -> {
                     // 이미 연동된 정보가 있다면, 닉네임 / 토큰 / 리프레시 토큰 갱신
-                    accountLink.updateAccountLinkFields(accountLink.getAccountLinkId() ,userName ,encryptedAccessToken ,encryptedRefreshToken);
+                    accountLink.updateAccountLinkFields(accountLink.getAccountLinkId() ,userName ,encryptedAccessToken ,encryptedRefreshToken, email);
                     accountLinkRepository.save(accountLink);                },
                 () -> {
                     // 연동된 정보가 없으면 새로 빌드하여 저장 TODO 정보 넣어주기
@@ -193,6 +194,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                             .member(existingMember)
                             .code(platCode)
                             .accountLinkNickname(userName)
+                            .accountLinkEmail(email)
                             .accountLinkToken(encryptedAccessToken)
                             .accountLinkRefreshToken(encryptedRefreshToken)
                             .build();
