@@ -854,6 +854,7 @@ public class RepoService {
             accessToken = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST)).getAccountLinkReceiveToken();
             accessToken = encryptionUtils.decrypt(accessToken);
             commits = fetchGitLabCommits(repoInfo.getRepoGitLabProjectId(), accessToken);
+            System.out.println("!#!#!#!#!#!#!#!#!#");
  
         } else {
             AccountLink accountLink = accountLinkRepository.findByMemberAndCodeCodeId(member, 1002L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST));
@@ -869,6 +870,7 @@ public class RepoService {
             System.out.println("!!!!!!!!!!!!!!11111111111111");
         }
 
+        System.out.println("!@!@!@!@!@!@!@!@!@!@!@");
         Map<String, Integer> linesOfCodeMap = calculateLinesOfCode(commits, repoName, userName, accessToken, repoInfo.getRepoGitLabProjectId() != null);
 
         List<Map.Entry<String, Integer>> linesOfCodeList = new ArrayList<>(linesOfCodeMap.entrySet());
@@ -960,6 +962,7 @@ public class RepoService {
 
 
             if (commits == null || commits.isEmpty()) {
+                System.out.println("last page = " + page);
                 break;
             }
 
@@ -967,6 +970,7 @@ public class RepoService {
             page++;
         }
 
+        System.out.println("allCommits.size = " + allCommits.size());
         return allCommits;
     }
     private Map<String, Integer> calculateLinesOfCode(List<Map<String, Object>> commits, String repoName, String username, String accessToken, boolean isGitLab) {
