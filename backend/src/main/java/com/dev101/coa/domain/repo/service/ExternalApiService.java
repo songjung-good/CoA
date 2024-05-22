@@ -88,7 +88,7 @@ public class ExternalApiService {
             System.out.println("page = " + page);
 
             List<Map<String, Object>> projects = fetchProjectsByPage(userName, accessToken, page);
-            System.out.println("projects = " + projects);
+//            System.out.println("projects = " + projects);
             if (projects == null || projects.isEmpty()) {
                 break;
             }
@@ -129,7 +129,7 @@ public class ExternalApiService {
         List<Map<String, Object>> projects = fetchGitlabProjects(userName, accessToken);
 
         for (Map<String, Object> project : projects) {
-            System.out.println("project = " + project);
+//            System.out.println("project = " + project);
             String projectName = (String) project.get("name");
             if (projectNameToCheck.equals(projectName)) {
                 return String.valueOf(project.get("id"));

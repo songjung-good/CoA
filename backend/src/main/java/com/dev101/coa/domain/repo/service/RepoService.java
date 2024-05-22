@@ -848,7 +848,7 @@ public class RepoService {
         String userName = null;
         String repoName = null;
         String accessToken;
-        
+
         if (repoInfo.getRepoGitLabProjectId() != null) {
 
             accessToken = accountLinkRepository.findByMemberAndCodeCodeId(member, 1003L).orElseThrow(() -> new BaseException(StatusCode.ACCOUNT_LINK_NOT_EXIST)).getAccountLinkReceiveToken();
@@ -935,6 +935,7 @@ public class RepoService {
 
         while (true) {
             String url = String.format("https://lab.ssafy.com/api/v4/projects/%s/repository/commits?page=%d&per_page=100", projectId, page);
+            System.out.println("fetchGitLabCommits url = " + url);
 
             List<Map<String, Object>> commits = webClient.get()
                     .uri(url)
