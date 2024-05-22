@@ -106,3 +106,79 @@ url:
 - 3306 포트로 mysql DB연결
 - 6379 포트로 redis 연결
 - 구글, 카카오, GitHub, GitLab 로그인
+
+### E. Nginx sites-available
+/etc/nginx/sites-available/default 파일을 다음과 같이 수정
+```
+server {
+    root /var/www/html;
+    # Add index.php to the list if you are using PHP
+    index index.html index.htm index.nginx-debian.html;
+    #server_name _;
+    server_name commitanalyze.com www.commitanalyze.com;
+    
+    listen [::]:443 ssl; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/commitanalyze.com/fullchain.pem; # managed by Certbot    ssl_certificate_key /etc/letsencrypt/live/commitanalyze.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+
+    # 디테일한 에러 로그 찍기
+    error_log  /var/log/nginx/error.log notice;
+
+
+    location / {
+        # 모든 비-API 요청을 3000 포트로 리디렉션
+        proxy_pass http://commitanalyze.com:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /api {
+        # /api 경로의 요청을 8080 포트로 리디렉션
+        proxy_pass http://commitanalyze.com:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /oauth2 {
+        # /api 경로의 요청을 8080 포트로 리디렉션
+        proxy_pass http://commitanalyze.com:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    
+    location /login {
+        # /api 경로의 요청을 8080 포트로 리디렉션
+        proxy_pass http://commitanalyze.com:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+
+server {
+    if ($host = www.commitanalyze.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = commitanalyze.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        server_name commitanalyze.com www.commitanalyze.com;
+    return 404; # managed by Certbot
+}
+```
+
